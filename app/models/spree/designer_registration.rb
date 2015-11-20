@@ -103,29 +103,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
     logger.info sending_self
     logger.info sending
-
-
-    # m2 =  Mandrill::API.new(MANDRILL_KEY)
-    # message_for_self = {
-    #     :subject=> "New user has registered: #{self.user.first_name self.user.last_name}",
-    #     :from_name=> "Jesse Bodine",
-    #     :text=>"New user has registered: #{self.user.first_name self.user.last_name} \n\n The Scout & Nimble Team",
-    #     :to=>[
-    #         {
-    #             :email=> self.user.email,
-    #             :name=> self.user.full_name
-    #         }
-    #     ],
-    #     :from_email=>"designer@scoutandnimble.com",
-    #     :track_opens => true,
-    #     :track_clicks => true,
-    #     :url_strip_qs => false,
-    #     :signing_domain => "scoutandnimble.com",
-    #     :last_name => self.user.last_name,
-    #     :first_name => self.user.first_name
-    # }
-    # sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
-    # logger.info sending_self
+    
   
   end
   
