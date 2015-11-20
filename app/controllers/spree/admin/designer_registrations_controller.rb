@@ -15,5 +15,5 @@ class Spree::Admin::DesignerRegistrationsController < Spree::Admin::ResourceCont
   #  update.response do |wants|
   #    wants.html { redirect_to edit_admin_fancy_thing_url( @fancy_thing ) }
   #  end
- 
+
 end
