@@ -27,15 +27,18 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   def update_designer_status
     user = self.user
     case self.status
-      when "pending" || "declined"
+      when "pending"
         user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-      when "accepted-designer"
+      when "room designer"
         user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
         self.send_room_designer_approval
         user.add_designer_to_mailchimp
-      when "accepted-affiliate"
+      when "to the trade designer"
         user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
         self.send_trade_designer_approval
+      when "declined"
+        user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
+        self.send_designer_decline
     end
   end
   
@@ -61,9 +64,68 @@ class Spree::DesignerRegistration < ActiveRecord::Base
      :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('new-designer-registration', [{:name => 'main', :content => html_content}], message, true)
+    message_for_self = {
+        :subject=> "New user has registered: #{self.user.first_name} #{self.user.last_name}",
+        :from_name=> "Jesse Bodine",
+        :text=>"New user has registered: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
+        :to=>[
+            {
+                :email=> "designer@scoutandnimble.com",
+                :name=> "Scout & Nimble"
+            }
+        ],
+        :from_email=>"designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com",
 
+        :merge_vars => [
+            {
+                :rcpt => self.user.email,
+                :vars => [
+                    {
+                        :name => "firstname",
+                        :content => self.user.first_name
+                    },
+                    {
+                        :name => "lastname",
+                        :content => self.user.last_name
+                    }
+                ]
+            }
+        ]
+    }
+
+    logger.info message_for_self
+
+    sending = m.messages.send_template('new-designer-registration', [{:name => 'main', :content => html_content}], message, true)
+    sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
+    logger.info sending_self
     logger.info sending
+
+
+    # m2 =  Mandrill::API.new(MANDRILL_KEY)
+    # message_for_self = {
+    #     :subject=> "New user has registered: #{self.user.first_name self.user.last_name}",
+    #     :from_name=> "Jesse Bodine",
+    #     :text=>"New user has registered: #{self.user.first_name self.user.last_name} \n\n The Scout & Nimble Team",
+    #     :to=>[
+    #         {
+    #             :email=> self.user.email,
+    #             :name=> self.user.full_name
+    #         }
+    #     ],
+    #     :from_email=>"designer@scoutandnimble.com",
+    #     :track_opens => true,
+    #     :track_clicks => true,
+    #     :url_strip_qs => false,
+    #     :signing_domain => "scoutandnimble.com",
+    #     :last_name => self.user.last_name,
+    #     :first_name => self.user.first_name
+    # }
+    # sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
+    # logger.info sending_self
   
   end
   
@@ -89,7 +151,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
      :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('room-designer-approval', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template('welcome-to-the-design-trade-program', [{:name => 'main', :content => html_content}], message, true)
 
     logger.info sending
   
@@ -117,10 +179,38 @@ class Spree::DesignerRegistration < ActiveRecord::Base
      :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('trade-designer-congratulations', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template('welcome-to-the-room-design-program', [{:name => 'main', :content => html_content}], message, true)
 
     logger.info sending
   
+  end
+
+
+  def send_designer_decline
+    html_content = ''
+    logger.info "Sending the mail to #{self.user.email}"
+
+    m = Mandrill::API.new(MANDRILL_KEY)
+    message = {
+        :subject=> "Your application has been declined!",
+        :from_name=> "Jesse Bodine",
+        :text=>"Your application has been declined!  \n\n The Scout & Nimble Team",
+        :to=>[
+            {
+                :email=> self.user.email,
+                :name=> self.user.full_name
+            }
+        ],
+        :from_email=>"designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com"
+    }
+
+    sending = m.messages.send_template('we-have-our-eye-on-you', [{:name => 'main', :content => html_content}], message, true)
+
+    logger.info sending
   end
   
   
