@@ -87,6 +87,7 @@ $(document).on({
 $(document).on({
     click: function(e) {
         e.preventDefault();
+        $(this).addClass('spinner');
         init = initCrop();
         cropImage(init[1], init[0], createObjectImage);
         canvas.renderAll();
@@ -167,7 +168,8 @@ function cropImage(cropper, dataImg, callback){
     window.canvas_tab = img;
     image_element = dataImg.getElement();
     dataImg.set('save_url', img);
-    console.log(dataImg);
+    dataImg.set('flipX', false);
+    $(this).removeClass('spinner');
     callback(dataImg);
 }
 
