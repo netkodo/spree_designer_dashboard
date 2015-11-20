@@ -41,6 +41,21 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         self.send_designer_decline
     end
   end
+
+  def update_old_designer_status
+    @designers = Spree::DesignerRegistration.all
+
+    @designers.each do |design|
+      puts design.status
+      if design.status == "accepted-designer"
+          design.update_column(:status,"room designer")
+      end
+      if design.status == "accepted-affiliate"
+          design.update_column(:status,"to the trade designer")
+      end
+    end
+
+  end
   
   def send_designer_welcome
     html_content = ''
@@ -103,7 +118,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
     logger.info sending_self
     logger.info sending
-    
+
   
   end
   
