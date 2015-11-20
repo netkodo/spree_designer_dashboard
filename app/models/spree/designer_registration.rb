@@ -21,7 +21,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   end
   
   def self.status_options
-    [["Pending Review","pending"], ["Accepted - Designer","accepted-designer"], ["Accepted - Affiliate Only","accepted-affiliate"], ["Declined","declined"]]
+    [["Pending Review","pending"], ["Room Designer","room designer"], ["To the Trade Designer","to the trade designer"], ["Declined","declined"]]
   end
   
   def update_designer_status
