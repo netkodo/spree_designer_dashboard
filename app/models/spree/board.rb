@@ -483,21 +483,40 @@ class Spree::Board < ActiveRecord::Base
         if product_hash['action_board'] == 'update'
           board_product = self.board_products.where(id: product_hash['product_id']).first
           if board_product.present?
-            attr = product_hash.except!('action_board', 'board_id', 'product_id')
+            if product_hash['image'].present?
+              crop_image(product_hash['image'], board_product)
+            end
+            attr = product_hash.except!('action_board', 'board_id', 'product_id', 'image')
             board_product.update(attr)
           end
         elsif product_hash['action_board'] == 'create'
           product = Spree::Product.where(id: product_hash['product_id']).first
           if product.present?
-            attr = product_hash.except!('action_board', 'product_id')
+            attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
+              if product_hash['image'].present?
+                crop_image(product_hash['image'], board_product)
+              end
               board_product.update(z_index: product_hash['z_index'])
             end
           end
         end
       end
     end
+  end
+
+  def crop_image(base64, board_product)
+      image = Spree::Image.where(id: board_product.image_id).first
+      if image.blank?
+        image = board_product.product.images.first
+      end
+      data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
+      file_img = File.new("#{Rails.root}/public/somefilename.png", 'wb')
+      file_img.write data
+      if image.update(attachment: file_img)
+        File.delete(file_img)
+      end
   end
 
   def send_revision_request_email(message_content="")
