@@ -108,6 +108,54 @@ $(document).on({
     }
 }, "#bp-mirror");
 
+$(document).on({
+    click: function(e){
+        e.preventDefault();
+        selectedImage = canvas.getActiveObject();
+        if(!isBlank(selectedImage)) {
+            moveLayer(selectedImage, "top")
+        }
+    }
+}, '#bp-move-front');
+
+$(document).on({
+    click: function(e){
+        e.preventDefault();
+        selectedImage = canvas.getActiveObject();
+        if(!isBlank(selectedImage)) {
+            moveLayer(selectedImage, "forward")
+        }
+    }
+}, '#bp-move-forward');
+
+$(document).on({
+    click: function(e){
+        e.preventDefault();
+        selectedImage = canvas.getActiveObject();
+        if(!isBlank(selectedImage)) {
+            moveLayer(selectedImage, "bottom")
+        }
+    }
+}, '#bp-move-back');
+
+$(document).on({
+    click: function(e){
+        e.preventDefault();
+        selectedImage = canvas.getActiveObject();
+        if(!isBlank(selectedImage)) {
+            moveLayer(selectedImage, "backward")
+        }
+    }
+}, '#bp-move-backward');
+
+$(document).on({
+    click: function(e){
+        e.preventDefault();
+        canvas.getActiveObject();
+        rotateObject(90);
+    }
+}, '#bp-rotate-left');
+
 function initCrop(){
     dataImg = canvas.getActiveObject();
     options = {
@@ -390,7 +438,7 @@ function getSavedProducts(board_id) {
                     }
                     else {
                         selectedImage = null;
-                        $('#board-product-preview').html('')
+                        $('#board-product-preview').html('');
                         $.cookie("active_image", "");
                     }
                 });
@@ -404,25 +452,6 @@ function getSavedProducts(board_id) {
                         }
                     }
                 });
-                // listen for toolbar functions
-                document.getElementById('bp-move-front').addEventListener('click', function () {
-                    moveLayer(selectedImage, "top")
-                }, false);
-                document.getElementById('bp-move-forward').addEventListener('click', function () {
-                    moveLayer(selectedImage, "forward")
-                }, false);
-                document.getElementById('bp-move-back').addEventListener('click', function () {
-                    moveLayer(selectedImage, "bottom")
-                }, false);
-                document.getElementById('bp-move-backward').addEventListener('click', function () {
-                    moveLayer(selectedImage, "backward")
-                }, false);
-                document.getElementById('bp-rotate-left').addEventListener('click', function () {
-                    activeObject = canvas.getActiveObject()
-                    rotateObject(90);
-
-                }, false);
-
             },
             error: function (objAJAXRequest, strError, errorThrown) {
                 alert("ERROR: " + strError);
