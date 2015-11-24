@@ -80,9 +80,9 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     }
 
     message_for_self = {
-        :subject=> "New user has registered: #{self.user.first_name} #{self.user.last_name}",
+        :subject=> "New user has applied: #{self.user.first_name} #{self.user.last_name}",
         :from_name=> "Jesse Bodine",
-        :text=>"New user has registered: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
+        :text=>"New user has applied: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
         :to=>[
             {
                 :email=> "designer@scoutandnimble.com",
@@ -112,9 +112,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         ]
     }
 
-    logger.info message_for_self
-
-    sending = m.messages.send_template('new-designer-registration', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
     sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
     logger.info sending_self
     logger.info sending
