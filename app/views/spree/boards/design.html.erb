@@ -312,9 +312,13 @@ $(function () {
   </div>
   <div class="crop-footer">
     <div class="actionRoom clearfix">
-      <input type="button" id="btnCropRoom" value="Crop" class="btn btn-primary">
-      <input type="button" id="btnZoomInRoom" value="+" class="btn btn-primary">
-      <input type="button" id="btnZoomOutRoom" value="-"  class="btn btn-primary">
+      <%= link_to "crop", "#",  class: 'btn btn-primary', id: 'btnCropRoom' %>
+      <%= link_to "#", class: 'btn btn-primary', id: 'btnZoomInRoom' do %>
+        <i class="fa fa-plus"></i>
+      <% end %>
+      <%= link_to "#", class: 'btn btn-primary', id: 'btnZoomOutRoom' do %>
+          <i class="fa fa-minus"></i>
+      <% end %>
     </div>
   </div>
 </div>

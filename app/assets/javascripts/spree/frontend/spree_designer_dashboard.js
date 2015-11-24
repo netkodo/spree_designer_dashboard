@@ -87,6 +87,7 @@ $(document).on({
 $(document).on({
     click: function(e) {
         e.preventDefault();
+        $(this).addClass('spinner');
         init = initCrop();
         cropImage(init[1], init[0], createObjectImage);
         canvas.renderAll();
@@ -167,7 +168,20 @@ function cropImage(cropper, dataImg, callback){
     window.canvas_tab = img;
     image_element = dataImg.getElement();
     dataImg.set('save_url', img);
-    console.log(dataImg);
+    dataImg.set('flipX', false);
+    $(this).removeClass('spinner');
+    value = $('.js-input-hash-product').val();
+    hash =  JSON.parse(value);
+    ha_id = '';
+    if (!isBlank(hash)){
+        if (dataImg.get('action') === 'create') {
+            ha_id = dataImg.get('hash_id');
+        } else {
+            ha_id = dataImg.get('id');
+        }
+        hash[ha_id]["image"] = img;
+        $('.js-input-hash-product').val(JSON.stringify(hash));
+    }
     callback(dataImg);
 }
 
@@ -447,16 +461,13 @@ function createObjectImage(activeObject) {
             theImage.filters.push(generateFilter());
             theImage.applyFilters(canvas.renderAll.bind(canvas));
         }
+        hash = generateHash(theImage);
+        $('.js-input-hash-product').val(JSON.stringify(hash));
         canvas.remove(activeObject);
         canvas.renderAll();
         canvas.setActiveObject(theImage);
     };
     activeObject.getElement().load();
-    obj = canvas.getActiveObject();
-    if (!isBlank(obj)) {
-        hash = generateHash(obj);
-    }
-    $('.js-input-hash-product').val(JSON.stringify(hash));
 }
 
 function generateFilter(){
@@ -493,7 +504,12 @@ function generateHash(object) {
     } else {
         ha_id = object.get('id');
         action = "update";
-
+    }
+    image = "";
+    if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
+        image = hash[ha_id]['image']
+    }else{
+        image = null
     }
     hash[ha_id] = {
         action_board: action,
@@ -504,7 +520,8 @@ function generateHash(object) {
         width: object.getWidth(),
         height: object.getHeight(),
         rotation_offset: object.getAngle(0),
-        flip_x: object.get('flipX')
+        flip_x: object.get('flipX'),
+        image: image
     };
 
     if (object.get('z_index') >= 0) {
