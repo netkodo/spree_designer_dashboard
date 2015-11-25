@@ -17,7 +17,7 @@
   </tr>
   </thead>
   <% if @designer_registrations.present? %>
-  <tbody>
+      <tbody>
       <% @designer_registrations.each do |registration| %>
           <tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id registration %>">
             <td><%= registration.first_name %></td>
@@ -31,6 +31,10 @@
             </td>
           </tr>
       <% end %>
+
+      </tbody>
+      </table>
+
+      <%= paginate @designer_registrations %>
+
   <% end %>
-  </tbody>
-</table>
