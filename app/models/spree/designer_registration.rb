@@ -36,6 +36,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       when "to the trade designer"
         user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
         self.send_trade_designer_approval
+        user.add_designer_to_mailchimp
       when "declined"
         user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
         self.send_designer_decline
@@ -203,6 +204,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
     logger.info sending
   end
-  
+
   
 end
