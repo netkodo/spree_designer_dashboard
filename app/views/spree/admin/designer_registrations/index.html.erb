@@ -8,4 +8,8 @@
 
 <%= render :partial => 'spree/admin/shared/users_sub_menu' %>
 
+<% content_for :page_title do %>
+    <%= Spree.t(:listing_designer_registrations) %>
+<% end %>
+
 <%= render :partial => 'spree/admin/designer_registrations/designers_form' %>
