@@ -1,11 +1,11 @@
 <table class="index">
   <colgroup>
-    <col style="width: 20%" />
-    <col style="width: 20%" />
-    <col style="width: 20%" />
-    <col style="width: 20%" />
-    <col style="width: 10%" />
-    <col style="width: 10%" />
+    <col style="width: 20%"/>
+    <col style="width: 20%"/>
+    <col style="width: 20%"/>
+    <col style="width: 20%"/>
+    <col style="width: 10%"/>
+    <col style="width: 10%"/>
   </colgroup>
   <thead>
   <tr>
@@ -16,20 +16,21 @@
     <th class="actions"></th>
   </tr>
   </thead>
-
+  <% if @designer_registrations.present? %>
   <tbody>
-  <% @designer_registrations.each do |registration| %>
-      <tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id registration %>">
-        <td><%= registration.first_name %></td>
-        <td><%= registration.last_name %></td>
-        <td><%= registration.company_name %></td>
-        <td><%= registration.status %></td>
+      <% @designer_registrations.each do |registration| %>
+          <tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id registration %>">
+            <td><%= registration.first_name %></td>
+            <td><%= registration.last_name %></td>
+            <td><%= registration.company_name %></td>
+            <td><%= registration.status %></td>
 
-        <td  class="actions">
-          <%= link_to_edit registration, :no_text => true %>
-          <%= link_to_delete registration, :no_text => true %>
-        </td>
-      </tr>
+            <td class="actions">
+              <%= link_to_edit registration, :no_text => true %>
+              <%= link_to_delete registration, :no_text => true %>
+            </td>
+          </tr>
+      <% end %>
   <% end %>
   </tbody>
 </table>
