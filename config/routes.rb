@@ -107,8 +107,8 @@ Spree::Core::Engine.routes.draw do
     resources :designer_registrations
     resources :slides
 
-    get "designer_registrations_room" => "designer_registrations#room_designers", :as => :room_designers
-    get "designer_registrations_trade" => "designer_registrations#trade_program", :as => :trade_program
+    get "room_designers" => "designer_registrations#room_designers", :as => :room_designers
+    get "trade_program" => "designer_registrations#trade_program", :as => :trade_program
     
     get  "designers" => "users#designers", :as => :designers
     

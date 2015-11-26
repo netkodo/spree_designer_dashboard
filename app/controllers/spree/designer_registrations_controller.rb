@@ -5,7 +5,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   
   # GET /designer_registrations
   def index
-    @designer_registrations = Spree::DesignerRegistration.all
+
   end
 
   # GET /designer_registrations/1
