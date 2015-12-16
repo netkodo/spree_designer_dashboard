@@ -1,3 +1,4 @@
+
 window.canvas_crop = null;
 function initializeProductSearchForm() {
     /* attach a submit handler to the form */
@@ -87,10 +88,27 @@ $(document).on({
 $(document).on({
     click: function(e) {
         e.preventDefault();
-        $(this).addClass('spinner');
-        init = initCrop();
-        cropImage(init[1], init[0], createObjectImage);
+        options = {};
+        v = $crop_image.cropper('getCroppedCanvas');
+        obj = canvas.getActiveObject();
+        obj.set('width', v.width);
+        obj.set('height', v.height);
+        obj.set('save_url', v.toDataURL());
+        obj.set('cropped', true);
+        obj.setElement(v);
         canvas.renderAll();
+        value = $('.js-input-hash-product').val();
+        hash =  JSON.parse(value);
+        ha_id = '';
+        if (!isBlank(hash)) {
+            if (obj.get('action') === 'create') {
+                ha_id = obj.get('hash_id');
+            } else {
+                ha_id = obj.get('id');
+            }
+            hash[ha_id]["image"] = v.toDataURL();
+            $('.js-input-hash-product').val(JSON.stringify(hash));
+        }
         $('#crop-modal').trigger('close');
     }
 }, '#btnCropRoom');
@@ -156,34 +174,31 @@ $(document).on({
     }
 }, '#bp-rotate-left');
 
-function initCrop(){
-    dataImg = canvas.getActiveObject();
-    options = {
-        thumbBox: '.thumbBoxRoom',
-        spinner: '.spinnerRoom',
-        imgSrc: dataImg.toDataURL()
-    };
-    cropper = $('.imageBoxRoom').cropbox(options);
-    return [dataImg, cropper]
-}
+//function initCrop(){
+//    dataImg = canvas.getActiveObject();
+//    options = {
+//        thumbBox: '.thumbBoxRoom',
+//        spinner: '.spinnerRoom',
+//        imgSrc: dataImg.toDataURL()
+//    };
+//    cropper = $('.imageBoxRoom').cropbox(options);
+//    return [dataImg, cropper]
+//}
 
 function generateModalCrop(dataImg){
-    img = dataImg.toDataURL();
-    var cropper, options;
-    options = {
-        thumbBox: '.thumbBoxRoom',
-        spinner: '.spinnerRoom',
-        imgSrc: img
+    $('.croppedRoom').html('');
+    delete dataImg.filters[0];
+//    dataImg.getElement().src = dataImg.save_url;
+    $('.croppedRoom').append('<img src='+dataImg.toDataURL('image/jpeg')+'>');
+    $crop_image = $('.croppedRoom img');
+    var options = {
+        aspectRatio: NaN,
+        minCanvasWidth: 300,
+        minCanvasHeight: 300,
+        minContainerHeight: 320
     };
-    cropper = $('.imageBoxRoom').cropbox(options);
-    $('.imageBoxRoom').show();
 
-    $('#btnZoomInRoom').on('click', function() {
-        return cropper.zoomIn();
-    });
-    return $('#btnZoomOutRoom').on('click', function() {
-        return cropper.zoomOut();
-    });
+    $crop_image.on().cropper(options);
 }
 
 function rotateObject(angleOffset) {
@@ -306,6 +321,9 @@ function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) 
         oImg.set('action', active);
         oImg.set('product_permalink', slug);
         oImg.set('hash_id', hash_id);
+        if (!isBlank(oImg.cropped)){
+        oImg.set('cropped', true)
+        }
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
         if (bp.rotation_offset >= 0) {
@@ -321,22 +339,6 @@ function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) 
     }
 }
 
-function getImageBase(url) {
-    base_url = $('#board-container').data('url');
-    $.ajax({
-        dataType: 'html',
-        method: 'POST',
-        url: base_url,
-        data: {image: url},
-        success: function (resp) {
-            activeObject = canvas.getActiveObject();
-            element = activeObject.getElement();
-            element.src = resp;
-            canvas.discardActiveObject();
-
-        }
-    })
-}
 
 function addProductToBoard(event, ui) {
 
@@ -484,9 +486,12 @@ function createObjectImage(activeObject) {
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         theImage.set('stroke', '#fff');
+        if (!isBlank(activeObject.cropped)){
+            theImage.set('cropped', true)
+        };
 
         canvas.add(theImage);
-        if (activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX) ) {
+        if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
             theImage.filters.push(generateFilter());
             theImage.applyFilters(canvas.renderAll.bind(canvas));
         }
