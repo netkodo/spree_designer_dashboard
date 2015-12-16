@@ -188,8 +188,8 @@ $(document).on({
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
-    dataImg.set('scaleX', 1.1);
-    dataImg.set('scaleY', 1.1);
+//    dataImg.set('scaleX', 1.1);
+//    dataImg.set('scaleY', 1.1);
 
 //    dataImg.getElement().src = dataImg.save_url;
     $('.croppedRoom').append('<img src='+dataImg.toDataURL('image/jpeg')+'>');
