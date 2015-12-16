@@ -188,14 +188,17 @@ $(document).on({
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
+    dataImg.set('scaleX', 1.1);
+    dataImg.set('scaleY', 1.1);
+
 //    dataImg.getElement().src = dataImg.save_url;
     $('.croppedRoom').append('<img src='+dataImg.toDataURL('image/jpeg')+'>');
     $crop_image = $('.croppedRoom img');
     var options = {
         aspectRatio: NaN,
-        minCanvasWidth: 300,
-        minCanvasHeight: 300,
-        minContainerHeight: 320
+        minCanvasWidth: 270,
+        minCanvasHeight: 270,
+        minContainerHeight: 290
     };
 
     $crop_image.on().cropper(options);
