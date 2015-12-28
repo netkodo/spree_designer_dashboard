@@ -91,11 +91,11 @@ $(document).on({
         options = {};
         v = $crop_image.cropper('getCroppedCanvas');
         obj = canvas.getActiveObject();
-        obj.set('width', v.width);
-        obj.set('height', v.height);
         obj.set('save_url', v.toDataURL());
         obj.set('cropped', true);
         obj.setElement(v);
+        obj.set('width', v.width/2);
+        obj.set('height', v.height/2);
         canvas.renderAll();
         value = $('.js-input-hash-product').val();
         hash =  JSON.parse(value);
@@ -188,17 +188,11 @@ $(document).on({
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
-//    dataImg.set('scaleX', 1.1);
-//    dataImg.set('scaleY', 1.1);
-
-//    dataImg.getElement().src = dataImg.save_url;
-    $('.croppedRoom').append('<img src='+dataImg.toDataURL('image/jpeg')+'>');
+    image = encodeURI(dataImg.save_url);
+    $('.croppedRoom').append('<img src='+image+'>');
     $crop_image = $('.croppedRoom img');
     var options = {
-        aspectRatio: NaN,
-        minCanvasWidth: 270,
-        minCanvasHeight: 270,
-        minContainerHeight: 290
+        aspectRatio: NaN
     };
 
     $crop_image.on().cropper(options);
@@ -657,7 +651,7 @@ function getProductBookmarks() {
 }
 
 function initializeBoardManagement() {
-    $("#submit_board_button").click(function () {
+    $(".submit_board_button").click(function () {
 
         $('#board-canvas').block({
             message: null,

@@ -492,11 +492,12 @@ class Spree::Board < ActiveRecord::Base
         elsif product_hash['action_board'] == 'create'
           product = Spree::Product.where(id: product_hash['product_id']).first
           if product.present?
+            image = product_hash['image']
             attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
-              if product_hash['image'].present?
-                crop_image(product_hash['image'], board_product)
+              if image.present?
+                crop_image(image, board_product)
               end
               board_product.update(z_index: product_hash['z_index'])
             end
