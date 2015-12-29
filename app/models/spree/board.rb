@@ -382,11 +382,8 @@ class Spree::Board < ActiveRecord::Base
         bp.height == 5 * bp.height
       end
       if bp.present? and bp.product.present?
-        if bp.photo.present?
-          product_image = bp.photo.url(:product)
-        else
+
         product_image = bp.product.image_for_board(bp)
-        end
       else
         product_image =""
       end

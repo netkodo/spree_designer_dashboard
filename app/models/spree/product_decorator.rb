@@ -133,18 +133,20 @@ Spree::Product.class_eval do
     #image.from_blob(urlimage.read)
 
     begin
-
-      image = Spree::Image.where(id: board_product.image_id).first
-      if image.present?
-        image_url = image.attachment.url(:product)
+      if board_product.photo.present?
+        image = board_product.photo
+        image_url = image.url(:product)
+        Magick::ImageList.new(image_url)
       else
-        image_url = self.images.first.attachment.url(:product)
+        image = Spree::Image.where(id: board_product.image_id).first
+        if image.present?
+          image_url = image.attachment.url(:product)
+        else
+          image_url = self.images.first.attachment.url(:product)
+        end
+        self.images.first ? Magick::ImageList.new(image_url) : Magick::ImageList.new(image.present? ? image.attachment.url(:product)  : self.variants.first.images.first.attachment.url(:product))
       end
-      self.images.first ? Magick::ImageList.new(image_url) : Magick::ImageList.new(image.present? ? image.attachment.url(:product)  : self.variants.first.images.first.attachment.url(:product))
     rescue Exception => e
-      puts "================"
-      puts e.inspect
-      puts "================"
     end
   end
 
