@@ -1,8 +1,16 @@
 class Spree::BoardProduct < ActiveRecord::Base
-  
+
   belongs_to :board
   belongs_to :product	
   before_create :set_z_index
+
+  has_attached_file :photo,
+                    styles: {mini: '48x48>', small: '160x160>', product: '460x460>',large: '900x900>', thumb:'120x120>', xlarge: '1200x1200>', featured: '360x206>', listing:'260x260>'},
+                    default_style: :product,
+                    url: 'board_products/:id/:style/:basename.:extension',
+                    path: 'board_products/:id/:style/:basename.:extension'
+
+
   default_scope  { where("#{Spree::BoardProduct.quoted_table_name}.deleted_at IS NULL") }
   
   state_machine :state, :initial => :pending_approval do

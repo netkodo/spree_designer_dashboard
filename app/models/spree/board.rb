@@ -508,14 +508,10 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def crop_image(base64, board_product)
-      image = Spree::Image.where(id: board_product.image_id).first
-      if image.blank?
-        image = board_product.product.images.first
-      end
       data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
       file_img = File.new("#{Rails.root}/public/somefilename.png", 'wb')
       file_img.write data
-      if image.update(attachment: file_img)
+      if board_product.update({photo: file_img, image_id: ''})
         File.delete(file_img)
       end
   end
