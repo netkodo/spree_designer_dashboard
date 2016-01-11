@@ -516,7 +516,7 @@ class Spree::Board < ActiveRecord::Base
 
   def crop_image(base64, board_product)
       data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
-      file_img = File.new("#{Rails.root}/public/somefilename.png", 'wb')
+      file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
       file_img.write data
       if board_product.update({photo: file_img, image_id: ''})
         File.delete(file_img)

@@ -22,7 +22,7 @@ class Spree::DesignersController < Spree::StoreController
     if params[:user].present? and params[:user][:user_images].present?
       base64 = (params[:user][:user_images][:attachment])
       data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
-      file_img = File.new("#{Rails.root}/public/somefilename.png", 'wb')
+      file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
       file_img.write data
       @image =  @user.user_images.new(attachment: file_img)
       if @image.save
