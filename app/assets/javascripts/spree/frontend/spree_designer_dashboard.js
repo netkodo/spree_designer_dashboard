@@ -90,7 +90,7 @@ $(document).on({
         e.preventDefault();
         options = {};
         v = $crop_image.cropper('getCroppedCanvas');
-        obj = canvas.getActiveObject();
+        var obj = canvas.getActiveObject();
         obj.set('save_url', v.toDataURL());
         obj.set('cropped', true);
         obj.setElement(v);
@@ -109,6 +109,11 @@ $(document).on({
             hash[ha_id]["image"] = v.toDataURL();
             $('.js-input-hash-product').val(JSON.stringify(hash));
         }
+        var obj2 = canvas.getActiveObject()
+        if(!isBlank(obj)) {
+            hash2 = generateHash(obj2);
+            $('.js-input-hash-product').val(JSON.stringify(hash2));
+        }
         $('#crop-modal').trigger('close');
     }
 }, '#btnCropRoom');
@@ -122,6 +127,11 @@ $(document).on({
             renderMirror(obj);
             hash = generateHash(obj);
             $('.js-input-hash-product').val(JSON.stringify(hash));
+        }
+        var obj2 = canvas.getActiveObject()
+        if(!isBlank(obj2)) {
+          hash2 = generateHash(obj2);
+          $('.js-input-hash-product').val(JSON.stringify(hash2));
         }
     }
 }, "#bp-mirror");

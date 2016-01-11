@@ -1,3 +1,4 @@
+require 'RMagick'
 class Spree::Board < ActiveRecord::Base
 
 
@@ -97,6 +98,13 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def remove_marked_products
+    Rails.logger.info "---------------"
+    Rails.logger.info "---------------"
+    Rails.logger.info "---------------"
+    Rails.logger.info "----- REMOVE MARKED PRODUCTS -----"
+    Rails.logger.info "---------------"
+    Rails.logger.info "---------------"
+    Rails.logger.info "---------------"
     delete_removed_board_products
     delete_deleted_board_products
     self.queue_image_generation
@@ -183,8 +191,8 @@ class Spree::Board < ActiveRecord::Base
 
   def room_and_style
     rs = []
-    rs << self.room.name if self.room
-    rs << self.style.name if self.style
+    rs << self.room.name if self.room.present?
+    rs << self.style.name if self.style.present?
     rs.join(", ")
   end
 
@@ -368,9 +376,9 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def generate_image
-    white_canvas = Magick::Image.new(630, 360) { self.background_color = "white" }
+    white_canvas = ::Magick::Image.new(630, 360) { self.background_color = "white" }
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
-
+    file = nil
     self.board_products.each do |bp|
       top_left_x, top_left_y = bp.top_left_x, bp.top_left_y
       if bp.height == 0
@@ -405,12 +413,13 @@ class Spree::Board < ActiveRecord::Base
           top_left_y = bp.center_point_y - bp.height/2
         end
 
-        white_canvas.composite!(product_image, Magick::NorthWestGravity, top_left_x, top_left_y, Magick::OverCompositeOp)
+        white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
       white_canvas.format = 'jpeg'
       file = Tempfile.new("room_#{self.id}.jpg")
       white_canvas.write(file.path)
+    end
       #self.board_image.destroy if self.board_image
       self.build_board_image if self.board_image.blank?
       #self.board_image.reload
@@ -419,8 +428,8 @@ class Spree::Board < ActiveRecord::Base
       # set it to be clean again
       #self.is_dirty = 0
       self.dirty_at = nil
-      self.save
-    end
+
+    self.save
   end
 
   def cache_style_and_room_type
@@ -474,9 +483,7 @@ class Spree::Board < ActiveRecord::Base
 
 
   def create_or_update_board_product(params)
-
     if params[:products_board].present?
-
       board_products = JSON.parse(params[:products_board])
 
       board_products.each do |_, product_hash|
