@@ -344,11 +344,17 @@ function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) 
         hash = generateHash(bp);
         $('.js-input-hash-product').val(JSON.stringify(hash));
     }
+
+  $('#designer-spiner').trigger('close');
 }
 
 
 function addProductToBoard(event, ui) {
-
+  $('#designer-spiner').lightbox_me({
+    centered: true,
+    closeClick: false,
+    closeEsc: false
+  });
     // add the image to the board through jquery drag and drop in order to get its position
     cloned = $(ui.helper).clone();
     $(this).append(cloned.removeClass('board-lightbox-product').addClass('board-lightbox-product-cloned'));
