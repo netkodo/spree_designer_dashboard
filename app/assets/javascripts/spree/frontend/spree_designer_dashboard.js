@@ -76,11 +76,11 @@ $(document).on({
         obj = canvas.getActiveObject();
         hash_id = obj.get('hash_id');
         canvas.remove(obj);
-        value = $('.js-input-hash-product').val();
+        value = $('.js-input-hash-product').text();
         if (value.length > 0) {
             hash = JSON.parse(value);
             delete hash[hash_id];
-            $('.js-input-hash-product').val(JSON.stringify(hash));
+            $('.js-input-hash-product').text(JSON.stringify(hash));
         }
     }
 }, '#js-remove-new-product-from-room');
@@ -97,7 +97,7 @@ $(document).on({
         obj.set('width', v.width/2);
         obj.set('height', v.height/2);
         canvas.renderAll();
-        value = $('.js-input-hash-product').val();
+        value = $('.js-input-hash-product').text();
         hash =  JSON.parse(value);
         ha_id = '';
         if (!isBlank(hash)) {
@@ -107,12 +107,15 @@ $(document).on({
                 ha_id = obj.get('id');
             }
             hash[ha_id]["image"] = v.toDataURL();
-            $('.js-input-hash-product').val(JSON.stringify(hash));
+            $('.js-input-hash-product').text(JSON.stringify(hash));
         }
         var obj2 = canvas.getActiveObject()
         if(!isBlank(obj)) {
+          setTimeout(function(){
             hash2 = generateHash(obj2);
-            $('.js-input-hash-product').val(JSON.stringify(hash2));
+            $('.js-input-hash-product').text(JSON.stringify(hash2));
+            console.log('sleep')
+          }, 1000)
         }
         $('#crop-modal').trigger('close');
     }
@@ -126,12 +129,15 @@ $(document).on({
         if(!isBlank(obj)){
             renderMirror(obj);
             hash = generateHash(obj);
-            $('.js-input-hash-product').val(JSON.stringify(hash));
+            $('.js-input-hash-product').text(JSON.stringify(hash));
         }
         var obj2 = canvas.getActiveObject()
         if(!isBlank(obj2)) {
+          setTimeout(function(){
           hash2 = generateHash(obj2);
-          $('.js-input-hash-product').val(JSON.stringify(hash2));
+          $('.js-input-hash-product').text(JSON.stringify(hash2));
+            console.log('sleep')
+          }, 1000)
         }
     }
 }, "#bp-mirror");
@@ -228,7 +234,7 @@ function rotateObject(angleOffset) {
     }
 
     hash = generateHash(obj);
-    $('.js-input-hash-product').val(JSON.stringify(hash));
+    $('.js-input-hash-product').text(JSON.stringify(hash));
 
     canvas.renderAll();
 }
@@ -240,7 +246,7 @@ function cropImage(cropper, dataImg, callback){
     dataImg.set('save_url', img);
     dataImg.set('flipX', false);
     $(this).removeClass('spinner');
-    value = $('.js-input-hash-product').val();
+    value = $('.js-input-hash-product').text();
     hash =  JSON.parse(value);
     ha_id = '';
     if (!isBlank(hash)){
@@ -250,7 +256,7 @@ function cropImage(cropper, dataImg, callback){
             ha_id = dataImg.get('id');
         }
         hash[ha_id]["image"] = img;
-        $('.js-input-hash-product').val(JSON.stringify(hash));
+        $('.js-input-hash-product').text(JSON.stringify(hash));
     }
     callback(dataImg);
 }
@@ -342,7 +348,7 @@ function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) 
     obj = find_object(id);
     if (!isBlank(obj)) {
         hash = generateHash(bp);
-        $('.js-input-hash-product').val(JSON.stringify(hash));
+        $('.js-input-hash-product').text(JSON.stringify(hash));
     }
 
   $('#designer-spiner').trigger('close');
@@ -418,7 +424,7 @@ function moveLayer(layer, direction) {
     canvas.forEachObject(function (obj) {
         obj.set('z_index', canvas.getObjects().indexOf(obj));
         hash = generateHash(obj);
-        $('.js-input-hash-product').val(JSON.stringify(hash));
+        $('.js-input-hash-product').text(JSON.stringify(hash));
     });
 
 }
@@ -509,7 +515,7 @@ function createObjectImage(activeObject) {
             theImage.applyFilters(canvas.renderAll.bind(canvas));
         }
         hash = generateHash(theImage);
-        $('.js-input-hash-product').val(JSON.stringify(hash));
+        $('.js-input-hash-product').text(JSON.stringify(hash));
         canvas.remove(activeObject);
         canvas.renderAll();
         canvas.setActiveObject(theImage);
@@ -536,7 +542,9 @@ function find_object(id){
 
 function generateHash(object) {
     board_id = $('#canvas').data('boardId');
-    value = $('.js-input-hash-product').val();
+    value = $('.js-input-hash-product').text();
+
+    console.log(value.length)
     if (value.length > 0) {
         hash = JSON.parse(value)
     } else {
@@ -667,8 +675,8 @@ function getProductBookmarks() {
 }
 
 function initializeBoardManagement() {
-    $(".submit_board_button").click(function () {
-
+    $(".submit_board_button").click(function (e) {
+      e.preventDefault()
         $('#board-canvas').block({
             message: null,
             overlayCSS: {
@@ -688,7 +696,31 @@ function initializeBoardManagement() {
 
         if ($('#edit_board_form').parsley('isValid')) {
             $(this).html('Saving...')
-            $("#edit_board_form").submit();
+
+
+            //$("#edit_board_form").submit();
+
+            var url = $("#edit_board_form").attr('action'); // the script where you handle the form input.
+
+            $.ajax({
+              type: "POST",
+              url: url,
+              dataType: "json",
+              data: $("#edit_board_form").serialize() +'&'+$.param({ 'products_board': $('.js-input-hash-product').text() }), // serializes the form's elements.
+              success: function(data)
+              {
+
+                console.log(data)
+                window.location = data.location
+              },
+              error: function(data) {
+                alert('data')
+
+              }
+            });
+
+
+
         } else {
             $('#edit_board_form').parsley('validate')
         }
