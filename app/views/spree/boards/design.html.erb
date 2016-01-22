@@ -3,7 +3,7 @@
 		<div class="board-design-section board-design-section-canvas">
           <div class="manage-board-footer my-board-design">
             <%= link_to "Cancel", designer_dashboard_path, :class => "btn btn-default" %>
-            <%= link_to "Save Changes", "javascript:void(0);", :class => "btn btn-primary submit_board_button", :id => "submit_board_button" %>
+            <%= link_to "Save Changes", "#;", :class => "btn btn-primary submit_board_button", :id => "submit_board_button" %>
 
 
             <% if false %>
@@ -140,7 +140,8 @@
 			<%= form_for(@board, {:url => room_path(@board),:html => {:id => "edit_board_form", :"parsley-validate" => ""}}) do |f| %>
 			<%= render :partial => 'form', :locals => { :f => f } %>
               <div class="js-input-board-products hidden">
-                <%= text_field_tag :products_board,'', class: 'js-input-hash-product' %>
+                <%#= text_field_tag :products_board,'', class: 'js-input-hash-product-textarea' %>
+                <div class="js-input-hash-product"></div>
               </div>
 			
 			<% end %>
@@ -148,7 +149,7 @@
 	</div>
 	<div class="manage-board-footer">
 		<%= link_to "Cancel", designer_dashboard_path, :class => "btn btn-default" %>
-		<%= link_to "Save Changes", "javascript:void(0);", :class => "btn btn-primary submit_board_button", :id => "submit_board_button-1" %>
+		<%= link_to "Save Changes", "#", :class => "btn btn-primary submit_board_button", :id => "submit_board_button-1" %>
 		
 		
 		<% if false %>

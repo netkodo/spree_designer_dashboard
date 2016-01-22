@@ -484,6 +484,7 @@ class Spree::Board < ActiveRecord::Base
 
   def create_or_update_board_product(params)
     if params[:products_board].present?
+      Rails.logger.info params[:products_board]
       board_products = JSON.parse(params[:products_board])
 
       board_products.each do |_, product_hash|

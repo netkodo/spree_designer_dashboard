@@ -277,7 +277,11 @@ class Spree::BoardsController < Spree::StoreController
     @board = Spree::Board.new(board_params)
     @board.designer = spree_current_user
     if @board.save
-      redirect_to build_board_path(@board)
+      respond_to do |format|
+        format.html {redirect_to build_board_path(@board)}
+        format.json { render json: {location: build_board_path(@board)}}
+        format.js { render json: {location: build_board_path(@board)}}
+      end
     else
     end
   end
@@ -289,7 +293,11 @@ class Spree::BoardsController < Spree::StoreController
     if @board.update_attributes(board_params)
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
       @board.queue_image_generation
-      redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')
+      respond_to do |format|
+        format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
+        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+      end
     else
       puts @board.errors.collect { |e| e.to_s }
       #format.html { render :action => "design"}
