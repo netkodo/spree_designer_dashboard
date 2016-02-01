@@ -26,6 +26,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   # POST /designer_registrations
   def create
     @designer_registration = current_spree_user.designer_registrations.new(designer_registration_params)
+    @designer_registration.status = 'pending'
 
     if @designer_registration.save
       redirect_to designer_registration_thanks_path

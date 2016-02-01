@@ -25,7 +25,12 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   end
   
   def update_designer_status
+
+    Rails.logger.info "##########################"
+    Rails.logger.info "##########################"
+    Rails.logger.info "##########################"
     user = self.user
+    Rails.logger.info "User: #{user.email}"
     case self.status
       when "pending"
         user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
