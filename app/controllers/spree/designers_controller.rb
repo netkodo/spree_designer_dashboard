@@ -18,18 +18,31 @@ class Spree::DesignersController < Spree::StoreController
 
   def update
     @user = spree_current_user
-    @user.user_images.destroy_all
-    if params[:user].present? and params[:user][:user_images].present?
-      base64 = (params[:user][:user_images][:attachment])
-      data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
-      file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
-      file_img.write data
-      @image =  @user.user_images.new(attachment: file_img)
-      if @image.save
-        File.delete(file_img)
-      end
-      params[:user] = params[:user].except!(:user_images, :logo_image_attributes)
 
+    if params[:user].present?
+      if params[:user][:user_images].present?
+        @user.user_images.destroy_all
+        base64 = (params[:user][:user_images][:attachment])
+        data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
+        file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
+        file_img.write data
+        @image =  @user.user_images.new(attachment: file_img)
+        if @image.save
+          File.delete(file_img)
+        end
+      end
+
+      if params[:user][:logo_image].present?
+        base64 = (params[:user][:logo_image][:attachment])
+        data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
+        file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
+        file_img.write data
+        if @user.create_logo_image(attachment: file_img)
+          File.delete(file_img)
+        end
+      end
+
+      params[:user] = params[:user].except!(:user_images, :logo_image)
 
     end
 
@@ -57,10 +70,10 @@ class Spree::DesignersController < Spree::StoreController
   def designer_params
     params.require(:user).permit(:first_name, :last_name, :description, :company_name, :website_url, :location, :blog_url, :email, :password, :password_confirmation,
                                  :is_discount_eligible, :is_beta_user, :can_add_boards, :designer_featured_starts_at, :designer_featured_ends_at, :designer_featured_position,
-                                 :supplier_id, :marketing_images_attributes, :logo_image_attributes, :feature_image_attributes, :bill_address_id, :ship_address_id,
+                                 :supplier_id, :marketing_images_attributes, :feature_image_attributes, :bill_address_id, :ship_address_id,
                                  :social_facebook, :social_twitter, :social_instagram, :social_pinterest, :social_googleplus, :social_linkedin, :social_tumblr,
                                  :username, :designer_quote, :marketing_images, :profile_display_name, :designer_commission, :show_designer_profile, :feature_image,
-                                 :user_images_attributes)
+                                 :user_images_attributes,:logo_image)
   end
 
 end
