@@ -137,11 +137,8 @@ h2.home a:hover{
 .drag_and_drop{
     position:absolute;
     font-weight: bold;
-    padding-top:25%;
-    padding-left: 6%;
-    opacity: 0.3;
-    font-size:36px;
-    -ms-transform: rotate(-20deg); /* IE 9 */
-    -webkit-transform: rotate(-20deg); /* Safari */
-    transform: rotate(-20deg);
+    padding-top: 20%;
+    padding-left: 20%;
+    opacity: 0.1;
+    font-size: 36px;
 }
