@@ -35,7 +35,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       when "pending"
         user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
       when "room designer"
-        user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
+        user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1,:show_designer_profile => 1})
         self.send_room_designer_approval
         user.add_designer_to_mailchimp
       when "to the trade designer"
@@ -59,6 +59,9 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       if design.status == "accepted-affiliate"
           design.update_column(:status,"to the trade designer")
       end
+      # if design.status == "new"
+      #   design.update_column(:status,"pending")
+      # end
     end
 
   end
