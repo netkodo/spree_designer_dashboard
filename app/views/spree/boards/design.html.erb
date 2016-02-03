@@ -29,7 +29,11 @@
 									<button type="button" class="btn btn-default" id="bp-move-back"><span class="fa fa-angle-double-down" style="font-size: 12px;"></span> Back</button>
 								</div>
 							</div>
-
+              <% if @board.board_products.count == 0 %>
+                  <div class="drag_and_drop">
+                    <i class="fa fa-arrow-down"></i> DRAG AND DROP HERE <i class="fa fa-arrow-down"></i>
+                  </div>
+            <% end %>
 							<div id="board-canvas" style="margin-bottom: 20px; position:relative;">
 								<canvas id="canvas" data-board-id="<%= @board.id %>" width="630" height="360" style="border: 1px solid #eee;"></canvas>
 							</div>
