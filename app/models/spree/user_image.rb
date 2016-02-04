@@ -9,7 +9,7 @@ module Spree
                       url: '/spree/user_images/:id/:style/:basename.:extension',
                       path: 'user_images/:id/:style/:basename.:extension',
                       convert_options: { all: '-strip -auto-orient' },
-                      default_url: '/assets/frontend/profile_default_primary.jpg'
+                      default_url: '/images/profile_default_primary.jpg'
 
     validates_attachment_presence :attachment
     validate :no_attachment_errors
