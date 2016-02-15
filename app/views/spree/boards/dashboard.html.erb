@@ -1,4 +1,4 @@
-
+<% cache @boards do %>
 <div class="row">
   <div class="col-md-3">
     <%= render :partial => "dashboard_menu", :locals => {:selected => "dashboard"}%>
@@ -86,3 +86,4 @@
     $('#new_room_button').popover()
 </script>
 
+<% end %>
