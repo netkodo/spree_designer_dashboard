@@ -11,7 +11,15 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   
   def destroy
     @board = Spree::Board.friendly.find(params[:id])
+    user = @board.designer
     if @board.destroy
+      boards = user.boards.where(status: "published").count
+      designer = Spree::DesignerRegistration.where(user_id:user.id).first
+      if boards > 0 and user.user_images.count == 1 and designer.status="room designer"
+        user.update(:show_designer_profile => 1)
+      else
+        user.update(:show_designer_profile => 0)
+      end
       redirect_to admin_boards_path
     end
       
@@ -145,7 +153,14 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.publish
     @board.send_publication_email(params[:board][:state_message]) if params[:board][:send_message] == "on"
-    
+
+    user=@board.designer
+    boards = user.boards.where(status: "published").count
+    designer = Spree::DesignerRegistration.where(user_id:user.id).first
+    if boards > 0 and user.user_images.count == 1 and designer.status="room designer"
+      user.update(:show_designer_profile => 1)
+    end
+
     respond_to do |format|
       format.js {  }
     end

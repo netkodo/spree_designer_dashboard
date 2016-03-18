@@ -534,7 +534,7 @@ class Spree::BoardsController < Spree::StoreController
   def destroy
     if @board
       @board.update(removal: true)
-      Delayed::Job.enqueue DeleteRoomJob.new(@board.id)
+      Resque.enqueue DeleteRoom,@board.id
       flash[:notice] = "The room has been deleted."
     else
       flash[:warning] = "We could not delete this room."

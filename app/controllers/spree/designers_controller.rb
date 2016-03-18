@@ -46,6 +46,14 @@ class Spree::DesignersController < Spree::StoreController
 
     end
 
+    designer = Spree::DesignerRegistration.where(user_id:@user.id).first
+    boards = @user.boards.where(status: "published").count
+    if boards > 0 and @user.user_images.count == 1 and designer.status="room designer"
+      @user.update(:show_designer_profile => 1)
+    else
+      @user.update(:show_designer_profile => 0)
+    end
+
     respond_to do |format|
       if @user.update_attributes(params[:user].permit!)
         format.html { redirect_to my_profile_path(format: 'html'), :notice => 'Your profile was successfully updated.', location: url_for( my_profile_path) }
