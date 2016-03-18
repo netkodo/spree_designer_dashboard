@@ -156,7 +156,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
      :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('welcome-to-the-design-trade-program', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template('approved-room-design-new-email', [{:name => 'main', :content => html_content}], message, true)
 
     logger.info sending
   
