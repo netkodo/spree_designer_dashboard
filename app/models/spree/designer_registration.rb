@@ -5,10 +5,11 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   
   validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
   #validates_presence_of :first_name, :last_name
-  
+
   after_save :update_designer_status
   after_create :send_designer_welcome
   after_create :update_profile_information
+  after_create :send_no_activity_email
   
   def update_profile_information
     if self.user
@@ -69,6 +70,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       # end
     end
 
+  end
+
+  def send_no_activity_email
+    Resque.enqueue_at(7.days.from_now,NoActivityEmailsToDesigners,self.id)
   end
   
   def send_designer_welcome
@@ -218,5 +223,32 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     logger.info sending
   end
 
-  
+  def send_to_designer_no_activity_emails
+    html_content = ''
+    logger.info "Sending the mail to #{self.user.email}"
+
+    m = Mandrill::API.new(MANDRILL_KEY)
+    message = {
+        :subject=> "We're waiting to see your work",
+        :from_name=> "Jesse Bodine",
+        :text=>"We're waiting to see your work",
+        :text=>"We're waiting to see your work",
+        :to=>[
+            {
+                :email=> self.user.email,
+                :name=> self.user.full_name
+            }
+        ],
+        :from_email=>"designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com"
+    }
+
+    sending = m.messages.send_template('we-re-waiting-to-see-your-work', [{:name => 'main', :content => html_content}], message, true)
+
+    logger.info sending
+  end
+
 end
