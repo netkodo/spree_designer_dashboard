@@ -28,6 +28,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     @designer_registration = current_spree_user.designer_registrations.new(designer_registration_params)
     @designer_registration.status = 'pending'
 
+    @designer_registration.user.first_name=params[:designer_registration][:first_name]
+    @designer_registration.user.last_name=params[:designer_registration][:last_name]
+    if @designer_registration.user.save
+      Rails.logger.info "FIRST/LAST NAME SET"
+    end
+
     if @designer_registration.save
       redirect_to designer_registration_thanks_path
     else
@@ -69,7 +75,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
 
     # Only allow a trusted parameter "white list" through.
     def designer_registration_params
-      params.require(:designer_registration).permit(:company_name, :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :user_id,:applied_for)
+      params.require(:designer_registration).permit(:first_name,:last_name,:company_name, :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :user_id,:applied_for)
     end
     
 end
