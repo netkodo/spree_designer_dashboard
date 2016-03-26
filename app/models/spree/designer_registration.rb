@@ -2,11 +2,11 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   require 'mandrill'
   #attr_accessible :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :company_name, :status, :first_name, :last_name
   belongs_to :user, :class_name => "User"
-
+  
   validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
   #validates_presence_of :first_name, :last_name
 
-
+  after_save :update_designer_status
   after_create :send_designer_welcome
   after_create :update_profile_information
   after_create :send_no_activity_email
@@ -16,16 +16,16 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     if self.user
       user = self.user
       user.build_username
-      user.update_attributes({:location => "#{self.city}, #{self.state}",
+      user.update_attributes({:location => "#{self.city}, #{self.state}", 
                               :website_url => self.website,
                               :company_name => self.company_name})
     end
   end
-
+  
   def self.status_options
-    [["Pending Review", "pending"], ["Room Designer", "room designer"], ["To the Trade Designer", "to the trade designer"], ["Declined", "declined"]]
+    [["Pending Review","pending"], ["Room Designer","room designer"], ["To the Trade Designer","to the trade designer"], ["Declined","declined"]]
   end
-
+  
   def update_designer_status
 
     Rails.logger.info "##########################"
