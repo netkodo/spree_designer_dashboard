@@ -5,7 +5,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
   #validates_presence_of :first_name, :last_name
-  
+
   after_create :send_designer_welcome
   after_create :update_profile_information
   after_create :send_no_activity_email
@@ -191,7 +191,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('welcome-to-the-room-design-program', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template('approved-trade-designer', [{:name => 'main', :content => html_content}], message, true)
 
     logger.info sending
 
