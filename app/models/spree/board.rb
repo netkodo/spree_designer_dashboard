@@ -454,6 +454,60 @@ class Spree::Board < ActiveRecord::Base
     "https://scoutandnimble.com/rooms/#{self.id}"
   end
 
+  def send_approval_email
+    html_content = ''
+    logger.info "Sending the mail to #{self.designer.email}"
+
+    m = Mandrill::API.new(MANDRILL_KEY)
+    message = {
+        :subject => "Your room has been approved!",
+        :from_name => "Scout & Nimble",
+        :text => "",
+        :to => [
+            {
+                :email => self.designer.email,
+                :name => self.designer.full_name
+            }
+        ],
+        :from_email => "designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com"
+    }
+
+    sending = m.messages.send_template('approved-room-new-email', [{:name => 'main', :content => html_content}], message, true)
+
+    logger.info sending
+  end
+
+  def send_room_saved_but_not_published_email
+    html_content = ''
+    logger.info "Sending the mail to #{self.designer.email}"
+
+    m = Mandrill::API.new(MANDRILL_KEY)
+    message = {
+        :subject => "We noticed you haven't published your room yet, and we want to make sure you aren't stuck!",
+        :from_name => "Scout & Nimble",
+        :text => "",
+        :to => [
+            {
+                :email => self.designer.email,
+                :name => self.designer.full_name
+            }
+        ],
+        :from_email => "designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com"
+    }
+
+    sending = m.messages.send_template('saved-room-but-not-published', [{:name => 'main', :content => html_content}], message, true)
+
+    logger.info sending
+  end
+
   def send_publication_email(message_content="")
 
     html_content = "Hi #{self.designer.full_name}, <br />Your room <strong>#{self.name}</strong> has been approved and published.  You can <a href=\"#{self.to_url}\">visit your room here</a> to check it out."
@@ -498,12 +552,20 @@ class Spree::Board < ActiveRecord::Base
             board_product.update(attr)
           end
         elsif product_hash['action_board'] == 'create'
+          Rails.logger.info "********************"
+          Rails.logger.info params
+          Rails.logger.info "********************"
           product = Spree::Product.where(id: product_hash['product_id']).first
           if product.present?
             image = product_hash['image']
             attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
+              Rails.logger.info "STWORZONO NOWY"
+              Rails.logger.info "STWORZONO NOWY"
+              Rails.logger.info "STWORZONO NOWY"
+              Resque.enqueue_at(2.minutes.from_now, RoomSavedButNotPublishedEmail, product_hash['board_id'])
+              # Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, @board.id)
               if image.present?
                 crop_image(image, board_product)
               end
