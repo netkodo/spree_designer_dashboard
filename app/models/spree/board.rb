@@ -552,20 +552,13 @@ class Spree::Board < ActiveRecord::Base
             board_product.update(attr)
           end
         elsif product_hash['action_board'] == 'create'
-          Rails.logger.info "********************"
-          Rails.logger.info params
-          Rails.logger.info "********************"
           product = Spree::Product.where(id: product_hash['product_id']).first
           if product.present?
             image = product_hash['image']
             attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
-              Rails.logger.info "STWORZONO NOWY"
-              Rails.logger.info "STWORZONO NOWY"
-              Rails.logger.info "STWORZONO NOWY"
-              Resque.enqueue_at(2.minutes.from_now, RoomSavedButNotPublishedEmail, product_hash['board_id'])
-              # Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, @board.id)
+              Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, product_hash['board_id'])
               if image.present?
                 crop_image(image, board_product)
               end
