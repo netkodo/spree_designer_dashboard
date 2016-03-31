@@ -43,15 +43,18 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           else
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
           end
-          self.send_room_designer_approval
+          # self.send_room_designer_approval
+          self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
           user.add_designer_to_mailchimp
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
-          self.send_trade_designer_approval
+          # self.send_trade_designer_approval
+          self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           user.add_designer_to_mailchimp
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          self.send_designer_decline
+          # self.send_designer_decline
+          self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
       end
     end
   end
@@ -141,15 +144,127 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   end
 
-  def send_room_designer_approval
-    html_content = ''
+  # def send_room_designer_approval
+  #   html_content = ''
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "Congratulations! Your application has been accepted!",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "Now that you are an approved Room Designer with Scout & Nimble you may experience a loss of breath, dizziness, nausea, tingling and the need to celebrate. These feelings are completely normal and should be experienced daily from here on out. Thanks for signing up and welcome aboard. Your Room Designer account is now active, and we hope to have you desiging rooms very soon. In the meantime, please check out the tutorial below on how to navigate our site and build your rooms. If you have any questions along the way, do not hesitate to reach out to us. We are here to help!  \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template('approved-room-design-new-email', [{:name => 'main', :content => html_content}], message, true)
+  #
+  #   logger.info sending
+  #
+  # end
+  #
+  # def send_trade_designer_approval
+  #   html_content = ''
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "You have been accepted into our Scout & Nimble Design Trade Program.  This allows you to shop our entire inventory of products from the best know retailers and get a discount on everything you purchase.  \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template('approved-trade-designer', [{:name => 'main', :content => html_content}], message, true)
+  #
+  #   logger.info sending
+  #
+  # end
+  #
+  #
+  # def send_designer_decline
+  #   html_content = ''
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "Your application has been declined!",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "Your application has been declined!  \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template('we-have-our-eye-on-you', [{:name => 'main', :content => html_content}], message, true)
+  #
+  #   logger.info sending
+  # end
+  #
+  # def send_to_designer_no_activity_emails
+  #   html_content = ''
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "We're waiting to see your work",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "We're waiting to see your work",
+  #       :text => "We're waiting to see your work",
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template('we-re-waiting-to-see-your-work', [{:name => 'main', :content => html_content}], message, true)
+  #
+  #   logger.info sending
+  # end
+
+  def send_email_to_designer(html_content,subject,from_name,text,template)
+    html_content = html_content
     logger.info "Sending the mail to #{self.user.email}"
 
     m = Mandrill::API.new(MANDRILL_KEY)
     message = {
-        :subject => "Congratulations! Your application has been accepted!",
-        :from_name => "Jesse Bodine",
-        :text => "Now that you are an approved Room Designer with Scout & Nimble you may experience a loss of breath, dizziness, nausea, tingling and the need to celebrate. These feelings are completely normal and should be experienced daily from here on out. Thanks for signing up and welcome aboard. Your Room Designer account is now active, and we hope to have you desiging rooms very soon. In the meantime, please check out the tutorial below on how to navigate our site and build your rooms. If you have any questions along the way, do not hesitate to reach out to us. We are here to help!  \n\n The Scout & Nimble Team",
+        :subject => subject,
+        :from_name => from_name,
+        :text => text,
         :to => [
             {
                 :email => self.user.email,
@@ -163,92 +278,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         :signing_domain => "scoutandnimble.com"
     }
 
-    sending = m.messages.send_template('approved-room-design-new-email', [{:name => 'main', :content => html_content}], message, true)
-
-    logger.info sending
-
-  end
-
-  def send_trade_designer_approval
-    html_content = ''
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!",
-        :from_name => "Jesse Bodine",
-        :text => "You have been accepted into our Scout & Nimble Design Trade Program.  This allows you to shop our entire inventory of products from the best know retailers and get a discount on everything you purchase.  \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template('approved-trade-designer', [{:name => 'main', :content => html_content}], message, true)
-
-    logger.info sending
-
-  end
-
-
-  def send_designer_decline
-    html_content = ''
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Your application has been declined!",
-        :from_name => "Jesse Bodine",
-        :text => "Your application has been declined!  \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template('we-have-our-eye-on-you', [{:name => 'main', :content => html_content}], message, true)
-
-    logger.info sending
-  end
-
-  def send_to_designer_no_activity_emails
-    html_content = ''
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "We're waiting to see your work",
-        :from_name => "Jesse Bodine",
-        :text => "We're waiting to see your work",
-        :text => "We're waiting to see your work",
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template('we-re-waiting-to-see-your-work', [{:name => 'main', :content => html_content}], message, true)
+    sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}], message, true)
 
     logger.info sending
   end
