@@ -21,6 +21,8 @@ class Spree::Board < ActiveRecord::Base
   has_one :board_image, as: :viewable, order: :position, dependent: :destroy, class_name: "Spree::BoardImage"
   has_one :conversation, :class_name => "Mailboxer::Conversation"
 
+  has_many :questions
+
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
