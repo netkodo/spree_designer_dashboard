@@ -50,6 +50,10 @@ class Spree::BoardsController < Spree::StoreController
     @user = spree_current_user
   end
 
+  def questions_and_answers
+
+  end
+
 
   def home
     @boards = Spree::Board.featured().limit(3)

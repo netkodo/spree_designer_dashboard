@@ -45,6 +45,7 @@ Spree::Core::Engine.routes.draw do
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard
   get "/my_profile" => "boards#profile", :as => :my_profile
   get "/my_store_credit" => "boards#store_credit", :as => :my_store_credit
+  get "/questions_and_answers" => "boards#questions_and_answers", :as => :questions_and_answers
   get "/my_rooms" => "boards#my_rooms", :as => :my_rooms
   resources :bookmarks, except: [:index]
   get "/favorites" => "bookmarks#index"
