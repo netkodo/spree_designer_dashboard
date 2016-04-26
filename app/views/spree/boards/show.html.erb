@@ -83,32 +83,37 @@
       <div id="product-tabs">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-          <li class="active"><a href="#description_tab" role="tab" data-toggle="tab">Description</a></li>
+          <li class="active"><a href="#description_tab" role="tab" data-toggle="tab">About This Room</a></li>
           <li><a href="#questionsandanswers" role="tab" data-toggle="tab">Q&A</a></li>
         </ul>
 
         <div class="tab-content">
           <div class="tab-pane active" id="description_tab">
             <div class="board-description">
-              <h4>About This Room</h4>
               <%= @board.description %>
             </div>
           </div>
 
-          <div class="tab-pane col-md-12" id="questionsandanswers">
-            <%- @board.questions.each do |question| %>
-              <div class="questionsandanswers row">
-                <div class="question">
-                  <div class="col-md-3 col-xs-3 text-center">Question:</div>
-                  <div class="col-md-9 col-xs-9"><%= question.text %></div>
+          <div class="tab-pane" id="questionsandanswers">
+            <div class="questions-content col-md-12">
+              <%- @board.questions.each do |question| %>
+                <div class="questionsandanswers row">
+                  <div class="question">
+                    <div class="col-md-3 col-xs-3 text-center">Question:</div>
+                    <div class="col-md-9 col-xs-9"><%= question.text %></div>
+                  </div>
+                  <div class="answer">
+                    <div class="col-md-3 col-xs-3 text-center">Answer:</div>
+                    <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+                  </div>
                 </div>
-                <div class="answer">
-                  <div class="col-md-3 col-xs-3 text-center">Answer:</div>
-                  <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
-                </div>
-              </div>
-            <%- end %>
+              <%- end %>
+            </div>
+            <div class="text-center">
+              <button class="ask-question btn btn-default">ASK QUESTION</button>
+            </div>
           </div>
+
         </div>
 
       </div>
@@ -243,6 +248,7 @@
 
  <div class="fb-comments" data-href="<%=url_for(:only_path => false)%>" data-numposts="5" data-colorscheme="light"></div>
 
+<%= render :partial => "add_question_modal"%>
 
 <script>
 $(document).ready(function() {
@@ -263,6 +269,25 @@ $(document).ready(function() {
 	    }
 	  });
 
+  $('.ask-question').click(function(){
+    $("#question-modal").modal();
+  });
+
+  $('.add-question').click(function(){
+    $.ajax({
+      dataType: 'json',
+//      contentType: 'json',obj = jQuery.parseJSON( '{ "board_id": '+ $('#question_text').data('board_id') +',"text":'+a+'}' );
+      method: 'POST',
+      url: '/rooms/add_board_question',
+      data: {text: $('#question_text').val(),board_id:$('#question_text').data('board_id')},
+      error: function(response) {
+        console.log('ERROR');
+      },
+      success: function(response) {
+        console.log(response);
+      }
+    });
+  });
 
 });
 </script>

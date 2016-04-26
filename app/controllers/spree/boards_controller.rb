@@ -9,6 +9,18 @@ class Spree::BoardsController < Spree::StoreController
 
   impressionist :actions => [:show]
 
+  def add_board_question
+    @question=Spree::Question.new(board_id:params[:board_id],text:params[:text])
+
+    respond_to do |format|
+      if @question.save
+        format.json {render json: @question}
+      else
+        format.json {render json: @question.errors}
+      end
+    end
+  end
+
   def require_board_designer
     if !(spree_current_user and spree_current_user.is_board_designer?)
       if spree_current_user.is_affiliate?
