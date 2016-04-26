@@ -76,10 +76,42 @@
 		</div>
 	<div class="col-md-5">
 		<div class="board-about-column">
-			<div class="board-description">
-				<h4>About This Room</h4>
-				<%= @board.description %>
-			</div>
+			<!--<div class="board-description">-->
+				<!--<h4>About This Room</h4>-->
+				<!--<%#= @board.description %>-->
+			<!--</div>-->
+      <div id="product-tabs">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#description_tab" role="tab" data-toggle="tab">Description</a></li>
+          <li><a href="#questions_and_answers" role="tab" data-toggle="tab">Details</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="description_tab">
+            <div class="board-description">
+              <h4>About This Room</h4>
+              <%= @board.description %>
+            </div>
+          </div>
+
+          <div class="tab-pane col-md-12" id="questions_and_answers">
+            <%- @board.questions.each do |question| %>
+              <div class="questionsandanswers row">
+                <div class="question">
+                  <div class="col-md-3 col-xs-3 text-center">Question:</div>
+                  <div class="col-md-9 col-xs-9"><%= question.text %></div>
+                </div>
+                <div class="answer">
+                  <div class="col-md-3 col-xs-3 text-center">Answer:</div>
+                  <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+                </div>
+              </div>
+            <%- end %>
+          </div>
+        </div>
+
+      </div>
 			<h4>Room By</h4>
 			<div class="board-designer-header">
 				<div class="board-designer-logo">
