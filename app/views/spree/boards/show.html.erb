@@ -97,17 +97,19 @@
           <div class="tab-pane" id="questionsandanswers">
             <div class="questions-content col-md-12">
               <%- @board.questions.each do |question| %>
-                <div class="questionsandanswers row">
-                  <div class="question">
-                    <div class="col-md-3 col-xs-3 text-center">Question:</div>
-                    <div class="col-md-9 col-xs-9"><%= question.text %></div>
+                <%- if question.is_visible %>
+                  <div class="questionsandanswers row">
+                    <div class="question">
+                      <div class="col-md-3 col-xs-3 text-center">Question:</div>
+                      <div class="col-md-9 col-xs-9"><%= question.text %></div>
+                    </div>
+                    <div class="answer">
+                      <div class="col-md-3 col-xs-3 text-center">Answer:</div>
+                      <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+                    </div>
                   </div>
-                  <div class="answer">
-                    <div class="col-md-3 col-xs-3 text-center">Answer:</div>
-                    <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
-                  </div>
-                </div>
-              <%- end %>
+                <% end %>
+              <% end %>
             </div>
             <div class="text-center">
               <button class="ask-question btn btn-default">ASK QUESTION</button>
@@ -276,15 +278,19 @@ $(document).ready(function() {
   $('.add-question').click(function(){
     $.ajax({
       dataType: 'json',
-//      contentType: 'json',obj = jQuery.parseJSON( '{ "board_id": '+ $('#question_text').data('board_id') +',"text":'+a+'}' );
       method: 'POST',
-      url: '/rooms/add_board_question',
-      data: {text: $('#question_text').val(),board_id:$('#question_text').data('board_id')},
+      url: '/rooms/add_question.json',
+      data: {text:$('#question_text').val(),board_id: $('#question_text').data('board_id')},
       error: function(response) {
         console.log('ERROR');
       },
       success: function(response) {
-        console.log(response);
+        $("#question-modal .modal-content").append('<h4 class="text-center" style="color:green">QUESTION SENT</h4>');
+        setTimeout(function(){
+          $("#question-modal .modal-content #question_text").val("");
+          $("#question-modal .modal-content h4.text-center").remove();
+          $("#question-modal").modal('hide');
+        },1000);
       }
     });
   });

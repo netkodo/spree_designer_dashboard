@@ -5,6 +5,63 @@
 
 
   <div class="col-md-9">
-    Q&A
+    <div class="questions-content-designer col-md-12">
+      <%- @questions.each do |question| %>
+        <div class="questionsandanswers row">
+          <div class="question">
+            <div class="col-md-3 col-xs-3 text-center">Question:</div>
+            <div class="col-md-9 col-xs-9"><%= question.text %></div>
+          </div>
+          <%- if question.answer.present? %>
+            <div class="answer">
+              <div class="col-md-3 col-xs-3 text-center">Your answer:</div>
+              <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+
+              <div class="col-md-3 col-xs-3 text-center">Answer was approved:</div>
+              <div class="col-md-9 col-xs-9"><%= question.is_visible ? "Yes":"No" %></div>
+            </div>
+          <% else %>
+          <div class="answer">
+            <div class="text-center">
+              <button class="btn btn-default answer-question" data-question_id="<%= question.id %>"> Answer</button>
+            </div>
+          </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
+
+<%= render :partial => "add_answer_modal"%>
+
+<script>
+  $(document).ready(function() {
+
+    $('.answer-question').click(function(){
+      $('#answer-modal #answer_text').data('question_id',$(this).data('question_id'));
+      $("#answer-modal").modal();
+    });
+
+    $('.add-answer').click(function(){
+      $.ajax({
+        dataType: 'json',
+        method: 'POST',
+        url: '/rooms/add_answer.json',
+        data: {text:$('#answer_text').val(),question_id: $('#answer_text').data('question_id')},
+        error: function(response) {
+          console.log('ERROR');
+        },
+        success: function(response) {
+          $("#answer-modal .modal-content").append('<h4 class="text-center" style="color:green">ANSWER ADDED</h4>');
+          setTimeout(function(){
+            $("#answer-modal .modal-content #answer_text").val("");
+            $("#answer-modal .modal-content h4.text-center").remove();
+            $("#answer-modal").modal('hide');
+          },1000);
+        }
+      });
+    });
+
+  });
+</script>

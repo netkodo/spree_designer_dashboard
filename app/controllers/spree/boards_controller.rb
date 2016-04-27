@@ -9,14 +9,30 @@ class Spree::BoardsController < Spree::StoreController
 
   impressionist :actions => [:show]
 
-  def add_board_question
-    @question=Spree::Question.new(board_id:params[:board_id],text:params[:text])
+  def add_question
+    if params[:board_id].present?
+      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text])
+    elsif params[:product_id].present?
+      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true)
+    end
 
     respond_to do |format|
       if @question.save
         format.json {render json: @question}
       else
         format.json {render json: @question.errors}
+      end
+    end
+  end
+
+  def add_answer
+    question = Spree::Question.find_by(id:params[:question_id])
+    @answer=question.build_answer(text:params[:text])
+    respond_to do |format|
+      if @answer.save
+        format.json {render json: @answer}
+      else
+        format.json {render json: @answer.errors}
       end
     end
   end
@@ -63,7 +79,14 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def questions_and_answers
-
+    board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted:true)
+    @questions = []
+    board_questions.each do |question|
+      board = Spree::Board.find_by(id:question.board_id)
+      if board.designer.id == spree_current_user.id
+        @questions << question
+      end
+    end
   end
 
 

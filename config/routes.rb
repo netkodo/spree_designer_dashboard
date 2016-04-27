@@ -55,7 +55,8 @@ Spree::Core::Engine.routes.draw do
   get "/video_tutorial" => "extra#video_tutorial", :as => :video_tutorial
 
   # room builder links
-  post '/rooms/add_board_question' => "boards#add_board_question"
+  post '/rooms/add_question' => "boards#add_question"
+  post '/rooms/add_answer' => "boards#add_answer"
   get '/rooms/build/:id' => "boards#build", :as => :build_board
   get '/rooms/:id/design' => "boards#design", :as => :design_board
   get '/rooms/:id/design2' => "boards#design2", :as => :design_board2
