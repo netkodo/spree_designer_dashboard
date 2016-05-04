@@ -1,0 +1,63 @@
+<% if !@review.used %>
+  <h2 class="text-center">You have bought <%= @product.name %> about 60 days ago</h2>
+  <div class="row">
+    <div class="col-md-6">
+        <%= image_tag @product.images.first.attachment.url(:product) %>
+    </div>
+    <div class="col-md-6">
+      <%= @product.description %>
+    </div>
+  </div>
+
+  <h4>Rating: </h4>
+  <form id="rating">
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+  </form>
+  <br>
+  <h4>Review: </h4>
+  <textarea type="text" id="user_review_text" name="review[review_text]" value="" class="form-control fullwidth user_review" autofocus="autofocus"></textarea>
+  <br>
+  <div class="text-center review-margin-top">
+    <button class="new-review btn btn-default">CREATE</button>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      $('.new-review').click(function(){
+        rating=$('#rating .star-rating-on').length;
+        if(rating==0){
+          $("#content div.text-center").append('<h4 class="text-center" style="color:red">You have to mark at least one star</h4>');
+          setTimeout(function(){
+            $("#content h4.text-center").remove();
+          },2000);
+        }else{
+          $.ajax({
+            dataType: 'json',
+            method: 'POST',
+            url: '/review/<%= params[:token] %>/create.json',
+            data: {review_text: $('#user_review_text').val(),reviewer_name: "<%= @user.full_name %> <%= Time.now.to_date %>",review_rating: rating,used: true,slug: "<%= @product.slug %>"},
+            beforeSend: function(){
+              $(".new-review").text('Sending review...');
+            },
+            error: function(response) {
+              console.log('ERROR');
+            },
+            success: function(response) {
+              $("#content div.text-center").append('<h4 class="text-center" style="color:green">Thanks for Your review</h4>');
+              setTimeout(function(){
+                $("#content h4.text-center").remove();
+              },2000);
+              window.location.pathname = "/";
+            }
+          });
+        }
+      });
+    });
+  </script>
+<% else %>
+    <h2 class="text-center">You have already wrote a review</h2>
+<% end %>

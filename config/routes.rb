@@ -40,6 +40,10 @@ Spree::Core::Engine.routes.draw do
   get "/home2" => "boards#home", :as => :home2
   get "/home" => "home#home2", :as => :home
   post "/orders/add_to_cart" => "orders#add_to_cart", :as => :orders_add_to_cart
+
+  #review
+  get "/review/:token" => 'home#user_review', as: :user_product_review_new
+  post "/review/:token/create" => 'home#create_user_review', as: :user_product_review_create
   
   # designer dashboard links
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard
