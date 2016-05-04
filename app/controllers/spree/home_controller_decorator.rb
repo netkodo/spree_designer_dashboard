@@ -15,7 +15,14 @@ module Spree
     def user_review
       @review = Spree::Review.find_by(token: params[:token])
       @product = Spree::Product.find_by(id: @review.product_id)
+      @order = Spree::Order.find_by(id: @review.order_id)
       @user = Spree::User.find_by(id: @review.user_id)
+
+      if !@user.first_name.present? and !@user.last_name.present?
+        @user_name = "#{@order.billing_firstname} #{@order.billing_lastname}"
+      else
+        @user_name = "#{@user.full_name}"
+      end
     end
 
     def create_user_review

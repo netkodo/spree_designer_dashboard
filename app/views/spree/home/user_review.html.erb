@@ -39,7 +39,7 @@
             dataType: 'json',
             method: 'POST',
             url: '/review/<%= params[:token] %>/create.json',
-            data: {review_text: $('#user_review_text').val(),reviewer_name: "<%= @user.full_name %> <%= Time.now.to_date %>",review_rating: rating,used: true,slug: "<%= @product.slug %>"},
+            data: {review_text: $('#user_review_text').val(),reviewer_name: "<%= @user_name %> <%= Time.now.to_date %>",review_rating: rating,used: true,slug: "<%= @product.slug %>"},
             beforeSend: function(){
               $(".new-review").text('Sending review...');
             },
