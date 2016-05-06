@@ -1,3 +1,7 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/questions_and_answers_board.js' %>
+<% end %>
+
 <div class="row">
   <div class="col-md-3">
     <%= render :partial => "dashboard_menu", :locals => {:selected => "questions_and_answers"} %>
@@ -34,34 +38,3 @@
 </div>
 
 <%= render :partial => "add_answer_modal"%>
-
-<script>
-  $(document).ready(function() {
-
-    $('.answer-question').click(function(){
-      $('#answer-modal #answer_text').data('question_id',$(this).data('question_id'));
-      $("#answer-modal").modal();
-    });
-
-    $('.add-answer').click(function(){
-      $.ajax({
-        dataType: 'json',
-        method: 'POST',
-        url: '/rooms/add_answer.json',
-        data: {text:$('#answer_text').val(),question_id: $('#answer_text').data('question_id')},
-        error: function(response) {
-          console.log('ERROR');
-        },
-        success: function(response) {
-          $("#answer-modal .modal-content").append('<h4 class="text-center" style="color:green">ANSWER ADDED</h4>');
-          setTimeout(function(){
-            $("#answer-modal .modal-content #answer_text").val("");
-            $("#answer-modal .modal-content h4.text-center").remove();
-            $("#answer-modal").modal('hide');
-          },1000);
-        }
-      });
-    });
-
-  });
-</script>
