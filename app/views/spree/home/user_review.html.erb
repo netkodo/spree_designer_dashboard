@@ -1,0 +1,33 @@
+<% if !@review.used %>
+  <% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/product_reviews.js' %>
+  <% end %>
+  <h2 class="text-center">You have bought <%= @product.name %> about 60 days ago</h2>
+  <div class="row">
+    <div class="col-md-6">
+        <%= image_tag @product.images.first.attachment.url(:product) %>
+    </div>
+    <div class="col-md-6">
+      <%= @product.description %>
+    </div>
+  </div>
+
+  <div id="product-data" data-token="<%= params[:token] %>" data-rev_name="<%= @user_name %> <%= Time.now.to_date %>" data-slug="<%= @product.slug %>"></div>
+  <h4>Rating: </h4>
+  <form id="rating">
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+    <input name="overwall" type="radio" class="star" />
+  </form>
+  <br>
+  <h4>Review: </h4>
+  <textarea type="text" id="user_review_text" name="review[review_text]" value="" class="form-control fullwidth user_review" autofocus="autofocus"></textarea>
+  <br>
+  <div class="text-center review-margin-top">
+    <button class="new-user-review btn btn-default">CREATE</button>
+  </div>
+<% else %>
+    <h2 class="text-center">You have already wrote a review</h2>
+<% end %>
