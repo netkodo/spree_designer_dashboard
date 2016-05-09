@@ -1,3 +1,7 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/questions_and_answers.js' %>
+<% end %>
+
 <div class="board-header">
 	<div class="row">
 		<div class="col-md-12">
@@ -112,7 +116,7 @@
               <% end %>
             </div>
             <div class="text-center">
-              <button class="ask-question btn btn-default">ASK QUESTION</button>
+              <button class="ask-question-board btn btn-default">ASK QUESTION</button>
             </div>
           </div>
 
@@ -270,30 +274,6 @@ $(document).ready(function() {
 	      return $('#'+$(this).data('colorPopoverContainer')).html();
 	    }
 	  });
-
-  $('.ask-question').click(function(){
-    $("#question-modal").modal();
-  });
-
-  $('.add-question').click(function(){
-    $.ajax({
-      dataType: 'json',
-      method: 'POST',
-      url: '/rooms/add_question.json',
-      data: {text:$('#question_text').val(),board_id: $('#question_text').data('board_id')},
-      error: function(response) {
-        console.log('ERROR');
-      },
-      success: function(response) {
-        $("#question-modal .modal-content").append('<h4 class="text-center" style="color:green">QUESTION SENT</h4>');
-        setTimeout(function(){
-          $("#question-modal .modal-content #question_text").val("");
-          $("#question-modal .modal-content h4.text-center").remove();
-          $("#question-modal").modal('hide');
-        },1000);
-      }
-    });
-  });
 
 });
 </script>
