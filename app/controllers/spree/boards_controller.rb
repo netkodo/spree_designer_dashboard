@@ -20,8 +20,10 @@ class Spree::BoardsController < Spree::StoreController
 
     respond_to do |format|
       if @question.save
-        Resque.enqueue NewQuestionEmail,email
-        Resque.enqueue NewQuestionEmail, "support@scoutandnimble.com" if params[:board_id].present?
+        if Rails.env != "staging"
+          Resque.enqueue NewQuestionEmail,"dniedzialkowski@netkodo.com"
+          Resque.enqueue NewQuestionEmail, "dniedzialkowski@netkodo.com" if params[:board_id].present?
+        end
         format.json {render json: @question}
       else
         format.json {render json: @question.errors}
