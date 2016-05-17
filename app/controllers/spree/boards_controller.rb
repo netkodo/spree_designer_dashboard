@@ -12,12 +12,16 @@ class Spree::BoardsController < Spree::StoreController
   def add_question
     if params[:board_id].present?
       @question=Spree::Question.new(board_id:params[:board_id],text:params[:text])
+      email=Spree::Board.find_by(id: params[:board_id]).designer.email
     elsif params[:product_id].present?
       @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true)
+      email = "support@scoutandnimble.com"
     end
 
     respond_to do |format|
       if @question.save
+        Resque.enqueue NewQuestionEmail,email
+        Resque.enqueue NewQuestionEmail, "support@scoutandnimble.com" if params[:board_id].present?
         format.json {render json: @question}
       else
         format.json {render json: @question.errors}
