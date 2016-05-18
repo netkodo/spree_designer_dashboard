@@ -7,7 +7,7 @@
     <%= render :partial => "dashboard_menu", :locals => {:selected => "questions_and_answers"} %>
   </div>
 
-
+<% if @questions.present? %>
   <div class="col-md-9">
     <div class="questions-content-designer col-md-12">
       <%- @questions.each do |question| %>
@@ -18,11 +18,14 @@
           </div>
           <%- if question.answer.present? %>
             <div class="answer">
+              <div>
               <div class="col-md-3 col-xs-3 text-center">Your answer:</div>
               <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
-
+              </div>
+              <div>
               <div class="col-md-3 col-xs-3 text-center">Answer was approved:</div>
               <div class="col-md-9 col-xs-9"><%= question.is_visible ? "Yes":"No" %></div>
+              </div>
             </div>
           <% else %>
           <div class="answer">
@@ -35,6 +38,9 @@
       <% end %>
     </div>
   </div>
-</div>
 
-<%= render :partial => "add_answer_modal"%>
+  <%= render :partial => "add_answer_modal"%>
+  <% else %>
+    <h2 class="text-center">No questions</h2>
+  <% end %>
+</div>

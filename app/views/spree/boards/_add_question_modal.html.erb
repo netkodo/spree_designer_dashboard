@@ -3,9 +3,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <h4>Ask a question: </h4>
-      <textarea id="question_text" data-board_id="<%= @board.id %>" name="question[text]" value="" class="form-control" autofocus="autofocus" style="max-width: 577px;"></textarea>
+      <textarea id="question_text" data-board_id="<%= @board.id %>" data-from="<%= spree_current_user.email if spree_current_user.present? %>" name="question[text]" value="" class="form-control" autofocus="autofocus" style="max-width: 577px;"></textarea>
       <div class="text-center">
-        <button class="add-question-board btn btn-default">ASK !</button>
+        <button class="add-question-board btn btn-default">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
