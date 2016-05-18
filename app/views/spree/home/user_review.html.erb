@@ -13,36 +13,38 @@
   </div>
 
   <%= form_for [:admin,@review], :url => user_product_review_create_path, html: {multipart: true} do |f| %>
-    <h4>Rating: </h4>
-    <div id="rating">
-      <input name="overwall" type="radio" class="star" />
-      <input name="overwall" type="radio" class="star" />
-      <input name="overwall" type="radio" class="star" />
-      <input name="overwall" type="radio" class="star" />
-      <input name="overwall" type="radio" class="star" />
-    </div>
-    <br>
-
-    <div class="hidden div-rating">
-      <%= f.text_field :rating, :class => 'rating' %>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :text, :class => 'control-label' %>
-      <div class="controls">
-        <%= f.text_area :text, :class => 'form-control text_field fullwidth user_review' %>
+    <div class="user-review-partial">
+      <h4>Rating: </h4>
+      <div id="rating">
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
       </div>
-    </div>
+      <br>
 
-    <div class="control-group">
-      <%= f.label :review_images, "Images (You can pass multiple pictures)", :class => 'control-label' %>
-      <div class="controls">
-        <%= file_field_tag "images[]", type: :file, multiple: true %>
+      <div class="hidden div-rating">
+        <%= f.text_field :rating, :class => 'rating' %>
       </div>
-    </div>
 
-    <div class="form-actions">
-      <%= f.submit :class => 'btn btn-primary' %>
+      <div class="control-group">
+        <%= f.label :text, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_area :text, :class => 'form-control text_field fullwidth user_review' %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :review_images, "Images (You can pass multiple pictures)", :class => 'control-label' %>
+        <div class="controls">
+          <%= file_field_tag "images[]", type: :file, multiple: true %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit :class => 'btn btn-primary' %>
+      </div>
     </div>
 
   <% end %>
