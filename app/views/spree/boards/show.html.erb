@@ -1,3 +1,7 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/questions_and_answers.js' %>
+<% end %>
+
 <div class="board-header">
 	<div class="row">
 		<div class="col-md-12">
@@ -76,10 +80,49 @@
 		</div>
 	<div class="col-md-5">
 		<div class="board-about-column">
-			<div class="board-description">
-				<h4>About This Room</h4>
-				<%= @board.description %>
-			</div>
+			<!--<div class="board-description">-->
+				<!--<h4>About This Room</h4>-->
+				<!--<%#= @board.description %>-->
+			<!--</div>-->
+      <div id="product-tabs">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#description_tab" role="tab" data-toggle="tab">About This Room</a></li>
+          <li><a href="#questionsandanswers" role="tab" data-toggle="tab">Q&A</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="description_tab">
+            <div class="board-description">
+              <%= @board.description %>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="questionsandanswers">
+            <div class="questions-content col-md-12">
+              <%- @board.questions.each do |question| %>
+                <%- if question.is_visible %>
+                  <div class="questionsandanswers row">
+                    <div class="question">
+                      <div class="col-md-3 col-xs-3 text-center">Question:</div>
+                      <div class="col-md-9 col-xs-9"><%= question.text %></div>
+                    </div>
+                    <div class="answer">
+                      <div class="col-md-3 col-xs-3 text-center">Answer:</div>
+                      <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="text-center">
+              <button class="ask-question-board btn btn-default">ASK QUESTION</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
 			<h4>Room By</h4>
 			<div class="board-designer-header">
 				<div class="board-designer-logo">
@@ -211,6 +254,7 @@
 
  <div class="fb-comments" data-href="<%=url_for(:only_path => false)%>" data-numposts="5" data-colorscheme="light"></div>
 
+<%= render :partial => "add_question_modal"%>
 
 <script>
 $(document).ready(function() {
@@ -230,7 +274,6 @@ $(document).ready(function() {
 	      return $('#'+$(this).data('colorPopoverContainer')).html();
 	    }
 	  });
-
 
 });
 </script>

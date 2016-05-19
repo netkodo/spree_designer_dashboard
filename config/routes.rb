@@ -49,6 +49,7 @@ Spree::Core::Engine.routes.draw do
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard
   get "/my_profile" => "boards#profile", :as => :my_profile
   get "/my_store_credit" => "boards#store_credit", :as => :my_store_credit
+  get "/questions_and_answers" => "boards#questions_and_answers", :as => :questions_and_answers
   get "/my_rooms" => "boards#my_rooms", :as => :my_rooms
   resources :bookmarks, except: [:index]
   get "/favorites" => "bookmarks#index"
@@ -58,6 +59,8 @@ Spree::Core::Engine.routes.draw do
   get "/video_tutorial" => "extra#video_tutorial", :as => :video_tutorial
 
   # room builder links
+  post '/rooms/add_question' => "boards#add_question"
+  post '/rooms/add_answer' => "boards#add_answer"
   get '/rooms/build/:id' => "boards#build", :as => :build_board
   get '/rooms/:id/design' => "boards#design", :as => :design_board
   get '/rooms/:id/design2' => "boards#design2", :as => :design_board2

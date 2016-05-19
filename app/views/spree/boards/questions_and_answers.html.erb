@@ -1,0 +1,46 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/questions_and_answers_board.js' %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-3">
+    <%= render :partial => "dashboard_menu", :locals => {:selected => "questions_and_answers"} %>
+  </div>
+
+<% if @questions.present? %>
+  <div class="col-md-9">
+    <div class="questions-content-designer col-md-12">
+      <%- @questions.each do |question| %>
+        <div class="questionsandanswers row">
+          <div class="question">
+            <div class="col-md-3 col-xs-3 text-center">Question:</div>
+            <div class="col-md-9 col-xs-9"><%= question.text %></div>
+          </div>
+          <%- if question.answer.present? %>
+            <div class="answer">
+              <div>
+              <div class="col-md-3 col-xs-3 text-center">Your answer:</div>
+              <div class="col-md-9 col-xs-9"><%= question.answer.text %></div>
+              </div>
+              <div>
+              <div class="col-md-3 col-xs-3 text-center">Answer was approved:</div>
+              <div class="col-md-9 col-xs-9"><%= question.is_visible ? "Yes":"No" %></div>
+              </div>
+            </div>
+          <% else %>
+          <div class="answer">
+            <div class="text-center">
+              <button class="btn btn-default answer-question" data-question_id="<%= question.id %>"> Answer</button>
+            </div>
+          </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render :partial => "add_answer_modal"%>
+  <% else %>
+    <h2 class="text-center">No questions</h2>
+  <% end %>
+</div>

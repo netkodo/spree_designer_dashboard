@@ -9,6 +9,38 @@ class Spree::BoardsController < Spree::StoreController
 
   impressionist :actions => [:show]
 
+  def add_question
+    if params[:board_id].present?
+      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from])
+      email=Spree::Board.find_by(id: params[:board_id]).designer.email
+    elsif params[:product_id].present?
+      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true,from:params[:from])
+      email = "support@scoutandnimble.com"
+    end
+
+    respond_to do |format|
+      if @question.save
+        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-question-email',"You have new question" if Rails.env != "staging"
+        format.json {render json: @question}
+      else
+        format.json {render json: @question.errors}
+      end
+    end
+  end
+
+  def add_answer
+    question = Spree::Question.find_by(id:params[:question_id])
+    @answer=question.build_answer(text:params[:text])
+    respond_to do |format|
+      if @answer.save
+        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-designer-answer',"New designer answer" if Rails.env != "staging"
+        format.json {render json: @answer}
+      else
+        format.json {render json: @answer.errors}
+      end
+    end
+  end
+
   def require_board_designer
     if !(spree_current_user and spree_current_user.is_board_designer?)
       if spree_current_user.is_affiliate?
@@ -48,6 +80,17 @@ class Spree::BoardsController < Spree::StoreController
 
   def store_credit
     @user = spree_current_user
+  end
+
+  def questions_and_answers
+    board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted:true)
+    @questions = []
+    board_questions.each do |question|
+      board = Spree::Board.find_by(id:question.board_id)
+      if board.designer.id == spree_current_user.id
+        @questions << question
+      end
+    end
   end
 
 
