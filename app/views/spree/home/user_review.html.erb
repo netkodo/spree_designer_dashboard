@@ -1,4 +1,4 @@
-<% if !@review.used %>
+<% if !@review_check.used %>
   <% content_for :scripts do %>
     <%= javascript_include_tag 'spree/product_reviews.js' %>
   <% end %>
@@ -12,22 +12,43 @@
     </div>
   </div>
 
-  <div id="product-data" data-token="<%= params[:token] %>" data-rev_name="<%= @user_name %> <%= Time.now.to_date %>" data-slug="<%= @product.slug %>"></div>
-  <h4>Rating: </h4>
-  <form id="rating">
-    <input name="overwall" type="radio" class="star" />
-    <input name="overwall" type="radio" class="star" />
-    <input name="overwall" type="radio" class="star" />
-    <input name="overwall" type="radio" class="star" />
-    <input name="overwall" type="radio" class="star" />
-  </form>
-  <br>
-  <h4>Review: </h4>
-  <textarea type="text" id="user_review_text" name="review[review_text]" value="" class="form-control fullwidth user_review" autofocus="autofocus"></textarea>
-  <br>
-  <div class="text-center review-margin-top">
-    <button class="new-user-review btn btn-default">CREATE</button>
-  </div>
+  <%= form_for [:admin,@review], :url => user_product_review_create_path, html: {multipart: true} do |f| %>
+    <div class="user-review-partial">
+      <h4>Rating: </h4>
+      <div id="rating">
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+        <input name="overwall" type="radio" class="star" />
+      </div>
+      <br>
+
+      <div class="hidden div-rating">
+        <%= f.text_field :rating, :class => 'rating' %>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :text, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_area :text, :class => 'form-control text_field fullwidth user_review' %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :review_images, "Images (You can pass multiple pictures)", :class => 'control-label' %>
+        <div class="controls">
+          <%= file_field_tag "images[]", type: :file, multiple: true %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit :class => 'btn btn-primary' %>
+      </div>
+    </div>
+
+  <% end %>
+
 <% else %>
     <h2 class="text-center">You have already wrote a review</h2>
 <% end %>

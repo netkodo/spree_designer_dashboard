@@ -13,29 +13,52 @@ module Spree
     end
 
     def user_review
+      @review_check = Spree::Review.find_by(token: params[:token])
+      @product = Spree::Product.find_by(id: @review_check.product_id)
+
+      @review = @product.product_reviews.new
+    end
+
+    def create_user_review
       @review = Spree::Review.find_by(token: params[:token])
       @product = Spree::Product.find_by(id: @review.product_id)
       @order = Spree::Order.find_by(id: @review.order_id)
       @user = Spree::User.find_by(id: @review.user_id)
 
       if !@user.first_name.present? and !@user.last_name.present?
-        @user_name = "#{@order.billing_firstname} #{@order.billing_lastname}"
+        user_name = "#{@order.billing_firstname} #{@order.billing_lastname} #{Time.now.to_date}"
       else
-        @user_name = "#{@user.full_name}"
+        user_name = "#{@user.full_name} #{Time.now.to_date}"
       end
-    end
 
-    def create_user_review
-      @product = Spree::Product.find_by(slug: params[:slug])
-      @review = Spree::Review.find_by(token: params[:token])
-      @user_review = @product.product_reviews.new(rating: params[:review_rating], text: params[:review_text],reviewer_name: params[:reviewer_name])
+      @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name:user_name)
 
-      respond_to do |format|
-        if @user_review.save and @review.update(used: params[:used])
-          format.json {render json: @review}
-        else
-          format.json {render json: @review.errors}
+      if @user_review.rating.present?
+        star=true if @user_review.rating>0
+      else
+        star=false
+      end
+
+      if params[:images].present? and star
+        params[:images].each do |image|
+          if image.present?
+            review_image = @user_review.review_images.new(review_image:image)
+            Rails.logger.info "*********************\ndone\n" if review_image.save
+          end
         end
+      end
+
+      if star
+        if @user_review.save and @review.update(used: true) and star
+          flash[:success] = "Thanks for Your review"
+          redirect_to '/'
+        else
+          flash[:error] = "Please try again"
+          redirect_to user_product_review_new_path(params[:token])
+        end
+      else
+        flash[:error] = "You have to mark at least one star"
+        redirect_to user_product_review_new_path(params[:token])
       end
     end
   end

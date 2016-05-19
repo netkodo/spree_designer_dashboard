@@ -11,19 +11,16 @@ class Spree::BoardsController < Spree::StoreController
 
   def add_question
     if params[:board_id].present?
-      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text])
+      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from])
       email=Spree::Board.find_by(id: params[:board_id]).designer.email
     elsif params[:product_id].present?
-      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true)
+      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true,from:params[:from])
       email = "support@scoutandnimble.com"
     end
 
     respond_to do |format|
       if @question.save
-        if Rails.env != "staging"
-          Resque.enqueue NewQuestionEmail, email
-          Resque.enqueue NewQuestionEmail, "support@scoutandnimble.com" if params[:board_id].present?
-        end
+        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-question-email',"You have new question" if Rails.env != "staging"
         format.json {render json: @question}
       else
         format.json {render json: @question.errors}
@@ -36,6 +33,7 @@ class Spree::BoardsController < Spree::StoreController
     @answer=question.build_answer(text:params[:text])
     respond_to do |format|
       if @answer.save
+        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-designer-answer',"New designer answer" if Rails.env != "staging"
         format.json {render json: @answer}
       else
         format.json {render json: @answer.errors}
