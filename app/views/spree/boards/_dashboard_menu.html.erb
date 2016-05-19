@@ -21,5 +21,5 @@
 
 	<% end %>
   <li class="<%="active" if selected == "store_credit"%>"><a href="/my_store_credit"><i class="fa fa-money"></i> &nbsp; Store Credit</a></li>
-  <li class="<%="active" if selected == "questions_and_answers"%>"><a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp; (<%= @questions_amount %>)  </a></li>
+  <li class="<%="active" if selected == "questions_and_answers"%>"><a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp; (<span class="question-pending"><%= @questions_amount %> pending</span>)</a></li>
 </ul>
