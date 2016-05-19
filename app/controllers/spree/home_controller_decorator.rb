@@ -26,9 +26,9 @@ module Spree
       @user = Spree::User.find_by(id: @review.user_id)
 
       if !@user.first_name.present? and !@user.last_name.present?
-        user_name = "#{@order.billing_firstname} #{@order.billing_lastname} #{Time.now.to_date}"
+        user_name = "#{@order.billing_firstname} #{@order.billing_lastname}"
       else
-        user_name = "#{@user.full_name} #{Time.now.to_date}"
+        user_name = "#{@user.full_name}"
       end
 
       @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name:user_name)
