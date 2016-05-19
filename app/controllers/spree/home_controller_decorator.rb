@@ -48,9 +48,14 @@ module Spree
         end
       end
 
-      if @user_review.save and @review.update(used: true) and star
-        flash[:success] = "Thanks for Your review"
-        redirect_to '/'
+      if star
+        if @user_review.save and @review.update(used: true) and star
+          flash[:success] = "Thanks for Your review"
+          redirect_to '/'
+        else
+          flash[:error] = "Please try again"
+          redirect_to user_product_review_new_path(params[:token])
+        end
       else
         flash[:error] = "You have to mark at least one star"
         redirect_to user_product_review_new_path(params[:token])

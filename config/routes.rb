@@ -44,7 +44,6 @@ Spree::Core::Engine.routes.draw do
   #review
   get "/review/:token" => 'home#user_review', as: :user_product_review_new
   post "/review/:token/create" => 'home#create_user_review', as: :user_product_review_create
-  post "/review/create" => 'home#create_user_review2', as: :user_product_review_create2
   
   # designer dashboard links
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard
