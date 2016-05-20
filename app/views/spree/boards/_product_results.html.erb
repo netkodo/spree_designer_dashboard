@@ -2,7 +2,7 @@
   <% unless products.empty? %>
       <% paginated_products = products %>
       <% if paginated_products.respond_to?(:num_pages) %>
-          <%= paginate paginated_products, :remote=>true %>
+          <%= paginate paginated_products %>
       <% end %>
   <% end %>
 </div>
@@ -83,7 +83,7 @@
         <% unless products.empty? %>
             <% paginated_products = products %>
             <% if paginated_products.respond_to?(:num_pages) %>
-                <%= paginate paginated_products, :remote=>true %>
+                <%= paginate paginated_products %>
             <% end %>
         <% end %>
       </div>
