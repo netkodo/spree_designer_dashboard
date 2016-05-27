@@ -37,6 +37,18 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     
     
   end
+
+  def search_supplier
+    if params[:ids]
+      @suppliers = Spree::Supplier.where(:id => params[:ids].split(','))
+    else
+      @suppliers = Spree::Supplier.ransack(params[:q]).result
+    end
+    respond_to do |format|
+      format.json {render :action => "search_supplier", :layout => false}
+    end
+
+  end
   
   def list
     #@boards = Spree::Board.includes({:board_products => {:product => [{:master => :stock_items}, :supplier]}}, :board_image, :designer).page(params[:page]).per(params[:per_page] || 10)

@@ -105,6 +105,7 @@ Spree::Core::Engine.routes.draw do
     match "/boards/request_revision", to: "boards#request_revision", via: :post
 
     get "/boards/search" => "boards#search", :as => :board_search
+    get "/suppliers/search" => "boards#search_supplier", :as => :supplier_search
     
     
     get  "boards/list" => "boards#list", :as => :boards_list
