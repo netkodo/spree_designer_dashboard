@@ -42,8 +42,8 @@ Spree::Core::Engine.routes.draw do
   post "/orders/add_to_cart" => "orders#add_to_cart", :as => :orders_add_to_cart
 
   #review
-  get "/review/:token" => 'home#user_review', as: :user_product_review_new
-  post "/review/:token/create" => 'home#create_user_review', as: :user_product_review_create
+  get "/review/:token" => 'home#user_review', as: :user_product_review_new,:defaults => {:format => 'html'}
+  post "/review/:token/create" => 'home#create_user_review', as: :user_product_review_create,:defaults => {:format => 'json'}
   
   # designer dashboard links
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard

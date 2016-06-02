@@ -33,13 +33,13 @@ module Spree
 
       @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name:user_name)
 
-      if @user_review.rating.present?
-        star=true if @user_review.rating>0
-      else
-        star=false
-      end
+      # if @user_review.rating.present?
+      #   star=true if @user_review.rating>0
+      # else
+      #   star=false
+      # end
 
-      if params[:images].present? and star
+      if params[:images].present? and @user_review.valid?
         params[:images].each do |image|
           if image.present?
             review_image = @user_review.review_images.new(review_image:image)
@@ -48,18 +48,31 @@ module Spree
         end
       end
 
-      if star
-        if @user_review.save and @review.update(used: true) and star
-          flash[:success] = "Thanks for Your review"
-          redirect_to '/'
+    #   if star
+    #     respond_to do |format|
+    #       if @user_review.save and @review.update(used: true) and star
+    #         Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{@order.billing_firstname} #{@order.billing_lastname}:",@product.name,params[:product_review][:text] if Rails.env != "staging"
+    #         flash[:success] = "Thanks for Your review"
+    #         format.json {redirect_to root_path}
+    #       else
+    #         flash[:error] = "Please try again"
+    #         format.json {redirect_to user_product_review_new_path(params[:token])}
+    #       end
+    #     end
+    #   else
+    #     flash[:error] = "You have to mark at least one star"
+    #     redirect_to user_product_review_new_path(params[:token])
+    #   end
+    # end
+      respond_to do |format|
+        if @user_review.save and @review.update(used: true) and @user_review.valid?
+          # Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{params[:product_review][:reviewer_name]}:",product.name,params[:product_review][:text] if Rails.env != "staging"
+          format.json {render json: @user_review, status: :ok}
         else
-          flash[:error] = "Please try again"
-          redirect_to user_product_review_new_path(params[:token])
+          format.json {render json: @user_review.errors, status: :unprocessable_entity}
         end
-      else
-        flash[:error] = "You have to mark at least one star"
-        redirect_to user_product_review_new_path(params[:token])
       end
     end
+
   end
 end
