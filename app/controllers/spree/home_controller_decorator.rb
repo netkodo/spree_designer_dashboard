@@ -26,18 +26,13 @@ module Spree
       @user = Spree::User.find_by(id: @review.user_id)
 
       if !@user.first_name.present? and !@user.last_name.present?
-        user_name = "#{@order.billing_firstname} #{@order.billing_lastname}"
+        user_name = "#{@order.billing_firstname} #{@order.billing_lastname}" if @order.present?
       else
-        user_name = "#{@user.full_name}"
+        user_name = "#{@user.full_name}" if @user.present?
       end
 
       @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name:user_name)
 
-      # if @user_review.rating.present?
-      #   star=true if @user_review.rating>0
-      # else
-      #   star=false
-      # end
 
       if params[:images].present? and @user_review.valid?
         params[:images].each do |image|
@@ -48,25 +43,9 @@ module Spree
         end
       end
 
-    #   if star
-    #     respond_to do |format|
-    #       if @user_review.save and @review.update(used: true) and star
-    #         Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{@order.billing_firstname} #{@order.billing_lastname}:",@product.name,params[:product_review][:text] if Rails.env != "staging"
-    #         flash[:success] = "Thanks for Your review"
-    #         format.json {redirect_to root_path}
-    #       else
-    #         flash[:error] = "Please try again"
-    #         format.json {redirect_to user_product_review_new_path(params[:token])}
-    #       end
-    #     end
-    #   else
-    #     flash[:error] = "You have to mark at least one star"
-    #     redirect_to user_product_review_new_path(params[:token])
-    #   end
-    # end
       respond_to do |format|
-        if @user_review.save and @review.update(used: true) and @user_review.valid?
-          # Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{params[:product_review][:reviewer_name]}:",product.name,params[:product_review][:text] if Rails.env != "staging"
+        if @user_review.save and @review.update(used: true)
+          Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{params[:product_review][:reviewer_name]}:",product.name,params[:product_review][:text] if Rails.env != "staging"
           format.json {render json: @user_review, status: :ok}
         else
           format.json {render json: @user_review.errors, status: :unprocessable_entity}
