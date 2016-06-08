@@ -23,15 +23,18 @@ module Spree
       @review = Spree::Review.find_by(token: params[:token])
       @product = Spree::Product.find_by(id: @review.product_id)
       @order = Spree::Order.find_by(id: @review.order_id)
-      @user = Spree::User.find_by(id: @review.user_id)
-
-      if !@user.first_name.present? and !@user.last_name.present?
+      if @review.user_id.length==32
         user_name = "#{@order.billing_firstname} #{@order.billing_lastname}" if @order.present?
       else
-        user_name = "#{@user.full_name}" if @user.present?
+        @user = Spree::User.find_by(id: @review.user_id)
+        if @user.first_name.present? and @user.last_name.present?
+          user_name = "#{@user.full_name}" if @user.present?
+        else
+          user_name = "#{@order.billing_firstname} #{@order.billing_lastname}" if @order.present?
+        end
       end
 
-      @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name:user_name)
+      @user_review = @product.product_reviews.new(rating: params[:product_review][:rating], text: params[:product_review][:text],reviewer_name: user_name)
 
 
       if params[:images].present? and @user_review.valid?
@@ -45,7 +48,8 @@ module Spree
 
       respond_to do |format|
         if @user_review.save and @review.update(used: true)
-          Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{params[:product_review][:reviewer_name]}:",product.name,params[:product_review][:text] if Rails.env != "staging"
+          Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{user_name}:",@product.name,params[:product_review][:text] if Rails.env != "staging"
+          flash[:success] = "Thanks for Your review"
           format.json {render json: @user_review, status: :ok}
         else
           format.json {render json: @user_review.errors, status: :unprocessable_entity}
