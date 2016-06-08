@@ -8,11 +8,12 @@
         <%= image_tag @product.images.first.attachment.url(:product) %>
     </div>
     <div class="col-md-6">
-      <%= @product.description %>
+      <%= @product.description.html_safe %>
     </div>
   </div>
+    <div class="user-review-notification text-center"></div>
 
-  <%= form_for [:admin,@review], :url => user_product_review_create_path, html: {multipart: true} do |f| %>
+  <%= form_for [:admin,@review], :url => user_product_review_create_path, html: {multipart: true,id: "new_product_review_form_order"} do |f| %>
     <div class="user-review-partial">
       <h4>Rating: </h4>
       <div id="rating">
