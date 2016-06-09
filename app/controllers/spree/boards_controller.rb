@@ -11,19 +11,19 @@ class Spree::BoardsController < Spree::StoreController
 
   def add_question
     if params[:board_id].present?
-      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from])
-      email=Spree::Board.find_by(id: params[:board_id]).designer.email
+      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from],send_email:params[:send_email])
+      to="(board)"
     elsif params[:product_id].present?
-      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true,from:params[:from])
-      email = "support@scoutandnimble.com"
+      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true,from:params[:from],send_email:params[:send_email])
+      to="(product)"
     end
 
     respond_to do |format|
       if @question.save
-        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'new-question-email',"You have new question" if Rails.env != "staging"
-        format.json {render json: @question}
+        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"You have new question",to,params[:text] if Rails.env != "staging"
+        format.json {render json: @question, status: :ok}
       else
-        format.json {render json: @question.errors}
+        format.json {render json: @question.errors, status: :unprocessable_entity}
       end
     end
   end
@@ -33,7 +33,7 @@ class Spree::BoardsController < Spree::StoreController
     @answer=question.build_answer(text:params[:text])
     respond_to do |format|
       if @answer.save
-        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'new-designer-answer',"New designer answer" if Rails.env != "staging"
+        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New designer answer","",params[:text] if Rails.env != "staging"
         format.json {render json: @answer}
       else
         format.json {render json: @answer.errors}

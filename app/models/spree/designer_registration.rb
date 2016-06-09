@@ -8,7 +8,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   after_create :send_designer_welcome
   after_create :update_profile_information
-  after_create :send_no_activity_email
   after_update :update_designer_status
 
   def update_profile_information
@@ -44,6 +43,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
           end
           self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
+          Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
           user.add_designer_to_mailchimp
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
@@ -72,10 +72,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       # end
     end
 
-  end
-
-  def send_no_activity_email
-    Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
   end
 
   def send_designer_welcome
