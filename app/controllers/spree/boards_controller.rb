@@ -20,7 +20,7 @@ class Spree::BoardsController < Spree::StoreController
 
     respond_to do |format|
       if @question.save
-        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-question-email',"You have new question" if Rails.env != "staging"
+        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'new-question-email',"You have new question" if Rails.env != "staging"
         format.json {render json: @question}
       else
         format.json {render json: @question.errors}
@@ -33,7 +33,7 @@ class Spree::BoardsController < Spree::StoreController
     @answer=question.build_answer(text:params[:text])
     respond_to do |format|
       if @answer.save
-        Resque.enqueue NewQuestionEmail,"support@scoutandnimble.com",'new-designer-answer',"New designer answer" if Rails.env != "staging"
+        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'new-designer-answer',"New designer answer" if Rails.env != "staging"
         format.json {render json: @answer}
       else
         format.json {render json: @answer.errors}
