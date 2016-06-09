@@ -1,4 +1,4 @@
-<div class="paginate">
+<div class="paginate" data-sign_in_count=<%= @sign_in_count %> >
   <% unless products.empty? %>
       <% paginated_products = products %>
       <% if paginated_products.respond_to?(:num_pages) %>

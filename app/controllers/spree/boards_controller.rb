@@ -250,6 +250,8 @@ class Spree::BoardsController < Spree::StoreController
     end
     @products = @all_products
 
+    @sign_in_count = spree_current_user.sign_in_count
+
     respond_to do |format|
       format.html { render :layout => false }
     end
