@@ -332,6 +332,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def update
+    session[:page_count]=0
     @board.slug = nil
     #respond_to do |format|
     @board.create_or_update_board_product(params)
@@ -359,6 +360,7 @@ class Spree::BoardsController < Spree::StoreController
     html_content << "<br /><br />Message from Designer:<br /><br />#{params[:board][:state_message]}" if params[:board] and params[:board][:state_message] and !params[:board][:state_message].blank?
 
     @board.designer.send_message(@room_manager, "Room Submitted by #{@board.designer.full_name}", html_content, true, nil, Time.now, @board)
+    session[:page_count]+=1
     redirect_to designer_dashboard_path
   end
 

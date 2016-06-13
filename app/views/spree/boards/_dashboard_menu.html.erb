@@ -3,9 +3,11 @@
    board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted:true)
    board_questions.each do |question|
      board = Spree::Board.find_by(id:question.board_id)
-     if board.designer.id == spree_current_user.id
-       if !question.answer.present?
-         @questions_amount += 1
+     if board.present?
+       if board.designer.id == spree_current_user.id
+         if !question.answer.present?
+           @questions_amount += 1
+         end
        end
      end
    end %>
