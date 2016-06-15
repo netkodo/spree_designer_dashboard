@@ -252,6 +252,7 @@ class Spree::BoardsController < Spree::StoreController
 
     @sign_in_count = spree_current_user.sign_in_count
 
+    session[:t_filter]=1 if @products.present?
     respond_to do |format|
       format.html { render :layout => false }
     end
