@@ -362,7 +362,7 @@ class Spree::BoardsController < Spree::StoreController
     html_content << "<br /><br />Message from Designer:<br /><br />#{params[:board][:state_message]}" if params[:board] and params[:board][:state_message] and !params[:board][:state_message].blank?
 
     @board.designer.send_message(@room_manager, "Room Submitted by #{@board.designer.full_name}", html_content, true, nil, Time.now, @board)
-    session[:page_count]+=1
+    session[:page_count]=1
     redirect_to designer_dashboard_path
   end
 
