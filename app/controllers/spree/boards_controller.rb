@@ -339,6 +339,7 @@ class Spree::BoardsController < Spree::StoreController
     if @board.update_attributes(board_params)
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
       @board.queue_image_generation
+      @board.designer.update(tutorial_roombuilder: true)
       respond_to do |format|
         format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
         format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
