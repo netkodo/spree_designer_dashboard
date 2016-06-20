@@ -58,6 +58,10 @@ Spree::Core::Engine.routes.draw do
   get "/tips_tricks" => "extra#tips_tricks", :tips_tricks => :tips_tricks
   get "/video_tutorial" => "extra#video_tutorial", :as => :video_tutorial
 
+  #portfolio
+  get "/portfolio" => "boards#portfolio", as: :portfolio
+  post "/portfolio" => "boards#create_portfolio", as: :create_portfolio
+
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
   post '/rooms/add_answer' => "boards#add_answer"

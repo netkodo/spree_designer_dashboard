@@ -87,8 +87,33 @@ class Spree::BoardsController < Spree::StoreController
     @questions = []
     board_questions.each do |question|
       board = Spree::Board.find_by(id:question.board_id)
-      if board.designer.id == spree_current_user.id
-        @questions << question
+      if board.present?
+        if board.designer.id == spree_current_user.id
+          @questions << question
+        end
+      end
+    end
+  end
+
+  def portfolio
+    @portfolio = Spree::Portfolio.new
+    @colors = Spree::Color.all.map {|c| [c.name,c.id]}
+    rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
+    styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
+    @room_type = rooms.map {|r| r.name}
+    @room_style = styles.map {|s| s.name}
+  end
+
+  def create_portfolio
+    @portfolio = Spree::Portfolio.new(portfolio_params)
+    respond_to do |format|
+      if @portfolio.save
+        format.html {redirect_to portfolio_path}
+        format.json {render json: @portfolio, status: :ok}
+      else
+        flash[:success]=@portfolio.errors.full_messages
+        format.html {redirect_to portfolio_path}
+        format.json {render json: @portfolio.errors, status: :unprocessable_entity}
       end
     end
   end
@@ -597,6 +622,10 @@ class Spree::BoardsController < Spree::StoreController
     @style_taxons = Spree::Taxonomy.where(:name => 'Styles').first().root.children
     @colors = Spree::Color.order(:position)
     @designers = Spree::User.published_designers().order("created_at desc")
+  end
+
+  def portfolio_params
+    params.require(:portfolio).permit(:name,:room_type,:style,:wall_color,:portfolio_image)
   end
 
   def board_params

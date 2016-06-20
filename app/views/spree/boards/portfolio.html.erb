@@ -1,0 +1,82 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/portfolio.js' %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-3">
+    <%= render :partial => "dashboard_menu", :locals => {:selected => "portfolio"} %>
+  </div>
+
+  <div class="col-md-9">
+    <%= form_for @portfolio,:url => create_portfolio_path, html: {multipart: true, id: "create_portfolio_form"}, format: :json do |f| %>
+        <div class="row">
+          <div class="col-md-7">
+
+            <div class="control-group row hidden">
+              <%= f.label :user_id, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :user_id, value: spree_current_user.id, :class => 'form-control' %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :portfolio_image, "Add image", :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.file_field :portfolio_image, type: :file %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :name, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :name, :class => 'form-control fullwidth' %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :room_type, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.select :room_type, options_for_select(@room_type),{}, :class => 'form-control' %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :style, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.select :style, options_for_select(@room_style),{}, :class => 'form-control' %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :wall_color, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.select :wall_color, options_for_select(@colors),{}, :class => 'form-control' %>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <label>
+                <input type="checkbox" id="portfolio_tos" class="col-md-3" checked>
+                <div class="col-md-9">
+                By checking here I attest that I own the rights to the image loaded and agree to allow Scout & Nimble, LLC to use this image
+                for marketing purposes. Scout & Nimble, LLC agrees to give the designer credit for the image and use the image for purposes of building
+                the designer's brnad.
+                </div>
+              </label>
+            </div>
+
+          </div>
+
+          <div class="col-md-5">
+            <img id="img_prev" src="#" alt="Your Portfolio image will appear here" class="img-responsive"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-actions text-center">
+            <%= f.submit :class => 'btn btn-primary' %>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>
