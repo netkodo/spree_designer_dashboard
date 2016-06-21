@@ -457,7 +457,9 @@ class Spree::Board < ActiveRecord::Base
   end
 
 
-  def create_or_update_board_product(params)
+  def create_or_update_board_product(params,board_id,email)
+    Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
+
     if params[:products_board].present?
       Rails.logger.info params[:products_board]
       board_products = JSON.parse(params[:products_board])
@@ -479,7 +481,6 @@ class Spree::Board < ActiveRecord::Base
             attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
-              Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, product_hash['board_id'])
               if image.present?
                 crop_image(image, board_product)
               end
