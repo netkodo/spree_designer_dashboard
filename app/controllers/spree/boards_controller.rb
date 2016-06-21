@@ -103,7 +103,7 @@ class Spree::BoardsController < Spree::StoreController
     @room_type = rooms.map {|r| r.name}
     @room_style = styles.map {|s| s.name}
 
-    @portfolios = Spree::Portfolio.where(user_id: spree_current_user)
+    @portfolios = spree_current_user.portfolios
   end
 
   def create_portfolio

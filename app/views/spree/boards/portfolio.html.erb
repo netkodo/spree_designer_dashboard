@@ -93,26 +93,26 @@
     <div class="row">
 
       <div id="products">
-        <!--<ul id="list-box" class="nbs-flexisel-ul">-->
+        <ul id="list-box" class="nbs-flexisel-ul">
 
-          <!--<%# if @portfolios.any? %>-->
-              <!--<%# @portfolios.each do |portfolio| %>-->
-                  <!--<li class="nbs-flexisel-item">-->
-                    <!--<div class="my-product-listing">-->
-                      <!--<div class="responsive-container">-->
+          <% if @portfolios.any? %>
+              <% @portfolios.each do |portfolio| %>
+                  <li class="nbs-flexisel-item">
+                    <div class="my-product-listing">
+                      <div class="responsive-container">
 
-                        <!--<div class="img-container">-->
+                        <div class="img-container">
+                          <%= image_tag portfolio.portfolio_image.url %>
+                        </div>
+                      </div>
+                      <%= portfolio.name %>
 
-                        <!--</div>-->
-                      <!--</div>-->
-                      <!--<%#= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>-->
+                    </div>
+                  </li>
+              <% end %>
+          <% end %>
 
-                    <!--</div>-->
-                  <!--</li>-->
-              <!--<%# end %>-->
-          <!--<%# end %>-->
-
-        <!--</ul>-->
+        </ul>
 
       </div>
 
