@@ -626,13 +626,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def portfolio_params
-    puts "======="
-    puts params.require(:portfolio)['portfolio_image']
-    puts "======="
-    par = params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
-    puts par['portfolio_image']
-    puts "======="
-    par
+    params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
   end
 
   def board_params
