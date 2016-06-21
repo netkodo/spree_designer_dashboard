@@ -102,6 +102,8 @@ class Spree::BoardsController < Spree::StoreController
     styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
     @room_type = rooms.map {|r| r.name}
     @room_style = styles.map {|s| s.name}
+
+    @portfolios = Spree::Portfolio.where(user_id: spree_current_user)
   end
 
   def create_portfolio
@@ -111,7 +113,6 @@ class Spree::BoardsController < Spree::StoreController
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio, status: :ok}
       else
-        flash[:success]=@portfolio.errors.full_messages
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio.errors, status: :unprocessable_entity}
       end
@@ -625,7 +626,13 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def portfolio_params
-    params.require(:portfolio).permit(:name,:room_type,:style,:wall_color,:portfolio_image)
+    puts "======="
+    puts params.require(:portfolio)['portfolio_image']
+    puts "======="
+    par = params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
+    puts par['portfolio_image']
+    puts "======="
+    par
   end
 
   def board_params

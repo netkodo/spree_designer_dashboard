@@ -60,7 +60,7 @@ Spree::Core::Engine.routes.draw do
 
   #portfolio
   get "/portfolio" => "boards#portfolio", as: :portfolio
-  post "/portfolio" => "boards#create_portfolio", as: :create_portfolio
+  post "/portfolio" => "boards#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
 
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
