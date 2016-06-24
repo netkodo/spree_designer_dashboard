@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<%= form_for [@user], :url => update_designer_path(format: 'html'), :html => {:multipart => true} do |f| %>
+<%= form_for [@user], :url => update_designer_path(format: 'json'), :html => {:multipart => true} do |f| %>
 
     <div class="row">
       <div class="col-md-12">
@@ -241,7 +241,8 @@
     <% end %>
 
     <hr/>
-    <p><%= link_to("Save Changes", '#', :class => "btn btn-primary js-save-changes-user", data: {url: my_profile_path}) %></p>
+    
+      <%= f.submit "Save Changes", :class => "btn btn-primary js-save-changes-user" %>
 
 <% end %>
 </div>

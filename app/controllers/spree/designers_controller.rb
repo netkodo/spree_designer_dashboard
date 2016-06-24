@@ -56,9 +56,11 @@ class Spree::DesignersController < Spree::StoreController
 
     respond_to do |format|
       if @user.update_attributes(params[:user].permit!)
-        format.html { redirect_to my_profile_path(format: 'html'), :notice => 'Your profile was successfully updated.', location: url_for( my_profile_path) }
+        format.html { redirect_to designer_dashboard_path(format: 'html'), :notice => 'Your profile was successfully updated.', location: url_for( designer_dashboard_path) }
+        format.json { render json: {:location => designer_dashboard_path}, status: :ok }
       else
         format.html { redirect_to my_profile_path(format: 'html'), :notice => 'There was an error and your profile was not updated.', location: url_for( my_profile_path) }
+        format.json { render json: @user.errors,status: :unprocessable_entity }
       end
     end
   end
