@@ -11,8 +11,31 @@
             <% end%>
 
           </div>
+
+      <div class="board-design-section-title" style="display:inline;">
+        <span class="board-design-step">1</span>
+      </div>
+
+      <div class="dropdown" style="display:inline;">
+        <span class="board-design-section-title dropdown-toggle" type="button" id="portfolio-menu" data-toggle="dropdown">Design a Room Around a Portfolio Image
+          <span class="caret"></span></span>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="portfolio-menu" id="portfolio-list">
+          <li role="presentation" class="text-center" id="blank_image" data-image="" data-name="Untitled Room" data-room_type="" data-style="" >
+            <a><i class="fa fa-3x fa-ban" aria-hidden="true"></i></a>
+          </li>
+          <% @portfolios.each do |p| %>
+              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
+                <a><%= image_tag p.portfolio_image.url(:small) %></a>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="portfolio-image col-md-12 text-center">
+        <img src="" alt="Portfolio image"/>
+      </div>
+
 			<div class="board-design-section-title">
-				<span class="board-design-step">1</span> Design Your Room
+				<span class="board-design-step">2</span> Design Your Room
 			</div>
 			<div class="row">
 				<div class="col-md-7">
@@ -121,7 +144,7 @@
 		<div class="board-design-section">
 			<div class="board-design-section-title">
 				<span class="board-design-step">
-					2
+					3
 				</span> Add color swatches
 			</div>
 			
@@ -138,7 +161,7 @@
 		<div class="board-design-section board-design-section-last">
 			<div class="board-design-section-title">
 				<span class="board-design-step">
-					3
+					4
 				</span> Room Details
 			</div>
 			<%= form_for(@board, {:url => room_path(@board),:html => {:id => "edit_board_form", :"parsley-validate" => ""}}) do |f| %>

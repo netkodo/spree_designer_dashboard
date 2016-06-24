@@ -100,8 +100,8 @@ class Spree::BoardsController < Spree::StoreController
     @colors = Spree::Color.all.map {|c| [c.name,c.id]}
     rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
     styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
-    @room_type = rooms.map {|r| r.name}
-    @room_style = styles.map {|s| s.name}
+    @room_type = rooms.map {|r| [r.name,r.id]}
+    @room_style = styles.map {|s| [s.name,s.id]}
 
     @portfolios = spree_current_user.portfolios
   end
@@ -429,6 +429,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
+    @portfolios = spree_current_user.portfolios
     @category = []
     @subcategory = []
     @sub_subcategory = []

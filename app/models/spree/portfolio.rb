@@ -1,6 +1,7 @@
 class Spree::Portfolio < ActiveRecord::Base
 
   belongs_to :spree_user
+  belongs_to :spree_board
   validates :name, presence: true
 
   has_attached_file :portfolio_image,
@@ -10,4 +11,13 @@ class Spree::Portfolio < ActiveRecord::Base
                     convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
 
   validates_attachment_presence :portfolio_image
+
+  def change_name_to_class
+      self.name.gsub(' ','_')
+  end
+
+  def change_class_to_name
+    self.name.gsub('_',' ')
+  end
+
 end
