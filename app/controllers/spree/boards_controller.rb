@@ -107,7 +107,9 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def create_portfolio
-    @portfolio = Spree::Portfolio.new(portfolio_params)
+    # checking params because if we wont cut portfolio_imaga it wont pass validation even if its empty string
+    !portfolio_params[:portfolio_image].present? ? x = portfolio_params.except(:portfolio_image) : x = portfolio_params
+    @portfolio = Spree::Portfolio.new(x)
     respond_to do |format|
       if @portfolio.save
         format.html {redirect_to portfolio_path}
