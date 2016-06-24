@@ -111,7 +111,7 @@ class Spree::BoardsController < Spree::StoreController
     respond_to do |format|
       if @portfolio.save
         format.html {redirect_to portfolio_path}
-        format.json {render json: @portfolio, status: :ok}
+        format.json {render json: {location: portfolio_path}, status: :ok}
       else
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio.errors, status: :unprocessable_entity}

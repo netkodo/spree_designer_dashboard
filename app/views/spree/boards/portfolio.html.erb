@@ -23,7 +23,7 @@
             <div class="control-group row">
               <%= f.label :portfolio_image, "Add image", :class => 'control-label col-md-3' %>
               <div class="controls col-md-9">
-                <%= f.file_field :portfolio_image, type: :file %>
+                <%= f.file_field :portfolio_image %>
                 <div class="info"></div>
               </div>
             </div>
@@ -79,7 +79,7 @@
           </div>
 
           <div class="col-md-5">
-            <img id="img_prev" src="#" alt="Your Portfolio image will appear here" class="img-responsive"/>
+            <img id="img_prev" src="" alt="Your Portfolio image will appear here" class="img-responsive"/>
           </div>
         </div>
 
@@ -91,32 +91,46 @@
     <% end %>
 
     <div class="row">
-
-      <div id="products">
-        <ul id="list-box" class="nbs-flexisel-ul">
-
-          <% if @portfolios.any? %>
+      <% if @portfolios.any? %>
+        <% if @portfolios.count > 4 %>
+          <div class="container slide-products col-md-12">
+            <ul class="products_flexi_box nbs-flexisel-ul">
               <% @portfolios.each do |portfolio| %>
-                  <li class="nbs-flexisel-item">
-                    <div class="my-product-listing">
-                      <div class="responsive-container">
-
-                        <div class="img-container">
-                          <%= image_tag portfolio.portfolio_image.url %>
-                        </div>
+                  <li>
+                    <div class="product-container">
+                      <div class="img-container">
+                        <%#= link_to(image_tag(product.images.first.attachment(:small)), product) %>
+                        <%= image_tag portfolio.portfolio_image.url %>
                       </div>
-                      <%= portfolio.name %>
-
+                      <div class="title">
+                        <%#= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
+                        <%= portfolio.name %>
+                      </div>
                     </div>
                   </li>
               <% end %>
-          <% end %>
-
-        </ul>
-
-      </div>
-
-
+            </ul>
+          </div>
+        <% else %>
+          <div class="col-md-12">
+            <% @portfolios.each do |portfolio| %>
+                <div class="col-md-3">
+                  <div class="product-container">
+                    <div class="img-container">
+                      <%#= link_to(image_tag(product.images.first.attachment(:small)), product) %>
+                      <%= image_tag portfolio.portfolio_image.url %>
+                    </div>
+                    <div class="title text-center">
+                      <%#= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
+                      <%= portfolio.name %>
+                    </div>
+                  </div>
+                </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
+
   </div>
 </div>
