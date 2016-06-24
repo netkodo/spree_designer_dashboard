@@ -633,7 +633,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def board_params
-    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
+    params.require(:board).permit(:is_assigned_to_portfolio,:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
 
   end
   # redirect to the edit action after create
