@@ -99,11 +99,9 @@
                   <li>
                     <div class="product-container">
                       <div class="img-container">
-                        <%#= link_to(image_tag(product.images.first.attachment(:small)), product) %>
                         <%= image_tag portfolio.portfolio_image.url %>
                       </div>
                       <div class="title">
-                        <%#= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
                         <%= portfolio.name %>
                       </div>
                     </div>
@@ -117,11 +115,9 @@
                 <div class="col-md-3">
                   <div class="product-container">
                     <div class="img-container text-center portfolio-carousel-static">
-                      <%#= link_to(image_tag(product.images.first.attachment(:small)), product) %>
                       <%= image_tag portfolio.portfolio_image.url %>
                     </div>
                     <div class="title text-center">
-                      <%#= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
                       <%= portfolio.name %>
                     </div>
                   </div>

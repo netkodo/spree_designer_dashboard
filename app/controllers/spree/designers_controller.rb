@@ -69,6 +69,8 @@ class Spree::DesignersController < Spree::StoreController
 
   def show
     @designer = Spree::User.is_active_designer().where(:username => params[:username]).first
+    # @portfolio_boards = @designer.boards.map { |b| b if b.portfolio.present? }.delete_if(&:blank?)
+    @portfolios = @designer.portfolios
     @products = []
     @products = @designer.products.available_through_published_boards if @designer.present?
     render :action => "show"
