@@ -366,6 +366,14 @@ class Spree::BoardsController < Spree::StoreController
     #respond_to do |format|
     @board.create_or_update_board_product(params)
     if @board.update_attributes(board_params)
+
+      if params[:is_assigned_to_portfolio].present?
+        portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
+        portfolio.update(board_id: @board.id)
+      else
+        @board.portfolio.update(board_id: nil) if @board.portfolio.present?
+      end
+
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
       @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
@@ -430,6 +438,8 @@ class Spree::BoardsController < Spree::StoreController
 
   def design
     @portfolios = spree_current_user.portfolios
+    @portfolio_id = @board.portfolio.id if @board.portfolio.present?
+
     @category = []
     @subcategory = []
     @sub_subcategory = []

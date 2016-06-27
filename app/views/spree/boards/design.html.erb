@@ -16,15 +16,16 @@
         <span class="board-design-step">1</span>
       </div>
 
+      <div id="current_portfolio" class="hidden" data-portfolio_id=<%= @portfolio_id %>></div>
       <div class="dropdown" style="display:inline;">
         <span class="board-design-section-title dropdown-toggle" type="button" id="portfolio-menu" data-toggle="dropdown">Design a Room Around a Portfolio Image
           <span class="caret"></span></span>
         <ul class="dropdown-menu" role="menu" aria-labelledby="portfolio-menu" id="portfolio-list">
-          <li role="presentation" class="text-center" id="blank_image" data-image="" data-name="Untitled Room" data-room_type="" data-style="" >
+          <li role="presentation" class="text-center" id="blank_image" data-image="" data-id="" data-name="Untitled Room" data-room_type="" data-style="" >
             <a><i class="fa fa-3x fa-ban" aria-hidden="true"></i></a>
           </li>
           <% @portfolios.each do |p| %>
-              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
+              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-id=<%= p.id %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
                 <a><%= image_tag p.portfolio_image.url(:small) %></a>
               </li>
           <% end %>
