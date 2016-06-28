@@ -1,7 +1,8 @@
 class Spree::Portfolio < ActiveRecord::Base
 
-  belongs_to :spree_user
-  belongs_to :spree_board
+  belongs_to :user
+  belongs_to :board
+  has_many :portfolio_favorites, dependent: :destroy
   validates :name, presence: true
 
   has_attached_file :portfolio_image,
@@ -18,6 +19,10 @@ class Spree::Portfolio < ActiveRecord::Base
 
   def change_class_to_name
     self.name.gsub('_',' ')
+  end
+
+  def is_favorite?(user)
+    self.portfolio_favorites.find_by(user_id: user.id) ? true : false
   end
 
 end

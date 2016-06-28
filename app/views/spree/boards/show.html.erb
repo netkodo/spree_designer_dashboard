@@ -1,5 +1,6 @@
 <% content_for :scripts do %>
     <%= javascript_include_tag 'spree/questions_and_answers.js' %>
+    <%= javascript_include_tag 'spree/portfolio.js' %>
 <% end %>
 
 <div class="board-header">
@@ -20,8 +21,12 @@
 <div class="row">
 	<div class="col-md-7">	
 		<div class="board-details">
-			<div class="board-section board-image-section">
-				<%= board_image(@board,:large)%>
+			<div class="board-section board-image-section text-center">
+        <% if @board.portfolio.present? %>
+          <%= image_tag @board.portfolio.portfolio_image.url(:large), class: 'img-board' %>
+        <% else %>
+          <%= board_image(@board,:large)%>
+        <% end %>
 			</div>
 			
 			<% if false %>
@@ -147,6 +152,18 @@
                   }
               </script>
               <div class="addthis_sharing_toolbox set-addthis-left"></div>
+
+        <% if spree_current_user.present? %>
+          <div class="board-favorites" data-bid=<%= @board.id %> data-uid=<%= spree_current_user.id %>>
+            <div class="favorite add-to-board-favorites  <%= "hidden" if @board.is_favorite?(spree_current_user) %>" >
+              <i class="fa fa-heart fa-white"></i>
+            </div>
+            <div class="favorite remove-from-board-favorites  <%= "hidden" unless @board.is_favorite?(spree_current_user) %>" >
+              <i class="fa fa-heart fa-red"></i>
+            </div>
+          </div>
+        <% end %>
+
 			</div>
 			<% if false %>
 			<div class="board-sharing-tools">

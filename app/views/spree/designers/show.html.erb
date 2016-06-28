@@ -112,7 +112,7 @@
               <% @portfolios.each do |portfolio| %>
                   <li>
                     <div class="product-container">
-                      <div class="img-container" data-img_large=<%= portfolio.portfolio_image.url(:large) %> data-img_width=<%= Paperclip::Geometry.from_file(portfolio.portfolio_image(:large)).width %> >
+                      <div class="img-container" data-id=<%= portfolio.id %>   >
                         <%= image_tag portfolio.portfolio_image.url %>
                       </div>
                     </div>
@@ -125,7 +125,7 @@
             <% @portfolios.each do |portfolio| %>
                 <div class="col-md-3">
                   <div class="product-container">
-                    <div class="img-container text-center portfolio-carousel-static" data-img_large=<%= portfolio.portfolio_image.url(:large) %> data-img_width=<%= Paperclip::Geometry.from_file(portfolio.portfolio_image(:large)).width %> >
+                    <div class="img-container text-center portfolio-carousel-static" data-id=<%= portfolio.id %> >
                       <%= image_tag portfolio.portfolio_image.url %>
                     </div>
                   </div>
@@ -198,7 +198,10 @@
 	<% end%>
 </div>
 
-<%= render partial: "spree/designers/portfolio_preview_modal" %>
+<%#= render partial: "spree/designers/portfolio_preview_modal" %>
+<div id="modal-handler">
+
+</div>
 
 <script>
 $(document).ready(function() {

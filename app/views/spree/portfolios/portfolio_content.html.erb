@@ -1,0 +1,36 @@
+<!--MODAL-->
+<div id="portfolio-modal" class="modal">
+  <div class="modal-dialog" style="width: <%= Paperclip::Geometry.from_file(@portfolio.portfolio_image(:large)).width %>px;">
+    <div class="modal-content text-center">
+
+      <div class="social-portfolio" data-pid=<%= @portfolio.id %> data-uid=<%= spree_current_user.id %> >
+
+        <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
+
+          <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= room_url(@portfolio.board) %>&media=<%= @portfolio.portfolio_image.url %>&description=<%= @portfolio.name %>">
+            <%= image_tag("frontend/pinterest.png",height: 20, class: "at4-icon aticon-pinterest_share",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+          </a>
+          <!-- Please call pinit.js only once per page -->
+          <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+        </div>
+
+        <% if spree_current_user.present? %>
+            <div class="favorite add-to-portfolio-favorites <%= "hidden" if @portfolio.is_favorite?(spree_current_user) %>">
+              <i class="fa fa-heart fa-white"></i>
+            </div>
+            <div class="favorite remove-from-portfolio-favorites <%= "hidden" unless @portfolio.is_favorite?(spree_current_user) %>">
+              <i class="fa fa-heart fa-red"></i>
+            </div>
+        <% end %>
+
+      </div>
+
+      <button type="button" class="close new-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <% if @portfolio.board.present? %>
+        <%= link_to image_tag(@portfolio.portfolio_image.url(:large)),room_path(@portfolio.board) %>
+      <% else %>
+        <%= image_tag @portfolio.portfolio_image.url(:large) %>
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
