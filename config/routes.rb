@@ -63,7 +63,12 @@ Spree::Core::Engine.routes.draw do
   get "/questions_and_answers" => "boards#questions_and_answers", :as => :questions_and_answers
   get "/my_rooms" => "boards#my_rooms", :as => :my_rooms
   resources :bookmarks, except: [:index]
-  get "/favorites" => "bookmarks#index"
+  get "/favorites_products" => "bookmarks#index"
+  get "/favorites" => "bookmarks#favorites"
+  get "/board_favorites" => "bookmarks#board_favorites"
+  get "/portfolio_favorites" => "bookmarks#portfolio_favorites"
+  get "/product_favorites" => "bookmarks#product_favorites"
+
   post "/bookmarks/remove" => "bookmarks#destroy", :as => :remove_bookmark
   get "/our_suppliers" => "extra#our_suppliers", :as => :our_suppliers
   get "/tips_tricks" => "extra#tips_tricks", :tips_tricks => :tips_tricks

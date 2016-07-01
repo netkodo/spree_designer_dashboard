@@ -668,7 +668,7 @@ function removeProductBookmark(product_id) {
 function getProductBookmarks() {
     $('#bookmark-preloader').removeClass('hidden')
     $('#bookmarks_container').html('')
-    var url = '/favorites/'
+    var url = '/favorites_products/'
     var request = $.get(url);
     request.done(function (data) {
     });
