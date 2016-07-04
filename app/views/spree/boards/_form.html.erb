@@ -25,4 +25,6 @@
 		<%= f.collection_select :style_id, @style_taxons, :id, :name, {:include_blank => true}, {:class => 'form-control', :style => "", :"required" => ""} %>
 		</div>
 	</div>
+  <%= check_box_tag :is_assigned_to_portfolio,"",false, class: "hidden" %>
+
 </fieldset>

@@ -34,6 +34,19 @@ Spree::Core::Engine.routes.draw do
   get "/designers/signup" => "designer_registrations#new", :as => :designer_signup
   patch "/designers" => "designers#update", :as => :update_designer
   #post "/designers/signup" => "designers#signup", :as => :create_designer_registration
+
+  #portfolio routes
+  post "/portfolio_content" => "portfolios#portfolio_content", :as => :portfolio_content
+  get "/portfolio" => "portfolios#portfolio", as: :portfolio
+  post "/portfolio" => "portfolios#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
+  get "/portfolios" => "portfolios#index", as: :index
+
+  #favoretes portfolio & board
+  post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}
+  delete "/remove_portfolio_favorite" => "portfolios#remove_portfolio_favorite", :as => :remove_portfolio_favorite,:defaults => {:format => 'json'}
+
+  post "/add_board_favorite" => "boards#add_board_favorite", :as => :add_board_favorite,:defaults => {:format => 'json'}
+  delete "/remove_board_favorite" => "boards#remove_board_favorite", :as => :remove_board_favorite,:defaults => {:format => 'json'}
   
   get "/mission" => "extra#mission" , :as => :mission
   get "/share-to-earn" => "extra#share_to_earn" , :as => :share_to_earn
@@ -52,11 +65,18 @@ Spree::Core::Engine.routes.draw do
   get "/questions_and_answers" => "boards#questions_and_answers", :as => :questions_and_answers
   get "/my_rooms" => "boards#my_rooms", :as => :my_rooms
   resources :bookmarks, except: [:index]
-  get "/favorites" => "bookmarks#index"
+  get "/favorites_products" => "bookmarks#index"
+  get "/favorites" => "bookmarks#favorites"
+  get "/board_favorites" => "bookmarks#board_favorites"
+  get "/portfolio_favorites" => "bookmarks#portfolio_favorites"
+  get "/product_favorites" => "bookmarks#product_favorites"
+
   post "/bookmarks/remove" => "bookmarks#destroy", :as => :remove_bookmark
   get "/our_suppliers" => "extra#our_suppliers", :as => :our_suppliers
   get "/tips_tricks" => "extra#tips_tricks", :tips_tricks => :tips_tricks
   get "/video_tutorial" => "extra#video_tutorial", :as => :video_tutorial
+
+  post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
 
   # room builder links
   post '/rooms/add_question' => "boards#add_question"

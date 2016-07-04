@@ -1,3 +1,7 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/portfolio.js' %>
+<% end %>
+
 <% content_for :page_header do %>
 <div class="row">
 	<div class="col-md-12">
@@ -100,6 +104,38 @@
   <% end %>
 <% end %>
 
+<div class="row my_profile_portfolios">
+  <% if @portfolios.any? %>
+      <% if @portfolios.count > 4 %>
+          <div class="container slide-products col-md-12">
+            <ul class="products_flexi_box nbs-flexisel-ul">
+              <% @portfolios.each do |portfolio| %>
+                  <li>
+                    <div class="product-container">
+                      <div class="img-container" data-id=<%= portfolio.id %>   >
+                        <%= image_tag portfolio.portfolio_image.url %>
+                      </div>
+                    </div>
+                  </li>
+              <% end %>
+            </ul>
+          </div>
+      <% else %>
+          <div class="col-md-12">
+            <% @portfolios.each do |portfolio| %>
+                <div class="col-md-3">
+                  <div class="product-container">
+                    <div class="img-container text-center portfolio-carousel-static" data-id=<%= portfolio.id %> >
+                      <%= image_tag portfolio.portfolio_image.url %>
+                    </div>
+                  </div>
+                </div>
+            <% end %>
+          </div>
+      <% end %>
+  <% end %>
+</div>
+
 <h2>Featured Rooms</h2>
 <div class="designer-boards">
   <% if @designer.present? %>
@@ -160,6 +196,11 @@
 		This designer doesn't have featured products at this time.
 	</div>
 	<% end%>
+</div>
+
+<%#= render partial: "spree/designers/portfolio_preview_modal" %>
+<div id="modal-handler">
+
 </div>
 
 <script>

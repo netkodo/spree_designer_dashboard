@@ -87,8 +87,10 @@ class Spree::BoardsController < Spree::StoreController
     @questions = []
     board_questions.each do |question|
       board = Spree::Board.find_by(id:question.board_id)
-      if board.designer.id == spree_current_user.id
-        @questions << question
+      if board.present?
+        if board.designer.id == spree_current_user.id
+          @questions << question
+        end
       end
     end
   end
@@ -339,6 +341,17 @@ class Spree::BoardsController < Spree::StoreController
     @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
+
+      if params[:is_assigned_to_portfolio].present?
+        portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
+        portfolio.update(board_id: @board.id)
+      else
+        if @board.portfolio.present?
+          portfolio = Spree::Portfolio.find(@board.portfolio.id)
+          portfolio.update(board_id: nil)
+        end
+      end
+
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
       @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
@@ -402,6 +415,12 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
+    @portfolios = spree_current_user.portfolios
+    if @board.portfolio.present?
+      @portfolio_id = @board.portfolio.id
+      @color_id = @board.portfolio.wall_color
+    end
+
     @category = []
     @subcategory = []
     @sub_subcategory = []
@@ -592,6 +611,28 @@ class Spree::BoardsController < Spree::StoreController
     redirect_to designer_dashboard_path
   end
 
+  def add_board_favorite
+    board = Spree::BoardFavorite.new(user_id: params[:user_id],board_id: params[:board_id])
+    respond_to do |format|
+      if board.save
+        format.json {render json: {}, status: :ok}
+      else
+        format.json {render json: board.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def remove_board_favorite
+    board = Spree::BoardFavorite.find_by(user_id: params[:user_id],board_id: params[:board_id])
+    respond_to do |format|
+      if board.destroy
+        format.json {render json: {}, status: :ok}
+      else
+        format.json {render json: board.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
   private
   def prep_search_collections
     @room_taxons = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
@@ -602,7 +643,6 @@ class Spree::BoardsController < Spree::StoreController
 
   def board_params
     params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
-
   end
   # redirect to the edit action after create
   #create.response do |wants|

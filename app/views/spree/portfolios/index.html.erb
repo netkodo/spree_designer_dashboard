@@ -1,0 +1,88 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/portfolio.js' %>
+<% end %>
+
+<div class="row col-md-12 text-center">
+  <h1>SHOP PORTFOLIO'S</h1>
+</div>
+
+<div class="row portfolios">
+  <div class="col-md-3">
+    FILTRY
+  </div>
+  <div class="col-md-9">
+
+    <% @portfolios.in_groups_of(4,false) do |p_row| %>
+
+        <div class="row">
+
+        <% for p in p_row %>
+
+          <div class="col-md-3 portfolio">
+
+            <div class="image">
+              <% if p.board.present? %>
+                <%= link_to image_tag(p.portfolio_image.url),room_path(p.board) %>
+              <% else %>
+                <%= image_tag p.portfolio_image.url, class: "img-responsive" %>
+              <% end %>
+            </div>
+
+            <div class="shop-portfolio col-md-12">
+
+              <div class="text-center">
+                <% if p.board.present? or spree_current_user.present? %>
+                    <div class="social-portfolio" data-pid=<%= p.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
+                      <% if p.board.present? %>
+                          <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
+
+                            <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= room_url(p.board) %>&media=<%= p.portfolio_image.url %>&description=<%= p.name %>">
+                              <%= image_tag("frontend/pinterest.png",height: 20, class: "at4-icon aticon-pinterest_share",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                            </a>
+                            <!-- Please call pinit.js only once per page -->
+                            <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                          </div>
+                      <% end %>
+
+                      <% if spree_current_user.present? %>
+                          <div class="favorite add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
+                            <i class="fa fa-heart fa-white"></i>
+                          </div>
+                          <div class="favorite remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
+                            <i class="fa fa-heart fa-red"></i>
+                          </div>
+                      <% end %>
+
+                    </div>
+                <% end %>
+              </div>
+
+
+              <div class="details"><%= p.name %></div>
+              <div>
+                <div class="col-md-4 no-paddings">
+                  <%= image_tag p.user.logo_image.attachment.url(:mini) %>
+                </div>
+
+                <div class="col-md-8 no-paddings">
+                  <span class="details"><%= p.user.full_name %></span>
+                  <br>
+                  <span><%= p.user.company_name %></span>
+                </div>
+              </div>
+
+              <% if p.board.present? %>
+                  <div class="col-md-12 text-center">
+                    <button class="btn btn-primary">Shop the Look</button>
+                  </div>
+              <% end %>
+
+
+            </div>
+          </div>
+        <% end %>
+        </div>
+    <% end %>
+
+  </div>
+</div>
