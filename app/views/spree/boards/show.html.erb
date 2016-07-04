@@ -195,7 +195,7 @@
 			
 			
 			<% unless @board.colors.blank? %>
-			<div class="board-swatch-colors">
+			<div class="board-swatch-colors row col-md-12">
 				<h4>Suggested Paint Colors</h4>
 				<% @board.colors.each_with_index do |color,index| %>
 					<div class="board-swatch-small color-match-link" id="add-colors-link-<%=index%>" data-match-id="1">
@@ -252,7 +252,7 @@
 			</div>
 			<% end %>
 
-      <div class="board-listing col-md-6">
+      <div class="board-listing col-md-6 row">
         <div class="board-image">
           <% if @board.portfolio.present? %>
             <%= board_image(@board,:small)%>

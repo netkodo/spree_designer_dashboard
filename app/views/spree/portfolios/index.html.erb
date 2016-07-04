@@ -21,7 +21,11 @@
           <div class="col-md-3 portfolio">
 
             <div class="image">
-              <%= image_tag p.portfolio_image.url, class: "img-responsive" %>
+              <% if p.board.present? %>
+                <%= link_to image_tag(p.portfolio_image.url),room_path(p.board) %>
+              <% else %>
+                <%= image_tag p.portfolio_image.url, class: "img-responsive" %>
+              <% end %>
             </div>
 
             <div class="shop-portfolio col-md-12">
