@@ -1,5 +1,9 @@
 class Spree::PortfoliosController < Spree::StoreController
 
+  def index
+    @portfolios = Spree::Portfolio.all
+  end
+
   def portfolio
     @portfolio = Spree::Portfolio.new
     @colors = Spree::Color.all.map {|c| [c.name,c.id]}

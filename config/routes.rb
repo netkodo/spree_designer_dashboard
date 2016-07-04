@@ -39,6 +39,8 @@ Spree::Core::Engine.routes.draw do
   post "/portfolio_content" => "portfolios#portfolio_content", :as => :portfolio_content
   get "/portfolio" => "portfolios#portfolio", as: :portfolio
   post "/portfolio" => "portfolios#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
+  get "/portfolios" => "portfolios#index", as: :index
+
   #favoretes portfolio & board
   post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}
   delete "/remove_portfolio_favorite" => "portfolios#remove_portfolio_favorite", :as => :remove_portfolio_favorite,:defaults => {:format => 'json'}
