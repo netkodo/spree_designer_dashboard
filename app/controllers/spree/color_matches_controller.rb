@@ -45,6 +45,22 @@ class Spree::ColorMatchesController < Spree::StoreController
       format.js   { render :action => "show" }
     end
   end
+
+  def create_color_match
+    @board = Spree::Board.find(params[:board_id])
+
+    @board.color_matches.destroy_all
+
+    @color_match = @board.color_matches.new(color_id: params[:color_id],board_id: params[:board_id])
+
+    respond_to do |format|
+      if @color_match.save
+        format.json {render json: [@color_match,@color_match.color], status: :ok}
+      else
+        format.json {render json: @color_match.errors, status: :unprocessable_entity}
+      end
+    end
+  end
     
   
   # redirect to the edit action after create

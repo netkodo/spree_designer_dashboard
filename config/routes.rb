@@ -74,6 +74,8 @@ Spree::Core::Engine.routes.draw do
   get "/tips_tricks" => "extra#tips_tricks", :tips_tricks => :tips_tricks
   get "/video_tutorial" => "extra#video_tutorial", :as => :video_tutorial
 
+  post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
+
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
   post '/rooms/add_answer' => "boards#add_answer"
