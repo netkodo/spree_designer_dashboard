@@ -6,7 +6,7 @@ class Spree::PortfoliosController < Spree::StoreController
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
 
-    @portfolios = Spree::Portfolio.all
+    @portfolios = Spree::Portfolio.all.order('board_id DESC')
 
     colors = @portfolios.all.map {|c| [c.color.name,c.color.id]}
     room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
@@ -44,13 +44,13 @@ class Spree::PortfoliosController < Spree::StoreController
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
       Rails.logger.info statement
 
-      @portfolios = eval(statement)
+      @portfolios = eval(statement).order('board_id DESC')
       colors = @portfolios.map {|c| [c.color.name,c.color.id]}
       room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
     else
-      @portfolios = Spree::Portfolio.all
+      @portfolios = Spree::Portfolio.all.order('board_id DESC')
       colors = @portfolios.map {|c| [c.color.name,c.color.id]}
       room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
