@@ -25,7 +25,7 @@
             <a><i class="fa fa-3x fa-ban" aria-hidden="true"></i></a>
           </li>
           <% @portfolios.each do |p| %>
-              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-color_id=<%= p.wall_color %> data-id=<%= p.id %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
+              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-color_id=<%= p.color_id %> data-id=<%= p.id %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
                 <a><%= image_tag p.portfolio_image.url(:small) %></a>
               </li>
           <% end %>

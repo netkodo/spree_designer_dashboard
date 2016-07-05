@@ -417,7 +417,7 @@ class Spree::BoardsController < Spree::StoreController
     @portfolios = spree_current_user.portfolios
     if @board.portfolio.present?
       @portfolio_id = @board.portfolio.id
-      @color_id = @board.portfolio.wall_color
+      @color_id = @board.portfolio.color_id
     end
 
     @category = []
