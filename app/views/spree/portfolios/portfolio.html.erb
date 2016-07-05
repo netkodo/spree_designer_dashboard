@@ -2,12 +2,23 @@
     <%= javascript_include_tag 'spree/portfolio.js' %>
 <% end %>
 
+
+
 <div class="row">
   <div class="col-md-3">
     <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "portfolio"} %>
   </div>
 
   <div class="col-md-9">
+
+    <div class="col-md-12 text-center my-portfolio">
+      <h1>My portfolio</h1>
+    </div>
+
+    <div class="col-md-7 row text-center add-new-room">
+      <h2>ADD NEW ROOM</h2>
+    </div>
+
     <%= form_for @portfolio,:url => create_portfolio_path, html: {multipart: true, id: "create_portfolio_form"} do |f| %>
         <div class="row">
           <div class="col-md-7">
@@ -55,7 +66,7 @@
             <div class="control-group row">
               <%= f.label :wall_color, :class => 'control-label col-md-3' %>
               <div class="controls col-md-9">
-                <%= f.select :wall_color, options_for_select(@colors),{}, :class => 'form-control' %>
+                <%= f.select :color_id, options_for_select(@colors),{}, :class => 'form-control' %>
                 <div class="info"></div>
               </div>
             </div>
@@ -63,7 +74,7 @@
             <div class="control-group row">
               <label>
                 <input type="checkbox" id="portfolio_tos" class="col-md-3">
-                <div class="col-md-9">
+                <div class="col-md-9 tos">
                   <!--By checking here I attest that I own the rights to the image loaded and agree to allow Scout & Nimble, LLC to use this image-->
                   <!--for marketing purposes. Scout & Nimble, LLC agrees to give the designer credit for the image and use the image for purposes of building-->
                   <!--the designer's brnad.-->
@@ -79,7 +90,7 @@
           </div>
 
           <div class="col-md-5">
-            <img id="img_prev" src="" alt="Your Portfolio image will appear here" class="img-responsive"/>
+            <img id="img_prev" src="" alt="" class="img-responsive"/>
           </div>
         </div>
 

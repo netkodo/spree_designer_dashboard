@@ -2,6 +2,9 @@ class Spree::Portfolio < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :board
+  belongs_to :color
+  belongs_to :room_types, foreign_key: 'room_type', class_name: "Spree::Taxon"
+  belongs_to :room_styles, foreign_key: 'style', class_name: "Spree::Taxon"
   has_many :portfolio_favorites, dependent: :destroy
   validates :name, presence: true
 

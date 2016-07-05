@@ -40,6 +40,7 @@ Spree::Core::Engine.routes.draw do
   get "/portfolio" => "portfolios#portfolio", as: :portfolio
   post "/portfolio" => "portfolios#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
   get "/portfolios" => "portfolios#index", as: :index
+  post "/portfolios_search" => "portfolios#search", as: :portfolios_search, :defaults => {:format => 'html'}
 
   #favoretes portfolio & board
   post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}

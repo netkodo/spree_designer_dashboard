@@ -1,7 +1,79 @@
 class Spree::PortfoliosController < Spree::StoreController
 
   def index
-    @portfolios = Spree::Portfolio.all
+    @colors = Hash.new(0)
+    @designers = Hash.new(0)
+    @room_type = Hash.new(0)
+    @room_style = Hash.new(0)
+
+    @portfolios = Spree::Portfolio.all.order('board_id DESC')
+
+    colors = @portfolios.all.map {|c| [c.color.name,c.color.id]}
+    room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+    room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+    designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
+
+    colors.each do |v|
+      @colors[v] += 1
+    end
+
+    designers.each do |v|
+      @designers[v] += 1
+    end
+
+    room_type.each do |v|
+      @room_type[v] += 1
+    end
+
+    room_style.each do |v|
+      @room_style[v] += 1
+    end
+  end
+
+  def search
+    @colors = Hash.new(0)
+    @designers = Hash.new(0)
+    @room_type = Hash.new(0)
+    @room_style = Hash.new(0)
+
+    if params[:filter].present?
+      tab = []
+      params[:filter].each do |f|
+        tab << "#{f[0]}: #{f[1]}"
+      end
+      statement= "Spree::Portfolio.where(#{tab.join(',')})"
+      Rails.logger.info statement
+
+      @portfolios = eval(statement).order('board_id DESC')
+      colors = @portfolios.map {|c| [c.color.name,c.color.id]}
+      room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
+    else
+      @portfolios = Spree::Portfolio.all.order('board_id DESC')
+      colors = @portfolios.map {|c| [c.color.name,c.color.id]}
+      room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
+    end
+
+    colors.each do |v|
+      @colors[v] += 1
+    end
+
+    designers.each do |v|
+      @designers[v] += 1
+    end
+
+    room_type.each do |v|
+      @room_type[v] += 1
+    end
+
+    room_style.each do |v|
+      @room_style[v] += 1
+    end
+
+    render "spree/portfolios/index",layout: false
   end
 
   def portfolio
@@ -59,7 +131,7 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
+      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:color_id,:portfolio_image)
     end
 end
 
