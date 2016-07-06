@@ -7,8 +7,9 @@ class Spree::PortfoliosController < Spree::StoreController
     @room_style = Hash.new(0)
 
     @portfolios = Spree::Portfolio.all.order('board_id DESC')
+    @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios)
 
-    colors = @portfolios.all.map {|c| [c.color.name,c.color.id]}
+    colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
     room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
     room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
     designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
@@ -42,16 +43,17 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
-      Rails.logger.info statement
 
       @portfolios = eval(statement).order('board_id DESC')
-      colors = @portfolios.map {|c| [c.color.name,c.color.id]}
+      @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios)
+      colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
       room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
     else
       @portfolios = Spree::Portfolio.all.order('board_id DESC')
-      colors = @portfolios.map {|c| [c.color.name,c.color.id]}
+      @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios)
+      colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
       room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
@@ -78,7 +80,8 @@ class Spree::PortfoliosController < Spree::StoreController
 
   def portfolio
     @portfolio = Spree::Portfolio.new
-    @colors = Spree::Color.all.map {|c| [c.name,c.id]}
+    # @colors = Spree::Color.all.map {|c| [c.name,c.id]}
+    @colors = Spree::Board.color_categories
     rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
     styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
     @room_type = rooms.map {|r| [r.name,r.id]}
@@ -131,7 +134,7 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:color_id,:portfolio_image)
+      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
     end
 end
 
