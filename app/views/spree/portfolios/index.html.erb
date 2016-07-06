@@ -45,10 +45,10 @@
       <ul>
         <% @colors.each do |k,v| %>
             <li>
-              <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:color_id].present? and params[:filter][:color_id].include? k[1].to_s %>" data-value="<%= k[1] %>" data-filter="color" >
+              <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>" data-value="<%= k[1] %>" data-filter="color" >
                 <%= k[0] %>
                 <span class="count">(<%= v %>)</span>
-                <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:color_id].present? and params[:filter][:color_id].include? k[1].to_s %>
+                <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>
               </a>
             </li>
         <% end %>
