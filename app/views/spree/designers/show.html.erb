@@ -114,7 +114,7 @@
                   <li>
                     <div class="product-container">
                       <div class="img-container" data-id=<%= portfolio.id %>   >
-                        <%= image_tag portfolio.portfolio_image.url %>
+                        <%= image_tag portfolio.portfolio_image.url(:carousel) %>
                       </div>
                     </div>
                   </li>
@@ -127,7 +127,7 @@
                 <div class="col-md-3">
                   <div class="product-container">
                     <div class="img-container text-center portfolio-carousel-static" data-id=<%= portfolio.id %> >
-                      <%= image_tag portfolio.portfolio_image.url %>
+                      <%= image_tag portfolio.portfolio_image.url(:carousel) %>
                     </div>
                   </div>
                 </div>
