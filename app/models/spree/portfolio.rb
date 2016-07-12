@@ -33,9 +33,9 @@ class Spree::Portfolio < ActiveRecord::Base
     obj.each_with_index do |t,i|
       if i%3 == 0
         i<3 ? z[0] = [t] : z[0] << t
-      elsif i%4 == 1
+      elsif i%3 == 1
         i<3 ? z[1] = [t] : z[1] << t
-      elsif i%4 == 2
+      else i%3 == 2
         i<3 ? z[2] = [t] : z[2] << t
       # else i%4 == 3
       #   i<4 ? z[3] = [t] : z[3] << t
