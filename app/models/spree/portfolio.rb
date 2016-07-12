@@ -9,7 +9,7 @@ class Spree::Portfolio < ActiveRecord::Base
   validates :name, presence: true
 
   has_attached_file :portfolio_image,
-                    styles: { small: '90x90>', medium: '200x>', large: '600x600>' },
+                    styles: { small: '90x90>', medium: '300x>', large: '600x600>' },
                     default_style: :medium,
                     path: 'portfolio_images/:id/:style/:basename.:extension',
                     convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
@@ -31,14 +31,14 @@ class Spree::Portfolio < ActiveRecord::Base
   def self.portfolios_ordering(obj)
     z = {}
     obj.each_with_index do |t,i|
-      if i%4 == 0
-        i<4 ? z[0] = [t] : z[0] << t
+      if i%3 == 0
+        i<3 ? z[0] = [t] : z[0] << t
       elsif i%4 == 1
-        i<4 ? z[1] = [t] : z[1] << t
+        i<3 ? z[1] = [t] : z[1] << t
       elsif i%4 == 2
-        i<4 ? z[2] = [t] : z[2] << t
-      else i%4 == 3
-      i<4 ? z[3] = [t] : z[3] << t
+        i<3 ? z[2] = [t] : z[2] << t
+      # else i%4 == 3
+      #   i<4 ? z[3] = [t] : z[3] << t
       end
     end
     z
