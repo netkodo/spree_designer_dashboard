@@ -12,7 +12,7 @@
 
     <div class="col-md-3">
 
-      <h4>Room Type</h4>
+      <h4>Room Type<span class="toggle-filter">+</span></h4>
       <div class="filter room_type">
         <ul>
           <% @room_type.each do |k,v| %>
@@ -27,7 +27,7 @@
         </ul>
       </div>
 
-      <h4>Room Style</h4>
+      <h4>Room Style<span class="toggle-filter">+</span></h4>
       <div class="filter room_style">
         <ul>
           <% @room_style.each do |k,v| %>
@@ -42,7 +42,7 @@
         </ul>
       </div>
 
-      <h4>Wall Color</h4>
+      <h4>Wall Color<span class="toggle-filter">+</span></h4>
       <div class="filter color">
         <ul>
           <% @colors.each do |k,v| %>
@@ -57,7 +57,7 @@
         </ul>
       </div>
 
-      <h4>Designer</h4>
+      <h4>Designer<span class="toggle-filter">+</span></h4>
       <div class="filter designer">
         <ul>
           <% @designers.each do |k,v| %>
