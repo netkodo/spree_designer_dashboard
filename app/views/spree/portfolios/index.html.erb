@@ -80,11 +80,11 @@
       <div class="result row">
         <% @portfolios_ordering.each do |k,v| %>
 
-            <div class="col-md-4 no-paddings">
+            <div class="col-md-4 col-xs-10 col-xs-offset-1 col-md-offset-0 col-sm-offset-0 col-sm-6 no-paddings">
 
             <% v.each do |p| %>
 
-              <div class="col-md-12 portfolio">
+              <div class="col-md-12 col-sm-12 col-xs-12 portfolio small-paddings">
 
                 <div class="image">
                   <% if p.board.present? %>
@@ -94,7 +94,7 @@
                   <% end %>
                 </div>
 
-                <div class="shop-portfolio col-md-12 <%= 'no-bottom-radius' if p.board.present? %>">
+                <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 <%= 'no-bottom-radius' if p.board.present? %>">
 
                   <div class="text-center">
                     <% if p.board.present? or spree_current_user.present? %>
@@ -137,12 +137,12 @@
 
                   <div class="details"><%= p.name %></div>
                   <div>
-                    <div class="col-md-4 no-paddings">
-                      <%= image_tag p.user.logo_image.attachment.url(:mini) %>
+                    <div class="col-md-3 col-xs-3 col-sm-3 no-paddings">
+                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
                     </div>
 
-                    <div class="col-md-8 no-paddings">
-                      <span class="details"><%= p.user.full_name %></span>
+                    <div class="col-md-9 col-xs-9 col-sm-9 profile-link no-paddings">
+                      <span class="details"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
                       <br>
                       <span><%= p.user.company_name %></span>
                     </div>
@@ -154,9 +154,9 @@
                 </div>
 
                 <% if p.board.present? %>
-                  <div class="shop-portfolio col-md-12">
+                  <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12">
                     <div></div>
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-12 col-xs-12 col-sm-12 text-center">
                       <%= link_to "Shop the Look",room_url(p.board), class: "btn btn-primary" %>
                     </div>
                   </div>
