@@ -1,0 +1,61 @@
+<div class="room-filters">
+  <h4>Room Type</h4>
+  <div class="filter room_type">
+    <ul>
+      <% @room_type.each do |k,v| %>
+          <li>
+            <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_type" >
+              <%= k[0] %>
+              <span class="count">(<%= v %>)</span>
+              <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>
+            </a>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <h4>Room Style</h4>
+  <div class="filter room_style">
+    <ul>
+      <% @room_style.each do |k,v| %>
+          <li>
+            <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:room_style].present? and params[:filter][:room_style].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_style" >
+              <%= k[0] %>
+              <span class="count">(<%= v %>)</span>
+              <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:room_style].present? and params[:filter][:room_style].include? k[1].to_s %>
+            </a>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <h4>Color</h4>
+  <div class="filter color">
+    <ul>
+      <% @colors.each do |k,v| %>
+          <li>
+            <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:color].present? and params[:filter][:color].include? k[1].to_s %>" data-value="<%= k[1] %>" data-filter="color" >
+              <%= k[0] %>
+              <span class="count">(<%= v %>)</span>
+              <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:color].present? and params[:filter][:color].include? k[1].to_s %>
+            </a>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <h4>Designer</h4>
+  <div class="filter designer">
+    <ul>
+      <% @designers.each do |k,v| %>
+          <li>
+            <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:designer_id].present? and params[:filter][:designer_id].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="designer" >
+              <%= k[0] %>
+              <span class="count">(<%= v %>)</span>
+              <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:designer_id].present? and params[:filter][:designer_id].include? k[1].to_s %>
+            </a>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

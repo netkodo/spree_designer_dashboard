@@ -58,8 +58,38 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def index
-    @boards = Spree::Board.published().order("created_at desc")
+    # @boards = Spree::Board.published().order("created_at desc")
     #@products = Spree::Product.featured()
+    @colors = Hash.new(0)
+    @designers = Hash.new(0)
+    @room_type = Hash.new(0)
+    @room_style = Hash.new(0)
+
+    @boards = Spree::Board.published().order("created_at desc")
+
+    colors = []
+    @boards.each do |b|
+      colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+    end
+    room_type = @boards.map { |r| [r.room_type,r.room_type]}
+    room_style = @boards.map { |s| [s.room_style,s.room_style]}
+    designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
+
+    colors.each do |v|
+      @colors[v] += 1
+    end
+
+    designers.each do |v|
+      @designers[v] += 1
+    end
+
+    room_type.each do |v|
+      @room_type[v] += 1
+    end
+
+    room_style.each do |v|
+      @room_style[v] += 1
+    end
   end
 
   def dashboard
@@ -121,57 +151,55 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def search
+    @colors = Hash.new(0)
+    @designers = Hash.new(0)
+    @room_type = Hash.new(0)
+    @room_style = Hash.new(0)
 
-    @boards_scope = Spree::Board.active
-    if params[:color_family] == 0
-      params[:color_family] = nil
-    end
-    unless params[:color_family].blank?
+    if params[:filter].present?
+      tab = []
+      params[:filter].except(:color).each do |f|
+        tab << "#{f[0]}: #{f[1]}"
+      end
 
-      #@related_colors = Spree::Color.by_color_family(params[:color_family])
-      @boards_scope = @boards_scope.by_color_family(params[:color_family])
-    end
-    if params[:room_id] == '0'
-      params[:room_id] = nil
-    end
-    unless params[:room_id].blank?
+      params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
+      @boards = eval(statement)
 
-      @boards_scope = @boards_scope.by_room(params[:room_id])
-    end
-    if params[:style_id] == 0
-      params[:style_id] = nil
-    end
-    unless params[:style_id].blank?
-
-      @boards_scope = @boards_scope.by_style(params[:style_id])
-    end
-    if params[:designer_id] == 0
-      params[:designer_id] = nil
-    end
-    unless params[:designer_id].blank?
-
-      @boards_scope = @boards_scope.by_designer(params[:designer_id])
-    end
-
-    unless params[:price_high].blank?
-
-      @boards_scope = @boards_scope.by_upper_bound_price(params[:price_high])
+      colors = []
+      @boards.each do |b|
+        colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+      end
+      room_type = @boards.map { |r| [r.room_type,r.room_type]}
+      room_style = @boards.map { |s| [s.room_style,s.room_style]}
+      designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
+    else
+      @boards = Spree::Board.published().order("created_at desc")
+      colors = []
+      @boards.each do |b|
+        colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+      end
+      room_type = @boards.map { |r| [r.room_type,r.room_type]}
+      room_style = @boards.map { |s| [s.room_style,s.room_style]}
+      designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
     end
 
-    unless params[:price_low].blank?
-      @boards_scope = @boards_scope.by_lower_bound_price(params[:price_low])
+    colors.each do |v|
+      @colors[v] += 1
     end
 
+    designers.each do |v|
+      @designers[v] += 1
+    end
 
-    @selected_color_family = params[:color_family] || ""
-    @selected_room = params[:room_id] || ""
-    @selected_style = params[:style_id] || ""
-    @selected_designer = params[:designer_id] || ""
-    @selected_price_low = params[:price_low] || ""
-    @selected_price_high = params[:price_high] || ""
+    room_type.each do |v|
+      @room_type[v] += 1
+    end
 
+    room_style.each do |v|
+      @room_style[v] += 1
+    end
 
-    @boards = @boards_scope
+    render "search",layout: false
   end
 
   def my_rooms

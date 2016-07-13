@@ -1,39 +1,62 @@
-<div class="row">
-	<div class="col-md-3">
-		<%= render :partial => "search_form"%>
-	</div>
-	<div class="col-md-9">
-		<div class="page-header">
-			<h1>Search Rooms</h1>
-		</div>
-		<div class="boards-list-main">
-			<% unless @boards.blank? %>
-				<div class="search-summary">
-					We found <%= pluralize(@boards.size, "room") %> that matched your search.  
-				</div>
-				<%= render :partial => "boards_list", :locals => {:boards => @boards}%>
-			<% else %>
-				<div class="empty-results">
-					We couldn't find any rooms for that search.
-				</div>
-			<% end %>
-		</div>
-	</div>
-</div>
+  <div class="col-md-3">
+    <%= render :partial => "filter_search"%>
+  </div>
+  <div class="col-md-9">
+    <% if false %>
+        <div class="prime">
+          <div class="tagline">
+            <h1 class="home-header">Removing the guesswork from home design.</h1>
+            <p class="home-subheader">Browse room designs from the industry's top designers for a room you'll love.</p>
+          </div>
+          <% if false %>
+              <div class="room-highlights">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="home-product">
+                      <%= image_tag("/images/home/table.png")%>
+                      <p><%= link_to "Browse Dining Rooms", "http://www.scoutandnimble.com/boards/search?utf8=%E2%9C%93&room_id=278&style_id=&color_family=&designer_id=&price_low=&price_high=&commit=Search+Rooms", :class => "btn btn-default"%></p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="home-product">
+                      <%= image_tag("/images/home/sofa.png")%>
+                      <p><%= link_to "Browse Living Rooms", "http://www.scoutandnimble.com/boards/search?utf8=%E2%9C%93&room_id=277&style_id=&color_family=&designer_id=&price_low=&price_high=&commit=Search+Rooms", :class => "btn btn-default"%></p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="home-product">
+                      <%= image_tag("/images/home/bed.png")%>
+                      <p><%= link_to "Browse Bedrooms", "http://www.scoutandnimble.com/boards/search?utf8=%E2%9C%93&room_id=279&style_id=&color_family=&designer_id=&price_low=&price_high=&commit=Search+Rooms", :class => "btn btn-default"%></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+        </div>
+
+    <% end %>
+    <div class="page-header">
+      <h1>Featured Rooms</h1>
+    </div>
+    <div class="js-spinner"><%= image_tag("frontend/preloader64.gif")%></div>
+    <div class="boards-list-main">
+      <% unless @boards.blank? %>
+          <%= render :partial => "boards_list", :locals => {:boards => @boards}%>
+      <% else %>
+          <div class="empty-state">There aren't any featured boards at this time.</div>
+      <% end %>
+    </div>
+
+    <% if false %>
+        <div class="boards-list-main">
+          <% unless @products.blank? %>
+              <%#= render :partial => "products_list", :locals => {:products => @products}%>
+          <% else %>
+              <div class="empty-state">There aren't any featured products at this time.</div>
+          <% end %>
+        </div>
+    <% end %>
+  </div>
 
 
-<script>
-$(document).ready(function() {
 
-  
-  $('select.room-filter').prepend("<option value='0'>All Rooms</option>");
-  $('select.style-filter').prepend("<option value='0'>All Styles</option>");
-  $('select.color-filter').prepend("<option value='0'>All Wall Colors</option>");
-  $('select.designer-filter').prepend("<option value='0'>All Designers</option>");
-  
-//$('.minict_wrapper ul:first').prepend("<li class='' data-value=''>All Rooms</li>");
-//$('.minict_wrapper ul:last').prepend("<li class='' data-value=''>All Designers</li>");
-//$('.minict_wrapper ul:eq(2)').prepend("<li class='' data-value=''>All Wall Colors</li>");
-//$('.minict_wrapper ul:eq(1)').prepend("<li class='' data-value=''>All Styles</li>");
-});
-</script>
