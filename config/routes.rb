@@ -5,7 +5,7 @@ Spree::Core::Engine.routes.draw do
   get '/al/:id' => 'users#auto_login', :as => :auto_login
   
   match "/rooms/product_search" => "boards#product_search", :as => :board_product_search, :via =>[:post]
-  get "/rooms/search" => "boards#search", :as => :board_search
+  post "/rooms/search" => "boards#search", :as => :board_search,:defaults => {:format => 'html'}
   get "/rooms/gettaxons" => "boards#gettaxons", :as => :board_gettaxons
 
   resources :board_products

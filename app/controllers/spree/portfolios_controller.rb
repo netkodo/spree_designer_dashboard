@@ -44,8 +44,7 @@ class Spree::PortfoliosController < Spree::StoreController
       end
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
 
-      @portfolios = eval(statement).order('board_id DESC')
-      @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios)
+      @boards = eval(statement).order('board_id DESC')
       colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
       room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
