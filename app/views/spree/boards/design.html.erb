@@ -26,7 +26,7 @@
           </li>
           <% @portfolios.each do |p| %>
               <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-id=<%= p.id %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
-                <a><%= image_tag p.portfolio_image.url(:small) %></a>
+                <a><%= image_tag p.portfolio_image.url(:carousel) %></a>
               </li>
           <% end %>
         </ul>
