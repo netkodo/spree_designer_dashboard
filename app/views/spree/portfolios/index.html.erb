@@ -97,29 +97,29 @@
                 <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 <%= 'no-bottom-radius' if p.board.present? %>">
 
                   <div class="text-center">
-                    <% if p.board.present? or spree_current_user.present? %>
+                    <%# if p.board.present? or spree_current_user.present? %>
                         <div class="social-portfolio" data-pid=<%= p.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
-                          <% if p.board.present? %>
+                          <%# if p.board.present? %>
                               <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
 
-                                <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= room_url(p.board) %>&media=<%= p.portfolio_image.url %>&description=<%= p.name %>">
+                                <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>&media=<%= p.portfolio_image.url(:large) %>&description=<%= p.name %>">
                                   <%= image_tag("frontend/pinterest.png",height: 20, class: "at4-icon aticon-pinterest_share",style: "background-color: #c9cace;position:relative;top:-1px;") %>
                                 </a>
                                 <!-- Please call pinit.js only once per page -->
                                 <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
                               </div>
-                          <% end %>
+                          <%# end %>
 
                           <% if spree_current_user.present? %>
-                              <div class="favorite add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
+                              <div class="favorite fav add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
                                 <i class="fa fa-heart fa-white"></i>
                               </div>
-                              <div class="favorite remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
+                              <div class="favorite fav remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
                                 <i class="fa fa-heart fa-red"></i>
                               </div>
                           <% end %>
 
-                          <% if p.board.present? %>
+                          <%# if p.board.present? %>
                             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
                             <script>
 
@@ -127,11 +127,11 @@
                                 pubid: "ra-54fe66e3227e091d"
                               }
                             </script>
-                            <div class="addthis_sharing_toolbox set-addthis-left" data-url="<%= room_url(p.board) %>" data-title=<%= p.name %> ></div>
-                          <% end %>
+                            <div class="addthis_sharing_toolbox set-addthis-left" data-url="<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>" data-title=<%= p.name %> ></div>
+                          <%# end %>
 
                         </div>
-                    <% end %>
+                    <%# end %>
                   </div>
 
 

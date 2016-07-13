@@ -109,12 +109,12 @@
   <% if @portfolios.any? %>
       <% if @portfolios.count > 4 %>
           <div class="container slide-products col-md-12">
-            <ul class="products_flexi_box nbs-flexisel-ul">
+            <ul class="flexi-box-designer-portfolios nbs-flexisel-ul carusel-margin">
               <% @portfolios.each do |portfolio| %>
                   <li>
                     <div class="product-container">
                       <div class="img-container" data-id=<%= portfolio.id %>   >
-                        <%= image_tag portfolio.portfolio_image.url(:carousel) %>
+                        <%= image_tag portfolio.portfolio_image.url(:carousel), class: 'img-responsive carusel-img' %>
                       </div>
                     </div>
                   </li>
