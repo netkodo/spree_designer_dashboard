@@ -1,6 +1,6 @@
 <div class="room-filters">
-  <h4>Room Type<span class="toggle-filter">-</span></h4>
-  <div class="filter room_type">
+  <h4>Room Type<span class="toggle-filter"><%= params[:filter].present? ? (params[:filter][:room_type].present? ? '-' : '+') : '-' %></span></h4>
+  <div class="filter room_type <%= params[:filter].present? ? (params[:filter][:room_type].present? ? '' : 'filter-hide') : '' %>">
     <ul>
       <% @room_type.each do |k,v| %>
           <li>
@@ -14,8 +14,8 @@
     </ul>
   </div>
 
-  <h4>Room Style<span class="toggle-filter">-</span></h4>
-  <div class="filter room_style">
+  <h4>Room Style<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:room_style].present?) ? "-":"+" %></span></h4>
+  <div class="filter room_style <%= (params[:filter].present? and params[:filter][:room_style].present?) ? '' : 'filter-hide' %>">
     <ul>
       <% @room_style.each do |k,v| %>
           <li>
@@ -29,8 +29,8 @@
     </ul>
   </div>
 
-  <h4>Color<span class="toggle-filter">-</span></h4>
-  <div class="filter color">
+  <h4>Color<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:color].present?) ? "-":"+" %></span></h4>
+  <div class="filter color <%= (params[:filter].present? and params[:filter][:designer_id].present?) ? '' : 'filter-hide' %>">
     <ul>
       <% @colors.each do |k,v| %>
           <li>
@@ -44,8 +44,8 @@
     </ul>
   </div>
 
-  <h4>Designer<span class="toggle-filter">-</span></h4>
-  <div class="filter designer">
+  <h4>Designer<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:designer_id].present?) ? "-":"+" %></span></h4>
+  <div class="filter designer <%= (params[:filter].present? and params[:filter][:designer_id].present?) ? '' : 'filter-hide' %>">
     <ul>
       <% @designers.each do |k,v| %>
           <li>
