@@ -136,11 +136,11 @@
 
                   <div class="details"><%= p.name %></div>
                   <div>
-                    <div class="col-md-3 col-xs-3 col-sm-3 no-paddings">
-                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
+                    <div class="col-md-3 col-xs-4 col-sm-4 text-center small-paddings">
+                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img img-responsive"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
                     </div>
 
-                    <div class="col-md-9 col-xs-9 col-sm-9 profile-link no-paddings">
+                    <div class="col-md-9 col-xs-8 col-sm-8 profile-link small-paddings">
                       <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
                       <br>
                       <span class="designer_company"><%= p.user.company_name %></span>
@@ -155,7 +155,7 @@
                 <% if p.board.present? %>
                   <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12">
                     <div></div>
-                    <div class="col-md-12 col-xs-12 col-sm-12 text-center">
+                    <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings">
                       <%= link_to "Shop the Look",room_url(p.board), class: "btn btn-primary" %>
                     </div>
                   </div>
