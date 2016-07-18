@@ -30,12 +30,14 @@
         </div>
         <%# end %>
       <% end %>
-      <button type="button" class="close new-close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <% if @portfolio.board.present? %>
-        <%= link_to image_tag(@portfolio.portfolio_image.url(:large)),room_path(@portfolio.board) %>
-      <% else %>
-        <%= image_tag @portfolio.portfolio_image.url(:large) %>
-      <% end %>
+      <div>
+        <button type="button" class="close new-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <% if @portfolio.board.present? %>
+          <%= link_to image_tag(@portfolio.portfolio_image.url(:large)),room_path(@portfolio.board),class:'img-responsive' %>
+        <% else %>
+          <%= image_tag @portfolio.portfolio_image.url(:large),class:'img-responsive' %>
+        <% end %>
+      </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
