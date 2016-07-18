@@ -131,7 +131,7 @@
                   <div class="details"><%= p.name %></div>
                   <div>
                     <div class="col-md-3 col-xs-4 col-sm-4 text-center small-paddings">
-                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img img-responsive"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
+                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
                     </div>
 
                     <div class="col-md-9 col-xs-8 col-sm-8 profile-link small-paddings">
