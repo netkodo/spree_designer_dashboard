@@ -135,9 +135,12 @@
                     </div>
 
                     <div class="col-md-9 col-xs-8 col-sm-8 profile-link small-paddings">
-                      <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
-                      <br>
-                      <span class="designer_company"><%= p.user.company_name %></span>
+                      <div class="designer_name_div">
+                        <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
+                      </div>
+                      <div class="designer_company_div">
+                        <span class="designer_company"><%= p.user.company_name %></span>
+                      </div>
                     </div>
                   </div>
 
