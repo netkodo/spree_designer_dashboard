@@ -1,0 +1,170 @@
+<% if @portfolios_ordering.any? %>
+
+    <div class="row col-md-12 text-center">
+      <h1>SHOP PORTFOLIO'S</h1>
+    </div>
+
+    <div class="col-md-3">
+      <h4>Room Type<span class="toggle-filter"><%= params[:filter].present? ? (params[:filter][:room_type].present? ? '-' : '+') : '-' %></span></h4>
+      <div class="filter room_type <%= params[:filter].present? ? (params[:filter][:room_type].present? ? '' : 'filter-hide') : '' %>">
+        <ul>
+          <% @room_type.each do |k,v| %>
+              <li>
+                <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_type" >
+                  <%= k[0] %>
+                  <span class="count">(<%= v %>)</span>
+                  <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>
+                </a>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <h4>Room Style<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:style].present?) ? "-":"+" %></span></h4>
+      <div class="filter room_style <%= (params[:filter].present? and params[:filter][:style].present?) ? '' : 'filter-hide' %>">
+        <ul>
+          <% @room_style.each do |k,v| %>
+              <li>
+                <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:style].present? and params[:filter][:style].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_style" >
+                  <%= k[0] %>
+                  <span class="count">(<%= v %>)</span>
+                  <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:style].present? and params[:filter][:style].include? k[1].to_s %>
+                </a>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <h4>Wall Color<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:wall_color].present?) ? "-":"+" %></span></h4>
+      <div class="filter color <%= (params[:filter].present? and params[:filter][:wall_color].present?) ? '' : 'filter-hide' %>">
+        <ul>
+          <% @colors.each do |k,v| %>
+              <li>
+                <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>" data-value="<%= k[1] %>" data-filter="color" >
+                  <%= k[0] %>
+                  <span class="count">(<%= v %>)</span>
+                  <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>
+                </a>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <h4>Designer<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:user_id].present?) ? "-":"+" %></span></h4>
+      <div class="filter designer <%= (params[:filter].present? and params[:filter][:user_id].present?) ? '' : 'filter-hide' %>">
+        <ul>
+          <% @designers.each do |k,v| %>
+              <li>
+                <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:user_id].present? and params[:filter][:user_id].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="designer" >
+                  <%= k[0] %>
+                  <span class="count">(<%= v %>)</span>
+                  <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:user_id].present? and params[:filter][:user_id].include? k[1].to_s %>
+                </a>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+
+    </div>
+    <div class="col-md-9">
+
+      <div class="js-spinner"><%= image_tag("frontend/preloader64.gif")%></div>
+
+      <div class="result row">
+        <% @portfolios_ordering.each do |k,v| %>
+
+            <div class="col-md-4 col-xs-6 col-sm-6 no-paddings">
+
+            <% v.each do |p| %>
+
+              <div class="col-md-12 col-sm-12 col-xs-12 portfolio small-paddings">
+
+                <div class="image">
+                  <% if p.board.present? %>
+                    <%= link_to image_tag(p.portfolio_image.url),room_path(p.board) %>
+                  <% else %>
+                    <%= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
+                  <% end %>
+                </div>
+
+                <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 <%= 'no-bottom-radius' if p.board.present? %>">
+
+                  <div class="text-center">
+                    <%# if p.board.present? or spree_current_user.present? %>
+                        <div class="social-portfolio" data-pid=<%= p.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
+                          <%# if p.board.present? %>
+                              <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
+
+                                <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>&media=<%= p.portfolio_image.url(:large) %>&description=<%= p.name %>">
+                                  <%= image_tag("frontend/pinterest.png",height: 20, class: "at4-icon aticon-pinterest_share",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                                </a>
+                                <!-- Please call pinit.js only once per page -->
+                                <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                              </div>
+                          <%# end %>
+
+                          <% if spree_current_user.present? %>
+                              <div class="favorite fav add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
+                                <i class="fa fa-heart fa-white"></i>
+                              </div>
+                              <div class="favorite fav remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
+                                <i class="fa fa-heart fa-red"></i>
+                              </div>
+                          <% end %>
+
+                          <%# if p.board.present? %>
+                            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
+                            <script>
+
+                              var addthis_config = {
+                                pubid: "ra-54fe66e3227e091d"
+                              }
+                            </script>
+                            <div class="addthis_sharing_toolbox set-addthis-left" data-url="<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>" data-title=<%= p.name %> ></div>
+                          <%# end %>
+
+                        </div>
+                    <%# end %>
+                  </div>
+
+
+                  <div class="details"><%= p.name %></div>
+                  <div>
+                    <div class="col-md-3 col-xs-4 col-sm-4 text-center small-paddings">
+                      <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img img-responsive"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
+                    </div>
+
+                    <div class="col-md-9 col-xs-8 col-sm-8 profile-link small-paddings">
+                      <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
+                      <br>
+                      <span class="designer_company"><%= p.user.company_name %></span>
+                    </div>
+                  </div>
+
+
+
+
+                </div>
+
+                <% if p.board.present? %>
+                  <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12">
+                    <div></div>
+                    <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings">
+                      <%= link_to "Shop the Look",room_url(p.board), class: "btn btn-primary" %>
+                    </div>
+                  </div>
+                <% end %>
+
+
+              </div>
+            <% end %>
+            </div>
+        <% end %>
+      </div>
+
+    </div>
+<% else %>
+    <div class="row col-md-12 text-center">
+      <h1>THERE IS NO PORTFOLIO'S YET</h1>
+    </div>
+<% end %>
