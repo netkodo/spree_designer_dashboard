@@ -28,15 +28,15 @@ class Spree::Portfolio < ActiveRecord::Base
     self.portfolio_favorites.find_by(user_id: user.id) ? true : false
   end
 
-  def self.portfolios_ordering(obj)
+  def self.portfolios_ordering(obj,cols)
     z = {}
     obj.each_with_index do |t,i|
-      if i%3 == 0
-        i<3 ? z[0] = [t] : z[0] << t
-      elsif i%3 == 1
-        i<3 ? z[1] = [t] : z[1] << t
-      else i%3 == 2
-        i<3 ? z[2] = [t] : z[2] << t
+      if i%cols == 0
+        i<cols ? z[0] = [t] : z[0] << t
+      elsif i%cols == 1
+        i<cols ? z[1] = [t] : z[1] << t
+      else i%cols == 2
+        i<cols ? z[2] = [t] : z[2] << t
       # else i%4 == 3
       #   i<4 ? z[3] = [t] : z[3] << t
       end
