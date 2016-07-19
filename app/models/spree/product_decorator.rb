@@ -76,6 +76,15 @@ Spree::Product.class_eval do
   end
 
 
+  def is_in_room?
+    if self.boards.present?
+      t = self.boards.map{|s| s.status=="published" ? true : false}
+      t.include?(true)
+    else
+      false
+    end
+  end
+
   def promoted_board
     if self.boards and self.boards.first
       self.boards.first
