@@ -275,6 +275,11 @@
 
 <%#= render :partial => "spree/shared/add_to_cart_modal" %>
 
+<% if !@board.other_designer_boards.blank? %>
+    <h3>Other Designer Rooms</h3>
+    <%= render :partial => "boards_list", :locals => {:boards => @board.other_designer_boards}%>
+<% end %>
+
 <h3>Related Rooms</h3>
 <% if !@board.related_boards.blank? %>
 	<%= render :partial => "boards_list", :locals => {:boards => @board.related_boards}%>

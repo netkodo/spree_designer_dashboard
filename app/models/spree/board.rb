@@ -330,6 +330,10 @@ class Spree::Board < ActiveRecord::Base
     return subsubcategory
   end
 
+  def other_designer_boards
+    self.designer.boards.where(status: "published").where.not(id: self.id)
+  end
+
   def related_boards
 
     boards_scope = Spree::Board.active
