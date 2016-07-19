@@ -81,7 +81,7 @@
 
                 <div class="image">
                   <% if p.board.present? and p.board.status=="published" %>
-                    <%= link_to image_tag(p.portfolio_image.url),room_path(p.board) %>
+                    <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p.board) %>
                   <% else %>
                     <%= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
                   <% end %>
@@ -153,7 +153,7 @@
                   <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12">
                     <div></div>
                     <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings">
-                      <%= link_to "Shop the Look",room_url(p.board), class: "btn btn-primary" %>
+                      <%= link_to "Shop the Look",show_portfolio_url(p.board), class: "btn btn-primary" %>
                     </div>
                   </div>
                 <% end %>
