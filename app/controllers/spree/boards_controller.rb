@@ -191,6 +191,11 @@ class Spree::BoardsController < Spree::StoreController
     impressionist(@board)
   end
 
+  def show_portfolio
+    @board = Spree::Board.friendly.find(params[:id])
+    impressionist(@board)
+  end
+
   def preview
     render :action => "show"
   end
