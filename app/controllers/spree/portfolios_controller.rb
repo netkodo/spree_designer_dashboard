@@ -80,6 +80,8 @@ class Spree::PortfoliosController < Spree::StoreController
 
   def portfolio_content
     @portfolio = Spree::Portfolio.find(params[:portfolio_id])
+    w=Paperclip::Geometry.from_file(@portfolio.portfolio_image(:large)).width
+    w >= params[:width].to_i ? @width=params[:width].to_i-20 : @width=w
   end
 
   def add_portfolio_favorite

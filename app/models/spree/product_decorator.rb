@@ -76,6 +76,15 @@ Spree::Product.class_eval do
   end
 
 
+  def is_in_room?
+    if self.boards.present?
+      t = self.boards.pluck(:status)
+      t.include?("published")
+    else
+      false
+    end
+  end
+
   def promoted_board
     if self.boards and self.boards.first
       self.boards.first

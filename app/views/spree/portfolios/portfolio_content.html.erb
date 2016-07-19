@@ -1,6 +1,6 @@
 <!--MODAL-->
 <div id="portfolio-modal" class="modal">
-  <div class="modal-dialog" style="width: <%= Paperclip::Geometry.from_file(@portfolio.portfolio_image(:large)).width %>px;">
+  <div class="modal-dialog" style="width: <%= @width %>px;">
     <div class="modal-content text-center">
 
       <%# if @portfolio.board.present? or spree_current_user.present? %>
