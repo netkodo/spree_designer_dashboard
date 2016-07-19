@@ -78,8 +78,8 @@ Spree::Product.class_eval do
 
   def is_in_room?
     if self.boards.present?
-      t = self.boards.map{|s| s.status=="published" ? true : false}
-      t.include?(true)
+      t = self.boards.pluck(:status)
+      t.include?("published")
     else
       false
     end
