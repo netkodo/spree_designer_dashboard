@@ -248,15 +248,26 @@
 			</div>
 			<% end %>
 
-      <!--<div class="board-listing col-md-6 row">-->
-        <!--<div class="board-image">-->
-          <!--<%# if @board.portfolio.present? %>-->
-            <!--<%#= board_image(@board,:small)%>-->
-          <!--<%# end %>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="row">
+      <% if @board.portfolio.present? %>
+        <div class="board-listing col-md-6 ">
+          <div class="board-image text-center">
+            <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
+          </div>
+        </div>
+      <% end %>
+      <% if !@board.other_designer_boards.blank? %>
+        <% @board.other_designer_boards.each do |room| %>
+              <div class="board-listing col-md-6 ">
+                <div class="board-image">
+                  <%= link_to image_tag(room.board_image.attachment.url(:small)), room_path(room)%>
+                </div>
+              </div>
+        <% end %>
+      <% end %>
+      </div>
 
-		</div>
+    </div>
 	</div>
 </div>
 
@@ -271,10 +282,10 @@
 
 <%#= render :partial => "spree/shared/add_to_cart_modal" %>
 
-<% if !@board.other_designer_boards.blank? %>
-    <h3>Other Designer Rooms</h3>
-    <%= render :partial => "boards_list", :locals => {:boards => @board.other_designer_boards}%>
-<% end %>
+<%# if !@board.other_designer_boards.blank? %>
+    <!--<h3>Other Designer Rooms</h3>-->
+    <%#= render :partial => "boards_list", :locals => {:boards => @board.other_designer_boards}%>
+<%# end %>
 
 <h3>Related Rooms</h3>
 <% if !@board.related_boards.blank? %>
