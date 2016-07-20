@@ -260,7 +260,7 @@
         <% @board.other_designer_boards.each do |room| %>
               <div class="board-listing col-md-6 ">
                 <div class="board-image">
-                  <%= link_to image_tag(room.board_image.attachment.url(:small)), room_path(@board)%>
+                  <%= link_to image_tag(room.board_image.attachment.url(:small)), room_path(room)%>
                 </div>
               </div>
         <% end %>
