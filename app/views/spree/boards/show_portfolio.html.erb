@@ -255,7 +255,7 @@
       <div class="board-listing col-md-6 row">
         <div class="board-image">
           <% if @board.portfolio.present? %>
-            <%=link_to board_image(@board,:small), room_path(@board)%>
+            <%=link_to board_image(@board,:large), room_path(@board)%>
           <% end %>
         </div>
       </div>
