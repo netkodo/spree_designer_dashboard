@@ -449,10 +449,7 @@ class Spree::BoardsController < Spree::StoreController
 
   def design
     @portfolios = spree_current_user.portfolios
-    if @board.portfolio.present?
-      @portfolio_id = @board.portfolio.id
-      @color_id = @board.portfolio.color_id
-    end
+    @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 
     @category = []
     @subcategory = []
