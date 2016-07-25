@@ -39,6 +39,8 @@ Spree::Core::Engine.routes.draw do
   #portfolio routes
   post "/portfolio_content" => "portfolios#portfolio_content", :as => :portfolio_content
   get "/portfolio" => "portfolios#portfolio", as: :portfolio
+  get "/edit_portfolio" => "portfolios#edit_portfolio", as: :edit_portfolio
+  post "/update_portfolio" => "portfolios#update_portfolio", :as => :update_portfolio, :defaults => {:format => 'json'}
   post "/portfolio" => "portfolios#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
   get "/portfolios" => "portfolios#index", as: :index
   post "/portfolios_search" => "portfolios#search", as: :portfolios_search, :defaults => {:format => 'html'}

@@ -63,6 +63,29 @@ class Spree::PortfoliosController < Spree::StoreController
     @portfolios = spree_current_user.portfolios
   end
 
+  def edit_portfolio
+    @colors = Spree::Board.color_categories
+    rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
+    styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
+    @room_type = rooms.map {|r| [r.name,r.id]}
+    @room_style = styles.map {|s| [s.name,s.id]}
+
+    @portfolio = Spree::Portfolio.find(params[:id])
+  end
+
+  def update_portfolio
+    @portfolio = Spree::Portfolio.find(params[:portfolio][:id])
+    respond_to do |format|
+      if @portfolio.update(portfolio_params)
+        format.html {redirect_to portfolio_path}
+        format.json {render json: {location: portfolio_path}, status: :ok}
+      else
+        format.html {redirect_to portfolio_path}
+        format.json {render json: @portfolio.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
   def create_portfolio
     # checking params because if we wont cut portfolio_image it wont pass validation even if its empty string
     !portfolio_params[:portfolio_image].present? ? x = portfolio_params.except(:portfolio_image) : x = portfolio_params
@@ -109,7 +132,7 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
+      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
     end
 end
 

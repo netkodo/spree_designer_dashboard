@@ -10,6 +10,7 @@
   </div>
 
   <div class="col-md-9">
+    <div class="portfolio-form">
 
     <div class="col-md-12 text-center my-portfolio">
       <h1>My portfolio</h1>
@@ -100,8 +101,9 @@
           </div>
         </div>
     <% end %>
+    </div>
 
-    <div class="row">
+    <div class="row dashboard-portfolios">
       <% if @portfolios.any? %>
         <% if @portfolios.count > 4 %>
           <div class="container slide-products col-md-12">
@@ -110,7 +112,7 @@
                   <li>
                     <div class="product-container">
                       <div class="img-container">
-                        <%= image_tag portfolio.portfolio_image.url(:carousel), class: "carusel-img" %>
+                        <%= image_tag portfolio.portfolio_image.url(:carousel), class: "carusel-img", data: {'id' => portfolio.id} %>
                       </div>
                       <div class="title">
                         <%= portfolio.name %>
@@ -126,7 +128,7 @@
                 <div class="col-md-3">
                   <div class="product-container">
                     <div class="img-container text-center portfolio-carousel-static">
-                      <%= image_tag portfolio.portfolio_image.url(:carousel) %>
+                      <%= image_tag portfolio.portfolio_image.url(:carousel), data: {'id' => portfolio.id} %>
                     </div>
                     <div class="title text-center">
                       <%= portfolio.name %>
