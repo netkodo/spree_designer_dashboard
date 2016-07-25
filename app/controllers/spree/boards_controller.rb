@@ -348,7 +348,7 @@ class Spree::BoardsController < Spree::StoreController
 
       if params[:is_assigned_to_portfolio].present?
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
-        portfolio.update(board_id: @board.id)
+        portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
       else
         if @board.portfolio.present?
           portfolio = Spree::Portfolio.find(@board.portfolio.id)
