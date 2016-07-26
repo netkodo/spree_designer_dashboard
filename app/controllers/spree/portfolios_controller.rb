@@ -4,6 +4,25 @@ class Spree::PortfoliosController < Spree::StoreController
 
   end
 
+  def portfolio_page
+    if params[:filter].present?
+      tab = []
+      params[:filter].each do |f|
+        tab << "#{f[0]}: #{f[1]}"
+      end
+      statement= "Spree::Portfolio.where(#{tab.join(',')})"
+
+      tmp_portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      @portfolios = tmp_portfolios.page(params[:page]).per(3)
+      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+    else
+      tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
+      @portfolios = tmp_portfolios.page(params[:page]).per(3)
+      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+    end
+    render "portfolio_page", layout: false
+  end
+
   def search
     @colors = Hash.new(0)
     @designers = Hash.new(0)
@@ -17,19 +36,21 @@ class Spree::PortfoliosController < Spree::StoreController
       end
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
 
-      @portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      tmp_portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      @portfolios = tmp_portfolios.page(params[:page]).per(3)
       params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
-      room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-      room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-      designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
+      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
     else
-      @portfolios = Spree::Portfolio.all.order('created_at DESC')
+      tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
+      @portfolios = tmp_portfolios.page(params[:page]).per(3)
       params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = @portfolios.map { |c| [c.wall_color,c.wall_color]}
-      room_type = @portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-      room_style = @portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-      designers = @portfolios.map {|d| [d.user.full_name,d.user.id]}
+      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
     end
 
     colors.each do |v|
