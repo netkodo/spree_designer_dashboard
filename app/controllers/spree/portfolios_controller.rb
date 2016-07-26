@@ -13,12 +13,30 @@ class Spree::PortfoliosController < Spree::StoreController
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
 
       tmp_portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      if params[:page].present? and params[:page].to_i > 1
+        obj = []
+        (1..params[:page].to_i).each do |page|
+          tmp_portfolios.page(page).per(3).each do |portfolio|
+            obj << portfolio
+          end
+        end
+      end
+
       @portfolios = tmp_portfolios.page(params[:page]).per(3)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
       tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
+      if params[:page].present? and params[:page].to_i > 1
+        obj = []
+        (1..params[:page].to_i).each do |page|
+          tmp_portfolios.page(page).per(3).each do |portfolio|
+            obj << portfolio
+          end
+        end
+      end
+      # tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(3)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     end
     render "portfolio_page", layout: false
   end
