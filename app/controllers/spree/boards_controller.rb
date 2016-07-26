@@ -66,7 +66,7 @@ class Spree::BoardsController < Spree::StoreController
     @room_style = Hash.new(0)
 
     tmp_boards = Spree::Board.published().order("created_at desc")
-    @boards = tmp_boards.page(params[:page]).per(4)
+    @boards = tmp_boards.page(params[:page]).per(60)
 
     colors = []
     tmp_boards.each do |b|
@@ -101,7 +101,7 @@ class Spree::BoardsController < Spree::StoreController
       end
       params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
       tmp_boards = eval(statement)
-      @boards = tmp_boards.page(params[:page]).per(4)
+      @boards = tmp_boards.page(params[:page]).per(60)
     else
       @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(4)
     end
