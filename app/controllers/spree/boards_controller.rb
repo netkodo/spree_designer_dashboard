@@ -311,6 +311,37 @@ class Spree::BoardsController < Spree::StoreController
     end
   end
 
+  def product_result_page
+    params.merge(:per_page => 60)
+
+    @board = Spree::Board.where(id: params[:board_id]).first
+
+    if @board.present? and @board.show_out_of_stock == true
+      out_of_stock = {order: "quantity_on_hand DESC, spree_variants.backorderable DESC"}
+    else
+      out_of_stock = {where: "quantity_on_hand > 0 "}
+    end
+    taxons = []
+    unless taxons.empty?
+      @searcher = build_searcher(params.merge(:taxon => taxons))
+    else
+      @searcher = build_searcher(params)
+    end
+    if params[:supplier_id] and params[:supplier_id].to_i > 0
+      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+    else
+      @all_products = @searcher.retrieve_products(out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+    end
+    @products = @all_products
+
+    @sign_in_count = spree_current_user.sign_in_count
+
+    session[:t_filter]=1 if @products.present?
+    respond_to do |format|
+      format.html { render :layout => false }
+    end
+  end
+
   def product_search
     params.merge(:per_page => 100)
     if params[:s].present?

@@ -1,16 +1,8 @@
-<div class="paginate" data-sign_in_count=<%= @sign_in_count %> >
-  <%# unless products.empty? %>
-      <%# paginated_products = products %>
-      <%# if paginated_products.respond_to?(:num_pages) %>
-          <%#= paginate paginated_products %>
-      <%# end %>
-  <%# end %>
-</div>
-<div class="js-render-product-room-builder" data-filter="<%= reload_filters_rooms_path(s: params[:s], keywords: params[:keywords], format: 'html') %>">
-  <% unless products.blank? %>
-      <% cache products do %>
-          <div class="select-products-box-inner">
-            <% products.in_groups_of(3, false) do |row_products| %>
+
+  <% unless @products.blank? %>
+      <% cache @products do %>
+          <div class="">
+            <% @products.in_groups_of(3, false) do |row_products| %>
                 <div class="row">
                   <% for product in row_products %>
                       <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
@@ -78,18 +70,10 @@
             <% end%>
 
       <% end %>
-      </div>
-      <!--<div class="paginate">-->
-        <!--<%# unless products.empty? %>-->
-            <!--<%# paginated_products = products %>-->
-            <!--<%# if paginated_products.respond_to?(:num_pages) %>-->
-                <!--<%#= paginate paginated_products %>-->
-            <!--<%# end %>-->
-        <!--<%# end %>-->
-      <!--</div>-->
+
       <div class="hidden paginate-to-remove">
-        <% unless products.empty? %>
-        <% paginated_products = products %>
+        <% unless @products.empty? %>
+        <% paginated_products = @products %>
         <% if paginated_products.respond_to?(:num_pages) %>
         <%= paginate paginated_products %>
         <% end %>
@@ -98,4 +82,3 @@
   <% else %>
       <p class="empty-search-state">We couldn't find any products for that search.</p>
   <% end %>
-</div>

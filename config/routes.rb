@@ -19,6 +19,7 @@ Spree::Core::Engine.routes.draw do
     collection do
       post :search_all_categories
       post :product_result
+      post :product_result_page, :defaults => {:format => 'html'}
       post :reload_filters
       post :set_out_of_stock_in_room
     end
