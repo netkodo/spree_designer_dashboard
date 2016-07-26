@@ -6,6 +6,7 @@ Spree::Core::Engine.routes.draw do
   
   match "/rooms/product_search" => "boards#product_search", :as => :board_product_search, :via =>[:post]
   post "/rooms/search" => "boards#search", :as => :board_search,:defaults => {:format => 'html'}
+  post "/room_page" => "boards#room_page", :as => :room_page,:defaults => {:format => 'html'}
   get "/rooms/gettaxons" => "boards#gettaxons", :as => :board_gettaxons
   get "/portfolios/:id" => "boards#show_portfolio", :as => :show_portfolio
 

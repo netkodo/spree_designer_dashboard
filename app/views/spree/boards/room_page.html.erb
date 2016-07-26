@@ -1,5 +1,5 @@
 
-<% boards.in_groups_of(2, false) do |row_boards| %>
+<% @boards.in_groups_of(2, false) do |row_boards| %>
 	<div class="row">
 	<% for board in row_boards %>
 		<div class="col-md-6">
@@ -23,5 +23,5 @@
 	</div>
 <% end %>
 <div class="hidden paginate-to-remove">
-  <%= paginate boards %>
+  <%= paginate @boards %>
 </div>

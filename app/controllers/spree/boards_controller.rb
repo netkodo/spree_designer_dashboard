@@ -65,15 +65,16 @@ class Spree::BoardsController < Spree::StoreController
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
 
-    @boards = Spree::Board.published().order("created_at desc")
+    tmp_boards = Spree::Board.published().order("created_at desc")
+    @boards = tmp_boards.page(params[:page]).per(4)
 
     colors = []
-    @boards.each do |b|
+    tmp_boards.each do |b|
       colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
     end
-    room_type = @boards.map { |r| [r.room_type,r.room_type]}
-    room_style = @boards.map { |s| [s.room_style,s.room_style]}
-    designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
+    room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
+    room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
+    designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
 
     colors.each do |v|
       @colors[v] += 1
@@ -90,6 +91,21 @@ class Spree::BoardsController < Spree::StoreController
     room_style.each do |v|
       @room_style[v] += 1
     end
+  end
+
+  def room_page
+    if params[:filter].present?
+      tab = []
+      params[:filter].except(:color).each do |f|
+        tab << "#{f[0]}: #{f[1]}"
+      end
+      params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
+      tmp_boards = eval(statement)
+      @boards = tmp_boards.page(params[:page]).per(4)
+    else
+      @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(4)
+    end
+    render "room_page", layout: false
   end
 
   def dashboard
@@ -163,24 +179,26 @@ class Spree::BoardsController < Spree::StoreController
       end
 
       params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
-      @boards = eval(statement)
+      tmp_boards = eval(statement)
+      @boards = tmp_boards.page(params[:page]).per(4)
 
       colors = []
-      @boards.each do |b|
+      tmp_boards.each do |b|
         colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
       end
-      room_type = @boards.map { |r| [r.room_type,r.room_type]}
-      room_style = @boards.map { |s| [s.room_style,s.room_style]}
-      designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
+      room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
+      room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
+      designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
     else
-      @boards = Spree::Board.published().order("created_at desc")
+      tmp_boards = Spree::Board.published().order("created_at desc")
+      @boards = tmp_boards.page(params[:page]).per(4)
       colors = []
-      @boards.each do |b|
+      tmp_boards.each do |b|
         colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
       end
-      room_type = @boards.map { |r| [r.room_type,r.room_type]}
-      room_style = @boards.map { |s| [s.room_style,s.room_style]}
-      designers = @boards.map {|d| [d.designer.full_name,d.designer.id]}
+      room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
+      room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
+      designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
     end
 
     colors.each do |v|
