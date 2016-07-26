@@ -69,9 +69,9 @@ Spree::Core::Engine.routes.draw do
   resources :bookmarks, except: [:index]
   get "/favorites_products" => "bookmarks#index"
   get "/favorites" => "bookmarks#favorites"
-  get "/board_favorites" => "bookmarks#board_favorites"
-  get "/portfolio_favorites" => "bookmarks#portfolio_favorites"
-  get "/product_favorites" => "bookmarks#product_favorites"
+  post "/board_favorites" => "bookmarks#board_favorites"
+  post "/portfolio_favorites" => "bookmarks#portfolio_favorites"
+  post "/product_favorites" => "bookmarks#product_favorites"
 
   post "/bookmarks/remove" => "bookmarks#destroy", :as => :remove_bookmark
   get "/our_suppliers" => "extra#our_suppliers", :as => :our_suppliers
