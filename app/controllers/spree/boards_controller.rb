@@ -180,7 +180,7 @@ class Spree::BoardsController < Spree::StoreController
 
       params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
       tmp_boards = eval(statement)
-      @boards = tmp_boards.page(params[:page]).per(4)
+      @boards = tmp_boards.page(params[:page]).per(60)
 
       colors = []
       tmp_boards.each do |b|
@@ -191,7 +191,7 @@ class Spree::BoardsController < Spree::StoreController
       designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
     else
       tmp_boards = Spree::Board.published().order("created_at desc")
-      @boards = tmp_boards.page(params[:page]).per(4)
+      @boards = tmp_boards.page(params[:page]).per(60)
       colors = []
       tmp_boards.each do |b|
         colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
