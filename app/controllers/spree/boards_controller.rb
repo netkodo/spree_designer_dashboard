@@ -425,13 +425,11 @@ class Spree::BoardsController < Spree::StoreController
     if @board.update_attributes(board_params)
 
       if params[:is_assigned_to_portfolio].present?
+        Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
         portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
       else
-        if @board.portfolio.present?
-          portfolio = Spree::Portfolio.find(@board.portfolio.id)
-          portfolio.update(board_id: nil)
-        end
+        Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
       end
 
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
