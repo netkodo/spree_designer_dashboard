@@ -103,7 +103,7 @@ class Spree::BoardsController < Spree::StoreController
       tmp_boards = eval(statement)
       @boards = tmp_boards.page(params[:page]).per(60)
     else
-      @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(4)
+      @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(60)
     end
     render "room_page", layout: false
   end
