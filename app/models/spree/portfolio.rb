@@ -14,7 +14,7 @@ class Spree::Portfolio < ActiveRecord::Base
                     path: 'portfolio_images/:id/:style/:basename.:extension',
                     convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
 
-  validates_attachment_presence :portfolio_image
+  validates_attachment_presence :portfolio_image, only: [:create_portfolio]
 
   def change_name_to_class
       self.name.gsub(' ','_')

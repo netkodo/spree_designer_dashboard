@@ -91,15 +91,47 @@ class Spree::PortfoliosController < Spree::StoreController
   end
 
   def portfolio
-    @portfolio = Spree::Portfolio.new
-    # @colors = Spree::Color.all.map {|c| [c.name,c.id]}
+    if spree_current_user and (spree_current_user.is_beta_user? or spree_current_user.is_designer?)
+      @portfolio = Spree::Portfolio.new
+      # @colors = Spree::Color.all.map {|c| [c.name,c.id]}
+      @colors = Spree::Board.color_categories
+      rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
+      styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
+      @room_type = rooms.map {|r| [r.name,r.id]}
+      @room_style = styles.map {|s| [s.name,s.id]}
+
+      @portfolios = spree_current_user.portfolios
+    else
+      redirect_to "/"
+    end
+  end
+
+  def edit_portfolio
     @colors = Spree::Board.color_categories
     rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
     styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
     @room_type = rooms.map {|r| [r.name,r.id]}
     @room_style = styles.map {|s| [s.name,s.id]}
 
-    @portfolios = spree_current_user.portfolios
+    @portfolio = Spree::Portfolio.find(params[:id])
+  end
+
+  def update_portfolio
+    @portfolio = Spree::Portfolio.find(params[:portfolio][:id])
+    !portfolio_params[:portfolio_image].present? ? x = portfolio_params.except(:portfolio_image) : x = portfolio_params
+    respond_to do |format|
+      if @portfolio.update(x)
+        if @portfolio.board.present?
+          board = @portfolio.board
+          board.update(room_id: params[:portfolio][:room_type],style_id: params[:portfolio][:style])
+        end
+        format.html {redirect_to portfolio_path}
+        format.json {render json: {location: portfolio_path}, status: :ok}
+      else
+        format.html {redirect_to portfolio_path}
+        format.json {render json: @portfolio.errors, status: :unprocessable_entity}
+      end
+    end
   end
 
   def create_portfolio
@@ -148,7 +180,7 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
+      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
     end
 end
 
