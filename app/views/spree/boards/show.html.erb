@@ -26,7 +26,7 @@
 			</div>
       <% if @board.portfolio.present? %>
         <div class="large-image col-md-6 large-image-margin">
-          <a class="js-show-large-image-board" data-orginal-image=<%= @board.board_image.attachment.url(:large) %> > View large </a>
+          <a class="js-show-large-image-board" data-orginal-image=<%= @board.board_image.present? ? @board.board_image.attachment.url(:large) : "/assets/frontend/boards/large_default.png"%> > View large </a>
         </div>
 			<% end %>
 			<% if false %>

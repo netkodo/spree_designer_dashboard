@@ -23,5 +23,5 @@
 	</div>
 <% end %>
 <div class="hidden paginate-to-remove">
-  <%= paginate boards %>
+  <%= paginate boards if !request.original_url.match('rooms/.') %>
 </div>
