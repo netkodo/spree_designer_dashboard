@@ -270,7 +270,7 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def self.available_room_taxons
-    ["Living Room", "Dining Room", "Bedroom", "Outdoor Living", "Home Office", "Kids Room"]
+    ["Living Room", "Dining Room", "Bedroom", "Outdoor Living", "Home Office", "Kids Room", "Kitchen", "Foyer"]
   end
 
   def self.by_style(style_id)
