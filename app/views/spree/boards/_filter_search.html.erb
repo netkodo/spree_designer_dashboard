@@ -30,7 +30,7 @@
   </div>
 
   <h4>Color<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:color].present?) ? "-":"+" %></span></h4>
-  <div class="filter color <%= (params[:filter].present? and params[:filter][:designer_id].present?) ? '' : 'filter-hide' %>">
+  <div class="filter color <%= (params[:filter].present? and params[:filter][:color].present?) ? '' : 'filter-hide' %>">
     <ul>
       <% @colors.each do |k,v| %>
           <li>
