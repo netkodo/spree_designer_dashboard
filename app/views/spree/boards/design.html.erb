@@ -25,7 +25,7 @@
             <a><i class="fa fa-3x fa-ban" aria-hidden="true"></i></a>
           </li>
           <% @portfolios.each do |p| %>
-              <li role="presentation" class="text-center" id=<%= p.change_name_to_class %> data-id=<%= p.id %> data-image=<%= p.portfolio_image.url %> data-name=<%= p.name %> data-room_type=<%= p.room_type %> data-style=<%= p.style %> >
+              <li role="presentation" class="text-center" id="<%= p.change_name_to_class %>" data-id="<%= p.id %>" data-image="<%= p.portfolio_image.url %>" data-name="<%= p.name %>" data-room_type="<%= p.room_type %>" data-style="<%= p.style %>" >
                 <a><%= image_tag p.portfolio_image.url(:carousel) %></a>
               </li>
           <% end %>
@@ -67,11 +67,11 @@
 
 
 						</div>
-						
-					</div>		
+
+					</div>
 				</div>
 				<div class="col-md-5">
-					
+
 					<div id="product_lightbox">
                       <div class="js-hidden-params hidden">
                         <%= text_field_tag :params   %>
@@ -115,7 +115,7 @@
 					  		<div id="design" class="tab-pane active board-manage-panel">
 								<div id="board_search_panel" class="">
 									<div id="products-preloader" style="padding-top: 20px; text-align: center;"><%= image_tag("frontend/preloader64.gif")%></div>
-									<div id="select-products-box" class="select-products-box">							
+									<div id="select-products-box" class="select-products-box">
 										<div class="board-search-empty-state">Search for products above and drag them onto your board.</div>
 									</div>
 								</div>
@@ -124,16 +124,16 @@
 					  <div class="tab-pane" id="bookmarks">
 						<div class="tab-pane active board-manage-panel">
 							<div id="" class="">
-								<div id="bookmarks-pagination" class="select-products-pagination"></div>		
-								<div id="select-bookmark-products-box" class="select-products-box">	
+								<div id="bookmarks-pagination" class="select-products-pagination"></div>
+								<div id="select-bookmark-products-box" class="select-products-box">
 									<div id="bookmark-preloader" class="hidden" style="padding-top: 20px; text-align: center;"><%= image_tag("frontend/preloader64.gif")%></div>
 									<div id="bookmarks_container">
 										<%#= render :partial => "product_results", :locals => {:products => @bookmarked_products}%>
 								</div>
 							</div>
 						</div>
-							
-							
+
+
 							</div>
 							</div>
 						</div>
@@ -141,24 +141,24 @@
 				</div>
 			</div>
 		</div>
-	
+
 		<div class="board-design-section">
 			<div class="board-design-section-title">
 				<span class="board-design-step">
 					3
 				</span> Add color swatches
 			</div>
-			
+
 			<div class="row">
 				<div class="col-md-12">
 					<div id="board-colors-container" class="board-colors-container">
-					<input type="hidden" id="board_id" name="board_id" value="<%=params[:id]%>" /> 
+					<input type="hidden" id="board_id" name="board_id" value="<%=params[:id]%>" />
 						<%= render :partial => "board_swatches", :locals => {:board => @board} %>
 					</div>
 				</div>
 			</div>
 		</div>
-	
+
 		<div class="board-design-section board-design-section-last">
 			<div class="board-design-section-title">
 				<span class="board-design-step">
@@ -171,19 +171,19 @@
                 <%#= text_field_tag :products_board,'', class: 'js-input-hash-product-textarea' %>
                 <div class="js-input-hash-product"></div>
               </div>
-			
+
 			<% end %>
 		</div>
 	</div>
 	<div class="manage-board-footer">
 		<%= link_to "Cancel", designer_dashboard_path, :class => "btn btn-default" %>
 		<%= link_to "Save Changes", "#", :class => "btn btn-primary submit_board_button", :id => "submit_board_button-1" %>
-		
-		
+
+
 		<% if false %>
 		<a href="javascript:void(0);" id="publish_room_button" class="btn btn-primary" data-toggle="popover" data-placement="left" title="" data-content="You've got your room looking preeettty nice and now you're ready to show the world.  You have come to the right place.  However, during this beta period we have turned publishing off.  However, you can preview what your room will look like by saving it and clicking the Preview button." data-original-title="Ready to Publish?">Save and Publish</a>
 		<% end%>
-		
+
 	</div>
 
 
@@ -208,8 +208,8 @@
 
 $(document).ready(function() {
 	initializeBoardManagement();
-	
-	$('.swatch').popover({ 
+
+	$('.swatch').popover({
 		html : true,
 	    content: function() {
 			//$('.button-product-info').popover('hide');
@@ -232,17 +232,17 @@ $(document).ready(function() {
 	});
 
 	$('#publish_room_button').popover()
-	
+
 	$('#bookmarks_tab').on('shown.bs.tab', function (e) {
 		getProductBookmarks()
 	})
-	
+
 	//$('#bookmarks_tab').on('shown.bs.tab', function (e) {
 	//  getProductBookmarks()
 	//	//e.target // activated tab
 	//  //e.relatedTarget // previous tab
 	//})
-	
+
 });
 
 
@@ -256,8 +256,8 @@ $( "#supplier_id" ).change(function () {
 		        type: "GET",
 		        url: "/rooms/gettaxons",
 		        data: "supplier_id="+str,
-		        success: function(msg){ 
-					
+		        success: function(msg){
+
 					// alert(msg)
 					var $el = $("#department_taxon");
 					$el.empty();
@@ -269,9 +269,9 @@ $( "#supplier_id" ).change(function () {
 		         }
 		      });
 	});
-	
+
   });
-<% end %>	
+<% end %>
 
 var canvas = new fabric.Canvas('canvas');
 
@@ -279,7 +279,7 @@ var canvas = new fabric.Canvas('canvas');
 //function preventLeaving(e) {
 //    var activeObject = e.target;
 //    if ((activeObject.get('left') - (activeObject.get('width') * activeObject.get('scaleX')  / 2) < 0))
-//        activeObject.set('left', activeObject.get('width') * activeObject.get('scaleX')  / 2); 
+//        activeObject.set('left', activeObject.get('width') * activeObject.get('scaleX')  / 2);
 //    if ((activeObject.get('top') - (activeObject.get('height') * activeObject.get('scaleY')  / 2) < 0))
 //        activeObject.set('top', activeObject.get('height') * activeObject.get('scaleY')  / 2);
 //    if (activeObject.get('left') + (activeObject.get('width') * activeObject.get('scaleX')  / 2) > canvas.getWidth())
@@ -309,10 +309,10 @@ var canvas = new fabric.Canvas('canvas');
 //
 
 $(function () {
-	// Fabric JS initialization 
+	// Fabric JS initialization
 
     var element;
-    
+
     $('#board-canvas').droppable({
         accept: function(element) {
 		  var cn = element.className;
@@ -323,8 +323,8 @@ $(function () {
     });
 	getSavedProducts($('#canvas').data('boardId'));
 	initializeProductSearchForm();
-	
-	
+
+
 });
 </script>
 <div id="crop-modal" tabindex="-1" role="dialog">
