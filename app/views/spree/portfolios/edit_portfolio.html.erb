@@ -45,7 +45,7 @@
       <div class="control-group row">
         <%= f.label :room_type, :class => 'control-label col-md-3' %>
         <div class="controls col-md-9">
-          <%= f.select :room_type, options_for_select(@room_type),{}, :class => 'form-control' %>
+          <%= f.select :room_type, options_for_select(@room_type,@portfolio.room_type),{}, :class => 'form-control' %>
           <div class="info"></div>
         </div>
       </div>
@@ -53,7 +53,7 @@
       <div class="control-group row">
         <%= f.label :style, :class => 'control-label col-md-3' %>
         <div class="controls col-md-9">
-          <%= f.select :style, options_for_select(@room_style),{}, :class => 'form-control' %>
+          <%= f.select :style, options_for_select(@room_style,@portfolio.style),{}, :class => 'form-control' %>
           <div class="info"></div>
         </div>
       </div>
@@ -61,7 +61,7 @@
       <div class="control-group row">
         <%= f.label :wall_color, :class => 'control-label col-md-3' %>
         <div class="controls col-md-9">
-          <%= f.select :wall_color, options_for_select(@colors),{}, :class => 'form-control' %>
+          <%= f.select :wall_color, options_for_select(@colors,@portfolio.wall_color),{}, :class => 'form-control' %>
           <div class="info"></div>
         </div>
       </div>
@@ -90,7 +90,9 @@
   </div>
 
   <div class="row">
-    <div class="form-actions text-center">
+    <div class="form-actions text-right col-md-7">
+      <div class="btn btn-danger destroy-portfolio" data-id="<%= @portfolio.id %>" >Delete</div>
+      <div class="btn btn-default cancel-portfolio">Cancel</div>
       <%= f.submit "Update", :class => 'btn btn-primary disabled' %>
     </div>
   </div>

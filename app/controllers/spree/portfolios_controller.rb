@@ -106,6 +106,27 @@ class Spree::PortfoliosController < Spree::StoreController
     end
   end
 
+  def destroy_portfolio
+    @portfolio = Spree::Portfolio.find(params[:id])
+    respond_to do |format|
+      if @portfolio.destroy
+        format.json {render json: {location: portfolio_path}, status: :ok}
+      else
+        format.json {render json: @portfolio.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def new_portfolio
+    @colors = Spree::Board.color_categories
+    rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
+    styles = Spree::Taxonomy.where(:name => 'Styles').first().root.children
+    @room_type = rooms.map {|r| [r.name,r.id]}
+    @room_style = styles.map {|s| [s.name,s.id]}
+
+    @portfolio = Spree::Portfolio.new
+  end
+
   def edit_portfolio
     @colors = Spree::Board.color_categories
     rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
@@ -183,6 +204,3 @@ class Spree::PortfoliosController < Spree::StoreController
       params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
     end
 end
-
-
-
