@@ -90,7 +90,9 @@
   </div>
 
   <div class="row">
-    <div class="form-actions text-center">
+    <div class="form-actions text-right col-md-7">
+      <div class="btn btn-danger destroy-portfolio" data-id="<%= @portfolio.id %>" >Delete</div>
+      <div class="btn btn-default cancel-portfolio">Cancel</div>
       <%= f.submit "Update", :class => 'btn btn-primary disabled' %>
     </div>
   </div>

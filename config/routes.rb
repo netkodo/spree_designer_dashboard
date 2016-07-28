@@ -1,16 +1,16 @@
 Spree::Core::Engine.routes.draw do
   # Add your extension routes here
-  
+
   # auto-login links
   get '/al/:id' => 'users#auto_login', :as => :auto_login
-  
+
   match "/rooms/product_search" => "boards#product_search", :as => :board_product_search, :via =>[:post]
   get "/rooms/search" => "boards#search", :as => :board_search
   get "/rooms/gettaxons" => "boards#gettaxons", :as => :board_gettaxons
   get "/portfolios/:id" => "boards#show_portfolio", :as => :show_portfolio
 
   resources :board_products
-  resources :color_collections do 
+  resources :color_collections do
     resources :colors
   end
   resources :rooms, controller: 'boards'  do
@@ -27,8 +27,8 @@ Spree::Core::Engine.routes.draw do
   resources :designer_registrations
 
 
-  
-  
+
+
   get "/tutorials" => "designers#tutorials", :as => :tutorials
   get "/designers" => "designers#index", :as => :designers
   get "/designers/thanks" => "designer_registrations#thanks", :as => :designer_registration_thanks
@@ -39,8 +39,10 @@ Spree::Core::Engine.routes.draw do
   #portfolio routes
   post "/portfolio_content" => "portfolios#portfolio_content", :as => :portfolio_content
   get "/portfolio" => "portfolios#portfolio", as: :portfolio
+  get "/new_portfolio" => "portfolios#new_portfolio", as: :new_portfolio
   get "/edit_portfolio" => "portfolios#edit_portfolio", as: :edit_portfolio
   post "/update_portfolio" => "portfolios#update_portfolio", :as => :update_portfolio, :defaults => {:format => 'json'}
+  delete "/destroy_portfolio" => "portfolios#destroy_portfolio", :as => :destroy_portfolio, :defaults => {:format => 'json'}
   post "/portfolio" => "portfolios#create_portfolio", as: :create_portfolio,:defaults => {:format => 'json'}
   get "/portfolios" => "portfolios#index", as: :index
   post "/portfolios_search" => "portfolios#search", as: :portfolios_search, :defaults => {:format => 'html'}
@@ -51,7 +53,7 @@ Spree::Core::Engine.routes.draw do
 
   post "/add_board_favorite" => "boards#add_board_favorite", :as => :add_board_favorite,:defaults => {:format => 'json'}
   delete "/remove_board_favorite" => "boards#remove_board_favorite", :as => :remove_board_favorite,:defaults => {:format => 'json'}
-  
+
   get "/mission" => "extra#mission" , :as => :mission
   get "/share-to-earn" => "extra#share_to_earn" , :as => :share_to_earn
   get "/home2" => "boards#home", :as => :home2
@@ -61,7 +63,7 @@ Spree::Core::Engine.routes.draw do
   #review
   get "/review/:token" => 'home#user_review', as: :user_product_review_new,:defaults => {:format => 'html'}
   post "/review/:token/create" => 'home#create_user_review', as: :user_product_review_create,:defaults => {:format => 'json'}
-  
+
   # designer dashboard links
   get "/dashboard" => "boards#dashboard", :as => :designer_dashboard
   get "/my_profile" => "boards#profile", :as => :my_profile
@@ -91,7 +93,7 @@ Spree::Core::Engine.routes.draw do
   get '/rooms/:id/preview' => "boards#preview", :as => :preview_board
   get '/colors/get_color/:swatch_val' => "colors#get_color", :as => :get_color_by_swatch
   get '/products/:id/product_with_variants' => "products#product_with_variants", :as => :product_with_variants
-  
+
   get '/widget/room/:id' => "widget#room", :as => :room_widget
 
   get '/inbox' => "mailbox#inbox", :as => :mailbox_inbox
@@ -109,29 +111,29 @@ Spree::Core::Engine.routes.draw do
       post :login_user
     end
   end
-  
+
   #get "/boards/product_search" => "boards#product_search", :as => :board_product_search
-   
+
 
   match "/boards/submit_for_publication/:id", to: "boards#submit_for_publication", :as => "submit_for_publication", via: :patch
   namespace :admin do
-    
-    
-    
+
+
+
     #match "/board_products", to: "board_products#update", via: :put
     match "/board_products/mark_approved", to: "board_products#mark_approved", via: :post
     match "/board_products/mark_rejected", to: "board_products#mark_rejected", via: :post
-    
+
     match "/boards/approval_form", to: "boards#approval_form", via: :get
     match "/boards/revision_form", to: "boards#revision_form", via: :get
-    
+
     match "/boards/approve", to: "boards#approve", via: :post
     match "/boards/request_revision", to: "boards#request_revision", via: :post
 
     get "/boards/search" => "boards#search", :as => :board_search
     get "/suppliers/search" => "boards#search_supplier", :as => :supplier_search
-    
-    
+
+
     get  "boards/list" => "boards#list", :as => :boards_list
     match  "boards/products(/:status)" => "boards#products", :as => :boards_products, :via =>[:get, :post]
     resources :boards
@@ -141,9 +143,9 @@ Spree::Core::Engine.routes.draw do
 
     get "room_designers" => "designer_registrations#room_designers", :as => :room_designers
     get "trade_program" => "designer_registrations#trade_program", :as => :trade_program
-    
+
     get  "designers" => "users#designers", :as => :designers
-    
+
     # Product Import Tables
     get  "product_import" => "product_import#index", :as => :product_import
     post "product_import" => "product_import#upload", :as => :post_product_import
@@ -151,7 +153,7 @@ Spree::Core::Engine.routes.draw do
     resources :import_tables
     resources :import_logs
 
-    post 'import_tables/:id' => 'import_tables#merge', :as => :create_products_from_csv    
+    post 'import_tables/:id' => 'import_tables#merge', :as => :create_products_from_csv
     get 'import_tables/:id/results' => 'import_tables#results', as: :import_table_results
     get 'import_tables/:id/percent_complete' => 'import_tables#completion', as: :import_table_completion
   end
