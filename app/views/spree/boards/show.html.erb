@@ -12,14 +12,14 @@
 				<li><%= link_to @board.room.name, "" %></li>
 				<% end %>
 				<li class="active"><%= @board.name%></li>
-			</ol>			
+			</ol>
 			<%#= render :partial => "promotion_code_banner"%>
 			<h1><%= @board.name %></h1>
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-7">	
+	<div class="col-md-7">
 		<div class="board-details">
 			<div class="board-section board-image-section text-center">
           <%= board_image(@board,:large)%>
@@ -34,8 +34,8 @@
 			<div class="board-section board-swatch-section">
 				<h3>Suggested Paint Colors</h3>
 				<% @board.colors.each_with_index do |color,index| %>
-					
-					
+
+
 					<div class="board-swatch color-match-link" id="add-colors-link-<%=index%>" data-match-id="1">
 						<span data-toggle="popover" data-color-id="<%=color.id%>" data-color-popover-container="color-popover-<%=color.id%>" data-html="true" data-trigger="hover" data-placement="top" data-animation="false" class="swatch-wrapper" data-color="<%=color.hex_val%>" data-color-hsv-h="<%=color.hsv_h%>" data-color-hsv-s="<%=color.hsv_s%>" data-color-hsv-v="<%=color.hsv_v%>" data-color-name="<%=color.name%>" data-color-swatch-val="<%=color.swatch_val%>">
 						<div class="board-swatch-color" id="board-swatch-color-<%=index%>" style="background-color: #<%= color.hex_val%>"></div>
@@ -44,9 +44,9 @@
 						</div>
 						</span>
 					</div>
-					
-					
-					
+
+
+
 					<div id="color-popover-<%=color.id%>" class="hide">
 					<div class="row">
 						<div class="col-md-5">
@@ -70,7 +70,7 @@
 									<td>H: <%=color.hsv_h%><br />
 										S: <%=color.hsv_s%><br />
 										V: <%=color.hsv_v%></td>
-								</tr>	
+								</tr>
 							</table>
 						</div>
 					</div>
@@ -79,8 +79,8 @@
 			</div>
 			<% end %>
 			<% end %>
-			
-			
+
+
 			</div>
 		</div>
 	<div class="col-md-5">
@@ -168,28 +168,28 @@
 			<% if false %>
 			<div class="board-sharing-tools">
 				<% if @board.status == "published" %>
-				<span class="share-label"><a href="javascript:void(0);" id="embed-room" data-toggle="popover" data-placement="bottom" data-container="body" data-html="true">Add a Scout & Nimble widget to your site</a></span> 
-				
+				<span class="share-label"><a href="javascript:void(0);" id="embed-room" data-toggle="popover" data-placement="bottom" data-container="body" data-html="true">Add a Scout & Nimble widget to your site</a></span>
+
 				<div id="room-widget" class="hidden">
 					<div class="embed-widget-instructions" style="width: 320px; margin-bottom: 20px;">
 						Copy the code below and paste it wherever you want the widget to appear.
 						<textarea class="" style="width: 100%; border: 1px solid #999;" onclick="this.focus();this.select()"><script src="" type="text/javascript"></script><div id="sn_widget" data-siteid=""></div></textarea>
 					</div>
 					<div class="embed-widget-container">
-						
+
 						<script src="http://localhost:3000/widget/widget.js?wtype=room&rid=<%=@board.id%>" type="text/javascript"></script><div id="sn_widget" data-site="http://localhost:3000" data-room-id="<%=@board.id%>">
 					</div>
 
-						
+
 					</div>
 				</div>
 				<% end %>
-				
+
 			</div>
-			
+
 			<% end %>
-			
-			
+
+
 			<% unless @board.colors.blank? %>
 			<div class="board-swatch-colors row col-md-12">
 				<h4>Suggested Paint Colors</h4>
@@ -197,12 +197,12 @@
 					<div class="board-swatch-small color-match-link" id="add-colors-link-<%=index%>" data-match-id="1">
 						<span data-toggle="popover" data-color-id="<%=color.id%>" data-color-popover-container="color-popover-<%=color.id%>" data-html="true" data-trigger="hover" data-placement="top" data-animation="false" class="swatch-wrapper" data-color="<%=color.hex_val%>" data-color-hsv-h="<%=color.hsv_h%>" data-color-hsv-s="<%=color.hsv_s%>" data-color-hsv-v="<%=color.hsv_v%>" data-color-name="<%=color.name%>" data-color-swatch-val="<%=color.swatch_val%>">
 						<div class="board-swatch-color" id="board-swatch-color-<%=index%>" style="background-color: #<%= color.hex_val%>"></div>
-						
+
 						</span>
 					</div>
-					
-					
-					
+
+
+
 					<div id="color-popover-<%=color.id%>" class="hide">
 					<div class="row">
 						<div class="col-md-5">
@@ -219,15 +219,15 @@
 									<%=color.swatch_val%>
 								</div>
 							</div>
-							
-							
+
+
 							<% if false%>
 							<table class="table table-condensed swatch-table">
 								<tr>
 									<td><strong>Swatch #</strong></td>
 									<td><%=color.swatch_val%></td>
 								</tr>
-								
+
 								<tr>
 									<td><strong>Hex</strong></td>
 									<td>#<%=color.hex_val%></td>
@@ -237,8 +237,8 @@
 									<td>H: <%=color.hsv_h%><br />
 										S: <%=color.hsv_s%><br />
 										V: <%=color.hsv_v%></td>
-								</tr>	
-								
+								</tr>
+
 							</table>
 							<% end %>
 						</div>
@@ -249,20 +249,43 @@
 			<% end %>
 
       <div class="row">
-      <% if @board.portfolio.present? %>
-        <div class="board-listing col-md-6 ">
-          <div class="board-image text-center">
-            <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
-          </div>
+
+        <% t = [] %>
+        <% t << @board.portfolio if @board.portfolio.present? %>
+        <% @board.other_designer_boards.map{|b| t << b} if !@board.other_designer_boards.blank? %>
+        <% if t.size > 2 %>
+          <div class="container col-md-12 other-room-slider">
+            <ul class="nbs-flexisel-ul">
+              <% t.each do |room| %>
+                <li>
+                  <div class="board-listing col-md-12">
+                    <% if room.instance_of? Spree::Portfolio %>
+                      <div class="board-image text-center col-md-12">
+                        <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
+                      </div>
+                    <% else %>
+                      <div class="board-image text-center col-md-12">
+                        <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
+                      </div>
+                    <% end %>
+                  </div>
+                </li>
+              <% end %>
+          </ul>
         </div>
-      <% end %>
-      <% if !@board.other_designer_boards.blank? %>
-        <% @board.other_designer_boards.each do |room| %>
-              <div class="board-listing col-md-6 ">
-                <div class="board-image">
-                  <%= link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)%>
-                </div>
+      <% else %>
+        <% t.each do |room| %>
+          <div class="board-listing col-md-6">
+            <% if room.instance_of? Spree::Portfolio %>
+              <div class="board-image text-center">
+                <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
               </div>
+            <% else %>
+              <div class="board-image">
+                <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
+              </div>
+            <% end %>
+          </div>
         <% end %>
       <% end %>
       </div>
@@ -274,7 +297,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="board-section board-products-section">
-			<h3>Buy Products from this Room</h3>	
+			<h3>Buy Products from this Room</h3>
 			<%= render :partial => "spree/designers/products_list", :locals => {:products => @board.products}%>
 		</div>
 	</div>
@@ -304,16 +327,19 @@
 
 <script>
 $(document).ready(function() {
-	$('#embed-room').popover({ 
+	$('#embed-room').popover({
 	    html : true,
 	    content: function() {
 			//$('.button-product-info').popover('hide');
 	      return $('#room-widget').html();
 	    }
 	  });
-	
-	
-	$('.swatch-wrapper').popover({ 
+
+    $('.other-room-slider .nbs-flexisel-ul').flexisel({
+      visibleItems:2
+    });
+
+	$('.swatch-wrapper').popover({
 	    html : true,
 	    content: function() {
 			//$('.button-product-info').popover('hide');
