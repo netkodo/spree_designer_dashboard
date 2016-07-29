@@ -35,10 +35,10 @@ class Spree::Portfolio < ActiveRecord::Base
         i<cols ? z[0] = [t] : z[0] << t
       elsif i%cols == 1
         i<cols ? z[1] = [t] : z[1] << t
-      else i%cols == 2
+      elsif i%cols == 2
         i<cols ? z[2] = [t] : z[2] << t
-      # else i%4 == 3
-      #   i<4 ? z[3] = [t] : z[3] << t
+      else i%4 == 3
+        i<4 ? z[3] = [t] : z[3] << t
       end
     end
     z
