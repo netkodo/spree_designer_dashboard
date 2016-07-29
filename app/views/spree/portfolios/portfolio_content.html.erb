@@ -5,7 +5,7 @@
 
       <%# if @portfolio.board.present? or spree_current_user.present? %>
 
-      <% if !request.referrer.match('/portfolios') %>
+      <% if !request.referrer.match('/portfolios') and !request.referrer.match('/favorites') %>
         <div class="social-portfolio" data-pid=<%= @portfolio.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
           <%# if @portfolio.board.present? %>
             <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
