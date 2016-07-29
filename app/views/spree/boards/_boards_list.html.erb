@@ -23,5 +23,5 @@
 	</div>
 <% end %>
 <div class="hidden paginate-to-remove">
-  <%= paginate boards if !request.original_url.match('rooms/.') %>
+  <%= paginate boards if !request.original_url.match('rooms/.') and !request.original_url.match('portfolios/.') %>
 </div>
