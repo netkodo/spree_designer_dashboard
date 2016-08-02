@@ -5,6 +5,7 @@
     </div>
 
     <div class="col-md-3">
+      <div class="portfolio-filters">
       <h4>Room Type<span class="toggle-filter"><%= params[:filter].present? ? (params[:filter][:room_type].present? ? '-' : '+') : '-' %></span></h4>
       <div class="filter room_type <%= params[:filter].present? ? (params[:filter][:room_type].present? ? '' : 'filter-hide') : '' %>">
         <ul>
@@ -64,7 +65,7 @@
           <% end %>
         </ul>
       </div>
-
+      </div>
     </div>
     <div class="col-md-9">
 
