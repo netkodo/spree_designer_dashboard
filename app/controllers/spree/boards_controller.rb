@@ -69,11 +69,11 @@ class Spree::BoardsController < Spree::StoreController
     if session[:hash_board_id].present? and session[:remember_product_page].present?
       @jump_to_board_id = session[:hash_board_id]
       @new_next_page = session[:remember_product_page].to_i + 1
-      @boards = tmp_boards.page(params[:page]).per(4*session[:remember_product_page].to_i)
+      @boards = tmp_boards.page(params[:page]).per(60*session[:remember_product_page].to_i)
       session[:hash_board_id] = nil
       session[:remember_product_page] = nil
     else
-      @boards = tmp_boards.page(params[:page]).per(4)
+      @boards = tmp_boards.page(params[:page]).per(60)
     end
 
     colors = []
@@ -111,9 +111,9 @@ class Spree::BoardsController < Spree::StoreController
       end
       params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
       tmp_boards = eval(statement)
-      @boards = tmp_boards.page(params[:page]).per(4)
+      @boards = tmp_boards.page(params[:page]).per(60)
     else
-      @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(4)
+      @boards = Spree::Board.published().order("created_at desc").page(params[:page]).per(60)
     end
     render "room_page", layout: false
   end
