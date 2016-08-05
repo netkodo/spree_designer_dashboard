@@ -1,9 +1,9 @@
-
+<div id="jump-to-board" class="hidden" data-id="<%= @jump_to_board_id %>" data-new_next_page="<%= @new_next_page %>"></div>
 <% boards.in_groups_of(2, false) do |row_boards| %>
 	<div class="row">
 	<% for board in row_boards %>
 		<div class="col-md-6">
-			<div class="board-listing">
+			<div id="board-<%= board.id %>" class="board-listing">
 				<div class="board-image">
 				<%= link_to board_image(board, :large), room_path(board)%>
 				</div>
@@ -25,3 +25,11 @@
 <div class="hidden paginate-to-remove">
   <%= paginate boards if !request.original_url.match('rooms/.') and !request.original_url.match('portfolios/.') %>
 </div>
+<script>
+  jump_to =""+$('#jump-to-board').data('id');
+  if(jump_to.length > 0){
+    window.location.hash = "board-"+jump_to
+    next= $('.paginate-to-remove .next a').attr('href').replace(/page=./,"page="+$('#jump-to-board').data('new_next_page'));
+    $('.paginate-to-remove .next a').attr('href',next);
+  }
+</script>

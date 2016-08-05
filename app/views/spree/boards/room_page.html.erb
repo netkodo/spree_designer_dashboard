@@ -2,7 +2,7 @@
 <% @boards.in_groups_of(2, false) do |row_boards| %>
 	<div class="row">
 	<% for board in row_boards %>
-		<div class="col-md-6">
+		<div class="col-md-6" id="board-<%= board.id %>">
 			<div class="board-listing">
 				<div class="board-image">
 				<%= link_to board_image(board, :large), room_path(board)%>
