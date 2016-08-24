@@ -30,7 +30,7 @@
                   <div class="addthis_sharing_toolbox addthis_list_product  listing-sharing-tools" data-url="<%= product_url(product) %>" data-title="<%= product.name %>" data-description="<%= product.description %>" data-img="<%= meta_schema_image(product) %>">
 
                   </div>
-                  <div class="favorits favorits-bookmark">
+                  <div class="favorits favorits-bookmark-favorites">
                     <% if spree_current_user %>
                         <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
                         <div class="js-scout-bookmark" data-bookmarked="<%= is_bookmarked %>" data-product-id="<%= product.id %>">
