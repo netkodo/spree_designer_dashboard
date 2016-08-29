@@ -93,36 +93,44 @@
                   <div class="text-center">
                     <%# if p.board.present? or spree_current_user.present? %>
                         <div class="social-portfolio" data-pid=<%= p.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
-                          <%# if p.board.present? %>
-                              <div id="pinterest-separate-button-render" class="at-share-tbx-element addthis_20x20_style addthis-smartlayers addthis-animated at4-show" >
+                          <%
+                            media,description = ""
+                            media = p.portfolio_image.url.split("?")[0].to_s if p.portfolio_image.url.present?
+                            description = strip_tags(p.board.description) if p.board.present? and p.board.description.present?
+                            url = p.board.present? ? show_portfolio_path(p.board) : 'https://www.scoutandnimble.com/portfolios'
+                            portfolio_name = p.name if p.name.present?
+                          %>
 
-                                <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>&media=<%= p.portfolio_image.url(:large) %>&description=<%= p.name %>">
-                                  <%= image_tag("frontend/pinterest.png",height: 20, class: "at4-icon aticon-pinterest_share",style: "background-color: #c9cace;position:relative;top:-1px;") %>
-                                </a>
-                                <!-- Please call pinit.js only once per page -->
-                                <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
-                              </div>
-                          <%# end %>
+                          <div class="favorits">
+                            <div class="shared-icon" >
+                              <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= url %>&media=<%= media %>&description=<%= description %>">
+                                <%= image_tag("frontend/pinterest.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                              </a>
+                              <!-- Please call pinit.js only once per page -->
+                              <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                            </div>
+                          </div>
 
-                          <% if spree_current_user.present? %>
-                              <div class="favorite fav add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
-                                <i class="fa fa-heart fa-white"></i>
-                              </div>
-                              <div class="favorite fav remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
-                                <i class="fa fa-heart fa-red"></i>
-                              </div>
-                          <% end %>
+                          <div class="favorits">
+                            <% if spree_current_user.present? %>
+                                <div class="favorite fav add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
+                                  <i class="fa fa-heart fa-white"></i>
+                                </div>
+                                <div class="favorite fav remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
+                                  <i class="fa fa-heart fa-red"></i>
+                                </div>
+                            <% end %>
+                          </div>
 
-                          <%# if p.board.present? %>
-                            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
-                            <script>
+                          <div class="favorits">
+                            <div class="shared-icon" >
 
-                              var addthis_config = {
-                                pubid: "ra-54fe66e3227e091d"
-                              }
-                            </script>
-                            <div class="addthis_sharing_toolbox set-addthis-left" data-url="<%= p.board.present? ? room_url(p.board) : 'https://www.scoutandnimble.com/portfolios' %>" data-title=<%= p.name %> ></div>
-                          <%# end %>
+                              <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=145634995501895&display=popup&name=<%= portfolio_name %>&description=<%= description %>&link=<%= url %>', 520, 570)">
+                                <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                              </a>
+                            </div>
+                          </div>
+
 
                         </div>
                     <%# end %>

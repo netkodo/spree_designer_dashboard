@@ -18,19 +18,49 @@
 				</div>
 
 
-              <div class="sp-addthis-script">
+              <div class="share-button">
 
-                <script>
-
-                    var addthis_config = {
-                        pubid: "ra-54fe66e3227e091d"
-                    }
-                </script>
                 <div class="scout-button">
-                  <div class="addthis_sharing_toolbox addthis_list_product  listing-sharing-tools" data-url="<%= product_url(product) %>" data-title="<%= product.name %>" data-description="<%= product.description %>" data-img="<%= meta_schema_image(product) %>">
+                  <%
+                    media,description = ""
+                    media = meta_schema_image(product).split("?")[0].to_s if meta_schema_image(product).present?
+                    description = strip_tags(product.description) if product.description.present?
+                    product_name = product.name if product.name.present?
+                  %>
 
+                  <div class="favorits">
+                    <div class="shared-icon" >
+
+                      <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=145634995501895&display=popup&name=<%= product_name %>&description=<%= description %>&link=<%= product_url(product) %>', 520, 570)">
+                        <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                      </a>
+                    </div>
                   </div>
-                  <div class="favorits favorits-bookmark-favorites">
+
+                  <div class="favorits">
+                    <div class="shared-icon" >
+
+                      <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= product_url(product) %>&summary=<%= description %>&title=<%= product_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
+                        <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="favorits">
+                    <div class="shared-icon" >
+
+
+
+                      <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= product_url(product) %>&media=<%= media %>&description=<%= description %>">
+                        <%= image_tag("frontend/pinterest.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                      </a>
+                      <!-- Please call pinit.js only once per page -->
+                      <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                    </div>
+                  </div>
+
+                  <div class="favorits">
+
                     <% if spree_current_user %>
                         <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
                         <div class="js-scout-bookmark" data-bookmarked="<%= is_bookmarked %>" data-product-id="<%= product.id %>">
@@ -53,6 +83,7 @@
                         </div>
                     <% end %>
                   </div>
+
                 </div>
               </div>
 				
