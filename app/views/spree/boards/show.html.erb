@@ -184,8 +184,9 @@
           </div>
         </div>
 
+
+      <% if spree_current_user.present? %>
         <div class="favorits">
-        <% if spree_current_user.present? %>
           <div class="board-favorites" data-bid=<%= @board.id %> data-uid=<%= spree_current_user.id %>>
             <div class="favorite add-to-board-favorites  <%= "hidden" if @board.is_favorite?(spree_current_user) %>" >
               <i class="fa fa-heart fa-white"></i>
@@ -194,8 +195,9 @@
               <i class="fa fa-heart fa-red"></i>
             </div>
           </div>
-        <% end %>
-          </div>
+        </div>
+      <% end %>
+
 
 			</div>
 			<% if false %>
