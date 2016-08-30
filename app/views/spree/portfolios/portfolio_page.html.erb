@@ -40,16 +40,18 @@
                             </div>
                           </div>
 
-                          <div class="favorits">
-                            <% if spree_current_user.present? %>
+
+                          <% if spree_current_user.present? %>
+                              <div class="favorits">
                                 <div class="favorite fav add-to-portfolio-favorites <%= "hidden" if p.is_favorite?(spree_current_user) %>">
                                   <i class="fa fa-heart fa-white"></i>
                                 </div>
                                 <div class="favorite fav remove-from-portfolio-favorites <%= "hidden" unless p.is_favorite?(spree_current_user) %>">
                                   <i class="fa fa-heart fa-red"></i>
                                 </div>
-                            <% end %>
-                          </div>
+                              </div>
+                          <% end %>
+
 
                           <div class="favorits">
                             <div class="shared-icon" >
