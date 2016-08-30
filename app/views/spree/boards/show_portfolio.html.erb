@@ -160,7 +160,7 @@
         <div class="favorits">
           <div class="shared-icon" >
 
-            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=145634995501895&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= show_portfolio_path(@board) %>', 520, 570)">
+            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=145634995501895&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= show_portfolio_url(@board) %>&picture=<%= media %>', 520, 570)">
               <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
           </div>
@@ -169,7 +169,7 @@
         <div class="favorits">
           <div class="shared-icon" >
 
-            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= show_portfolio_path(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
+            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= show_portfolio_url(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
               <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
           </div>
@@ -177,7 +177,7 @@
 
         <div class="favorits">
           <div class="shared-icon" >
-            <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= show_portfolio_path(@board) %>&media=<%= media %>&description=<%= description %>">
+            <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= show_portfolio_url(@board) %>&media=<%= media %>&description=<%= description %>">
               <%= image_tag("frontend/pinterest.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
             <!-- Please call pinit.js only once per page -->

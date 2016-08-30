@@ -88,7 +88,7 @@
                   <% end %>
                 </div>
 
-                <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 <%= 'no-bottom-radius' if p.board.present? %>">
+                <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 <%= 'no-bottom-radius' if p.board.present? and p.board.status == 'published' %>">
 
                   <div class="text-center">
                     <%# if p.board.present? or spree_current_user.present? %>
