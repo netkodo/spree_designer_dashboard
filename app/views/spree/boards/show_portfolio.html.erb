@@ -149,13 +149,41 @@
 			</div>
 			<div class="board-sharing-tools">
 				<span class="share-label">Share:</span>
-              <script>
 
-                  var addthis_config = {
-                      pubid: "ra-54fe66e3227e091d"
-                  }
-              </script>
-              <div class="addthis_sharing_toolbox set-addthis-left"></div>
+        <%
+          media,description = ""
+          # media = meta_schema_image(@board).split("?")[0].to_s if meta_schema_image(@board).present?
+          description = strip_tags(@board.description) if @board.description.present?
+          board_name = @board.name if @board.name.present?
+        %>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+
+            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=145634995501895&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= room_url(@board) %>', 520, 570)">
+              <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+          </div>
+        </div>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+
+            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= room_url(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
+              <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+          </div>
+        </div>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+            <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= room_url(@board) %>&media=<%= media %>&description=<%= description %>">
+              <%= image_tag("frontend/pinterest.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+            <!-- Please call pinit.js only once per page -->
+            <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+          </div>
+        </div>
 
         <% if spree_current_user.present? %>
           <div class="board-favorites" data-bid=<%= @board.id %> data-uid=<%= spree_current_user.id %>>
