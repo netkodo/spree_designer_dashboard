@@ -156,7 +156,7 @@
         <div class="favorits">
           <div class="shared-icon" >
 
-            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= room_url(@board) %>&picture=<%= media %>', 520, 570)">
+            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= room_url(@board) %>&picture=<%= media %>', '_blank', 'width=520, height=570')">
               <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
           </div>
@@ -165,7 +165,7 @@
         <div class="favorits">
           <div class="shared-icon" >
 
-            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= room_url(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
+            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= room_url(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', '_blank', 'width=520, height=570')" >
               <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
           </div>

@@ -31,7 +31,7 @@
                   <div class="favorits">
                     <div class="shared-icon" >
 
-                      <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= product_name %>&description=<%= description %>&link=<%= product_url(product) %>', 520, 570)">
+                      <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= product_name %>&description=<%= description %>&link=<%= product_url(product) %>', '_blank', 'width=520, height=570')">
                         <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
                       </a>
                     </div>
@@ -40,7 +40,7 @@
                   <div class="favorits">
                     <div class="shared-icon" >
 
-                      <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= product_url(product) %>&summary=<%= description %>&title=<%= product_name %>&source=https://www.scoutandnimble.com', 520, 570)" >
+                      <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= product_url(product) %>&summary=<%= description %>&title=<%= product_name %>&source=https://www.scoutandnimble.com', '_blank', 'width=520, height=570')" >
                         <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
                       </a>
                     </div>
