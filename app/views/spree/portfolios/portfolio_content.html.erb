@@ -26,16 +26,17 @@
             </div>
           </div>
 
-          <div class="favorits">
-            <% if spree_current_user.present? %>
+          <% if spree_current_user.present? %>
+              <div class="favorits">
                 <div class="favorite add-to-portfolio-favorites <%= "hidden" if @portfolio.is_favorite?(spree_current_user) %>">
                   <i class="fa fa-heart fa-white"></i>
                 </div>
                 <div class="favorite remove-from-portfolio-favorites <%= "hidden" unless @portfolio.is_favorite?(spree_current_user) %>">
                   <i class="fa fa-heart fa-red"></i>
                 </div>
-            <% end %>
-          </div>
+              </div>
+          <% end %>
+
 
 
 
