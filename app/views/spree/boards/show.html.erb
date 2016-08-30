@@ -148,7 +148,7 @@
 
         <%
           media,description = ""
-          media = meta_schema_image(@board).split("?")[0].to_s if meta_schema_image(@board).present?
+          media = @board.board_image.attachment.url.split("?")[0].to_s if @board.board_image.present?
           description = strip_tags(@board.description) if @board.description.present?
           board_name = @board.name if @board.name.present?
         %>
