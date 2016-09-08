@@ -164,9 +164,8 @@
 
         <div class="favorits">
           <div class="shared-icon" >
-
-            <a onclick="return window.open('https://www.linkedin.com/shareArticle?mini=true&url=<%= room_url(@board) %>&summary=<%= description %>&title=<%= board_name %>&source=https://www.scoutandnimble.com', '_blank', 'width=520, height=570')" >
-              <%= image_tag("frontend/linkedin.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            <a onclick="return window.open('https://twitter.com/intent/tweet?via=scoutandnimble&hashtags=scoutandnimble&url=<%= room_url(@board) %>&text=<%= board_name %>', '_blank', 'width=520, height=570')" >
+              <%= image_tag("frontend/twitter.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
             </a>
           </div>
         </div>
