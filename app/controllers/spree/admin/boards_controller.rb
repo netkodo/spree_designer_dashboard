@@ -180,7 +180,7 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   end
   
   def request_revision
-    #@board  = Spree::Board.find_by id: params[:board][:id]
+    @board  = Spree::Board.find_by id: params[:board][:id]
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.request_designer_revision
     @room_manager.send_message(@board.designer, "Your room needs revisions.", "Please revise your room.")
