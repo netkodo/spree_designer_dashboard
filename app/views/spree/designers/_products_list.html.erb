@@ -12,7 +12,7 @@
 
 				    <div class="img-container">
 				        <div class="centerer"></div>
-				        <%= link_to raw("#{listing_image(product, :itemprop => 'image')}"), product, :itemprop => 'url' %>
+				        <%= link_to raw("#{listing_image(product, :itemprop => 'image',class:'img-responsive')}"), product, :itemprop => 'url' %>
 				    </div>
                   <%= show_out_of_stock(product) %>
 				</div>
