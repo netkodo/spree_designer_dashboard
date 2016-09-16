@@ -617,54 +617,6 @@ function getProductDetails(product_id, board_id, board_product_id, variant_url) 
     });
 }
 
-function addProductBookmark(product_id) {
-    var url = '/bookmarks.json?product_id=' + product_id
-    //$('.bookmark-link-'+product_id).parent().addClass('hidden')
-    //$('.bookmark-link-'+product_id).parent().parent().children('.unbookmark-product-container').removeClass('hidden')
-    $('.bookmark-link-' + product_id).each(function () {
-        $(this).parent().addClass('hidden')
-        $(this).parent().parent().children('.unbookmark-product-container').removeClass('hidden')
-    });
-
-
-    $.ajax({
-            url: url,
-            type: "POST",
-            dataType: "json",
-            data: {},
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-            },
-            success: function (bookmark) {
-                //alert('u r the one')
-            },
-            error: function (objAJAXRequest, strError, errorThrown) {
-                //alert("ERROR: " + strError);
-            }
-        }
-    );
-}
-
-function observeBookmarkChanges() {
-    $('.bookmark-product').click(function () {
-        addProductBookmark($(this).data('productId'))
-    });
-    $('.remove-bookmark-product').click(function () {
-        removeProductBookmark($(this).data('productId'))
-    });
-
-}
-
-function removeProductBookmark(product_id) {
-    $('.unbookmark-link-' + product_id).each(function () {
-        $(this).parent().addClass('hidden')
-        $(this).parent().parent().children('.bookmark-product-container').removeClass('hidden')
-    });
-    var url = '/bookmarks/remove?product_id=' + product_id;
-    $.post(url, null, "script");
-
-}
-
 function getProductBookmarks() {
     $('#bookmark-preloader').removeClass('hidden')
     $('#bookmarks_container').html('')
