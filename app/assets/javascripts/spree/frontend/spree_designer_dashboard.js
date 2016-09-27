@@ -578,7 +578,9 @@ function generateHash(object) {
         flip_x: object.get('flipX'),
         image: image
     };
-
+    if(object.get('action') === 'create'){
+        hash[ha_id]['image']=object.getElement().src
+    }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');
     }
