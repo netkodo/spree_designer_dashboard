@@ -18,6 +18,7 @@ $('.board-lightbox-product').draggable({
 });
 
 $('.add-to-board-link').click(function() {
+  canvas.discardActiveObject()
 	getProductDetails($(this).data('productId'), $('#canvas').data('boardId'), null)	
 });
 
