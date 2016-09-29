@@ -386,14 +386,29 @@ class Spree::BoardsController < Spree::StoreController
     else
       @searcher = build_searcher(params)
     end
-    if params[:supplier_id] and params[:supplier_id].to_i > 0
-      # @all_products = @searcher.retrieve_products.by_supplier(params[:supplier_id]).not_on_a_board
-      #@all_products =  @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
-      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+
+    @board = Spree::Board.find(params[:board_id])
+
+    if @board.private
+      if params[:supplier_id] and params[:supplier_id].to_i > 0
+        # @all_products = @searcher.retrieve_products.by_supplier(params[:supplier_id]).not_on_a_board
+        #@all_products =  @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
+        @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+      else
+        # @all_products = @searcher.retrieve_products.not_on_a_board
+        #@all_products = @searcher.retrieve_products( {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
+        @all_products = @searcher.retrieve_products({order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+      end
     else
-      # @all_products = @searcher.retrieve_products.not_on_a_board
-      #@all_products = @searcher.retrieve_products( {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
-      @all_products = @searcher.retrieve_products({order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+      if params[:supplier_id] and params[:supplier_id].to_i > 0
+        # @all_products = @searcher.retrieve_products.by_supplier(params[:supplier_id]).not_on_a_board
+        #@all_products =  @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
+        @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {where: "available_sans_board = ture"}, {order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+      else
+        # @all_products = @searcher.retrieve_products.not_on_a_board
+        #@all_products = @searcher.retrieve_products( {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
+        @all_products = @searcher.retrieve_products({where: "available_sans_board = true"}, {order: "quantity_on_hand DESC, spree_variants.backorderable DESC"})
+      end
     end
     @products = @all_products
 
