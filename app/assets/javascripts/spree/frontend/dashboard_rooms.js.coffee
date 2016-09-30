@@ -6,11 +6,9 @@ $ ->
   getRoomsDependsOnType = (type) ->
     clearHidden()
     if type == true
-      console.log('private')
       $('.table-board-listing tbody .false').each ->
         $(@).addClass('hidden')
     else
-      console.log('public')
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
 
@@ -19,3 +17,21 @@ $ ->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
   ,'.js-get-room-type'
+
+  $(document).on
+    click: (e)->
+      e.preventDefault()
+      my_this = $(@)
+      $.ajax
+        dataType: 'html'
+        method: 'POST'
+        url: '/private_invoice'
+        data: {id: $(@).data('id')}
+        success: (response)->
+          my_this.parents('tr').after("<tr><td class='no-border' colspan='6'>#{response}</td></tr>")
+        error: (response) ->
+          my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
+          setTimeout () ->
+            $('.notification-to-remove').remove()
+          ,'3000'
+  ,'.js-private-invoice'
