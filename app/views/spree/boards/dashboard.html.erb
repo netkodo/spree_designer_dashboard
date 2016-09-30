@@ -7,13 +7,26 @@
   <div class="col-md-9">
     <div class="page-header clearfix">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-6">
           <h1>Your Rooms</h1>
         </div>
-        <div class="col-md-3 header-actions">
+        <div class="col-md-6 header-actions">
 
 
-              <%= link_to "Add a Room", new_room_path, :class => "btn btn-primary" %>
+          <% if @designer_type == "room designer" %>
+              <%= link_to "Add a Private Room", new_room_path(private: true), :class => "btn btn-primary" %>
+              <%= link_to "Add a Public Room", new_room_path(private: false), :class => "btn btn-primary" %>
+            <% elsif @designer_type == "to the trade designer" %>
+              <%= link_to "Add a Private Room", new_room_path(private: true), :class => "btn btn-primary" %>
+            <% end %>
+        </div>
+        <div class="col-md-12 text-center">
+          <% if @designer_type == "room designer" %>
+            <div class="btn btn-primary btn-rounded js-get-room-type" data-private="false">Public</div>
+              <div class="btn btn-primary btn-rounded js-get-room-type" data-private="true">Private</div>
+          <% elsif @designer_type == "to the trade designer" %>
+            <div class="btn btn-primary btn-rounded js-get-room-type" data-private="true">Private</div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -32,7 +45,7 @@
           </thead>
           <tbody>
           <% @boards.each do |board|%>
-              <tr>
+              <tr class="<%= board.private %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <%= board_image(board,:small)%>

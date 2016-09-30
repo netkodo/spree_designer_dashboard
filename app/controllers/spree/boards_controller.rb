@@ -119,8 +119,14 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
-    @boards = spree_current_user.boards.where(removal: false)
+    if spree_current_user.designer_registrations.first.status == "room designer"
+      @designer_type = "room designer"
+      @boards = spree_current_user.boards.where(removal: false)
+    elsif spree_current_user.designer_registrations.first.status == "to the trade designer"
+      @designer_type = "to the trade designer"
+      @boards = spree_current_user.boards.where(removal: false,private: true)
     end
+  end
 
   def profile
     @user = spree_current_user
@@ -267,7 +273,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def new
-    @board = Spree::Board.new(:name => "Untitled Room")
+    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private])
     @board.designer = spree_current_user
     @board.save!
     redirect_to design_board_path(@board)
