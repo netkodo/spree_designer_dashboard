@@ -88,9 +88,9 @@
               </div>
 				
 		      	<%= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
-				<div class="row">
+				<div class="row price-discount">
 					<div class="col-md-12">
-						<div>
+						<div class="price-height">
 							<span class="price" itemprop="price">
 							<%= display_price_range(product)%>
 							<%#= display_price(product.master) %></span>
