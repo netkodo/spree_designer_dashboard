@@ -21,6 +21,18 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
+      $(@).parents('tr.invoice').remove()
+  ,'.close-invoice'
+
+  $(document).on
+    click: (e)->
+      e.preventDefault()
+      console.log 'save'
+  ,'.save-invoice'
+
+  $(document).on
+    click: (e)->
+      e.preventDefault()
       my_this = $(@)
       $.ajax
         dataType: 'html'
@@ -28,7 +40,7 @@ $ ->
         url: '/private_invoice'
         data: {id: $(@).data('id')}
         success: (response)->
-          my_this.parents('tr').after("<tr><td class='no-border' colspan='6'>#{response}</td></tr>")
+          my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
           setTimeout () ->
