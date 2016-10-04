@@ -89,7 +89,10 @@ $ ->
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
-          obj.remove()
+          obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
+          setTimeout () ->
+            obj.remove()
+          ,'3000'
           console.log response
         error: (response) ->
           $(@).html('Save')
