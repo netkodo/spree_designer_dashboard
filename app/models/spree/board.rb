@@ -23,6 +23,7 @@ class Spree::Board < ActiveRecord::Base
   has_one :portfolio, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
+  has_many :invoice_lines
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged

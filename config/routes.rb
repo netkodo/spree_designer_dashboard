@@ -88,6 +88,7 @@ Spree::Core::Engine.routes.draw do
   post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
 
   post "/private_invoice" => "boards#private_invoice", as: :private_invoice, :defaults => {:format => 'html'}
+  post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
 
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
