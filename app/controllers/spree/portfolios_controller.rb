@@ -1,7 +1,50 @@
 class Spree::PortfoliosController < Spree::StoreController
 
   def index
+    @colors = Hash.new(0)
+    @designers = Hash.new(0)
+    @room_type = Hash.new(0)
+    @room_style = Hash.new(0)
 
+    if params[:filter].present?
+      tab = []
+      params[:filter].each do |f|
+        tab << "#{f[0]}: #{f[1]}"
+      end
+      statement= "Spree::Portfolio.where(#{tab.join(',')})"
+
+      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')
+      @portfolios = tmp_portfolios.page(params[:page]).per(60)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+    else
+      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
+      @portfolios = tmp_portfolios.page(params[:page]).per(60)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+    end
+
+    colors.each do |v|
+      @colors[v] += 1
+    end
+
+    designers.each do |v|
+      @designers[v] += 1
+    end
+
+    room_type.each do |v|
+      @room_type[v] += 1
+    end
+
+    room_style.each do |v|
+      @room_style[v] += 1
+    end
   end
 
   def portfolio_page
@@ -23,7 +66,7 @@ class Spree::PortfoliosController < Spree::StoreController
       end
 
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
       tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
       if params[:page].present? and params[:page].to_i > 1
@@ -36,7 +79,7 @@ class Spree::PortfoliosController < Spree::StoreController
       end
       # tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     end
     render "portfolio_page", layout: false
   end
@@ -54,17 +97,17 @@ class Spree::PortfoliosController < Spree::StoreController
       end
       statement= "Spree::Portfolio.where(#{tab.join(',')})"
 
-      tmp_portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
       colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
     else
-      tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
+      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
       colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
@@ -113,6 +156,22 @@ class Spree::PortfoliosController < Spree::StoreController
         format.json {render json: {location: portfolio_path}, status: :ok}
       else
         format.json {render json: @portfolio.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def add_to_room
+    Rails.logger.info "****************"
+    Rails.logger.info "****************"
+    Rails.logger.info "****************"
+    Rails.logger.info "****************"
+    Rails.logger.info "****************"
+
+    respond_to do |format|
+      if true
+        format.json {render json: {message: "ok"},status: :ok}
+      else
+        format.json {render json: {message: "error"},status: :unprocessable_entity}
       end
     end
   end
@@ -201,6 +260,6 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image)
+      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image,:description,:paint_brand,:paint_name,:tags)
     end
 end

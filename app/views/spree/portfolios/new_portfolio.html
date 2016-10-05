@@ -58,6 +58,38 @@
           </div>
         </div>
 
+          <div class="control-group row">
+              <%= f.label :paint_brand, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                  <%= f.text_field :paint_brand, :class => 'form-control fullwidth' %>
+                  <div class="info"></div>
+              </div>
+          </div>
+
+          <div class="control-group row">
+              <%= f.label :paint_name, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                  <%= f.text_field :paint_name, :class => 'form-control fullwidth' %>
+                  <div class="info"></div>
+              </div>
+          </div>
+
+          <div class="control-group row">
+              <%= f.label :description, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                  <%= f.text_area :description, :class => 'form-control fullwidth' %>
+                  <div class="info"></div>
+              </div>
+          </div>
+
+          <div class="control-group row">
+              <%= f.label :tags, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                  <%= f.text_field :tags, :class => 'form-control fullwidth', :placeholder => 'Use commas to separate tags' %>
+                  <div class="info"></div>
+              </div>
+          </div>
+
         <div class="control-group row">
           <label>
             <input type="checkbox" id="portfolio_tos" class="col-md-3">
@@ -73,6 +105,10 @@
             </div>
           </label>
         </div>
+
+          <div class="col-md-8 add-another-image">
+              <span class="plus-sign"><i class="fa fa-plus" aria-hidden="true"></i></span> Add another image for this room
+          </div>
 
       </div>
     <div class="col-md-5">

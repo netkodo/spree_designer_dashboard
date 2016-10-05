@@ -73,6 +73,38 @@
             </div>
 
             <div class="control-group row">
+              <%= f.label :paint_brand, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :paint_brand, :class => 'form-control fullwidth' %>
+                <div class="info"></div>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :paint_name, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :paint_name, :class => 'form-control fullwidth' %>
+                <div class="info"></div>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :description, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_area :description, :class => 'form-control fullwidth' %>
+                <div class="info"></div>
+              </div>
+            </div>
+
+            <div class="control-group row">
+              <%= f.label :tags, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :tags, :class => 'form-control fullwidth', :placeholder => 'Use commas to separate tags' %>
+                <div class="info"></div>
+              </div>
+            </div>
+
+            <div class="control-group row">
               <label>
                 <input type="checkbox" id="portfolio_tos" class="col-md-3">
                 <div class="col-md-9 tos">
@@ -86,6 +118,10 @@
                   image for purposes of building the designer’s brand.
                 </div>
               </label>
+            </div>
+
+            <div class="col-md-8 add-another-image">
+              <span class="plus-sign"><i class="fa fa-plus" aria-hidden="true"></i></span> Add another image for this room
             </div>
 
           </div>
@@ -103,43 +139,53 @@
     <% end %>
     </div>
 
-    <div class="row dashboard-portfolios">
-      <% if @portfolios.any? %>
-        <% if @portfolios.count > 4 %>
-          <div class="container slide-products col-md-12">
-            <ul class="products_flexi_box nbs-flexisel-ul">
-              <% @portfolios.each do |portfolio| %>
-                  <li>
-                    <div class="product-container">
-                      <div class="img-container">
-                        <%= image_tag portfolio.portfolio_image.url(:carousel), class: "carusel-img", data: {'id' => portfolio.id} %>
-                      </div>
-                      <div class="title">
-                        <%= portfolio.name %>
-                      </div>
-                    </div>
-                  </li>
-              <% end %>
-            </ul>
-          </div>
-        <% else %>
-          <div class="col-md-12">
-            <% @portfolios.each do |portfolio| %>
-                <div class="col-md-3">
-                  <div class="product-container">
-                    <div class="img-container text-center portfolio-carousel-static">
-                      <%= image_tag portfolio.portfolio_image.url(:carousel), data: {'id' => portfolio.id} %>
-                    </div>
-                    <div class="title text-center">
-                      <%= portfolio.name %>
-                    </div>
-                  </div>
-                </div>
-            <% end %>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
+    <!--<div class="row dashboard-portfolios">-->
+      <!--<%# if @portfolios.any? %>-->
+        <!--<%# if @portfolios.count > 4 %>-->
+          <!--<div class="container slide-products col-md-12">-->
+            <!--<ul class="products_flexi_box nbs-flexisel-ul">-->
+              <!--<%# @portfolios.each do |portfolio| %>-->
+                  <!--<li>-->
+                    <!--<div class="product-container">-->
+                      <!--<div class="img-container">-->
+                        <!--<%#= image_tag portfolio.portfolio_image.url(:carousel), class: "carusel-img", data: {'id' => portfolio.id} %>-->
+                      <!--</div>-->
+                      <!--<div class="title">-->
+                        <!--<%#= portfolio.name %>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</li>-->
+              <!--<%# end %>-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--<%# else %>-->
+          <!--<div class="col-md-12">-->
+            <!--<%# @portfolios.each do |portfolio| %>-->
+                <!--<div class="col-md-3">-->
+                  <!--<div class="product-container">-->
+                    <!--<div class="img-container text-center portfolio-carousel-static">-->
+                      <!--<%#= image_tag portfolio.portfolio_image.url(:carousel), data: {'id' => portfolio.id} %>-->
+                    <!--</div>-->
+                    <!--<div class="title text-center">-->
+                      <!--<%#= portfolio.name %>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+            <!--<%# end %>-->
+          <!--</div>-->
+        <!--<%# end %>-->
+      <!--<%# end %>-->
+    <!--</div>-->
 
   </div>
+
+  <div class="col-md-12 dashboard-portfolios" id="portfolios-content">
+    <% if @portfolios.any? %>
+      <% @portfolios.each do |p| %>
+        <%= render :partial => 'spree/portfolios/portfolio_item_edit', locals: {p: p} %>
+      <% end %>
+    <% end %>
+  </div>
 </div>
+
+<div id="modal-handler"></div>

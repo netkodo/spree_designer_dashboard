@@ -294,7 +294,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="board-section board-products-section">
-			<h3>Buy Products from this Room</h3>	
+			<% if @board.products.present? %><h3>Buy Products from this Room</h3><% end %>
 			<%= render :partial => "spree/designers/products_list", :locals => {:products => @board.products}%>
 		</div>
 	</div>
@@ -315,6 +315,8 @@
 <% end%>
 
  <div class="fb-comments" data-href="<%=url_for(:only_path => false)%>" data-numposts="5" data-colorscheme="light"></div>
+
+<%= render :partial => 'spree/portfolios/portfolio_seo', locals: {p: @board.portfolio} %>
 
 <%= render :partial => "add_question_modal"%>
 

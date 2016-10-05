@@ -1,0 +1,42 @@
+<div class="col-md-3 col-xs-6 col-sm-6 no-paddings">
+
+  <div class="col-md-12 col-sm-12 col-xs-12 portfolio small-paddings">
+
+    <div class="image">
+      <% if p.board.present? and p.board.status=="published" %>
+          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p.board) %>
+      <% else %>
+          <%= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
+      <% end %>
+    </div>
+
+    <div class="shop-portfolio col-md-12 col-xs-12 col-sm-12 no-paddings">
+
+      <!--<div class="details"><%#= p.name %></div>-->
+      <div class="portfolio-info">
+        <div class="col-md-3 col-xs-4 col-sm-4 text-center small-paddings">
+          <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
+        </div>
+
+        <div class="col-md-6 col-xs-4 col-sm-5 profile-link small-paddings">
+          <div class="designer_name_div">
+            <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
+          </div>
+          <div class="designer_company_div">
+            <span class="designer_company"><%= p.user.company_name %></span>
+          </div>
+        </div>
+
+        <div class="text-center col-md-3 col-xs-4 col-sm-3 no-paddings">
+          <span class="edit" data-id="<%= p.id %>">edit</span>
+        </div>
+
+        <% if p.board.present? and p.board.status=="published" %>
+            <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings shop-the-look">
+              <%= link_to "Shop the Look",show_portfolio_url(p.board), class: "btn btn-primary" %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

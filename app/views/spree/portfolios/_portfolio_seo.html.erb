@@ -1,0 +1,12 @@
+<% if p.tags.split(',').count > 0 %>
+  <h3>Tags:</h3>
+  <div class="col-md-12 portfolio-seo">
+    <% p.tags.split(',').each do |t| %>
+      <% if t.present? %>
+        <span class="tag">
+          <%= t.strip %>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
