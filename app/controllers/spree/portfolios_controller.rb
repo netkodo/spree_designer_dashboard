@@ -160,22 +160,6 @@ class Spree::PortfoliosController < Spree::StoreController
     end
   end
 
-  def add_to_room
-    Rails.logger.info "****************"
-    Rails.logger.info "****************"
-    Rails.logger.info "****************"
-    Rails.logger.info "****************"
-    Rails.logger.info "****************"
-
-    respond_to do |format|
-      if true
-        format.json {render json: {message: "ok"},status: :ok}
-      else
-        format.json {render json: {message: "error"},status: :unprocessable_entity}
-      end
-    end
-  end
-
   def new_portfolio
     @colors = Spree::Board.color_categories
     rooms = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
@@ -217,14 +201,35 @@ class Spree::PortfoliosController < Spree::StoreController
   def create_portfolio
     # checking params because if we wont cut portfolio_image it wont pass validation even if its empty string
     !portfolio_params[:portfolio_image].present? ? x = portfolio_params.except(:portfolio_image) : x = portfolio_params
+
+    if x[:room_id].present?
+      room_id = x[:room_id]
+    else
+      room_id = Spree::Room.create(user_id: spree_current_user.id).id
+      x[:room_id] = room_id
+    end
+
     @portfolio = Spree::Portfolio.new(x)
+
     respond_to do |format|
       if @portfolio.save
         format.html {redirect_to portfolio_path}
-        format.json {render json: {location: portfolio_path}, status: :ok}
+        format.json {render json: @portfolio, status: :ok}
       else
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def single_portfolio_edit
+    @portfolio=Spree::Portfolio.find(params[:id])
+
+    respond_to do |format|
+      if @portfolio.present?
+        format.html {render partial: 'portfolio_item_edit', locals: {p: @portfolio}}
+      else
+        format.html {redirect_to portfolio_path}
       end
     end
   end
@@ -260,6 +265,6 @@ class Spree::PortfoliosController < Spree::StoreController
   private
 
     def portfolio_params
-      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image,:description,:paint_brand,:paint_name,:tags)
+      params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image,:description,:paint_brand,:paint_name,:tags,:room_id)
     end
 end

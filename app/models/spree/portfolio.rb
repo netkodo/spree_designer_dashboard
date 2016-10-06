@@ -6,6 +6,10 @@ class Spree::Portfolio < ActiveRecord::Base
   belongs_to :room_types, foreign_key: 'room_type', class_name: "Spree::Taxon"
   belongs_to :room_styles, foreign_key: 'style', class_name: "Spree::Taxon"
   has_many :portfolio_favorites, dependent: :destroy
+  belongs_to :room
+
+  before_destroy :check_rooms
+
   validates :name, presence: true
 
   has_attached_file :portfolio_image,
@@ -15,6 +19,14 @@ class Spree::Portfolio < ActiveRecord::Base
                     convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
 
   validates_attachment_presence :portfolio_image, only: [:create_portfolio]
+
+  def check_rooms
+    # destroying room if removed portfolio was last in that rooom
+    room = self.room
+    if room.portfolios.count <= 1
+      room.destroy
+    end
+  end
 
   def change_name_to_class
       self.name.gsub(' ','_')

@@ -104,6 +104,14 @@
               </div>
             </div>
 
+            <div class="control-group row hidden">
+              <%= f.label :room_id, :class => 'control-label col-md-3' %>
+              <div class="controls col-md-9">
+                <%= f.text_field :room_id, :class => 'form-control fullwidth', :value => nil %>
+                <div class="info"></div>
+              </div>
+            </div>
+
             <div class="control-group row">
               <label>
                 <input type="checkbox" id="portfolio_tos" class="col-md-3">
@@ -120,7 +128,7 @@
               </label>
             </div>
 
-            <div class="col-md-8 add-another-image">
+            <div class="btn col-md-8 add-another-image disabled">
               <span class="plus-sign"><i class="fa fa-plus" aria-hidden="true"></i></span> Add another image for this room
             </div>
 
@@ -189,3 +197,5 @@
 </div>
 
 <div id="modal-handler"></div>
+
+<%= render :partial => 'spree/portfolios/portfolio_save_modal' %>

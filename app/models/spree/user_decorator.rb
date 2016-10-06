@@ -2,6 +2,7 @@ Spree::User.class_eval do
   has_many :boards, foreign_key: :designer_id, order: "created_at desc"
   has_many :products, :through => :boards
   has_many :bookmarks
+  has_many :rooms, dependent: :destroy
   has_many :designer_registrations
   has_many :portfolios, dependent: :destroy
   has_many :portfolio_favorites, dependent: :destroy

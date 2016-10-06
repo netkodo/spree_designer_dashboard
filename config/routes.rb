@@ -38,7 +38,7 @@ Spree::Core::Engine.routes.draw do
   patch "/designers" => "designers#update", :as => :update_designer
   #post "/designers/signup" => "designers#signup", :as => :create_designer_registration
 
-  #portfolio routes + room route
+  #portfolio routes
   post "/portfolio_content" => "portfolios#portfolio_content", :as => :portfolio_content
   get "/portfolio" => "portfolios#portfolio", as: :portfolio
   get "/new_portfolio" => "portfolios#new_portfolio", as: :new_portfolio
@@ -49,8 +49,7 @@ Spree::Core::Engine.routes.draw do
   get "/portfolios" => "portfolios#index", as: :index
   post "/portfolios_search" => "portfolios#search", as: :portfolios_search, :defaults => {:format => 'html'}
   post "/portfolio_page" => "portfolios#portfolio_page", :as => :portfolio_page
-
-  post "/add_to_room" => "portfolios#add_to_room",:as => :add_to_room,:defaults => {:format => 'json'}
+  post "/single_portfolio_edit" => "portfolios#single_portfolio_edit", :as => :single_portfolio_edit, :defaults => {:format => 'html'}
 
   #favoretes portfolio & board
   post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}
