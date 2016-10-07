@@ -249,8 +249,12 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def show_portfolio
-    @board = Spree::Board.friendly.find(params[:id])
-    impressionist(@board)
+    @portfolio = Spree::Portfolio.find(params[:id])
+    if !@portfolio.board.present?
+      @same_room_images = @portfolio.room.portfolios.select{|x| x.id != @portfolio.id}
+      @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?",@portfolio.room_type,@portfolio.style,@portfolio.wall_color).limit(4)
+    end
+    # impressionist(@portfolio)
   end
 
   def preview

@@ -190,7 +190,7 @@
   <div class="col-md-12 dashboard-portfolios" id="portfolios-content">
     <% if @portfolios.any? %>
       <% @portfolios.each do |p| %>
-        <%= render :partial => 'spree/portfolios/portfolio_item_edit', locals: {p: p} %>
+        <%= render :partial => 'spree/portfolios/portfolio_item_edit', locals: {p: p,cols: 3} %>
       <% end %>
     <% end %>
   </div>

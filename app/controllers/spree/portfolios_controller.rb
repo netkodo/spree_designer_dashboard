@@ -153,7 +153,7 @@ class Spree::PortfoliosController < Spree::StoreController
     @portfolio = Spree::Portfolio.find(params[:id])
     respond_to do |format|
       if @portfolio.destroy
-        format.json {render json: {location: portfolio_path}, status: :ok}
+        format.json {render json: @portfolio, status: :ok}
       else
         format.json {render json: @portfolio.errors, status: :unprocessable_entity}
       end
@@ -227,7 +227,7 @@ class Spree::PortfoliosController < Spree::StoreController
 
     respond_to do |format|
       if @portfolio.present?
-        format.html {render partial: 'portfolio_item_edit', locals: {p: @portfolio}}
+        format.html {render partial: 'portfolio_item_edit', locals: {p: @portfolio,cols: 3}}
       else
         format.html {redirect_to portfolio_path}
       end

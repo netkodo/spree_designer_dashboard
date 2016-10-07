@@ -79,7 +79,7 @@
 
           <div class="result row">
             <% @portfolios.each do |p| %>
-              <%= render :partial => 'spree/portfolios/portfolio_item', locals: {p: p} %>
+              <%= render :partial => 'spree/portfolios/portfolio_item', locals: {p: p,cols: nil} %>
             <% end %>
           </div>
 

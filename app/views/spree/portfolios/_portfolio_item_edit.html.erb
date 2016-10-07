@@ -1,4 +1,4 @@
-<div class="col-md-3 col-xs-6 col-sm-6 no-paddings">
+<div class='<%= cols.present? ? "col-md-#{cols}" : "col-md-4" %> col-xs-6 col-sm-6 no-paddings' id="<%= p.id %>">
 
   <div class="col-md-12 col-sm-12 col-xs-12 portfolio small-paddings">
 
@@ -15,7 +15,7 @@
       <!--<div class="details"><%#= p.name %></div>-->
       <div class="portfolio-info">
         <div class="col-md-3 col-xs-4 col-sm-4 text-center small-paddings">
-          <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img"),"/#{p.user.username}") %>
+          <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img default-img img-responsive"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img img-responsive"),"/#{p.user.username}") %>
         </div>
 
         <div class="col-md-6 col-xs-4 col-sm-5 profile-link small-paddings">

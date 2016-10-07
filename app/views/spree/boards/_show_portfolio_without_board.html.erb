@@ -1,0 +1,166 @@
+<% content_for :scripts do %>
+    <%= javascript_include_tag 'spree/questions_and_answers.js' %>
+    <%= javascript_include_tag 'spree/portfolio.js' %>
+<% end %>
+
+<div class="board-header">
+	<div class="row">
+		<div class="col-md-12">
+			<ol class="breadcrumb">
+				<li><%= link_to "All Portfolios", '/portfolios' %></li>
+			</ol>			
+			<%#= render :partial => "promotion_code_banner"%>
+			<h1><%= @portfolio.name %></h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-7">	
+		<div class="board-details">
+			<div class="board-section board-image-section text-center">
+          <%= image_tag @portfolio.portfolio_image.url(:large), class: 'img-board' %>
+			</div>
+      <div class="large-image col-md-6 large-image-margin">
+        <a class="js-show-large-image-board" data-orginal-image=<%= @portfolio.portfolio_image.url(:large) %> > View large </a>
+      </div>
+
+			
+			
+			</div>
+		</div>
+	<div class="col-md-5">
+		<div class="board-about-column">
+			<!--<div class="board-description">-->
+				<!--<h4>About This Room</h4>-->
+				<!--<%#= @portfolio.board.description %>-->
+			<!--</div>-->
+      <div id="product-tabs">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#description_tab" role="tab" data-toggle="tab">About This Room</a></li>
+          <!--<li><a href="#questionsandanswers" role="tab" data-toggle="tab">Q&A</a></li>-->
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="description_tab">
+            <div class="board-description">
+              <%= @portfolio.description %>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+			<h4>Room By</h4>
+			<div class="board-designer-header">
+				<div class="board-designer-logo">
+					<% if !@portfolio.user.user_images.blank? %>
+					<%=image_tag(@portfolio.user.user_images.first.attachment(:mini), :class => "img-circle img-responsive")%>
+					<% else %>
+						<%=image_tag("/assets/frontend/profile_default_primary.jpg", :class => "img-circle img-responsive")%>
+					<% end %>
+				</div>
+				<div class="board-designer-info">
+					<h3><%= link_to @portfolio.user.full_name, "/#{@portfolio.user.username}"%></h3>
+					<p><%= @portfolio.user.company_name%></p>
+				</div>
+			</div>
+			<div class="board-sharing-tools">
+				<span class="share-label">Share:</span>
+
+        <%
+          media,description = ""
+          media = @portfolio.portfolio_image.url.split("?")[0].to_s
+          description = strip_tags(@portfolio.description) if @portfolio.description.present?
+          board_name = @portfolio.name if @portfolio.name.present?
+        %>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+
+            <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= board_name %>&description=<%= description %>&link=<%= show_portfolio_url(@portfolio) %>&picture=<%= media %>', '_blank', 'width=520, height=570')">
+              <%= image_tag("frontend/facebook.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+          </div>
+        </div>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+            <a onclick="return window.open('https://twitter.com/intent/tweet?via=scoutandnimble&hashtags=scoutandnimble&url=<%= show_portfolio_url(@portfolio) %>&text=<%= board_name %>', '_blank', 'width=520, height=570')" >
+              <%= image_tag("frontend/twitter.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+          </div>
+        </div>
+
+        <div class="favorits">
+          <div class="shared-icon" >
+            <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= show_portfolio_url(@portfolio) %>&media=<%= media %>&description=<%= description %>">
+              <%= image_tag("frontend/pinterest.png",style: "background-color: #c9cace;position:relative;top:-1px;") %>
+            </a>
+            <!-- Please call pinit.js only once per page -->
+            <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+          </div>
+        </div>
+
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<% if @same_room_images.count > 0 %>
+  <div class="row col-md-12 portfolio-row-margin">
+    <h3>Same Room Images</h3>
+    <div id='portfolios-content'>
+      <%  @same_room_images.each do |p| %>
+        <%= render :partial => "spree/portfolios/portfolio_item", locals: {p: p,cols: 3} %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @related_rooms.count > 0 %>
+    <div class="row col-md-12 portfolio-row-margin">
+      <h3>Related Rooms</h3>
+      <div id='portfolios-content'>
+        <%  @related_rooms.each do |p| %>
+            <%= render :partial => "spree/portfolios/portfolio_item", locals: {p: p,cols: 3} %>
+        <% end %>
+      </div>
+    </div>
+<% end %>
+
+ <div class="fb-comments" data-href="<%=url_for(:only_path => false)%>" data-numposts="5" data-colorscheme="light"></div>
+
+<%= render :partial => 'spree/portfolios/portfolio_seo', locals: {p: @portfolio} %>
+
+<%#= render :partial => "add_question_modal"%>
+
+<div id="lightBox">
+
+</div>
+
+<script>
+$(document).ready(function() {
+	$('#embed-room').popover({ 
+	    html : true,
+	    content: function() {
+			//$('.button-product-info').popover('hide');
+	      return $('#room-widget').html();
+	    }
+	  });
+	
+	
+	$('.swatch-wrapper').popover({ 
+	    html : true,
+	    content: function() {
+			//$('.button-product-info').popover('hide');
+	      return $('#'+$(this).data('colorPopoverContainer')).html();
+	    }
+	  });
+
+});
+</script>

@@ -3,7 +3,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <h4>Ask a question: </h4>
-      <textarea id="question_text" data-board_id="<%= @board.id %>" name="question[text]" value="" class="form-control" autofocus="autofocus" style="max-width: 577px;"></textarea>
+      <textarea id="question_text" data-board_id="<%= @portfolio.board.id %>" name="question[text]" value="" class="form-control" autofocus="autofocus" style="max-width: 577px;"></textarea>
       <% if spree_current_user.present? %>
           <label><input type="checkbox" id="question_send_email"  name="question[send_email]" checked> Check if you wish to be notified with the answer</label>
           <input type="text" id="question_from" class="form-control hidden" name="question[from]" value="<%= spree_current_user.email %>">
