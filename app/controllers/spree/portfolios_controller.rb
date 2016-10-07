@@ -133,6 +133,21 @@ class Spree::PortfoliosController < Spree::StoreController
     render "spree/portfolios/search",layout: false
   end
 
+  def get_tags
+    Rails.logger.info params
+    tags = ["daniel","jarek","apple","agata","linux","ruby","scoutandnimble","black hole","rails","ruby on rails"]
+    hash = {}
+    tags.select{|s| s.starts_with?(params[:s])}.each_with_index.map{|s,i| hash[i]=s}
+
+    respond_to do |format|
+      if hash.length >= 1
+        format.json {render json: hash,status: :ok}
+      else
+        format.json {render json: {message: "nothing found"},status: :unprocessable_entity}
+      end
+    end
+  end
+
   def portfolio
     if spree_current_user and (spree_current_user.is_beta_user? or spree_current_user.is_designer?)
       @portfolio = Spree::Portfolio.new

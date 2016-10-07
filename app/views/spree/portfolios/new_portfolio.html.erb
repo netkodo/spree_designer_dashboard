@@ -85,7 +85,8 @@
           <div class="control-group row">
               <%= f.label :tags, :class => 'control-label col-md-3' %>
               <div class="controls col-md-9">
-                  <%= f.text_field :tags, :class => 'form-control fullwidth', :placeholder => 'Use commas to separate tags' %>
+                  <ul id="tags"></ul>
+                  <%= f.text_field :tags, :class => 'form-control fullwidth hidden', :placeholder => 'Use commas to separate tags' %>
                   <div class="info"></div>
               </div>
           </div>
