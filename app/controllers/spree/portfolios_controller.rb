@@ -134,10 +134,8 @@ class Spree::PortfoliosController < Spree::StoreController
   end
 
   def get_tags
-    Rails.logger.info params
-    tags = ["daniel","jarek","apple","agata","linux","ruby","scoutandnimble","black hole","rails","ruby on rails"]
     hash = {}
-    tags.select{|s| s.starts_with?(params[:s])}.each_with_index.map{|s,i| hash[i]=s}
+    Spree::Tag.where("tag LIKE ?","#{params[:s]}%").each_with_index.map{|s,i| hash[i]=s.tag}
 
     respond_to do |format|
       if hash.length >= 1
@@ -198,6 +196,15 @@ class Spree::PortfoliosController < Spree::StoreController
   def update_portfolio
     @portfolio = Spree::Portfolio.find(params[:portfolio][:id])
     !portfolio_params[:portfolio_image].present? ? x = portfolio_params.except(:portfolio_image) : x = portfolio_params
+
+    if x[:tags].present? and params[:portfolio][:tags] != @portfolio.tags
+      x[:tags].split(',').each do |t|
+        unless Spree::Tag.find_by(tag: t).present?
+          Spree::Tag.create(tag: t)
+        end
+      end
+    end
+
     respond_to do |format|
       if @portfolio.update(x)
         if @portfolio.board.present?
@@ -222,6 +229,14 @@ class Spree::PortfoliosController < Spree::StoreController
     else
       room_id = Spree::Room.create(user_id: spree_current_user.id).id
       x[:room_id] = room_id
+    end
+
+    if x[:tags].present?
+      x[:tags].split(',').each do |t|
+        unless Spree::Tag.find_by(tag: t).present?
+          Spree::Tag.create(tag: t)
+        end
+      end
     end
 
     @portfolio = Spree::Portfolio.new(x)
