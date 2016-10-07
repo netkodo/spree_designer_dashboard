@@ -28,6 +28,15 @@ class Spree::Portfolio < ActiveRecord::Base
     end
   end
 
+  def self.create_rooms_for_existing_portfolios
+    Spree::Portfolio.all.each do |p|
+      unless p.room_id.present?
+        r = Spree::Room.create(user_id: p.user_id)
+        p.update(room_id: r.id)
+      end
+    end
+  end
+
   def change_name_to_class
       self.name.gsub(' ','_')
   end
