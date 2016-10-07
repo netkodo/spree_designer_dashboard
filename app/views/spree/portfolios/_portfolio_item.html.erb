@@ -43,7 +43,7 @@
                   </div>
                 </div>
             <% end %>
-            <div class="num-photos"><%= p.room.portfolios.count %> photos</div>
+            <div class="num-photos <%= !spree_current_user.present? ? "space_logout" : '' %>"><%= p.room.portfolios.count %> photos</div>
 
           </div>
         </div>
