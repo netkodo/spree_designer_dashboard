@@ -138,7 +138,7 @@
 					<% if !@portfolio.board.designer.user_images.blank? %>
 					<%=image_tag(@portfolio.board.designer.user_images.first.attachment(:mini), :class => "img-circle img-responsive")%>
 					<% else %>
-						<%=image_tag("/assets/frontend/profile_default_primary.jpg", :class => "img-circle img-responsive")%>
+						<%=image_tag("/assets/frontend/profile_default_primary.jpg", :class => "img-circle img-responsive default-designer")%>
 					<% end %>
 					<%#= link_to logo_image(@portfolio.board.designer.logo_image, :mini), "/#{@portfolio.board.designer.username}"%>
 				</div>

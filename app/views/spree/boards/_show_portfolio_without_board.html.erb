@@ -59,7 +59,7 @@
 					<% if !@portfolio.user.user_images.blank? %>
 					<%=image_tag(@portfolio.user.user_images.first.attachment(:mini), :class => "img-circle img-responsive")%>
 					<% else %>
-						<%=image_tag("/assets/frontend/profile_default_primary.jpg", :class => "img-circle img-responsive")%>
+						<%=image_tag("/assets/frontend/profile_default_primary.jpg", :class => "img-circle img-responsive default-designer")%>
 					<% end %>
 				</div>
 				<div class="board-designer-info">
