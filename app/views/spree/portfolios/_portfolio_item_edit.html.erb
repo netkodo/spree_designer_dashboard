@@ -4,9 +4,10 @@
 
     <div class="image">
       <% if p.board.present? and p.board.status=="published" %>
-          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p.board) %>
+          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p) %>
       <% else %>
-          <%= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
+          <%#= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
+          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p) %>
       <% end %>
     </div>
 
@@ -33,7 +34,7 @@
 
         <% if p.board.present? and p.board.status=="published" %>
             <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings shop-the-look">
-              <%= link_to "Shop the Look",show_portfolio_url(p.board), class: "btn btn-primary" %>
+              <%= link_to "Shop the Look",show_portfolio_url(p), class: "btn btn-primary" %>
             </div>
         <% end %>
       </div>
