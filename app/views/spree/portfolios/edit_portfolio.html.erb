@@ -99,21 +99,21 @@
         </div>
       </div>
 
-      <div class="control-group row">
-        <label>
-          <input type="checkbox" id="portfolio_tos" class="col-md-3">
-          <div class="col-md-9 tos">
-            <!--By checking here I attest that I own the rights to the image loaded and agree to allow Scout & Nimble, LLC to use this image-->
-            <!--for marketing purposes. Scout & Nimble, LLC agrees to give the designer credit for the image and use the image for purposes of building-->
-            <!--the designer's brnad.-->
-            By checking here I attest that I own the rights to the image
-            loaded and agree to allow Scout & Nimble, LLC to use this
-            image for marketing purposes. Scout & Nimble, LLC agrees
-            to always give the designer credit for the image and use the
-            image for purposes of building the designer’s brand.
-          </div>
-        </label>
-      </div>
+      <!--<div class="control-group row">-->
+        <!--<label>-->
+          <!--<input type="checkbox" id="portfolio_tos" class="col-md-3">-->
+          <!--<div class="col-md-9 tos">-->
+            <!--&lt;!&ndash;By checking here I attest that I own the rights to the image loaded and agree to allow Scout & Nimble, LLC to use this image&ndash;&gt;-->
+            <!--&lt;!&ndash;for marketing purposes. Scout & Nimble, LLC agrees to give the designer credit for the image and use the image for purposes of building&ndash;&gt;-->
+            <!--&lt;!&ndash;the designer's brnad.&ndash;&gt;-->
+            <!--By checking here I attest that I own the rights to the image-->
+            <!--loaded and agree to allow Scout & Nimble, LLC to use this-->
+            <!--image for marketing purposes. Scout & Nimble, LLC agrees-->
+            <!--to always give the designer credit for the image and use the-->
+            <!--image for purposes of building the designer’s brand.-->
+          <!--</div>-->
+        <!--</label>-->
+      <!--</div>-->
 
     </div>
 
@@ -126,7 +126,7 @@
     <div class="form-actions text-right col-md-7">
       <div class="btn btn-danger destroy-portfolio" data-id="<%= @portfolio.id %>" >Delete</div>
       <div class="btn btn-default cancel-portfolio">Cancel</div>
-      <%= f.submit "Update", :class => 'btn btn-primary disabled' %>
+      <%= f.submit "Update", :class => 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
