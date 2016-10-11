@@ -6,39 +6,40 @@
               <div class="btn btn-primary add-item-dropdown">Add a Item</div>
               <div class="add-item-data">
 
-                <%= form_for 'custom_item', :url => "test", :html => {:id => "create-custom-item"} do |f| %>
+                <%= form_for 'custom_item', :url => "/create_custom_item", :html => {:id => "create-custom-item"} do |f| %>
 
                   <div class="form-group">
                     <div class="col-md-12">
-                      <%= file_field_tag "image", type: :file %>
+                      <%= f.file_field "image", type: :file %>
+                      <div class="errors text-left"></div>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="col-sm-12">
                       <%= f.text_field :name, placeholder: 'Item Name', :class => 'form-control' %>
-                      <%= f.error_message_on :name %>
+                      <div class="errors text-left"></div>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="col-sm-12">
                       <%= f.text_field :sku, placeholder: 'Item SKU', :class => 'form-control' %>
-                      <%= f.error_message_on :sku %>
+                      <div class="errors text-left"></div>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="col-sm-12">
                       <%= f.text_field :cost, placeholder: 'Item Cost', :class => 'form-control' %>
-                      <%= f.error_message_on :cost %>
+                      <div class="errors text-left"></div>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="col-sm-12">
                       <%= f.text_field :price, placeholder: 'Item Price', :class => 'form-control' %>
-                      <%= f.error_message_on :price %>
+                      <div class="errors text-left"></div>
                     </div>
                   </div>
 
