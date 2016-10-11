@@ -25,12 +25,12 @@
         <% if @portfolio.board.portfolio.present? %>
           <%= image_tag @portfolio.board.portfolio.portfolio_image.url(:large), class: 'img-board' %>
         <% else %>
-          <%= board_image(@portfolio.board,:large)%>
+          <%= board_image(@portfolio.board,:original)%>
         <% end %>
 			</div>
       <% if @portfolio.board.portfolio.present? %>
         <div class="large-image col-md-6 large-image-margin">
-          <a class="js-show-large-image-board" data-orginal-image=<%= @portfolio.board.portfolio.portfolio_image.url(:large) %> > View large </a>
+          <a class="js-show-large-image-board" data-orginal-image=<%= @portfolio.board.portfolio.portfolio_image.url(:original) %> > View large </a>
         </div>
 			<% end %>
 			<% if false %>
