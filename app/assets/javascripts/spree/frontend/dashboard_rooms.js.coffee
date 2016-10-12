@@ -17,6 +17,7 @@ $ ->
     $(".table-invoice.#{invoice} tbody tr[changed=true]").each ->
       id = $(@).data('id')
       hash[id]={}
+      hash[id]["custom"]=$(@).data('custom')
       $('td[changed=true]',@).each ->
         $.each($(@).data(),(k,v) ->
           hash[id][k]=v
@@ -80,6 +81,7 @@ $ ->
   $(document).on
     click: (e) ->
       invoice = generateInvoiceHash($(@).data('board_id'))
+      console.log invoice
       obj = $(@).parents('tr.invoice')
       $.ajax
         dataType: 'json'

@@ -4,7 +4,11 @@ image_id = ""
 board_image = ""
 node :board_product do |board_product|
    image_id = board_product.image_id
-   board_image = board_product.photo
+   if board_product.photo.present?
+    board_image = board_product.photo
+   else
+    board_image = board_product.custom_item.image
+   end
 end
 child  :product do
   attributes :slug, :name, :description
@@ -19,6 +23,12 @@ child  :product do
          p.images.first.attachment.url if !p.images.blank? and p.images.first.attachment
           "data:image/jpeg;base64,#{Base64.encode64(open( p.images.first.attachment.url.to_s).read) if !p.images.blank? and p.images.first.attachment}"
        end
+    end
+end
+child :custom_item do
+    attributes :name, :id
+    node :image_url do |p|
+        "data:image/jpeg;base64,#{Base64.encode64(open(p.image.url.to_s).read)}"
     end
 end
 

@@ -4,7 +4,7 @@ class Spree::BoardProductsController < Spree::StoreController
   before_filter :require_authentication
   def index
     if params[:room_id] and @board = Spree::Board.find(params[:room_id])      
-      @board_products = @board.board_products(:include => [:master_images, :product])
+      @board_products = @board.board_products(:include => [:master_images, :product,:custom_item])
       respond_to do |format|
         format.js   {render :layout => false}
         format.json   {render :layout => false}
@@ -68,7 +68,7 @@ class Spree::BoardProductsController < Spree::StoreController
   
   private
     def board_product_params
-      params.require(:board_product).permit(:board_id, :product_id, :top_left_x, :top_left_y, :center_point_x, :center_point_y, :z_index, :status, :width, :height, :rotation_offset)
+      params.require(:board_product).permit(:board_id, :custom_item_id, :product_id, :top_left_x, :top_left_y, :center_point_x, :center_point_y, :z_index, :status, :width, :height, :rotation_offset)
     end
     
   

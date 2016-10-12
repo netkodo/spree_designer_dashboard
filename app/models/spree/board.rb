@@ -496,6 +496,26 @@ class Spree::Board < ActiveRecord::Base
               end
               board_product.update(z_index: product_hash['z_index'])
             end
+          else
+            puts 'nie istnieje'
+            puts 'nie istnieje'
+            puts 'nie istnieje'
+            custom = Spree::CustomItem.find(product_hash['custom_item_id'])
+            puts custom.inspect
+            if custom.present?
+              image = product_hash['image']
+              attr = product_hash.except!('action_board', 'product_id', 'image')
+              board_product = Spree::BoardProduct.new(attr)
+              if board_product.save
+                if image.present?
+                  crop_image(image, board_product)
+                end
+                board_product.update(z_index: product_hash['z_index'])
+              end
+              puts "END "
+              puts "END "
+              puts "END "
+            end
           end
         end
       end
@@ -503,12 +523,18 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def crop_image(base64, board_product)
+    puts "start"
       data = Base64.decode64(base64['data:image/png;base64,'.length .. -1])
+    puts "towrzenie"
       file_img = File.new("#{Rails.root}/public/somefilename#{DateTime.now.to_i + rand(1000)}.png", 'wb')
+    puts "zapis"
       file_img.write data
+
       if board_product.update({photo: file_img, image_id: ''})
+        puts "kasowanie"
         File.delete(file_img)
       end
+    puts "KONIEC"
   end
 
   def send_revision_request_email(message_content="")

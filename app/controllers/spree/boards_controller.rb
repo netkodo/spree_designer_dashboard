@@ -130,8 +130,7 @@ class Spree::BoardsController < Spree::StoreController
 
   def private_invoice
     @board = Spree::Board.find(params[:id])
-    @board_products = @board.board_products.map{|x| x.product}
-
+    @board_products = @board.board_products.map{|x| x.product.present? ? x.product : x.custom_item}
     respond_to do |format|
       if @board_products.present?
         format.html{render layout: false, status: :ok}
@@ -764,7 +763,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def board_params
-    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
+    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline,:customer_address)
   end
   # redirect to the edit action after create
   #create.response do |wants|
