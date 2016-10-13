@@ -449,6 +449,7 @@ class Spree::BoardsController < Spree::StoreController
   def update
     session[:page_count]=0
     @board.slug = nil
+    @board.update_column(:generated,false)
     #respond_to do |format|
     @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
     @board.update_column(:not_published_email,true)
@@ -463,7 +464,7 @@ class Spree::BoardsController < Spree::StoreController
       end
 
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
-      @board.queue_image_generation
+      # @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
       respond_to do |format|
         format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}

@@ -469,36 +469,38 @@ class Spree::Board < ActiveRecord::Base
   def create_or_update_board_product(params,board_id,email)
     Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
 
-    if params[:products_board].present?
-      Rails.logger.info params[:products_board]
-      board_products = JSON.parse(params[:products_board])
+    Resque.enqueue(RoomUpdate, params,board_id)
 
-      board_products.each do |_, product_hash|
-        if product_hash['action_board'] == 'update'
-          board_product = self.board_products.where(id: product_hash['product_id']).first
-          if board_product.present?
-            if product_hash['image'].present?
-              crop_image(product_hash['image'], board_product)
-            end
-            attr = product_hash.except!('action_board', 'board_id', 'product_id', 'image')
-            board_product.update(attr)
-          end
-        elsif product_hash['action_board'] == 'create'
-          product = Spree::Product.where(id: product_hash['product_id']).first
-          if product.present?
-            image = product_hash['image']
-            attr = product_hash.except!('action_board', 'product_id', 'image')
-            board_product = product.board_products.new(attr)
-            if board_product.save
-              if image.present?
-                crop_image(image, board_product)
-              end
-              board_product.update(z_index: product_hash['z_index'])
-            end
-          end
-        end
-      end
-    end
+    # if params[:products_board].present?
+    #   Rails.logger.info params[:products_board]
+    #   board_products = JSON.parse(params[:products_board])
+    #
+    #   board_products.each do |_, product_hash|
+    #     if product_hash['action_board'] == 'update'
+    #       board_product = self.board_products.where(id: product_hash['product_id']).first
+    #       if board_product.present?
+    #         if product_hash['image'].present?
+    #           crop_image(product_hash['image'], board_product)
+    #         end
+    #         attr = product_hash.except!('action_board', 'board_id', 'product_id', 'image')
+    #         board_product.update(attr)
+    #       end
+    #     elsif product_hash['action_board'] == 'create'
+    #       product = Spree::Product.where(id: product_hash['product_id']).first
+    #       if product.present?
+    #         image = product_hash['image']
+    #         attr = product_hash.except!('action_board', 'product_id', 'image')
+    #         board_product = product.board_products.new(attr)
+    #         if board_product.save
+    #           if image.present?
+    #             crop_image(image, board_product)
+    #           end
+    #           board_product.update(z_index: product_hash['z_index'])
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
   end
 
   def crop_image(base64, board_product)
