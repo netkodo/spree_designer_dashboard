@@ -36,9 +36,9 @@
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <% if board.generated %>
-                    <%= image_tag("/assets/frontend/boards/small_generated.png", class: 'img-responsive')%>
-                  <% else %>
                     <%= board_image(board,:small)%>
+                  <% else %>
+                    <%= image_tag("/assets/frontend/boards/small_generated.png", class: 'img-responsive')%>
                   <% end %>
                 </td>
                 <td class="board-title">
