@@ -71,6 +71,22 @@
                 <% end %>
               </ul>
             </div>
+
+            <h4>Tags<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:tags].present?) ? "-":"+" %></span></h4>
+            <div class="filter tags  <%= (params[:filter].present? and params[:filter][:tags].present?) ? '' : 'filter-hide' %>">
+              <ul>
+                <% @tags.each do |k,v| %>
+                    <li>
+                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:tags].present? and params[:filter][:tags].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="tags" >
+                        <%= k[0] %>
+                        <span class="count">(<%= v %>)</span>
+                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:tags].present? and params[:filter][:tags].include? k[1].to_s %>
+                      </a>
+                    </li>
+                <% end %>
+              </ul>
+            </div>
+
           </div>
         </div>
         <div class="col-md-9">

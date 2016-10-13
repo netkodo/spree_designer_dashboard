@@ -65,4 +65,15 @@ class Spree::Portfolio < ActiveRecord::Base
     z
   end
 
+  def self.get_filter_tags(obj)
+    tab = []
+    tmp=obj.map{|p| p.tags.split(',')}
+    tmp.each do |tags|
+      tags.each do |tag|
+        tab << [tag,tag]
+      end
+    end
+    tab
+  end
+
 end

@@ -5,30 +5,16 @@ class Spree::PortfoliosController < Spree::StoreController
     @designers = Hash.new(0)
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
+    @tags = Hash.new(0)
 
-    if params[:filter].present?
-      tab = []
-      params[:filter].each do |f|
-        tab << "#{f[0]}: #{f[1]}"
-      end
-      statement= "Spree::Portfolio.where(#{tab.join(',')})"
-
-      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')
-      @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
-      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
-    else
-      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
-      @portfolios = tmp_portfolios.page(params[:page]).per(60)
-      # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
-      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
-    end
+    tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
+    @portfolios = tmp_portfolios.page(params[:page]).per(60)
+    # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
+    colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+    room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
+    room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
+    designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+    tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
 
     colors.each do |v|
       @colors[v] += 1
@@ -45,17 +31,26 @@ class Spree::PortfoliosController < Spree::StoreController
     room_style.each do |v|
       @room_style[v] += 1
     end
+
+    tags.each do |v|
+      @tags[v] +=1
+    end
   end
 
   def portfolio_page
     if params[:filter].present?
       tab = []
-      params[:filter].each do |f|
+      params[:filter].except('tags').each do |f|
         tab << "#{f[0]}: #{f[1]}"
       end
-      statement= "Spree::Portfolio.where(#{tab.join(',')})"
 
-      tmp_portfolios = eval(statement).order('created_at DESC')#,board_id DESC
+      if params[:filter][:tags].present?
+        tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      else
+        statement= "Spree::Portfolio.where(#{tab.join(',')})"
+      end
+
+      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')#,board_id DESC
       if params[:page].present? and params[:page].to_i > 1
         obj = []
         (1..params[:page].to_i).each do |page|
@@ -68,7 +63,7 @@ class Spree::PortfoliosController < Spree::StoreController
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
-      tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
+      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
       if params[:page].present? and params[:page].to_i > 1
         obj = []
         (1..params[:page].to_i).each do |page|
@@ -89,13 +84,20 @@ class Spree::PortfoliosController < Spree::StoreController
     @designers = Hash.new(0)
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
+    @tags = Hash.new(0)
 
     if params[:filter].present?
       tab = []
-      params[:filter].each do |f|
+      params[:filter].except('tags').each do |f|
         tab << "#{f[0]}: #{f[1]}"
       end
-      statement= "Spree::Portfolio.where(#{tab.join(',')})"
+
+      if params[:filter][:tags].present?
+        tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      else
+        statement= "Spree::Portfolio.where(#{tab.join(',')})"
+      end
+
 
       tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
@@ -104,6 +106,7 @@ class Spree::PortfoliosController < Spree::StoreController
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+      tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
     else
       tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
@@ -112,6 +115,7 @@ class Spree::PortfoliosController < Spree::StoreController
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+      tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
     end
 
     colors.each do |v|
@@ -128,6 +132,10 @@ class Spree::PortfoliosController < Spree::StoreController
 
     room_style.each do |v|
       @room_style[v] += 1
+    end
+
+    tags.each do |v|
+      @tags[v] +=1
     end
 
     render "spree/portfolios/search",layout: false
