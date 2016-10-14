@@ -59,7 +59,7 @@ class Spree::PortfoliosController < Spree::StoreController
         if tab.join(',').present?
           statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
         else
-          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}.where(''))"
+          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
         end
       else
         statement= "Spree::Portfolio.where(#{tab.join(',')})"
@@ -111,9 +111,9 @@ class Spree::PortfoliosController < Spree::StoreController
         tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
       elsif params[:filter][:wall_color].present?
         if tab.join(',').present?
-          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
+          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
         else
-          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
+          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
         end
       else
         statement= "Spree::Portfolio.where(#{tab.join(',')})"
