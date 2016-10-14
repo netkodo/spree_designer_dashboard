@@ -59,10 +59,10 @@ class Spree::PortfoliosController < Spree::StoreController
 
       tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')#,board_id DESC
       if params[:page].present? and params[:page].to_i > 1
-        obj = []
+        @obj = []
         (1..params[:page].to_i).each do |page|
           tmp_portfolios.page(page).per(60).each do |portfolio|
-            obj << portfolio
+            @obj << portfolio
           end
         end
       end
@@ -72,10 +72,10 @@ class Spree::PortfoliosController < Spree::StoreController
     else
       tmp_portfolios = Spree::Portfolio.all.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       if params[:page].present? and params[:page].to_i > 1
-        obj = []
+        @obj = []
         (1..params[:page].to_i).each do |page|
           tmp_portfolios.page(page).per(60).each do |portfolio|
-            obj << portfolio
+            @obj << portfolio
           end
         end
       end
