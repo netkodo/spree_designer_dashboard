@@ -122,7 +122,7 @@
   </div>
 <% end %>
 
-<% if @related_rooms.count > 0 %>
+<% if @related_rooms.present? and @related_rooms.count > 0 %>
     <div class="row col-md-12 portfolio-row-margin">
       <h3>Related Rooms</h3>
       <div id='portfolios-content'>
