@@ -28,6 +28,15 @@ class Spree::Portfolio < ActiveRecord::Base
     end
   end
 
+  def check_tags(check)
+    tags = self.tags.split(',')
+    tab = []
+    check.each do |check|
+      tags.include?(check) ? tab << true : tab << false
+    end
+    tab.include?(false) ? false : true
+  end
+
   def self.create_rooms_for_existing_portfolios
     Spree::Portfolio.all.each do |p|
       unless p.room_id.present?

@@ -53,20 +53,9 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      # if params[:filter][:tags].present?
-      #   tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
-      # elsif params[:filter][:wall_color].present?
-      #   if tab.join(',').present?
-      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
-      #   else
-      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
-      #   end
-      # else
-      #   statement= "Spree::Portfolio.where(#{tab.join(',')})"
-      # end
       params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
-      params[:filter][:tags].present? ? tag_s = ".where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\")" : nil
-      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}#{tag_s}.where(#{tab.join(',')})" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
+      params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
+      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
       tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')#,board_id DESC
       if params[:page].present? and params[:page].to_i > 1
@@ -78,7 +67,7 @@ class Spree::PortfoliosController < Spree::StoreController
         end
       end
 
-      @portfolios = tmp_portfolios.page(params[:page]).per(60)
+      @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
       tmp_portfolios = Spree::Portfolio.all.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
@@ -91,7 +80,7 @@ class Spree::PortfoliosController < Spree::StoreController
         end
       end
       # tmp_portfolios = Spree::Portfolio.all.order('created_at DESC')
-      @portfolios = tmp_portfolios.page(params[:page]).per(60)
+      @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     end
     render "portfolio_page", layout: false
@@ -110,31 +99,17 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      # if params[:filter][:tags].present?
-      #   tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
-      #
-      # elsif params[:filter][:wall_color].present?
-      #   if tab.join(',').present?
-      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
-      #     wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})"
-      #   else
-      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
-      #   end
-      # else
-      #   statement= "Spree::Portfolio.where(#{tab.join(',')})"
-      # end
-
       params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
-      params[:filter][:tags].present? ? tag_s = ".where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\")" : nil
-      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}#{tag_s}.where(#{tab.join(',')})" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
+      params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
+      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
       Rails.logger.info statement
       Rails.logger.info statement
       Rails.logger.info statement
 
 
-      tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
-      @portfolios = tmp_portfolios.page(params[:page]).per(60)
+      tmp_portfolios = eval(statement)#.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
+      @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
       # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
       colors = []
