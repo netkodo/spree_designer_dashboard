@@ -10,7 +10,16 @@ class Spree::PortfoliosController < Spree::StoreController
     tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
     @portfolios = tmp_portfolios.page(params[:page]).per(60)
     # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-    colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+    # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+    colors = []
+    tmp_portfolios.each do |wc|
+      colors << [wc.wall_color,wc.wall_color]
+      if wc.board.present? and wc.board.colors.present?
+        wc.board.colors.each do |c|
+          colors << [c.name,c.name]
+        end
+      end
+    end
     room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
     room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
     designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
@@ -46,11 +55,17 @@ class Spree::PortfoliosController < Spree::StoreController
 
       if params[:filter][:tags].present?
         tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      elsif params[:filter][:wall_color].present?
+        if tab.join(',').present?
+          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
+        else
+          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}.where(''))"
+        end
       else
         statement= "Spree::Portfolio.where(#{tab.join(',')})"
       end
 
-      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')#,board_id DESC
+      tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')#,board_id DESC
       if params[:page].present? and params[:page].to_i > 1
         obj = []
         (1..params[:page].to_i).each do |page|
@@ -63,7 +78,7 @@ class Spree::PortfoliosController < Spree::StoreController
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
-      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
+      tmp_portfolios = Spree::Portfolio.all.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       if params[:page].present? and params[:page].to_i > 1
         obj = []
         (1..params[:page].to_i).each do |page|
@@ -88,21 +103,40 @@ class Spree::PortfoliosController < Spree::StoreController
 
     if params[:filter].present?
       tab = []
-      params[:filter].except('tags').each do |f|
+      params[:filter].except('tags','wall_color').each do |f|
         tab << "#{f[0]}: #{f[1]}"
       end
 
       if params[:filter][:tags].present?
         tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      elsif params[:filter][:wall_color].present?
+        if tab.join(',').present?
+          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
+        else
+          statement= "Spree::Portfolio.joins(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}.where(''))"
+        end
       else
         statement= "Spree::Portfolio.where(#{tab.join(',')})"
       end
 
+      Rails.logger.info statement
+      Rails.logger.info statement
+      Rails.logger.info statement
 
-      tmp_portfolios = eval(statement).order('board_id IS NULL, created_at DESC')
+
+      tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      colors = []
+      tmp_portfolios.each do |wc|
+        colors << [wc.wall_color,wc.wall_color]
+        if wc.board.present? and wc.board.colors.present?
+          wc.board.colors.each do |c|
+            colors << [c.name,c.name]
+          end
+        end
+      end
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
@@ -111,7 +145,16 @@ class Spree::PortfoliosController < Spree::StoreController
       tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
-      colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
+      colors = []
+      tmp_portfolios.each do |wc|
+        colors << [wc.wall_color,wc.wall_color]
+        if wc.board.present? and wc.board.colors.present?
+          wc.board.colors.each do |c|
+            colors << [c.name,c.name]
+          end
+        end
+      end
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
       room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
