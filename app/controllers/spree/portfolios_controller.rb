@@ -103,11 +103,6 @@ class Spree::PortfoliosController < Spree::StoreController
       params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
       tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
-      Rails.logger.info statement
-      Rails.logger.info statement
-      Rails.logger.info statement
-
-
       tmp_portfolios = eval(statement)#.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
