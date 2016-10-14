@@ -49,21 +49,24 @@ class Spree::PortfoliosController < Spree::StoreController
   def portfolio_page
     if params[:filter].present?
       tab = []
-      params[:filter].except('tags').each do |f|
+      params[:filter].except('tags','wall_color').each do |f|
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      if params[:filter][:tags].present?
-        tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
-      elsif params[:filter][:wall_color].present?
-        if tab.join(',').present?
-          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
-        else
-          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
-        end
-      else
-        statement= "Spree::Portfolio.where(#{tab.join(',')})"
-      end
+      # if params[:filter][:tags].present?
+      #   tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      # elsif params[:filter][:wall_color].present?
+      #   if tab.join(',').present?
+      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
+      #   else
+      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
+      #   end
+      # else
+      #   statement= "Spree::Portfolio.where(#{tab.join(',')})"
+      # end
+      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
+      params[:filter][:tags].present? ? tag_s = ".where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\")" : nil
+      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}#{tag_s}.where(#{tab.join(',')})" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
       tmp_portfolios = eval(statement).order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')#,board_id DESC
       if params[:page].present? and params[:page].to_i > 1
@@ -107,17 +110,23 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      if params[:filter][:tags].present?
-        tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
-      elsif params[:filter][:wall_color].present?
-        if tab.join(',').present?
-          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
-        else
-          statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
-        end
-      else
-        statement= "Spree::Portfolio.where(#{tab.join(',')})"
-      end
+      # if params[:filter][:tags].present?
+      #   tab.join(',').present? ? statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where(#{tab.join(',')})" : statement= "Spree::Portfolio.where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\").where('')"
+      #
+      # elsif params[:filter][:wall_color].present?
+      #   if tab.join(',').present?
+      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where(#{tab.join(',')})"
+      #     wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})"
+      #   else
+      #     statement= "Spree::Portfolio.includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]}).where('')"
+      #   end
+      # else
+      #   statement= "Spree::Portfolio.where(#{tab.join(',')})"
+      # end
+
+      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
+      params[:filter][:tags].present? ? tag_s = ".where(\"tags LIKE '%#{params[:filter][:tags].join('%')}%'\")" : nil
+      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}#{tag_s}.where(#{tab.join(',')})" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
       Rails.logger.info statement
       Rails.logger.info statement
