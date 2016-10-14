@@ -1,4 +1,4 @@
-<% if @portfolio.board.present? %>
+<% if @portfolio.board.present? and @portfolio.board.status == "published" and @portfolio.board.generated %>
     <%= render :partial => 'spree/boards/show_portfolio_with_board' %>
 <% else %>
     <%= render :partial => 'spree/boards/show_portfolio_without_board' %>
