@@ -404,6 +404,8 @@ class Spree::Board < ActiveRecord::Base
       if bp.present? and bp.product.present?
 
         product_image = bp.product.image_for_board(bp)
+      elsif bp.custom_item.present?
+        product_image = bp.custom_item.custom_image_for_board(bp)
       else
         product_image =""
       end
