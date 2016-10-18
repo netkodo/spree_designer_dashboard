@@ -10,18 +10,13 @@ class Spree::BoardsController < Spree::StoreController
   impressionist :actions => [:show]
 
   def check_generated_board
-    Rails.logger.info "test"
-    Rails.logger.info params[:ids]
     hash = {}
     params[:ids].each do  |b|
       board = Spree::Board.find(b)
       if board.generated
         hash[b] = render_to_string '/spree/boards/single_board_check.html.erb', locals: {board: board}, layout: false
       end
-      # board.generated ? t << (render_to_string 'spree/boards/single_board_check', locals: {board: board}) : nil
     end
-
-    Rails.logger.info hash
 
     respond_to do |format|
       if hash.present?
