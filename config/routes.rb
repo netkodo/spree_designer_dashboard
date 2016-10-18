@@ -54,6 +54,8 @@ Spree::Core::Engine.routes.draw do
   post "/get_tags" => "portfolios#get_tags", :as => :get_tags, :defaults => {:format => 'json'}
 
   #favoretes portfolio & board
+  post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
+
   post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}
   delete "/remove_portfolio_favorite" => "portfolios#remove_portfolio_favorite", :as => :remove_portfolio_favorite,:defaults => {:format => 'json'}
 

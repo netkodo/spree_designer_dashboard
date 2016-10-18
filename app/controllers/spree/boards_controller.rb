@@ -9,6 +9,29 @@ class Spree::BoardsController < Spree::StoreController
 
   impressionist :actions => [:show]
 
+  def check_generated_board
+    Rails.logger.info "test"
+    Rails.logger.info params[:ids]
+    hash = {}
+    params[:ids].each do  |b|
+      board = Spree::Board.find(b)
+      if board.generated
+        hash[b] = render_to_string '/spree/boards/single_board_check.html.erb', locals: {board: board}, layout: false
+      end
+      # board.generated ? t << (render_to_string 'spree/boards/single_board_check', locals: {board: board}) : nil
+    end
+
+    Rails.logger.info hash
+
+    respond_to do |format|
+      if hash.present?
+        format.json {render json: {boards: hash},status: :ok}
+      else
+        format.json {render json: {:message => "nothing changed"},status: :unprocessable_entity}
+      end
+    end
+  end
+
   def add_question
     if params[:board_id].present?
       @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from],send_email:params[:send_email])
