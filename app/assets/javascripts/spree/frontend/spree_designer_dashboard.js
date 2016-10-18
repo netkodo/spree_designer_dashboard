@@ -316,6 +316,7 @@ fabric.Object.prototype.setCenterToOrigin = function () {
 
 function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_id, callback ) {
     callback = callback || null;
+    custom_item_id = custom_item_id || null
      fabric.Image.fromURL(url, function (oImg) {
         oImg.scale(1).set({
             save_url: url,
@@ -464,8 +465,13 @@ function getSavedProducts(board_id) {
                         item_image = board_product.custom_item.image_url
                         item_slug = ""
                     }
-
-                    buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id, 'update', board_product.id,  createObjectImage);
+                    // console.log(board_product.custom_item.id);
+                    // console.log('---')
+                    if (board_product.custom_item == undefined){
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, 'update', board_product.id,  createObjectImage);
+                    }else{
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id, 'update', board_product.id,  createObjectImage);
+                    };
                     canvas.renderAll();
                     canvas.discardActiveObject();
                 });
