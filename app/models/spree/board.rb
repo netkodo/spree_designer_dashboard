@@ -296,7 +296,7 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def self.color_categories
-    ["Blue", "Cool Neutral", "Green", "Orange", "Red", "Violet", "Warm Neutral", "White", "Yellow","Black", "Brown", "Grey", "Pink", "Beige", "Tan"].sort
+    ["Blue", "Cool Neutral", "Green", "Orange", "Red", "Violet", "Warm Neutral", "White", "Yellow"].sort
   end
 
   scope :by_color, (lambda do |color|
