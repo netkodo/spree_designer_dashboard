@@ -10,7 +10,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
         end
         if check_prod.present?
           update_hash={}
-          val.each do |k,v|
+          val.except('custom').each do |k,v|
             update_hash[k.snakecase]=v
           end
           Rails.logger.info update_hash
@@ -22,7 +22,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
           else
             custom_data=Spree::InvoiceLine.new(board_id:params[:board_id],product_id: key)
           end
-          val.each do |k,v|
+          val.except('custom').each do |k,v|
             custom_data[k.snakecase.to_sym]=v
           end
           custom_data.save
