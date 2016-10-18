@@ -107,7 +107,7 @@
 
   <% if @portfolios.any? %>
     <h2>My Portfolio</h2>
-    <div class="row my_profile_portfolios">
+    <div class="row my_profile_portfolios" id="portfolios-content">
       <% if @portfolios.count > 4 %>
         <% @portfolios.each do |portfolio| %>
           <%= render :partial => 'spree/portfolios/portfolio_item', locals: {cols: 3,p: portfolio}%>

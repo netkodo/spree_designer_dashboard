@@ -55,7 +55,7 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
+      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) AND spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
       params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
       tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
@@ -101,7 +101,7 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.color_family IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
+      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) AND spree_colors.color_family IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
       params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
       tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
