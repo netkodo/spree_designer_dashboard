@@ -3,7 +3,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
   def save_invoice
     if params[:invoice].present?
       params[:invoice].each do |key,val|
-        if params[:invoice][key][:custom]
+        if params[:invoice][key][:custom] == "true"
           check_prod = Spree::InvoiceLine.find_by(board_id: params[:board_id],custom_item_id:key)
         else
           check_prod = Spree::InvoiceLine.find_by(board_id: params[:board_id],product_id:key)
@@ -17,7 +17,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
           check_prod.update_columns(update_hash)
           Rails.logger.info "aa"
         else
-          if params[:invoice][key][:custom]
+          if params[:invoice][key][:custom] == "true"
             custom_data=Spree::InvoiceLine.new(board_id:params[:board_id],custom_item_id: key)
           else
             custom_data=Spree::InvoiceLine.new(board_id:params[:board_id],product_id: key)
