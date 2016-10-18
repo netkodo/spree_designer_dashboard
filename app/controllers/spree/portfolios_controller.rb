@@ -13,11 +13,13 @@ class Spree::PortfoliosController < Spree::StoreController
     # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
     colors = []
     tmp_portfolios.each do |wc|
-      colors << [wc.wall_color,wc.wall_color]
+      # colors << [wc.wall_color,wc.wall_color]
       if wc.board.present? and wc.board.colors.present?
         wc.board.colors.each do |c|
-          colors << [c.name,c.name]
+          colors << [c.color_family,c.color_family]
         end
+      else
+        colors << [wc.wall_color,wc.wall_color]
       end
     end
     room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
@@ -99,7 +101,7 @@ class Spree::PortfoliosController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.name IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
+      params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.color_family IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
       params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
       tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
@@ -109,11 +111,13 @@ class Spree::PortfoliosController < Spree::StoreController
       # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
       colors = []
       tmp_portfolios.each do |wc|
-        colors << [wc.wall_color,wc.wall_color]
+        # colors << [wc.wall_color,wc.wall_color]
         if wc.board.present? and wc.board.colors.present?
           wc.board.colors.each do |c|
-            colors << [c.name,c.name]
+            colors << [c.color_family,c.color_family]
           end
+        else
+          colors << [wc.wall_color,wc.wall_color]
         end
       end
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
@@ -127,11 +131,13 @@ class Spree::PortfoliosController < Spree::StoreController
       # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
       colors = []
       tmp_portfolios.each do |wc|
-        colors << [wc.wall_color,wc.wall_color]
+        # colors << [wc.wall_color,wc.wall_color]
         if wc.board.present? and wc.board.colors.present?
           wc.board.colors.each do |c|
-            colors << [c.name,c.name]
+            colors << [c.color_family,c.color_family]
           end
+        else
+          colors << [wc.wall_color,wc.wall_color]
         end
       end
       room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
