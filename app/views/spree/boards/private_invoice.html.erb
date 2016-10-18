@@ -10,7 +10,6 @@
   </thead>
   <tbody class="text-center">
     <% @board_products.each do |bp| %>
-      <%= bp %>
       <% if bp.is_a?(Spree::Product) %>
         <tr data-id="<%= bp.id %>" data-custom="false">
           <td>
