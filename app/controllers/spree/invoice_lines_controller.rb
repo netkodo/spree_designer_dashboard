@@ -1,8 +1,7 @@
 class Spree::InvoiceLinesController < Spree::StoreController
+  require 'mandrill'
 
   def save_invoice
-    Rails.logger.info params[:invoice]
-    Rails.logger.info "***************"
     if params[:invoice].present?
       params[:invoice].each do |key,val|
         # if params[:invoice][key][:custom] == "true"
@@ -70,6 +69,36 @@ class Spree::InvoiceLinesController < Spree::StoreController
     File.open(save_path, 'wb') do |file|
       file << pdf
     end
+
+    html_content = ''
+    Rails.logger.info "Sending the mail to dniedzialkowski@netkodo.com"
+    m = Mandrill::API.new(MANDRILL_KEY)
+    message = {
+        :subject => "Thank you for submitting your application!",
+        :from_name => "Jesse Bodine",
+        :text => "Thanks for registering to be a Scout & Nimble room designer.  Please stay tuned as we'll be in touch soon!  \n\n The Scout & Nimble Team",
+        :to => [
+            {
+                :email => "dniedzialkowski@netkodo.com",
+                :name => "self.user.full_name"
+            }
+        ],
+        "attachments" => [
+            {
+                "type" => "pdf",
+                "name" => "invoice.pdf",
+                "content" => Base64.encode64(pdf)
+            }
+        ],
+        :from_email => "designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com"
+    }
+    sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
+    Rails.logger.info sending
+
     respond_to do |format|
       if true
         format.json {render json: {:message => "ok"}, status: :ok}
