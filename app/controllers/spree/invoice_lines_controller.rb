@@ -54,7 +54,11 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
   def send_invoice_email
     Rails.logger.info "email with invoice"
-
+    # pdf = WickedPdf.new.pdf_from_string('<h1>Hello There!</h1>')
+    # save_path = Rails.root.join('public','filename.pdf')
+    # File.open(save_path, 'wb') do |file|
+    #   file << pdf
+    # end
     respond_to do |format|
       if true
         format.json {render json: {:message => "ok"}, status: :ok}
