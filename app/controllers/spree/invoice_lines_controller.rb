@@ -40,6 +40,31 @@ class Spree::InvoiceLinesController < Spree::StoreController
     end
   end
 
+  def private_invoice
+    @board = Spree::Board.find(params[:id])
+    @board_products = @board.board_products.map{|x| x.product.present? ? x.product : x.custom_item}
+    respond_to do |format|
+      if @board_products.present?
+        format.html{render layout: false, status: :ok}
+      else
+        format.html{render layout: false, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def send_invoice_email
+    Rails.logger.info "email with invoice"
+
+    respond_to do |format|
+      if true
+        format.json {render json: {:message => "ok"}, status: :ok}
+      else
+        format.json {render json: {:message => "error"},status: :unprocessable_entity}
+      end
+    end
+
+  end
+
 end
 
 

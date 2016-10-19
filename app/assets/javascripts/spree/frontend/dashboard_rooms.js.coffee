@@ -126,3 +126,19 @@ $ ->
             $('.notification-to-remove').remove()
           ,'3000'
   ,'.js-private-invoice'
+
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: '/send_invoice_email'
+        data: {id: $(@).data('id')}
+        success: (response) ->
+          console.log response
+        error: (response) ->
+          console.log 'error'
+          console.log response
+  ,'.js-private-email'

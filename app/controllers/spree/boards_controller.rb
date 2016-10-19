@@ -128,18 +128,6 @@ class Spree::BoardsController < Spree::StoreController
     end
   end
 
-  def private_invoice
-    @board = Spree::Board.find(params[:id])
-    @board_products = @board.board_products.map{|x| x.product.present? ? x.product : x.custom_item}
-    respond_to do |format|
-      if @board_products.present?
-        format.html{render layout: false, status: :ok}
-      else
-        format.html{render layout: false, status: :unprocessable_entity}
-      end
-    end
-  end
-
   def profile
     @user = spree_current_user
     if spree_current_user and (spree_current_user.is_beta_user? or spree_current_user.is_designer?)
