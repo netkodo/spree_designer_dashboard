@@ -89,6 +89,7 @@ Spree::Core::Engine.routes.draw do
 
   post "/private_invoice" => "invoice_lines#private_invoice", as: :private_invoice, :defaults => {:format => 'html'}
   post "/send_invoice_email" => "invoice_lines#send_invoice_email", as: :send_invoice_email, :defaults => {:format => 'json'}
+  get "/show_invoice_email" => "invoice_lines#show_invoice_email", as: :show_invoice_email, :defaults => {:format => 'html'}
   post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
 
   # room builder links

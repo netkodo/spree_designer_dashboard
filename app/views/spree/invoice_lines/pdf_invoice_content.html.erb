@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <%= image_tag wicked_pdf_asset_base64('frontend/store-logo.png') %>
+      </div>
+      <div class="row pdf-big-margin">
+        <div class="col-xs-4">
+          <div class="pdf-big-margin">
+            <h1><%= designer.company_name %></h1>
+            <%= designer.company_name %><br>
+            <%= designer.location %><br>
+          </div>
+
+          <div class="pdf-small-margin">
+            email: <br>
+            <%= designer.email %><br>
+            <%= designer.website_url.match('www') ? designer.website_url : "www.#{designer.website_url}" %>
+          </div>
+        </div>
+        <div class="col-xs-8">
+          <div class="pdf-small-margin">
+            DATE<br>
+            <%= DateTime.now.strftime("%B %d, %Y") %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            TO: <%= DateTime.now.strftime("%B %d, %Y") %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            INVOICE NUMBER: <%= rand(10000) %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            TIME: 30 Days<br>
+          <div>
+
+          <%#= render 'private_invoice', @board; board, @board_products: board_products %>
+          <table class="table pdf-table pdf-small-margin">
+            <thead>
+            <tr>
+              <th style="width: 60%">DESCRIPION</th>
+              <th style="width: 10%">QUANTITY</th>
+              <th style="width: 15%">UNIT PRICE</th>
+              <th style="width: 15%">COST</th>
+            </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td>DESC</td>
+                <td>2</td>
+                <td>123$</td>
+                <td>123$</td>
+              </tr>
+              <tr>
+                <td>DESC</td>
+                <td>2</td>
+                <td>123$</td>
+                <td>123$</td>
+              </tr>
+              <tr>
+                <td>DESC</td>
+                <td>2</td>
+                <td>123$</td>
+                <td>123$</td>
+              </tr>
+
+              <tr>
+                <td colspan="3">Subtotal</td>
+                <td>$123</td>
+              </tr>
+              <tr>
+                <td colspan="3">Sales Tax</td>
+                <td>$123</td>
+              </tr>
+              <tr>
+                <td colspan="3">Shipping</td>
+                <td>$123</td>
+              </tr>
+              <tr>
+                <td colspan="3">Total</td>
+                <td>$123</td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
