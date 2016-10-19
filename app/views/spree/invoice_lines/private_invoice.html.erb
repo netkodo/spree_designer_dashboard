@@ -10,45 +10,45 @@
   </thead>
   <tbody class="text-center">
     <% @board_products.each do |bp| %>
-      <% if bp.is_a?(Spree::Product) %>
+      <% if bp.product.present? %>
         <tr data-id="<%= bp.id %>" data-custom="false">
           <td>
-            <%= listing_image(bp, :itemprop => 'image',class:'img-responsive') %>
+            <%= listing_image(bp.product, :itemprop => 'image',class:'img-responsive') %>
           </td>
-          <td class="edit-sku" data-sku="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.sku.present?) ? bp.invoice_lines.first.sku : bp.sku %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.sku.present?) ? bp.invoice_lines.first.sku : bp.sku %>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
             <span class="edit">edit</span>
           </td>
-          <td class="edit-name" data-name="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.name.present?) ? bp.invoice_lines.first.name : bp.name %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.name.present?) ? bp.invoice_lines.first.name : bp.name %>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.price %>
+            <%= bp.product.price %>
           </td>
-          <td class="edit-customer-cost" data-customer-cost="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.customer_cost.present?) ? bp.invoice_lines.first.customer_cost : bp.price %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.customer_cost.present?) ? bp.invoice_lines.first.customer_cost : bp.price %>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
+            <%= bp.get_item_data('cost') %>
             <span class="edit">edit</span>
           </td>
         </tr>
       <% else %>
         <tr data-id="<%= bp.id %>" data-custom="true">
           <td>
-           <%= image_tag bp.image(:medium), class: 'img-responsive' %>
+           <%= image_tag bp.custom_item.image(:medium), class: 'img-responsive' %>
           </td>
-          <td class="edit-sku" data-sku="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.sku.present?) ? bp.invoice_lines.first.sku : bp.sku %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.sku.present?) ? bp.invoice_lines.first.sku : bp.sku %>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
             <span class="edit">edit</span>
           </td>
-          <td class="edit-name" data-name="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.name.present?) ? bp.invoice_lines.first.name : bp.name %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.name.present?) ? bp.invoice_lines.first.name : bp.name %>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.price %>
+            <%= bp.custom_item.price %>
           </td>
-          <td class="edit-customer-cost" data-customer-cost="<%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.customer_cost.present?) ? bp.invoice_lines.first.customer_cost : bp.price %>">
-            <%= (bp.invoice_lines.present? and bp.invoice_lines.first.board_id == @board.id and bp.invoice_lines.first.customer_cost.present?) ? bp.invoice_lines.first.customer_cost : bp.price %>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
+            <%= bp.get_item_data('cost') %>
             <span class="edit">edit</span>
           </td>
         </tr>

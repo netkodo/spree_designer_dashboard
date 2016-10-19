@@ -50,10 +50,10 @@ $ ->
           val = $(@).parent().data('name')
         when 'edit-sku'
           val = $(@).parent().data('sku')
-        when 'edit-customer-cost'
-          val = $(@).parent().data('customer-cost')
+        when 'edit-cost'
+          val = $(@).parent().data('cost')
       $(@).parent().html("<input type='text' class='form-control' value=#{val}><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
-  ,'.edit-name .edit, .edit-sku .edit, .edit-customer-cost .edit'
+  ,'.edit-name .edit, .edit-sku .edit, .edit-cost .edit'
 
   $(document).on
     click: (e)->
@@ -70,11 +70,11 @@ $ ->
             $(@).parents('tr').attr('changed',true)
             $(@).parents('td').attr('changed',true)
             $(@).parent().data('sku',val)
-        when 'edit-customer-cost'
-          if val != $(@).parent().data('customer-cost')
+        when 'edit-cost'
+          if val != $(@).parent().data('cost')
             $(@).parents('tr').attr('changed',true)
             $(@).parents('td').attr('changed',true)
-            $(@).parent().data('customer-cost',val)
+            $(@).parent().data('cost',val)
       $(@).parent().html("#{val} <span class='edit'>edit</span>")
   ,'.save-edit'
 
@@ -87,7 +87,8 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: '/save_invoice'
-        data: {invoice,board_id: $(@).data('board_id')}
+        data: {invoice}
+#        ,board_id: $(@).data('board_id')
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
@@ -105,7 +106,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      val = $(@).parent().data('customer-cost') || $(@).parent().data('name') || $(@).parent().data('sku')
+      val = $(@).parent().data('cost') || $(@).parent().data('name') || $(@).parent().data('sku')
       $(@).parent().html("#{val} <span class='edit'>edit</span>")
   ,'.cancel-edit'
 
