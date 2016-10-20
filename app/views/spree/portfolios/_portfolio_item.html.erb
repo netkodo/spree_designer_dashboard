@@ -21,7 +21,7 @@
           <%= p.user.user_images.present? ? link_to(image_tag(p.user.user_images.first.attachment.url(:mini), class: "style-img default-img img-responsive"),"/#{p.user.username}" ) : link_to(image_tag(p.user.user_images.new.attachment.url(:mini), class: "style-img default-img img-responsive"),"/#{p.user.username}") %>
         </div>
 
-        <div class="col-md-6 col-xs-4 col-sm-5 profile-link small-paddings">
+        <div class="col-md-6 col-xs-8 col-sm-5 profile-link small-paddings">
           <div class="designer_name_div">
             <span class="designer_name"><%= link_to(p.user.full_name,"/#{p.user.username}") %></span>
           </div>
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="text-center col-md-3 col-xs-4 col-sm-3 no-paddings">
+        <div class="text-center col-md-3 col-xs-12 col-sm-3 no-paddings">
           <div class="social-portfolio" data-pid=<%= p.id %> data-uid=<%= spree_current_user.id if spree_current_user.present? %> >
 
             <% if spree_current_user.present? %>
