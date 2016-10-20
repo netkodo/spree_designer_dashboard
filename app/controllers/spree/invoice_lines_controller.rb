@@ -73,30 +73,69 @@ class Spree::InvoiceLinesController < Spree::StoreController
     html_content = ''
     Rails.logger.info "Sending the mail to dniedzialkowski@netkodo.com"
     m = Mandrill::API.new(MANDRILL_KEY)
+
+    colors = []
+    products = []
+    board.colors.each do |c|
+      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b}
+    end
+
+    board.board_products do |bp|
+      if bp.product.present?
+
+      else
+
+      end
+    end
+
     message = {
-        :subject => "Thank you for submitting your application!",
-        :from_name => "Jesse Bodine",
-        :text => "Thanks for registering to be a Scout & Nimble room designer.  Please stay tuned as we'll be in touch soon!  \n\n The Scout & Nimble Team",
+        :subject => board.name,
+        :from_name => "INVOICE",
+        :text => "INVOICE",
         :to => [
             {
                 :email => "dniedzialkowski@netkodo.com",
-                :name => "self.user.full_name"
-            }
-        ],
-        "attachments" => [
-            {
-                "type" => "pdf",
-                "name" => "invoice.pdf",
-                "content" => Base64.encode64(pdf)
+                :name => "Daniel Niedziałkowski"
             }
         ],
         :from_email => "designer@scoutandnimble.com",
         :track_opens => true,
         :track_clicks => true,
         :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
+        :signing_domain => "scoutandnimble.com",
+        :merge_language => "handlebars",
+        :attachments => [
+            {
+                :type => "pdf",
+                :name => "invoice.pdf",
+                :content => Base64.encode64(pdf)
+            }
+        ],
+        :merge_vars => [
+            {
+                :rcpt => "dniedzialkowski@netkodo.com",
+                :vars => [
+                    {
+                        :name => "boardimage",
+                        :content => board.board_image.attachment(:original)#.split('?')[0]
+                    },
+                    {
+                        :name => "colors",
+                        :content => board.board_image.attachment(:original)#.split('?')[0]
+                    },
+                    {
+                        :name => "products",
+                        :content => board.board_image.attachment(:original)#.split('?')[0]
+                    }
+                ]
+            }
+        ]
     }
-    sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
+
+    Rails.logger.info message.inspect
+    Rails.logger.info 'message.inspect'
+
+    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
     Rails.logger.info sending
 
     respond_to do |format|
