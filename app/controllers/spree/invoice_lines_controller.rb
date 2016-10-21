@@ -4,11 +4,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
   def save_invoice
     if params[:invoice].present?
       params[:invoice].each do |key,val|
-        # if params[:invoice][key][:custom] == "true"
-          check_prod = Spree::InvoiceLine.find_by(board_product_id: key)
-        # else
-        #   check_prod = Spree::InvoiceLine.find_by(board_product_id: key)
-        # end
+        check_prod = Spree::InvoiceLine.find_by(board_product_id: key)
         if check_prod.present?
           update_hash={}
           val.except('custom').each do |k,v|
@@ -18,11 +14,6 @@ class Spree::InvoiceLinesController < Spree::StoreController
           check_prod.update_columns(update_hash)
           Rails.logger.info "update hash"
         else
-          # if params[:invoice][key][:custom] == "true"
-          #   custom_data=Spree::InvoiceLine.new(board_id:params[:board_id],custom_item_id: key)
-          # else
-          #   custom_data=Spree::InvoiceLine.new(board_id:params[:board_id],product_id: key)
-          # end
           new = Spree::InvoiceLine.new(board_product_id: key)
           val.except('custom').each do |k,v|
             new[k.snakecase.to_sym]=v
@@ -55,8 +46,6 @@ class Spree::InvoiceLinesController < Spree::StoreController
   end
 
   def send_invoice_email
-    Rails.logger.info "email with invoice"
-    Rails.logger.info "currently ony generating pdf invoice"
     board = Spree::Board.find(params[:id])
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
@@ -71,20 +60,20 @@ class Spree::InvoiceLinesController < Spree::StoreController
     end
 
     html_content = ''
-    Rails.logger.info "Sending the mail to dniedzialkowski@netkodo.com"
     m = Mandrill::API.new(MANDRILL_KEY)
 
     colors = []
     products = []
     board.colors.each do |c|
-      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b}
+      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name}
     end
 
-    board.board_products do |bp|
+    products = []
+    board.board_products.each do |bp|
       if bp.product.present?
-
+        products << {:img => bp.product.images.first.attachment.url, :name => bp.product.name, :cost => bp.get_item_data('cost')}
       else
-
+        products << {:img => bp.custom_item.image(:original), :name => bp.custom_item.name, :cost => bp.get_item_data('cost')}
       end
     end
 
@@ -121,22 +110,22 @@ class Spree::InvoiceLinesController < Spree::StoreController
                     },
                     {
                         :name => "colors",
-                        :content => board.board_image.attachment(:original)#.split('?')[0]
+                        :content => colors
                     },
                     {
                         :name => "products",
-                        :content => board.board_image.attachment(:original)#.split('?')[0]
+                        :content => products
+                    },
+                    {
+                        :name => "notes",
+                        :content => board.description
                     }
                 ]
             }
         ]
     }
 
-    Rails.logger.info message.inspect
-    Rails.logger.info 'message.inspect'
-
     sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
-    Rails.logger.info sending
 
     respond_to do |format|
       if true
