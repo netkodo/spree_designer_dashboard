@@ -67,9 +67,10 @@
                       <%= check_msrp_price_value(product) %>
                   <% else %>
                       <% if !product.master.msrp_price.nil? %>
-                          <span class="msrp"><%= display_msrp(product.master) %></span>
+                          <span class="msrp"><%= display_msrp(product.master) %></span><span class="price"><%= display_price(product) %></span>
 								<span class="price-percentage-off">
-									 <%= "#{product.percentage_off}% off" %>
+									 <%#= "#{product.percentage_off}% off" %>
+									 <%= display_percentage_off(product) %>
 								</span>
                       <% end %>
                   <% end %>
