@@ -71,9 +71,9 @@ class Spree::InvoiceLinesController < Spree::StoreController
     products = []
     board.board_products.each do |bp|
       if bp.product.present?
-        products << {:img => bp.product.images.first.attachment.url, :name => bp.product.name, :cost => bp.get_item_data('cost')}
+        products << {:img => bp.product.images.first.attachment.url, :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
       else
-        products << {:img => bp.custom_item.image(:original), :name => bp.custom_item.name, :cost => bp.get_item_data('cost')}
+        products << {:img => bp.custom_item.image(:original), :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
       end
     end
 
