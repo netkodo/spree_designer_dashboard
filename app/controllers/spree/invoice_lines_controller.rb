@@ -83,8 +83,8 @@ class Spree::InvoiceLinesController < Spree::StoreController
         :text => "INVOICE",
         :to => [
             {
-                :email => "dniedzialkowski@netkodo.com",
-                :name => "Daniel Niedziałkowski"
+                :email => "jarwoz@gmail.com",
+                :name => "Jarek"
             }
         ],
         :from_email => "designer@scoutandnimble.com",
@@ -102,7 +102,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
         ],
         :merge_vars => [
             {
-                :rcpt => "dniedzialkowski@netkodo.com",
+                :rcpt => "jarwoz@gmail.com",
                 :vars => [
                     {
                         :name => "boardimage",
