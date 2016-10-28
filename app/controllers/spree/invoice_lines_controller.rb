@@ -65,7 +65,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
     colors = []
     products = []
     board.colors.each do |c|
-      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name}
+      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name, :swatch_val => c.swatch_val}
     end
 
     products = []

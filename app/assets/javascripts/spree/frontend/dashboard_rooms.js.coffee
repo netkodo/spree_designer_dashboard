@@ -131,6 +131,7 @@ $ ->
 
   $(document).on
     click: (e) ->
+      my_this = $(@)
       e.preventDefault()
       $.ajax
         dataType: 'json'
@@ -139,6 +140,10 @@ $ ->
         data: {id: $(@).data('id')}
         success: (response) ->
           console.log response
+          my_this.after("<div class='notification-to-remove'><i class='fa fa-check success'></i> Email sent</div>")
+          setTimeout () ->
+            $( $('.notification-to-remove'), my_this.parent() ).remove()
+          ,'2000'
         error: (response) ->
           console.log 'error'
           console.log response
