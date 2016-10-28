@@ -49,9 +49,15 @@ class Spree::InvoiceLinesController < Spree::StoreController
     board = Spree::Board.find(params[:id])
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.sum_items(board_products)
     total = Spree::BoardProduct.sum_items(board_products)
 
-    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products, total: total})
+    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, total: total})
+
+    puts "aaaa"
+    x=board.calculate_tax
+    puts x.inspect
+    puts "aaaa"
 
     pdf = WickedPdf.new.pdf_from_string(content)
     save_path = Rails.root.join('public','filename.pdf')
@@ -141,11 +147,12 @@ class Spree::InvoiceLinesController < Spree::StoreController
     board = Spree::Board.find(138)
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.sum_items(board_products)
     total = Spree::BoardProduct.sum_items(board_products)
     # board_products = board.board_products.select{|x| x.product_id.present?}.group_by(:product_id)
     # custom_products = board.board_products.select{|x| x.custom_item_id.present?}.group_by(:custom_item_id)
     respond_to do |format|
-      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,total: total}}
+      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, total: total}}
       #custom_products:custom_products
     end
   end

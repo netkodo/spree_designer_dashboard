@@ -12,6 +12,8 @@ class Spree::Board < ActiveRecord::Base
   has_many :colors, :through => :color_matches
   has_many :conversations, as: :conversationable, class_name: "::Mailboxer::Conversation"
 
+  belongs_to :state
+
   has_and_belongs_to_many :promotion_rules,
                           class_name: '::Spree::PromotionRule',
                           join_table: 'spree_boards_promotion_rules',
@@ -590,6 +592,35 @@ class Spree::Board < ActiveRecord::Base
     sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
 
     logger.info sending
+  end
+
+  def calculate_tax
+    designer=self.designer.designer_registrations.first
+    if designer.present?
+      dest_state = Spree::State.find(self.state_id)
+      origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
+      destination=::TaxCloud::Address.new(address1:  self.customer_address, city: self.customer_city, zip5: self.customer_zipcode, state: dest_state.abbr)
+
+      transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
+      self.board_products.each_with_index do |item,index|
+        transaction.cart_items << get_item_data_for_tax(item,index)
+        puts get_item_data_for_tax(item,index)
+      end
+
+      puts transaction.inspect
+      response = transaction.lookup
+      puts response.inspect
+
+    end
+  end
+
+  def get_item_data_for_tax(item,index)
+    ::TaxCloud.CartItem.new(
+      index: index,
+      item_id: item.get_item_data('name'),
+      tic: Spree::Config.taxcloud_shipping_tic,
+      price: item.get_item_data('cost')
+    )
   end
 
 
