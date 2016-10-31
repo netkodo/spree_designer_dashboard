@@ -592,5 +592,100 @@ class Spree::Board < ActiveRecord::Base
     logger.info sending
   end
 
+  def calculate_tax
+    designer=self.designer.designer_registrations.first
+    if designer.present?
+      dest_state = Spree::State.find(self.state_id)
+      origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
+      destination=::TaxCloud::Address.new(address1:  self.customer_address, city: self.customer_city, zip5: self.customer_zipcode, state: dest_state.abbr)
+
+      transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
+      self.board_products.each_with_index do |item,index|
+        transaction.cart_items << get_item_data_for_tax(item,index)
+      end
+
+      response = transaction.lookup
+    end
+  end
+
+  def get_item_data_for_tax(item,index)
+    ::TaxCloud::CartItem.new(
+      index: index,
+      item_id: item.get_item_data('name'),
+      tic: Spree::Config.taxcloud_shipping_tic,
+      price: item.get_item_data('cost'),
+      quantity: 1
+    )
+  end
+
+  def send_email_with_invoice(to_addr,to_name,pdf)
+    html_content = ''
+    m = Mandrill::API.new(MANDRILL_KEY)
+
+    colors = []
+    products = []
+    self.colors.each do |c|
+      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name, :swatch_val => c.swatch_val}
+    end
+
+    products = []
+    self.board_products.each do |bp|
+      if bp.product.present?
+        products << {:img => bp.product.images.first.attachment.url, :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
+      else
+        products << {:img => bp.custom_item.image(:original), :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
+      end
+    end
+
+    message = {
+        :subject => self.name,
+        :from_name => "INVOICE",
+        :text => "INVOICE",
+        :to => [
+            {
+                :email => to_addr,
+                :name => to_name
+            }
+        ],
+        :from_email => "designer@scoutandnimble.com",
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com",
+        :merge_language => "handlebars",
+        :attachments => [
+            {
+                :type => "pdf",
+                :name => "invoice.pdf",
+                :content => Base64.encode64(pdf)
+            }
+        ],
+        :merge_vars => [
+            {
+                :rcpt => to_addr,
+                :vars => [
+                    {
+                        :name => "boardimage",
+                        :content => self.board_image.attachment(:original)#.split('?')[0]
+                    },
+                    {
+                        :name => "colors",
+                        :content => colors
+                    },
+                    {
+                        :name => "products",
+                        :content => products
+                    },
+                    {
+                        :name => "notes",
+                        :content => self.description
+                    }
+                ]
+            }
+        ]
+    }
+    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
+  end
+
 
 end

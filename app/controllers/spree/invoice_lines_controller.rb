@@ -49,9 +49,12 @@ class Spree::InvoiceLinesController < Spree::StoreController
     board = Spree::Board.find(params[:id])
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.sum_items(board_products)
     total = Spree::BoardProduct.sum_items(board_products)
 
-    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products, total: total})
+    taxcloud=board.calculate_tax
+
+    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
 
     pdf = WickedPdf.new.pdf_from_string(content)
     save_path = Rails.root.join('public','filename.pdf')
@@ -59,73 +62,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
       file << pdf
     end
 
-    html_content = ''
-    m = Mandrill::API.new(MANDRILL_KEY)
-
-    colors = []
-    products = []
-    board.colors.each do |c|
-      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name, :swatch_val => c.swatch_val}
-    end
-
-    products = []
-    board.board_products.each do |bp|
-      if bp.product.present?
-        products << {:img => bp.product.images.first.attachment.url, :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
-      else
-        products << {:img => bp.custom_item.image(:original), :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
-      end
-    end
-
-    message = {
-        :subject => board.name,
-        :from_name => "INVOICE",
-        :text => "INVOICE",
-        :to => [
-            {
-                :email => "jarwoz@gmail.com",
-                :name => "Jarek"
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com",
-        :merge_language => "handlebars",
-        :attachments => [
-            {
-                :type => "pdf",
-                :name => "invoice.pdf",
-                :content => Base64.encode64(pdf)
-            }
-        ],
-        :merge_vars => [
-            {
-                :rcpt => "jarwoz@gmail.com",
-                :vars => [
-                    {
-                        :name => "boardimage",
-                        :content => board.board_image.attachment(:original)#.split('?')[0]
-                    },
-                    {
-                        :name => "colors",
-                        :content => colors
-                    },
-                    {
-                        :name => "products",
-                        :content => products
-                    },
-                    {
-                        :name => "notes",
-                        :content => board.description
-                    }
-                ]
-            }
-        ]
-    }
-
-    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
+    board.send_email_with_invoice("dniedzialkowski@netkodo.com","Daniel Niedzialkowski",pdf)
 
     respond_to do |format|
       if true
@@ -141,11 +78,15 @@ class Spree::InvoiceLinesController < Spree::StoreController
     board = Spree::Board.find(138)
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.sum_items(board_products)
     total = Spree::BoardProduct.sum_items(board_products)
+
+    taxcloud=board.calculate_tax
+
     # board_products = board.board_products.select{|x| x.product_id.present?}.group_by(:product_id)
     # custom_products = board.board_products.select{|x| x.custom_item_id.present?}.group_by(:custom_item_id)
     respond_to do |format|
-      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,total: total}}
+      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount}}
       #custom_products:custom_products
     end
   end
