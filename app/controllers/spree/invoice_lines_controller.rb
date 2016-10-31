@@ -62,7 +62,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
       file << pdf
     end
 
-    board.send_email_with_invoice("dniedzialkowski@netkodo.com","Daniel Niedzialkowski",pdf)
+    board.send_email_with_invoice("jarwoz@gmail.com","Jaroslaw Wozniak",pdf)
 
     respond_to do |format|
       if true
