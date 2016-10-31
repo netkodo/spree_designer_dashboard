@@ -604,13 +604,9 @@ class Spree::Board < ActiveRecord::Base
       transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
       self.board_products.each_with_index do |item,index|
         transaction.cart_items << get_item_data_for_tax(item,index)
-        puts get_item_data_for_tax(item,index)
       end
 
-      puts transaction.inspect
       response = transaction.lookup
-      puts response.inspect
-
     end
   end
 
@@ -619,7 +615,8 @@ class Spree::Board < ActiveRecord::Base
       index: index,
       item_id: item.get_item_data('name'),
       tic: Spree::Config.taxcloud_shipping_tic,
-      price: item.get_item_data('cost')
+      price: item.get_item_data('cost'),
+      quantity: 1
     )
   end
 
