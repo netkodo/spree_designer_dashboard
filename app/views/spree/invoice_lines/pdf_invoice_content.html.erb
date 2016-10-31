@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <%= image_tag wicked_pdf_asset_base64('frontend/store-logo.png') %>
+      </div>
+      <div class="row pdf-big-margin">
+        <div class="col-xs-3">
+          <div class="pdf-big-margin">
+            <h1><%= designer.company_name %></h1>
+            <%= designer.company_name %><br>
+            <%= designer.location %><br>
+          </div>
+
+          <div class="pdf-small-margin">
+            email: <br>
+            <%= designer.email %><br>
+            <%= designer.website_url.match('www') ? designer.website_url : "www.#{designer.website_url}" %>
+          </div>
+        </div>
+        <div class="col-xs-9">
+          <div class="pdf-small-margin">
+            DATE<br>
+            <%= DateTime.now.strftime("%B %d, %Y") %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            TO: <%= DateTime.now.strftime("%B %d, %Y") %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            INVOICE NUMBER: <%= rand(10000) %><br>
+          <div>
+
+          <div class="pdf-small-margin">
+            TIME: 30 Days<br>
+          <div>
+
+          <%#= render 'private_invoice', @board; board, @board_products: board_products %>
+          <table class="table pdf-table pdf-small-margin">
+            <thead>
+            <tr>
+              <th style="width: 55%">DESCRIPION</th>
+              <th style="width: 5%">QUANTITY</th>
+              <th style="width: 20%">UNIT PRICE</th>
+              <th style="width: 20%">COST</th>
+            </tr>
+            </thead>
+            <tbody>
+
+              <% board_products.each do |bp| %>
+                <tr>
+                  <td><%= bp.get_item_data('sku') %> <%= bp.get_item_data('name') %></td>
+                  <td>1</td>
+                  <td>$<span class="price-display"><%= bp.get_item_data('cost') %></span></td>
+                  <td>$<span class="price-display"><%= bp.get_item_data('cost') %></span></td>
+                </tr>
+              <% end %>
+
+              <!--<%# board_products.each do |k,v| %>-->
+                <!--<%# v.each do |bp| %>-->
+                  <!--<tr>-->
+                    <!--<td><%#= v[0].get_item_data('sku') %> <%#= bp.get_item_data('name') %></td>-->
+                    <!--<td><%#= k %></td>-->
+                    <!--<td><%#= v[0].get_item_data('cost') %></td>-->
+                    <!--<td><%#= v[0].get_item_data('cost') %></td>-->
+                  <!--</tr>-->
+                <!--<%# end %>-->
+              <!--<%# end %>-->
+  <!---->
+              <!--<%# custom_products.each do |k,v| %>-->
+                <!--<%# v.each do |bp| %>-->
+                  <!--<tr>-->
+                    <!--<td><%#= v[0].get_item_data('sku') %> <%#= bp.get_item_data('name') %></td>-->
+                    <!--<td><%#= k %></td>-->
+                    <!--<td><%#= v[0].get_item_data('cost') %></td>-->
+                    <!--<td><%#= v[0].get_item_data('cost') %></td>-->
+                  <!--</tr>-->
+                <!--<%# end %>-->
+              <!--<%# end %>-->
+
+              <tr>
+                <td colspan="3" class="text-right">Subtotal</td>
+                <td>$<span class="price-display"><%= subtotal %></span></td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-right">Sales Tax</td>
+                <td>$<span class="price-display"><%= tax %></span></td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-right">Shipping</td>
+                <td>$<span class="price-display">??</span></td>
+              </tr>
+              <tr style="font-weight: bold;">
+                <td colspan="3" class="text-right">Total</td>
+                <td>$<span class="price-display"><%= total %></span></td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -11,20 +11,29 @@
     <%= board.name %>
     <div class="board-actions">
       <% if board.generated %>
-          <% if ["new", "in_revision"].include?(board.state) %>
+          <% if board.private %>
               <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
               <%= link_to "Edit", design_board_path(board), :class => "btn btn-default btn-sm"%>
-              <%= link_to "Delete", room_path(board), :class => "btn btn-default btn-sm", :confirm => 'Are you sure you want to delete this room?', :method => :delete%>
-              <%= link_to "Submit to Publish", "javascript:void(0);", :class => "btn btn-default btn-sm", :id => "submit_and_publish_board_button", :"data-toggle"=>"modal", :"data-target"=>"#publish-board-modal-#{board.id}" %>
-              <%= render :partial => "spree/boards/submit_for_publication_modal", :locals => {:board => board}%>
+              <div class="btn btn-default btn-sm js-private-invoice" data-id="<%= board.id %>">Invoice</div>
+              <div class="btn btn-default btn-sm js-private-email" data-id="<%= board.id %>">Email</div>
 
-          <% elsif ["submitted_for_publication"].include?(board.state)  %>
-              <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
-          <% elsif board.state == "published" %>
-              <%= link_to "View Public Page", room_path(board), :class => "btn btn-default btn-sm"%>
-              <%= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id} %>
+          <% else %>
+              <% if ["new", "in_revision"].include?(board.state) %>
+                  <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
+                  <%= link_to "Edit", design_board_path(board), :class => "btn btn-default btn-sm"%>
+                  <%= link_to "Delete", room_path(board), :class => "btn btn-default btn-sm", :confirm => 'Are you sure you want to delete this room?', :method => :delete%>
+                  <%= link_to "Submit to Publish", "javascript:void(0);", :class => "btn btn-default btn-sm", :id => "submit_and_publish_board_button", :"data-toggle"=>"modal", :"data-target"=>"#publish-board-modal-#{board.id}" %>
+                  <%= render :partial => "spree/boards/submit_for_publication_modal", :locals => {:board => board}%>
+
+              <% elsif ["submitted_for_publication"].include?(board.state)  %>
+                  <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
+              <% elsif board.state == "published" %>
+                  <%= link_to "View Public Page", room_path(board), :class => "btn btn-default btn-sm"%>
+                  <%= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id} %>
+              <% end %>
           <% end %>
       <% end %>
+
     </div>
   </td>
   <td class="stat align-center"><%= board.board_products.size %></td>
