@@ -54,7 +54,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
     taxcloud=board.calculate_tax
 
-    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total})
+    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
 
     pdf = WickedPdf.new.pdf_from_string(content)
     save_path = Rails.root.join('public','filename.pdf')
@@ -152,7 +152,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
     # board_products = board.board_products.select{|x| x.product_id.present?}.group_by(:product_id)
     # custom_products = board.board_products.select{|x| x.custom_item_id.present?}.group_by(:custom_item_id)
     respond_to do |format|
-      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total}}
+      format.html {render '/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount}}
       #custom_products:custom_products
     end
   end
