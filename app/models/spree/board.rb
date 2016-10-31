@@ -12,8 +12,6 @@ class Spree::Board < ActiveRecord::Base
   has_many :colors, :through => :color_matches
   has_many :conversations, as: :conversationable, class_name: "::Mailboxer::Conversation"
 
-  belongs_to :state
-
   has_and_belongs_to_many :promotion_rules,
                           class_name: '::Spree::PromotionRule',
                           join_table: 'spree_boards_promotion_rules',
