@@ -65,12 +65,13 @@
                 </td>
                 <td class="board-title">
                   <%= board.name %>
-                  <div class="board-actions">
+                  <div class="board-actions" data-board_id="<%= board.id %>" data-user_id="<%= spree_current_user.id %>">
                     <% if board.private %>
                       <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
                       <%= link_to "Edit", design_board_path(board), :class => "btn btn-default btn-sm"%>
-                      <div class="btn btn-default btn-sm js-private-invoice" data-id="<%= board.id %>">Invoice</div>
-                      <div class="btn btn-default btn-sm js-private-email" data-id="<%= board.id %>">Email</div>
+                      <div class="btn btn-default btn-sm js-private-invoice">Invoice</div>
+                      <div class="btn btn-default btn-sm js-private-email">Email</div>
+                      <div class="btn btn-default btn-sm js-histroy">History</div>
 
                     <% else %>
                       <% if ["new", "in_revision"].include?(board.state) %>
@@ -117,6 +118,8 @@
     <% end %>
   </div>
 </div>
+
+<div id="board-history-modal-handler"></div>
 
 <%= render partial: 'after_submit_to_publish_modal' %>
 <%= render partial: 'dashboard_welcome_modal' %>

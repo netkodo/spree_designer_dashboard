@@ -1,4 +1,15 @@
 $ ->
+  addToHistory = (user_id,board_id,action) ->
+    $.ajax
+      dataType: 'json'
+      method: 'POST'
+      url: '/create_board_history'
+      data: { board_history: {action: action, board_id: board_id, user_id: user_id} }
+      success: (response) ->
+
+      error: (response) ->
+
+
   clearHidden = () ->
     $('.table-board-listing tbody tr').each ->
       $(@).removeClass('hidden')
@@ -68,12 +79,6 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      console.log 'save'
-  ,'.save-invoice'
-
-  $(document).on
-    click: (e)->
-      e.preventDefault()
       switch $(@).parent().attr('class')
         when 'edit-name'
           val = $(@).parent().data('name')
@@ -116,7 +121,7 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: '/save_invoice'
-        data: {invoice}
+        data: {invoice, board_id: $(@).data('board_id'), user_id: $(@).data('user_id') }
 #        ,board_id: $(@).data('board_id')
         beforeSend: ()->
           $(@).html('Saving..')
@@ -148,9 +153,9 @@ $ ->
         dataType: 'html'
         method: 'POST'
         url: '/private_invoice'
-        data: {id: $(@).data('id')}
+        data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response)->
-          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).data('id')}").addClass('hidden')
+          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
@@ -168,10 +173,9 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: '/send_invoice_email'
-        data: {id: $(@).data('id')}
+        data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response) ->
-          console.log response
-          my_this.after("<div class='notification-to-remove'><i class='fa fa-check success'></i> Email sent</div>")
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-check success'></i> Email sent</div>")
           setTimeout () ->
             $( $('.notification-to-remove'), my_this.parent() ).remove()
           ,'2000'
@@ -179,3 +183,20 @@ $ ->
           console.log 'error'
           console.log response
   ,'.js-private-email'
+
+  $(document).on
+    click: (e) ->
+      my_this = $(@)
+      e.preventDefault()
+      $.ajax
+        dataType: 'html'
+        method: 'POST'
+        url: '/board_history'
+        data: {user_id: $(@).parents('.board-actions').data('user_id'), board_id: $(@).parents('.board-actions').data('board_id')}
+        success: (response) ->
+          $("#board-history-modal-handler").html(response)
+          $("#board-history").modal()
+        error: (response) ->
+          console.log 'error'
+          console.log response
+  ,'.js-histroy'
