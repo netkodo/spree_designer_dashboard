@@ -12,6 +12,32 @@ $ ->
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
 
+  changeTableView = (type) ->
+    if type == true
+      $(".table.table-board-listing thead").html("<th class='status'>&nbsp;</th><th colspan='2'>Rooms</th>")
+      $(".table.table-board-listing colgroup").html(
+        "   <col style='width: 5%' />
+            <col style='width: 20%' />
+            <col style='width: 75%' />"
+      )
+      $(".designer_commission_style").addClass('hidden')
+    else
+      $(".table.table-board-listing thead").html(
+        "     <th class='status'>&nbsp;</th>
+              <th colspan='2'>Rooms</th>
+              <th class='align-center'># Products</th>
+              <th class='align-center'># Views</th>
+              <th class='align-center'>Revenue</th>"
+      )
+      $(".table.table-board-listing colgroup").html(
+        "   <col style='width: 5%' />
+            <col style='width: 20%' />
+            <col style='width: 40%' />
+            <col style='width: 12%' />
+            <col style='width: 10%' />
+            <col style='width: 10%' />"
+      )
+      $(".designer_commission_style").removeClass('hidden')
   generateInvoiceHash = (invoice) ->
     hash = {}
     $(".table-invoice.#{invoice} tbody tr[changed=true]").each ->
@@ -28,6 +54,7 @@ $ ->
     click: (e)->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
+      changeTableView($(@).data('private'))
   ,'.js-get-room-type'
 
   $(document).on

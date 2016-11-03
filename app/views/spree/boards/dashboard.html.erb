@@ -37,23 +37,27 @@
           <colgroup>
             <col style="width: 5%" />
             <col style="width: 20%" />
-            <col style="width: 40%" />
+            <col style="width: 75%" />
+            <% if false %>
             <col style="width: 12%" />
             <col style="width: 10%" />
             <col style="width: 10%" />
+                <% end %>
           </colgroup>
           <thead>
           <tr>
             <th class="status">&nbsp;</th>
             <th colspan="2">Rooms</th>
+            <% if false %>
             <th class="align-center"># Products</th>
             <th class="align-center"># Views</th>
             <th class="align-center">Revenue</th>
+                <% end %>
           </tr>
           </thead>
           <tbody>
           <% @boards.each do |board|%>
-              <tr class="<%= board.private %>">
+              <tr class="<%= board.private %> <%= board.private ? '' : 'hidden' %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <%= board_image(board,:small)%>
@@ -85,9 +89,11 @@
 
                   </div>
                 </td>
-                <td class="stat align-center"><%= board.board_products.size %></td>
-                <td class="stat align-center"><%= board.impressionist_count %></td>
-                <td class="stat align-center"><%= board.board_commission.to_s %></td>
+                <% unless board.private %>
+                  <td class="stat align-center"><%= board.board_products.size %></td>
+                  <td class="stat align-center"><%= board.impressionist_count %></td>
+                  <td class="stat align-center"><%= board.board_commission.to_s %></td>
+                <% end %>
 
 
               </tr>
@@ -95,13 +101,13 @@
           </tbody>
         </table>
         <%- if spree_current_user.designer_commission.present?  %>
-            <div class="board-title designer_commission_style">
+            <div class="board-title designer_commission_style hidden">
               <%=  "Total earned: #{number_to_currency(spree_current_user.designer_commission)}" %>
             </div>
-            <div class="board-title designer_commission_style">
+            <div class="board-title designer_commission_style hidden">
               <%= "Total paid: #{number_to_currency(spree_current_user.total_affiliate_payments_amount)}" %>
             </div>
-            <div class="board-title designer_commission_style">
+            <div class="board-title designer_commission_style hidden">
               <%= "Total due: #{number_to_currency(spree_current_user.afilliate_balance_due)}" %>
             </div>
         <%- end%>
