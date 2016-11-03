@@ -5,9 +5,9 @@ en:
       room_create: "Room Created"
       invoice_edit: "Invoice was edited"
       invoice_email: "Invoice email was sent"
-      new_product: "New product added"
-      update_product: "Product was updated"
-      delete_product: "Product was deleted"
+      new_product: "New product: %{product}, was added"
+      update_product: "Product: %{product}, was updated"
+      delete_product: "Product: %{product}, was deleted"
     activerecord:
       attributes:
         spree/board: &board_labels

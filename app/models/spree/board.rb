@@ -24,6 +24,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
   has_many :invoice_lines
+  has_many :board_histories, dependent: :destroy
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
@@ -480,7 +481,7 @@ class Spree::Board < ActiveRecord::Base
         if product_hash['action_board'] == 'update'
           board_product = self.board_products.where(id: product_hash['product_id']).first
           if board_product.present?
-            Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product")
+            Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present ? board_product.product.name : board_product.costom_item.name}")
             if product_hash['image'].present?
               crop_image(product_hash['image'], board_product)
             end
@@ -494,7 +495,7 @@ class Spree::Board < ActiveRecord::Base
             attr = product_hash.except!('action_board', 'product_id', 'image')
             board_product = product.board_products.new(attr)
             if board_product.save
-              Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product")
+              Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.product.name}")
               if image.present?
                 crop_image(image, board_product)
               end
@@ -511,7 +512,7 @@ class Spree::Board < ActiveRecord::Base
               attr = product_hash.except!('action_board', 'product_id', 'image')
               board_product = Spree::BoardProduct.new(attr)
               if board_product.save
-                Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product")
+                Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.custom_item.name}")
                 if image.present?
                   crop_image(image, board_product)
                 end
