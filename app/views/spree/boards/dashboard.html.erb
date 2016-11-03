@@ -7,6 +7,14 @@
   <div class="col-md-9">
     <div class="page-header clearfix">
       <div class="row">
+        <div class="col-md-12 text-right">
+          <% if @designer_type == "room designer" %>
+              <div class="btn btn-primary js-get-room-type" data-private="false">Public</div>
+              <div class="btn btn-primary js-get-room-type" data-private="true">Private</div>
+          <% elsif @designer_type == "to the trade designer" %>
+              <div class="btn btn-primary js-get-room-type" data-private="true">Private</div>
+          <% end %>
+        </div>
         <div class="col-md-6">
           <h1>Your Rooms</h1>
         </div>
@@ -20,14 +28,7 @@
               <%= link_to "Add a Private Room", new_room_path(private: true), :class => "btn btn-primary" %>
             <% end %>
         </div>
-        <div class="col-md-12 text-center">
-          <% if @designer_type == "room designer" %>
-            <div class="btn btn-primary btn-rounded js-get-room-type" data-private="false">Public</div>
-              <div class="btn btn-primary btn-rounded js-get-room-type" data-private="true">Private</div>
-          <% elsif @designer_type == "to the trade designer" %>
-            <div class="btn btn-primary btn-rounded js-get-room-type" data-private="true">Private</div>
-          <% end %>
-        </div>
+
       </div>
     </div>
 
