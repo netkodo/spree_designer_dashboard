@@ -24,6 +24,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
   has_many :invoice_lines
+  has_many :board_histories, dependent: :destroy
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
@@ -472,15 +473,15 @@ class Spree::Board < ActiveRecord::Base
   def create_or_update_board_product(params,board_id,email)
     Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
 
-    Resque.enqueue(RoomUpdate, params,board_id)
-
     # if params[:products_board].present?
     #   Rails.logger.info params[:products_board]
     #   board_products = JSON.parse(params[:products_board])
+    #
     #   board_products.each do |_, product_hash|
     #     if product_hash['action_board'] == 'update'
     #       board_product = self.board_products.where(id: product_hash['product_id']).first
     #       if board_product.present?
+    #         Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present? ? board_product.product.name : board_product.custom_item.name}")
     #         if product_hash['image'].present?
     #           crop_image(product_hash['image'], board_product)
     #         end
@@ -494,6 +495,7 @@ class Spree::Board < ActiveRecord::Base
     #         attr = product_hash.except!('action_board', 'product_id', 'image')
     #         board_product = product.board_products.new(attr)
     #         if board_product.save
+    #           Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.product.name}")
     #           if image.present?
     #             crop_image(image, board_product)
     #           end
@@ -510,6 +512,7 @@ class Spree::Board < ActiveRecord::Base
     #           attr = product_hash.except!('action_board', 'product_id', 'image')
     #           board_product = Spree::BoardProduct.new(attr)
     #           if board_product.save
+    #             Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.custom_item.name}")
     #             if image.present?
     #               crop_image(image, board_product)
     #             end
@@ -523,7 +526,6 @@ class Spree::Board < ActiveRecord::Base
     #     end
     #   end
     # end
-
   end
 
   def crop_image(base64, board_product)
@@ -607,7 +609,8 @@ class Spree::Board < ActiveRecord::Base
   def get_item_data_for_tax(item,index)
     ::TaxCloud::CartItem.new(
       index: index,
-      item_id: item.get_item_data('name'),
+      # item_id: item.get_item_data('name')[0...50],
+      item_id: item.get_item_data('sku'),
       tic: Spree::Config.taxcloud_shipping_tic,
       price: item.get_item_data('cost'),
       quantity: 1
@@ -643,7 +646,7 @@ class Spree::Board < ActiveRecord::Base
                 :name => to_name
             }
         ],
-        :from_email => "designer@scoutandnimble.com",
+        :from_email => to_addr,
         :track_opens => true,
         :track_clicks => true,
         :url_strip_qs => false,

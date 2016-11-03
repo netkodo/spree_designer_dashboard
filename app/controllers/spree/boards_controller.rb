@@ -295,9 +295,10 @@ class Spree::BoardsController < Spree::StoreController
   def new
     @board = Spree::Board.new(:name => "Untitled Room",private: params[:private])
     @board.designer = spree_current_user
-    @board.save!
-    redirect_to design_board_path(@board)
-
+    if @board.save!
+      Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
+      redirect_to design_board_path(@board)
+    end
     #@colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
 
     #1.upto(5) do |n|

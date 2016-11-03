@@ -10,22 +10,23 @@ class Spree::InvoiceLinesController < Spree::StoreController
           val.except('custom').each do |k,v|
             update_hash[k.snakecase]=v
           end
-          Rails.logger.info update_hash
+          # Rails.logger.info update_hash
           check_prod.update_columns(update_hash)
-          Rails.logger.info "update hash"
+          # Rails.logger.info "update hash"
         else
           new = Spree::InvoiceLine.new(board_product_id: key)
           val.except('custom').each do |k,v|
             new[k.snakecase.to_sym]=v
           end
           new.save
-          Rails.logger.info new.inspect
+          # Rails.logger.info new.inspect
         end
       end
     end
 
     respond_to do |format|
       if true
+        Spree::BoardHistory.create(user_id: params[:user_id], board_id: params[:board_id], action: "invoice_edit")
         format.json{render json: {},status: :ok}
       else
         format.json{render json: {},status: :unprocessable_entity}
@@ -62,10 +63,11 @@ class Spree::InvoiceLinesController < Spree::StoreController
       file << pdf
     end
 
-    board.send_email_with_invoice("jarwoz@gmail.com","Jaroslaw Wozniak",pdf)
+    board.send_email_with_invoice(designer.email,designer.full_name,pdf)
 
     respond_to do |format|
       if true
+        Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
         format.json {render json: {:message => "ok"}, status: :ok}
       else
         format.json {render json: {:message => "error"},status: :unprocessable_entity}

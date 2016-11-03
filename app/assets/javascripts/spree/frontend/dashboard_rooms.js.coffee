@@ -1,4 +1,15 @@
 $ ->
+  addToHistory = (user_id,board_id,action) ->
+    $.ajax
+      dataType: 'json'
+      method: 'POST'
+      url: '/create_board_history'
+      data: { board_history: {action: action, board_id: board_id, user_id: user_id} }
+      success: (response) ->
+
+      error: (response) ->
+
+
   clearHidden = () ->
     $('.table-board-listing tbody tr').each ->
       $(@).removeClass('hidden')
@@ -11,6 +22,33 @@ $ ->
     else
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
+
+  changeTableView = (type) ->
+    if type == true
+      $(".table.table-board-listing thead").html("<th class='status'>&nbsp;</th><th colspan='2'>Rooms</th>")
+      $(".table.table-board-listing colgroup").html(
+        "   <col style='width: 5%' />
+            <col style='width: 20%' />
+            <col style='width: 75%' />"
+      )
+      $(".designer_commission_style").addClass('hidden')
+    else
+      $(".table.table-board-listing thead").html(
+        "     <th class='status'>&nbsp;</th>
+              <th colspan='2'>Rooms</th>
+              <th class='align-center'># Products</th>
+              <th class='align-center'># Views</th>
+              <th class='align-center'>Revenue</th>"
+      )
+      $(".table.table-board-listing colgroup").html(
+        "   <col style='width: 5%' />
+            <col style='width: 20%' />
+            <col style='width: 40%' />
+            <col style='width: 12%' />
+            <col style='width: 10%' />
+            <col style='width: 10%' />"
+      )
+      $(".designer_commission_style").removeClass('hidden')
 
   generateInvoiceHash = (invoice) ->
     hash = {}
@@ -28,19 +66,15 @@ $ ->
     click: (e)->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
+      changeTableView($(@).data('private'))
   ,'.js-get-room-type'
 
   $(document).on
     click: (e)->
       e.preventDefault()
+      $(".table.table-board-listing tbody tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
       $(@).parents('tr.invoice').remove()
   ,'.close-invoice'
-
-  $(document).on
-    click: (e)->
-      e.preventDefault()
-      console.log 'save'
-  ,'.save-invoice'
 
   $(document).on
     click: (e)->
@@ -52,7 +86,7 @@ $ ->
           val = $(@).parent().data('sku')
         when 'edit-cost'
           val = $(@).parent().data('cost')
-      $(@).parent().html("<input type='text' class='form-control' value=#{val}><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
+      $(@).parent().html("<input type='text' class='form-control' value=\"#{val}\"><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
   ,'.edit-name .edit, .edit-sku .edit, .edit-cost .edit'
 
   $(document).on
@@ -87,11 +121,12 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: '/save_invoice'
-        data: {invoice}
+        data: {invoice, board_id: $(@).data('board_id'), user_id: $(@).data('user_id') }
 #        ,board_id: $(@).data('board_id')
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
+          $(".table.table-board-listing tbody tr.true").not(".board#{$(@).data('board_id')}").removeClass('hidden')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->
             obj.remove()
@@ -118,8 +153,9 @@ $ ->
         dataType: 'html'
         method: 'POST'
         url: '/private_invoice'
-        data: {id: $(@).data('id')}
+        data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response)->
+          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
@@ -137,10 +173,9 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: '/send_invoice_email'
-        data: {id: $(@).data('id')}
+        data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response) ->
-          console.log response
-          my_this.after("<div class='notification-to-remove'><i class='fa fa-check success'></i> Email sent</div>")
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-check success'></i> Email sent</div>")
           setTimeout () ->
             $( $('.notification-to-remove'), my_this.parent() ).remove()
           ,'2000'
@@ -148,3 +183,20 @@ $ ->
           console.log 'error'
           console.log response
   ,'.js-private-email'
+
+  $(document).on
+    click: (e) ->
+      my_this = $(@)
+      e.preventDefault()
+      $.ajax
+        dataType: 'html'
+        method: 'POST'
+        url: '/board_history'
+        data: {user_id: $(@).parents('.board-actions').data('user_id'), board_id: $(@).parents('.board-actions').data('board_id')}
+        success: (response) ->
+          $("#board-history-modal-handler").html(response)
+          $("#board-history").modal()
+        error: (response) ->
+          console.log 'error'
+          console.log response
+  ,'.js-histroy'
