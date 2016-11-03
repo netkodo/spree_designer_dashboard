@@ -58,7 +58,7 @@
           </thead>
           <tbody>
           <% @boards.each do |board|%>
-              <tr class="<%= board.private %> <%= board.private ? '' : 'hidden' %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %>">
+              <tr id="<%= board.id %>" class="<%= board.private %> <%= board.private ? '' : 'hidden' %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <% if board.generated %>
