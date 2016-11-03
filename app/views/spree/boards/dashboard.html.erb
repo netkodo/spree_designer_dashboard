@@ -57,7 +57,7 @@
           </thead>
           <tbody>
           <% @boards.each do |board|%>
-              <tr class="<%= board.private %> <%= board.private ? '' : 'hidden' %>">
+              <tr class="<%= board.private %> <%= board.private ? '' : 'hidden' %> board<%= board.id %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <%= board_image(board,:small)%>

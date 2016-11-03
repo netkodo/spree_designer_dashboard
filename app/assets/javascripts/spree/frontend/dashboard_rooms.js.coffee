@@ -60,6 +60,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
+      $(".table.table-board-listing tbody tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
       $(@).parents('tr.invoice').remove()
   ,'.close-invoice'
 
@@ -119,6 +120,7 @@ $ ->
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
+          $(".table.table-board-listing tbody tr.true").not(".board#{$(@).data('board_id')}").removeClass('hidden')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->
             obj.remove()
@@ -147,6 +149,7 @@ $ ->
         url: '/private_invoice'
         data: {id: $(@).data('id')}
         success: (response)->
+          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).data('id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
