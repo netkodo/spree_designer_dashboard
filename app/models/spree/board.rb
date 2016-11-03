@@ -481,7 +481,7 @@ class Spree::Board < ActiveRecord::Base
         if product_hash['action_board'] == 'update'
           board_product = self.board_products.where(id: product_hash['product_id']).first
           if board_product.present?
-            Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present ? board_product.product.name : board_product.costom_item.name}")
+            Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present? ? board_product.product.name : board_product.custom_item.name}")
             if product_hash['image'].present?
               crop_image(product_hash['image'], board_product)
             end
