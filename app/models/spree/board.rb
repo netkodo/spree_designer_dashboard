@@ -611,7 +611,8 @@ class Spree::Board < ActiveRecord::Base
   def get_item_data_for_tax(item,index)
     ::TaxCloud::CartItem.new(
       index: index,
-      item_id: item.get_item_data('name'),
+      # item_id: item.get_item_data('name')[0...50],
+      item_id: item.get_item_data('sku'),
       tic: Spree::Config.taxcloud_shipping_tic,
       price: item.get_item_data('cost'),
       quantity: 1

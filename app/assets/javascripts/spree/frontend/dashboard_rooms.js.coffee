@@ -38,6 +38,7 @@ $ ->
             <col style='width: 10%' />"
       )
       $(".designer_commission_style").removeClass('hidden')
+
   generateInvoiceHash = (invoice) ->
     hash = {}
     $(".table-invoice.#{invoice} tbody tr[changed=true]").each ->
@@ -80,7 +81,7 @@ $ ->
           val = $(@).parent().data('sku')
         when 'edit-cost'
           val = $(@).parent().data('cost')
-      $(@).parent().html("<input type='text' class='form-control' value=#{val}><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
+      $(@).parent().html("<input type='text' class='form-control' value=\"#{val}\"><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
   ,'.edit-name .edit, .edit-sku .edit, .edit-cost .edit'
 
   $(document).on
