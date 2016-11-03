@@ -25,19 +25,19 @@
           <div class="pdf-small-margin">
             DATE<br>
             <%= DateTime.now.strftime("%B %d, %Y") %><br>
-          <div>
+          </div>
 
           <div class="pdf-small-margin">
             TO: <%= DateTime.now.strftime("%B %d, %Y") %><br>
-          <div>
+          </div>
 
           <div class="pdf-small-margin">
             INVOICE NUMBER: <%= rand(10000) %><br>
-          <div>
+          </div>
 
           <div class="pdf-small-margin">
             TIME: 30 Days<br>
-          <div>
+          </div>
 
           <%#= render 'private_invoice', @board; board, @board_products: board_products %>
           <table class="table pdf-table pdf-small-margin">
@@ -102,6 +102,40 @@
 
             </tbody>
           </table>
+
+          <div class="row">
+            <div class="col-xs-2">
+              <b>Subtotal:</b>
+            </div>
+            <div class="col-xs-3">
+              <%= subtotal %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-2">
+              <b>Sales Tax:</b>
+            </div>
+            <div class="col-xs-3">
+              <%= tax %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-2">
+              <b>Shipping:</b>
+            </div>
+            <div class="col-xs-3">
+              ??
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-2">
+              <b>Total:</b>
+            </div>
+            <div class="col-xs-3">
+              <%= total %>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
