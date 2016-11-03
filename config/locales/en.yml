@@ -6,6 +6,7 @@ en:
       invoice_edit: "Invoice was edited"
       invoice_email: "Invoice email was sent"
       new_product: "New product added"
+      update_product: "Product was updated"
     activerecord:
       attributes:
         spree/board: &board_labels
