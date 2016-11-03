@@ -57,7 +57,7 @@ class Spree::BoardProductsController < Spree::StoreController
   def destroy
     if @board_product = Spree::BoardProduct.find(params[:id])
       @board_product.destroy
-      
+      Spree::BoardHistory.create(user_id: @board_product.board.designer.id, board_id: @board_product.board_id, action: "delete_product")
     end
     respond_to do |format|
       format.js   { render :text => "Deleted" }
