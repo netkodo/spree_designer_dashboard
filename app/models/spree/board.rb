@@ -652,7 +652,7 @@ class Spree::Board < ActiveRecord::Base
                 :name => to_name
             }
         ],
-        :from_email => "designer@scoutandnimble.com",
+        :from_email => to_addr,
         :track_opens => true,
         :track_clicks => true,
         :url_strip_qs => false,
