@@ -50,6 +50,9 @@ Spree::Core::Engine.routes.draw do
   post "/portfolios_search" => "portfolios#search", as: :portfolios_search, :defaults => {:format => 'html'}
   post "/portfolio_page" => "portfolios#portfolio_page", :as => :portfolio_page
 
+  #project routes
+  resources :projects
+
   #favoretes portfolio & board
   post "/add_portfolio_favorite" => "portfolios#add_portfolio_favorite", :as => :add_portfolio_favorite,:defaults => {:format => 'json'}
   delete "/remove_portfolio_favorite" => "portfolios#remove_portfolio_favorite", :as => :remove_portfolio_favorite,:defaults => {:format => 'json'}

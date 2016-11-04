@@ -25,6 +25,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :board_favorites, dependent: :destroy
   has_many :invoice_lines
   has_many :board_histories, dependent: :destroy
+  belongs_to :project
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
@@ -599,9 +600,9 @@ class Spree::Board < ActiveRecord::Base
   def calculate_tax
     designer=self.designer.designer_registrations.first
     if designer.present?
-      dest_state = Spree::State.find(self.state_id)
+      dest_state = Spree::State.find(self.project.state_id)
       origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
-      destination=::TaxCloud::Address.new(address1:  self.customer_address, city: self.customer_city, zip5: self.customer_zipcode, state: dest_state.abbr)
+      destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: dest_state.abbr)
 
       transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
       self.board_products.each_with_index do |item,index|

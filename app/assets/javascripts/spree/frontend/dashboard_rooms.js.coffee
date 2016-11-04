@@ -72,7 +72,8 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      $(".table.table-board-listing tbody tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      $(".table.table-board-listing tbody.project tr.true.project#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('project_id')}").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
       $(@).parents('tr.invoice').remove()
   ,'.close-invoice'
 
@@ -117,6 +118,7 @@ $ ->
       invoice = generateInvoiceHash($(@).data('board_id'))
       console.log invoice
       obj = $(@).parents('tr.invoice')
+      my_this = $(@)
       $.ajax
         dataType: 'json'
         method: 'POST'
@@ -126,7 +128,8 @@ $ ->
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
-          $(".table.table-board-listing tbody tr.true").not(".board#{$(@).data('board_id')}").removeClass('hidden')
+          $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
+          $(".table.table-board-listing tbody.project tr.true.project#{$(my_this).data('project_id')}").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->
             obj.remove()
@@ -155,7 +158,8 @@ $ ->
         url: '/private_invoice'
         data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response)->
-          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
+          $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
+          $(".table.table-board-listing tbody.project tr.true").not(".project#{$(my_this).parents('.board-actions').data('project_id')}.board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
@@ -200,3 +204,12 @@ $ ->
           console.log 'error'
           console.log response
   ,'.js-histroy'
+
+  $(document).on
+    change: (e) ->
+      $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+      $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
+      $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+      $(".table.table-board-listing tbody.project tr.true.project#{$(@).val()}").removeClass('hidden')
+      $(".table.table-board-listing tbody.project tr.true").not(".project#{$(@).val()}").addClass('hidden')
+  ,'#project_select'
