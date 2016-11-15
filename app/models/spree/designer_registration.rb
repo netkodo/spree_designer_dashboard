@@ -42,16 +42,18 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           else
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
           end
-          self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
-          Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
-          user.add_designer_to_mailchimp
+          # self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
+          # Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
+          # user.add_designer_to_mailchimp
+          user.designer_ac_registration
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
-          self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
-          user.add_designer_to_mailchimp
+          # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
+          # user.add_designer_to_mailchimp
+          user.designer_ac_registration
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
+          self.send_email_to_designer("", "Your application has been declined!", "Jesse Bodine", "", "we-have-our-eye-on-you")
       end
     end
   end
@@ -137,7 +139,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   end
 
-  def send_email_to_designer(html_content,subject,from_name,text,template)
+  def send_email_to_designer(html_content, subject, from_name, text, template)
     html_content = html_content
     logger.info "Sending the mail to #{self.user.email}"
 
