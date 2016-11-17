@@ -24,7 +24,7 @@
 </div>
 
 <div class="form-group">
-  <%= f.collection_select :state_id, Spree::State.order(name: :asc), :id, :name, {value: 49}, {:class => 'form-control text-center'}  %>
+  <%= f.select :state, options_for_select(Spree::State.order(name: :asc).map{|s| [s.name,s.abbr]}), {}, :class => 'form-control text-center' %>
   <div class="info"></div>
 </div>
 

@@ -1,5 +1,5 @@
 <div class="form-group">
-  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['FLAT RATE',{class: 'option-color'}],['HOURLY RATE',{class: 'option-color'}]],'placeholder'),{}, :class => 'form-control text-center select-placeholder'%>
+  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['FLAT RATE','flat_rate',{class: 'option-color'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}]],'placeholder'),{}, :class => 'form-control text-center select-placeholder'%>
   <div class="info"></div>
 </div>
 

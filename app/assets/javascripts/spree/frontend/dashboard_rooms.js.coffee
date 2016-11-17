@@ -217,7 +217,26 @@ $ ->
   $(document).on
     change: (e) ->
       $(@).removeClass('select-placeholder')
-  ,"#project_rate_type, #project_charge, #project_charge_percentage"
+  ,"#project_charge_percentage, #project_customer_billing_cycle"
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+      $('#contract_type').html("
+        <option value='placeholder' selected='selected' disabled='disabled'>#{$('#project_rate_type').find('option:selected').text()}</option>
+        ")
+  ,"#project_rate_type"
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+      if $(@).val() == true
+        $('#project_charge_percentage').show()
+        $('#project_charge_on').show()
+      else
+        $('#project_charge_percentage').hide()
+        $('#project_charge_on').hide()
+  ,"#project_charge"
 
   $(document).on
     click: (e) ->
@@ -225,12 +244,51 @@ $ ->
       step = $(@).data('step')
       $('.step').hide()
       $(".step-#{step}").show()
+      if step == 2
+        $('.step1 .data').html("<p>
+          #{$('#project_project_name').val()}<br>
+          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
+          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
+          </p>
+          <p>
+          #{$('#project_email').val()}<br>
+          #{$('#project_phone').val()}
+          </p>")
+      else if step == 3
+        if $('#project_rate_type').val() == "flat_rate"
+          str = "<p>
+            #{$('#project_rate_type').find('option:selected').text()}<br>
+            #{$('#project_rate').val()}<br>
+            #{$('#project_customer_billing_cycle').find('option:selected').text()}
+            </p>"
+        else
+          str = "<p>
+            #{$('#project_rate_type').find('option:selected').text()}<br>
+            #{$('#project_customer_billing_cycle').find('option:selected').text()}
+            </p>"
+        $('.step2 .data').html(str)
+      else if step == 4
+        if $('#project_charge').val() == true
+#          if $('#project_charge_percentage')
+          str = "<p>
+              #{$('#contract_type').find('option:selected').text()}<br>
+              Percentage: Yes<br>
+
+              Charge: #{$('#contract_type').find('option:selected').text()}
+            </p>"
+        else
+          str = "<p>
+              #{$('#contract_type').find('option:selected').text()}<br>
+              Percentage: No
+            </p>"
+        $('.step2 .data').html(str)
+
   ,".project-next-step, .project-prev-step"
 
   $(document).on
     change: (e) ->
       $('#project_customer_billing_cycle').parents('.form-group').show()
-      if $(@).val() == "FLAT RATE"
+      if $(@).val() == "flat_rate"
         $('#project_rate').parents('.form-group').show()
         $('#project_customer_billing_cycle').html('
           <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
