@@ -213,3 +213,37 @@ $ ->
       $(".table.table-board-listing tbody.project tr.true.project#{$(@).val()}").removeClass('hidden')
       $(".table.table-board-listing tbody.project tr.true").not(".project#{$(@).val()}").addClass('hidden')
   ,'#project_select'
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+  ,"#project_rate_type, #project_charge, #project_charge_percentage"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      step = $(@).data('step')
+      $('.step').hide()
+      $(".step-#{step}").show()
+  ,".project-next-step, .project-prev-step"
+
+  $(document).on
+    change: (e) ->
+      $('#project_customer_billing_cycle').parents('.form-group').show()
+      if $(@).val() == "FLAT RATE"
+        $('#project_rate').parents('.form-group').show()
+        $('#project_customer_billing_cycle').html('
+          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
+          <option value="at_start" class="option-color">BILL AT START OF PROJECT</option>
+          <option value="at_completion" class="option-color">BILL AT PROJECT COMPLETION</option>
+          ')
+      else
+        $('#project_rate').parents('.form-group').hide()
+        $('#project_customer_billing_cycle').html('
+          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
+          <option value="weekly" class="option-color">WEEKLY</option>
+          <option value="bi_weekly" class="option-color">BI-WEEKLY</option>
+          <option value="monthly" class="option-color">MONTHLY</option>
+          <option value="at_completion" class="option-color">AT PROJECT COMPLETION</option>
+        ')
+  ,"#project_rate_type"

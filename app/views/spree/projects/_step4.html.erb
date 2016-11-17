@@ -1,0 +1,56 @@
+<div class="col-md-12 text-center">
+  <h1>Project Details</h1>
+</div>
+<div class="row project-step text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Customer Info:</span></p>
+    <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+  </div>
+  <div class="col-md-4">
+    <p>
+      <%= @project.project_name %><br>
+      <%= @project.address1 %>, <%= @project.address2 %><br>
+      <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+    </p>
+    <p>
+      <%= @project.email %><br>
+      <%= @project.phone %>
+    </p>
+  </div>
+</div>
+
+<div class="row project-step text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Billing Method:</span></p>
+    <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+  </div>
+  <div class="col-md-4">
+    <p>
+      <%= @project.project_name %><br>
+      <%= @project.address1 %>, <%= @project.address2 %><br>
+      <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+    </p>
+    <p>
+      <%= @project.email %><br>
+      <%= @project.phone %>
+    </p>
+  </div>
+</div>
+
+<div class="row project-step text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Contract Terms:</span></p>
+    <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+  </div>
+  <div class="col-md-4">
+    <p>
+      <%= @project.project_name %><br>
+      <%= @project.address1 %>, <%= @project.address2 %><br>
+      <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+    </p>
+    <p>
+      <%= @project.email %><br>
+      <%= @project.phone %>
+    </p>
+  </div>
+</div>

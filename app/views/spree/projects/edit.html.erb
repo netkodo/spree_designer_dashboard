@@ -5,23 +5,61 @@
 
     <div class="col-md-9">
       <div class="col-md-12 text-center">
-        <h1>Edit Project Details</h1>
+        <h1>Project Details</h1>
+      </div>
+      <div class="row project-step text-center">
+        <div class="col-md-4">
+          <p><span class="step-name">Customer Info:</span></p>
+          <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <%= @project.project_name %><br>
+            <%= @project.address1 %>, <%= @project.address2 %><br>
+            <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+          </p>
+          <p>
+            <%= @project.email %><br>
+            <%= @project.phone %>
+          </p>
+        </div>
       </div>
 
-        <%= form_for @project,:url => project_path(@project), html: {id: "create_project_form"}, method: :put do |f| %>
-          <div class="row">
-             <div class="col-md-8 col-md-offset-2">
+      <div class="row project-step text-center">
+        <div class="col-md-4">
+          <p><span class="step-name">Billing Method:</span></p>
+          <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <%= @project.project_name %><br>
+            <%= @project.address1 %>, <%= @project.address2 %><br>
+            <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+          </p>
+          <p>
+            <%= @project.email %><br>
+            <%= @project.phone %>
+          </p>
+        </div>
+      </div>
 
-              <%= render :partial => "form", locals: {f: f} %>
+      <div class="row project-step text-center">
+        <div class="col-md-4">
+          <p><span class="step-name">Contract Terms:</span></p>
+          <p><%= link_to "Edit", edit_project_path(@project.id), :class => "project-edit" %></p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <%= @project.project_name %><br>
+            <%= @project.address1 %>, <%= @project.address2 %><br>
+            <%= @project.city %>, <%= @project.state.abbr %> <%= @project.zip_code %>
+          </p>
+          <p>
+            <%= @project.email %><br>
+            <%= @project.phone %>
+          </p>
+        </div>
+      </div>
 
-             </div>
-          </div>
-
-          <div class="row">
-              <div class="form-actions text-right col-md-8 col-md-offset-2">
-                  <%= f.submit "Update", :class => 'btn btn-primary' %>
-              </div>
-          </div>
-        <% end %>
     </div>
 </div>
