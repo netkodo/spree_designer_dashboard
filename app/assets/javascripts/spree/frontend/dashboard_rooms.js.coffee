@@ -217,7 +217,7 @@ $ ->
   $(document).on
     change: (e) ->
       $(@).removeClass('select-placeholder')
-  ,"#project_charge_percentage, #project_customer_billing_cycle"
+  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on"
 
   $(document).on
     change: (e) ->
@@ -228,14 +228,22 @@ $ ->
   ,"#project_rate_type"
 
   $(document).on
+    click: (e) ->
+      e.preventDefault()
+      step = $(@).data('step')
+      $('.step').hide()
+      $(".step-#{step}").show()
+  ,".js-project-edit"
+
+  $(document).on
     change: (e) ->
       $(@).removeClass('select-placeholder')
-      if $(@).val() == true
-        $('#project_charge_percentage').show()
-        $('#project_charge_on').show()
+      if $(@).val() == 'true'
+        $('#project_charge_percentage').parents('.form-group').show()
+        $('#project_charge_on').parents('.form-group').show()
       else
-        $('#project_charge_percentage').hide()
-        $('#project_charge_on').hide()
+        $('#project_charge_percentage').parents('.form-group').hide()
+        $('#project_charge_on').parents('.form-group').hide()
   ,"#project_charge"
 
   $(document).on
@@ -257,31 +265,34 @@ $ ->
       else if step == 3
         if $('#project_rate_type').val() == "flat_rate"
           str = "<p>
-            #{$('#project_rate_type').find('option:selected').text()}<br>
+            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
             #{$('#project_rate').val()}<br>
-            #{$('#project_customer_billing_cycle').find('option:selected').text()}
+            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
             </p>"
         else
           str = "<p>
-            #{$('#project_rate_type').find('option:selected').text()}<br>
-            #{$('#project_customer_billing_cycle').find('option:selected').text()}
+            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
             </p>"
         $('.step2 .data').html(str)
       else if step == 4
-        if $('#project_charge').val() == true
-#          if $('#project_charge_percentage')
+        if $('#project_charge').val() == 'true'
+          if $("#project_charge_on").val() == 'all_products'
+            charge_on = "On all products"
+          else
+            charge_on = "On alternate products"
           str = "<p>
-              #{$('#contract_type').find('option:selected').text()}<br>
+              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
               Percentage: Yes<br>
-
-              Charge: #{$('#contract_type').find('option:selected').text()}
+              #{charge_on}<br>
+              Charge: #{$('#project_charge_percentage').val()}%
             </p>"
         else
           str = "<p>
               #{$('#contract_type').find('option:selected').text()}<br>
               Percentage: No
             </p>"
-        $('.step2 .data').html(str)
+        $('.step3 .data').html(str)
 
   ,".project-next-step, .project-prev-step"
 

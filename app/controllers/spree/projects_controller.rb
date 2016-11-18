@@ -39,6 +39,6 @@ class Spree::ProjectsController < Spree::StoreController
   private
 
     def project_params
-      params.require(:project).permit(:user_id, :project_name, :address1, :address2, :city, :state, :zip_code, :email, :phone, :rate_type, :rate, :customer_billing_cycle, :charge_percentage, :charge)
+      params.require(:project).permit(:user_id, :project_name, :address1, :address2, :city, :state, :zip_code, :email, :phone, :rate_type, :rate, :customer_billing_cycle, :charge_percentage, :charge, :charge_on)
     end
 end

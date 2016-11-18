@@ -1,14 +1,29 @@
 <div class="form-group">
-  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['FLAT RATE','flat_rate',{class: 'option-color'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}]],'placeholder'),{}, :class => 'form-control text-center select-placeholder'%>
+  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['FLAT RATE','flat_rate',{class: 'option-color'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{u ? '':'select-placeholder'}" %>
   <div class="info"></div>
 </div>
 
-<div class="form-group" style="display: none;">
+<div class="form-group" style="display: <%= @project.rate_type == 'flat_rate' ? 'block;' : 'none;' %>">
   <%= f.text_field :rate, :placeholder => 'ENTER RATE (EX: 100.00)', :class => 'form-control text-center' %>
   <div class="info"></div>
 </div>
 
-<div class="form-group" style="display: none;">
-  <%= f.select :customer_billing_cycle, options_for_select([]),{}, :class => 'form-control text-center select-placeholder' %>
+<div class="form-group" style="<%= u ? '' : 'display: none;' %>">
+  <% if u %>
+    <% flat = [['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],['BILL AT START OF PROJECT','at_start'],['BILL AT PROJECT COMPLETION','at_completion']]
+        hourly = [
+            ['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],
+            ['WEEKLY','weekly'],
+            ['BI-WEEKLY','bi_weekly'],
+            ['MONTHLY','monthly'],
+            ['AT PROJECT COMPLETION','at_completion'],
+        ]
+        @project.rate_type == "flat_rate" ? select = flat : select = hourly
+    %>
+
+    <%= f.select :customer_billing_cycle, options_for_select(select,@project.customer_billing_cycle),{}, :class => "form-control text-center" %>
+  <% else %>
+    <%= f.select :customer_billing_cycle, options_for_select([]),{}, :class => 'form-control text-center select-placeholder' %>
+  <% end %>
   <div class="info"></div>
 </div>
