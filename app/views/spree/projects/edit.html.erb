@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-3">
+    <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+  </div>
+
+  <div class="col-md-9">
+    <%= form_for @project, :method => 'patch',:url => project_path, html: {id: "update_project_form"} do |f| %>
+        <% update = @project.created_at.present? ? true : false %>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="step step-1" style="display: none;">
+              <h2>STEP 1</h2>
+              <div class="col-md-12 text-center">
+                <h1>Customer Information</h1>
+              </div>
+              <%= render :partial => "step1", locals: {f: f, u: update} %>
+              <div class="text-right">
+                <button class="btn btn-primary text-right project-next-step" data-step="2">next</button>
+              </div>
+            </div>
+
+            <div class="step step-2" style="display: none;">
+              <h2>STEP 2</h2>
+              <div class="col-md-12 text-center">
+                <h1>Billing Method</h1>
+              </div>
+              <%= render :partial => "step2", locals: {f: f, u: update} %>
+              <div class="text-right">
+                <%if update %>
+                    <button class="btn btn-primary text-right project-prev-step" data-step="1">prev</button>
+                <% end %>
+                <button class="btn btn-primary project-next-step" data-step="3">next</button>
+              </div>
+            </div>
+
+            <div class="step step-3" style="display: none;">
+              <h2>STEP 3</h2>
+              <div class="col-md-12 text-center">
+                <h1>Select a Contract</h1>
+              </div>
+              <%= render :partial => "step3", locals: {f: f, u: update} %>
+              <div class="form-actions text-right">
+                <%if update %>
+                    <button class="btn btn-primary text-right project-prev-step" data-step="2">prev</button>
+                <% end %>
+                <button class="btn btn-primary text-right project-prev-step" data-step="4">next</button>
+                <%#= f.submit "Save", :class => 'btn btn-primary' %>
+              </div>
+            </div>
+
+            <div class="step step-4">
+              <div class="col-md-12 text-center">
+                <h1>PROJECT DETAILS</h1>
+              </div>
+              <%= render :partial => "step4", locals: {f: f, u: update} %>
+              <div class="form-actions text-center">
+                <%= f.submit "UPDATE CONTRACT", :class => 'btn btn-primary' %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+    <% end %>
+  </div>
+</div>

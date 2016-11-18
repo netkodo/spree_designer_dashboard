@@ -1,0 +1,54 @@
+<div class="row project-step step1 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Customer Info:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="1">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+      <p>
+        <%= @project.project_name %><br>
+        <%= @project.address1 %>, <%= @project.address2 %><br>
+        <%= @project.city %>, <%= @project.state %>, <%= @project.zip_code %>
+      </p>
+      <p>
+        <%= @project.email %><br>
+        <%= @project.phone %>
+      </p>
+    <% end %>
+  </div>
+</div>
+
+<div class="row project-step step2 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Billing Method:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="2">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+    <p>
+      <%= @project.rate_type == 'flat_rate' ? 'Flat Rate' : 'Hourly Rate' %><br>
+      <%= @project.rate_type == 'flat_rate' ? @project.rate : '' %><br>
+      <%= @project.get_customer_billing_cycle %>
+    </p>
+    <% end %>
+  </div>
+</div>
+
+<div class="row project-step step3 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Contract Terms:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="3">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+        <%= @project.rate_type == 'flat_rate' ? 'Flat Rate' : 'Hourly Rate' %><br>
+        <% if @project.charge %>
+          Percentage: Yes<br>
+          <%= @project.charge_on == 'alternate' ? 'On Alternate Products' : 'On All Products' %><br>
+          Charge: <%= @project.charge_percentage %>%
+        <% else %>
+          Percentage: No
+        <% end %>
+    <% end %>
+  </div>
+</div>

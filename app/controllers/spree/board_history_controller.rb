@@ -1,7 +1,7 @@
 class Spree::BoardHistoryController < Spree::StoreController
 
   def board_history
-    @history = Spree::BoardHistory.where(board_id: params[:board_id],user_id: params[:user_id])
+    @history = Spree::BoardHistory.where(board_id: params[:board_id],user_id: params[:user_id]).order("created_at desc")
     render "board_history", layout: false
   end
 

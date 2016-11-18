@@ -53,6 +53,9 @@ Spree::Core::Engine.routes.draw do
 
   post "/get_tags" => "portfolios#get_tags", :as => :get_tags, :defaults => {:format => 'json'}
 
+  #project routes
+  resources :projects
+
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
 

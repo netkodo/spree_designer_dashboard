@@ -72,7 +72,8 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      $(".table.table-board-listing tbody tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      $(".table.table-board-listing tbody.project tr.true.project#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('project_id')}").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
       $(@).parents('tr.invoice').remove()
   ,'.close-invoice'
 
@@ -117,6 +118,7 @@ $ ->
       invoice = generateInvoiceHash($(@).data('board_id'))
       console.log invoice
       obj = $(@).parents('tr.invoice')
+      my_this = $(@)
       $.ajax
         dataType: 'json'
         method: 'POST'
@@ -126,7 +128,8 @@ $ ->
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
-          $(".table.table-board-listing tbody tr.true").not(".board#{$(@).data('board_id')}").removeClass('hidden')
+          $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
+          $(".table.table-board-listing tbody.project tr.true.project#{$(my_this).data('project_id')}").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->
             obj.remove()
@@ -155,7 +158,8 @@ $ ->
         url: '/private_invoice'
         data: {id: $(@).parents('.board-actions').data('board_id')}
         success: (response)->
-          $(".table.table-board-listing tbody tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
+          $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
+          $(".table.table-board-listing tbody.project tr.true").not(".project#{$(my_this).parents('.board-actions').data('project_id')}.board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
@@ -200,3 +204,115 @@ $ ->
           console.log 'error'
           console.log response
   ,'.js-histroy'
+
+  $(document).on
+    change: (e) ->
+      $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+      $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
+      $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+      $(".table.table-board-listing tbody.project tr.true.project#{$(@).val()}").removeClass('hidden')
+      $(".table.table-board-listing tbody.project tr.true").not(".project#{$(@).val()}").addClass('hidden')
+  ,'#project_select'
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on"
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+      $('#contract_type').html("
+        <option value='placeholder' selected='selected' disabled='disabled'>#{$('#project_rate_type').find('option:selected').text()}</option>
+        ")
+  ,"#project_rate_type"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      step = $(@).data('step')
+      $('.step').hide()
+      $(".step-#{step}").show()
+  ,".js-project-edit"
+
+  $(document).on
+    change: (e) ->
+      $(@).removeClass('select-placeholder')
+      if $(@).val() == 'true'
+        $('#project_charge_percentage').parents('.form-group').show()
+        $('#project_charge_on').parents('.form-group').show()
+      else
+        $('#project_charge_percentage').parents('.form-group').hide()
+        $('#project_charge_on').parents('.form-group').hide()
+  ,"#project_charge"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      step = $(@).data('step')
+      $('.step').hide()
+      $(".step-#{step}").show()
+      if step == 2
+        $('.step1 .data').html("<p>
+          #{$('#project_project_name').val()}<br>
+          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
+          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
+          </p>
+          <p>
+          #{$('#project_email').val()}<br>
+          #{$('#project_phone').val()}
+          </p>")
+      else if step == 3
+        if $('#project_rate_type').val() == "flat_rate"
+          str = "<p>
+            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+            #{$('#project_rate').val()}<br>
+            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+            </p>"
+        else
+          str = "<p>
+            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+            </p>"
+        $('.step2 .data').html(str)
+      else if step == 4
+        if $('#project_charge').val() == 'true'
+          if $("#project_charge_on").val() == 'all_products'
+            charge_on = "On all products"
+          else
+            charge_on = "On alternate products"
+          str = "<p>
+              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
+              Percentage: Yes<br>
+              #{charge_on}<br>
+              Charge: #{$('#project_charge_percentage').val()}%
+            </p>"
+        else
+          str = "<p>
+              #{$('#contract_type').find('option:selected').text()}<br>
+              Percentage: No
+            </p>"
+        $('.step3 .data').html(str)
+
+  ,".project-next-step, .project-prev-step"
+
+  $(document).on
+    change: (e) ->
+      $('#project_customer_billing_cycle').parents('.form-group').show()
+      if $(@).val() == "flat_rate"
+        $('#project_rate').parents('.form-group').show()
+        $('#project_customer_billing_cycle').html('
+          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
+          <option value="at_start" class="option-color">BILL AT START OF PROJECT</option>
+          <option value="at_completion" class="option-color">BILL AT PROJECT COMPLETION</option>
+          ')
+      else
+        $('#project_rate').parents('.form-group').hide()
+        $('#project_customer_billing_cycle').html('
+          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
+          <option value="weekly" class="option-color">WEEKLY</option>
+          <option value="bi_weekly" class="option-color">BI-WEEKLY</option>
+          <option value="monthly" class="option-color">MONTHLY</option>
+          <option value="at_completion" class="option-color">AT PROJECT COMPLETION</option>
+        ')
+  ,"#project_rate_type"

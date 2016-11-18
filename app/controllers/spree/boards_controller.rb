@@ -293,7 +293,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def new
-    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private])
+    project_id = nil || params[:project_id]
+    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private],project_id: project_id)
     @board.designer = spree_current_user
     if @board.save!
       Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
@@ -773,7 +774,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def board_params
-    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline,:customer_address, :customer_zipcode, :state_id, :customer_city)
+    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline, :project_id)#:customer_address, :customer_zipcode, :state_id, :customer_city
   end
   # redirect to the edit action after create
   #create.response do |wants|
