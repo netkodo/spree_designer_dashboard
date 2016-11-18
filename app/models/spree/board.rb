@@ -475,7 +475,7 @@ class Spree::Board < ActiveRecord::Base
     Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
 
     if params[:products_board].present?
-      Rails.logger.info params[:products_board]
+      # Rails.logger.info params[:products_board]
       board_products = JSON.parse(params[:products_board])
 
       board_products.each do |_, product_hash|
@@ -503,11 +503,7 @@ class Spree::Board < ActiveRecord::Base
               board_product.update(z_index: product_hash['z_index'])
             end
           else
-            puts 'nie istnieje'
-            puts 'nie istnieje'
-            puts 'nie istnieje'
             custom = Spree::CustomItem.find(product_hash['custom_item_id'])
-            puts custom.inspect
             if custom.present?
               image = product_hash['image']
               attr = product_hash.except!('action_board', 'product_id', 'image')
@@ -519,9 +515,6 @@ class Spree::Board < ActiveRecord::Base
                 end
                 board_product.update(z_index: product_hash['z_index'])
               end
-              puts "END "
-              puts "END "
-              puts "END "
             end
           end
         end
