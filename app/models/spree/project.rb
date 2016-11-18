@@ -5,22 +5,22 @@ class Spree::Project < ActiveRecord::Base
     if self.rate_type == 'flat_rate'
       case self.customer_billing_cycle
         when 'at_start'
-          'BILL AT START OF PROJECT'
+          'Bill At Start Of Project'
         when 'at_completion'
-          'BILL AT PROJECT COMPLETION'
+          'Bill At Project Completion'
         else
           'ERROR'
       end
     else
       case self.customer_billing_cycle
         when 'weekly'
-          'WEEKLY'
+          'Weekly'
         when 'bi_weekly'
-          'BI-WEEKLY'
+          'Bi-Weekly'
         when 'monthly'
-          'MONTHLY'
+          'Mmonthly'
         when 'at_completion'
-          'BILL AT PROJECT COMPLETION'
+          'Bill At Project Completion'
         else
           'ERROR'
       end
