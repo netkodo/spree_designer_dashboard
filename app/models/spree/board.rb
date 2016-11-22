@@ -595,7 +595,7 @@ class Spree::Board < ActiveRecord::Base
     if designer.present?
       dest_state = Spree::State.find(self.project.state_id)
       origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
-      destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: dest_state.abbr)
+      destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: self.project.state)
 
       transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
       self.board_products.each_with_index do |item,index|
