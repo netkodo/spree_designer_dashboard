@@ -6,7 +6,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
   #validates_presence_of :first_name, :last_name
 
-  after_create :send_designer_welcome
+  # after_create :send_designer_welcome
   after_create :update_profile_information
   after_update :update_designer_status
 
@@ -45,15 +45,15 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
           # Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
           # user.add_designer_to_mailchimp
-          user.designer_ac_registration
+          user.designer_ac_registration('room designer')
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
-          user.designer_ac_registration
+          user.designer_ac_registration('to the trade designer')
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          self.send_email_to_designer("", "Your application has been declined!", "Jesse Bodine", "", "we-have-our-eye-on-you")
+          # self.send_email_to_designer("", "Your application has been declined!", "Jesse Bodine", "", "we-have-our-eye-on-you")
       end
     end
   end
