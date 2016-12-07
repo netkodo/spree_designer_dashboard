@@ -397,7 +397,7 @@ function addProductToBoard(event, ui) {
                 width: cloned.width(),
                 height: cloned.height()
             };
-            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'), 'create', cloned.data('productId') || cloned.data('custom_item_id') + '-' + random, createObjectImage);
+            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'), 'create', cloned.data('productId') + '-' + random || cloned.data('custom_item_id') + '-' + random, createObjectImage);
             if(cloned.data('productId') != undefined){
                 setTimeout((function () {
                     if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
