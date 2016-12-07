@@ -1,11 +1,13 @@
 collection @board_products
-attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x
+attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x, :option_id
 image_id = ""
 board_image = ""
 node :board_product do |board_product|
    image_id = board_product.image_id
    if board_product.photo.present?
     board_image = board_product.photo
+   elsif board_product.option_id.present?
+    board_image = Spree::PropertyConnectImage.option_image_for_board(board_product)
    else
     board_image = board_product.custom_item.image(:original)
    end

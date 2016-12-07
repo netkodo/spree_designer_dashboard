@@ -314,9 +314,12 @@ fabric.Object.prototype.setCenterToOrigin = function () {
     });
 };
 
-function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_id, callback ) {
+function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, active, hash_id, callback ) {
+    console.log("option iD",option_id);
+    console.log("HASG iD",hash_id);
     callback = callback || null;
     custom_item_id = custom_item_id || null
+    option_id = option_id || null
      fabric.Image.fromURL(url, function (oImg) {
         oImg.scale(1).set({
             save_url: url,
@@ -331,14 +334,18 @@ function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_
             minScaleLimit: 0.5,
             hasRotatingPoint: true
         });
+        console.log("ADASDAS");
+        console.log(option_id);
         oImg.set('id', id);
         oImg.set('custom_item_id', custom_item_id);
+        oImg.set('option_id', option_id);
         oImg.set('action', active);
         oImg.set('product_permalink', slug);
         oImg.set('hash_id', hash_id);
         if (!isBlank(oImg.cropped)){
         oImg.set('cropped', true)
         }
+        console.log(oImg);
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
         if (bp.rotation_offset >= 0) {
@@ -347,9 +354,17 @@ function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_
         }
      callback(oImg);
     });
+    console.log("IDIDIDIDID: ",id);
+    console.log(option_id);
     obj = find_object(id);
+    console.log("qwerty");
+    console.log("size canva",canvas.getObjects().length);
+    console.log(obj);
+    console.log(canvas.getObjects());
     if (!isBlank(obj)) {
+        console.log('in');
         hash = generateHash(bp);
+        console.log('in after');
         $('.js-input-hash-product').text(JSON.stringify(hash));
     }
 
@@ -385,6 +400,7 @@ function addProductToBoard(event, ui) {
             slug = ui.helper.data('product-slug');
             canvas_id = ui.helper.data('canvas-id');
             custom_item_id = ui.helper.data('custom_item_id');
+            option_id = ui.helper.data('option_id');
             console.log(ui.helper.data('custom_item_id'));
             console.log(cloned.data('custom_item_id'));
             console.log('++');
@@ -392,12 +408,23 @@ function addProductToBoard(event, ui) {
                 board_id: $('#canvas').data('boardId'),
                 product_id: cloned.data('productId'),
                 custom_item_id: cloned.data('custom_item_id'),
+                option_id: cloned.data('option_id'),
                 center_point_x: center_x,
                 center_point_y: center_y,
                 width: cloned.width(),
                 height: cloned.height()
             };
-            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'), 'create', cloned.data('productId') + '-' + random || cloned.data('custom_item_id') + '-' + random, createObjectImage);
+
+            hash_key = cloned.data('productId') || cloned.data('custom_item_id');
+            // if(cloned.data('productId') == undefined && cloned.data('custom_item_id') == undefined){
+            //     hash_key = cloned.data('option_id');
+            // }else{
+                hash_key = cloned.data('productId') || cloned.data('custom_item_id') || cloned.data('option_id');
+                hash_key += '-'+random;
+            // }
+            console.log(hash_key);
+
+            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'),cloned.data('option_id'), 'create', hash_key, createObjectImage);
             if(cloned.data('productId') != undefined){
                 setTimeout((function () {
                     if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
@@ -468,9 +495,9 @@ function getSavedProducts(board_id) {
                     // console.log(board_product.custom_item.id);
                     // console.log('---')
                     if (board_product.custom_item == undefined){
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, 'update', board_product.id,  createObjectImage);
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null,null, 'update', board_product.id,  createObjectImage);
                     }else{
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id, 'update', board_product.id,  createObjectImage);
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id,null, 'update', board_product.id,  createObjectImage);
                     };
                     canvas.renderAll();
                     canvas.discardActiveObject();
@@ -541,6 +568,7 @@ function createObjectImage(activeObject) {
         theImage.set('variant_image', activeObject.get('variant_image'));
         theImage.set('stroke', '#fff');
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
+        theImage.set('option_id',activeObject.get('option_id'));
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
         };
@@ -569,8 +597,13 @@ var filter = new fabric.Image.filters.Convolute({
 }
 
 function find_object(id){
+    console.log('fROM INSIDE');
+    console.log(id);
+    console.log("size canva",canvas.getObjects().length);
     $.each(canvas.getObjects(), function(index, obj){
-        if (obj.get('id') === id ){
+        console.log(obj.get('id'));
+        if (obj.get('id') == id ){
+            console.log("======");
           return value;
         }
     });
@@ -602,10 +635,13 @@ function generateHash(object) {
     }else{
         image = null
     }
+    console.log("objekt");
+    console.log(object);
     hash[ha_id] = {
         action_board: action,
         board_id: board_id,
         custom_item_id: object.get('custom_item_id'),
+        option_id: object.get('option_id'),
         product_id: object.get('id'),
         center_point_x: object.getCenterPoint().x,
         center_point_y: object.getCenterPoint().y,
