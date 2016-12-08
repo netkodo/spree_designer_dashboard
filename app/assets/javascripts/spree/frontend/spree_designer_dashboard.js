@@ -530,7 +530,7 @@ function getSavedProducts(board_id) {
                         $.cookie("active_image", "");
                     }
                 });
-                
+
                 canvas.on({
                     'object:modified': function (e) {
 
@@ -549,7 +549,7 @@ function getSavedProducts(board_id) {
 }
 
 function createObjectImage(activeObject) {
-    console.log("ACO",activeObject.get('save_url'));
+    // console.log("ACO",activeObject.get('save_url'));
     new_image = activeObject.get('save_url');
     activeObject.getElement().src = new_image;
 
