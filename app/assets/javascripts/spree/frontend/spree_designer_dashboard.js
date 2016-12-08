@@ -504,13 +504,11 @@ function getSavedProducts(board_id) {
                     }else{
                         buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, board_product.option_id, 'update', board_product.id,  createObjectImage);
                     };
-                    console.log('_______________-');
                     canvas.renderAll();
                     canvas.discardActiveObject();
-                    console.log('a');
                 });
                 canvas.discardActiveObject();
-                console.log('b');
+
                 // detect which product has focus
                 canvas.on('mouse:down', function (options) {
                     if (options.target) {
@@ -532,7 +530,7 @@ function getSavedProducts(board_id) {
                         $.cookie("active_image", "");
                     }
                 });
-                console.log('c');
+                
                 canvas.on({
                     'object:modified': function (e) {
 
