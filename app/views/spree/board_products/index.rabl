@@ -6,8 +6,6 @@ node :board_product do |board_product|
    image_id = board_product.image_id
    if board_product.photo.present?
     board_image = board_product.photo
-   elsif board_product.option_id.present?
-    board_image = Spree::PropertyConnectImage.option_image_for_board(board_product)
    else
     board_image = board_product.custom_item.image(:original)
    end
@@ -31,6 +29,11 @@ child :custom_item do
     attributes :name, :id
     node :image_url do |p|
         "data:image/jpeg;base64,#{Base64.encode64(open(p.image(:original).to_s).read)}"
+    end
+end
+child :option do
+    node :image_url do |p|
+        "data:image/jpeg;base64,#{Base64.encode64(open(p.property_image(:original).to_s).read)}"
     end
 end
 

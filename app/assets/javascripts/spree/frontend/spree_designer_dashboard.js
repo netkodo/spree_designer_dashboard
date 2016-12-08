@@ -315,11 +315,11 @@ fabric.Object.prototype.setCenterToOrigin = function () {
 };
 
 function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, active, hash_id, callback ) {
-    console.log("option iD",option_id);
-    console.log("HASG iD",hash_id);
+    // console.log("option iD",option_id);
+    // console.log("HASG iD",hash_id);
     callback = callback || null;
-    custom_item_id = custom_item_id || null
-    option_id = option_id || null
+    custom_item_id = custom_item_id || null;
+    option_id = option_id || null;
      fabric.Image.fromURL(url, function (oImg) {
         oImg.scale(1).set({
             save_url: url,
@@ -334,8 +334,8 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
             minScaleLimit: 0.5,
             hasRotatingPoint: true
         });
-        console.log("ADASDAS");
-        console.log(option_id);
+        // console.log("ADASDAS");
+        // console.log(option_id);
         oImg.set('id', id);
         oImg.set('custom_item_id', custom_item_id);
         oImg.set('option_id', option_id);
@@ -345,7 +345,7 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
         if (!isBlank(oImg.cropped)){
         oImg.set('cropped', true)
         }
-        console.log(oImg);
+        // console.log(oImg);
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
         if (bp.rotation_offset >= 0) {
@@ -354,14 +354,14 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
         }
      callback(oImg);
     });
-    console.log("IDIDIDIDID: ",id);
-    console.log(option_id);
+    // console.log("IDIDIDIDID: ",id);
+    // console.log(option_id);
     obj = find_object(id);
-    console.log("qwerty");
-    console.log("size canva",canvas.getObjects().length);
-    console.log(obj);
-    console.log(canvas.getObjects());
-    if (!isBlank(obj)) {
+    // console.log("qwerty");
+    // console.log("size canva",canvas.getObjects().length);
+    // console.log(obj);
+    // console.log(canvas.getObjects());
+    if (!isBlank(obj) && false) {
         console.log('in');
         hash = generateHash(bp);
         console.log('in after');
@@ -483,27 +483,34 @@ function getSavedProducts(board_id) {
                 console.log(data);
                 // add the products to the board
                 $.each(data, function (index, board_product) {
-                    console.log(index);
-                    console.log(board_product);
+                    // console.log(index);
+                    // console.log(board_product);
                     if(board_product.product != undefined){
                         item_image = board_product.product.image_url
                         item_slug = board_product.product.slug
-                    }else{
+                    }else if(board_product.custom_item != undefined){
                         item_image = board_product.custom_item.image_url
+                        item_slug = ""
+                    }else{
+                        item_image = board_product.property_connect_image.image_url
                         item_slug = ""
                     }
                     // console.log(board_product.custom_item.id);
-                    // console.log('---')
-                    if (board_product.custom_item == undefined){
+                    // console.log('---');
+                    if (board_product.custom_item == undefined && board_product.option_id == undefined){
                         buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null,null, 'update', board_product.id,  createObjectImage);
-                    }else{
+                    }else if(board_product.custom_item != undefined && board_product.option_id == undefined){
                         buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id,null, 'update', board_product.id,  createObjectImage);
+                    }else{
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, board_product.option_id, 'update', board_product.id,  createObjectImage);
                     };
+                    console.log('_______________-');
                     canvas.renderAll();
                     canvas.discardActiveObject();
+                    console.log('a');
                 });
                 canvas.discardActiveObject();
-
+                console.log('b');
                 // detect which product has focus
                 canvas.on('mouse:down', function (options) {
                     if (options.target) {
@@ -512,8 +519,8 @@ function getSavedProducts(board_id) {
                         // pass the product id and board_id (optional) and BoardProduct id (optional)
                         if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
                             $.cookie("active_image", selectedImage.get('hash_id'));
-                            console.log('slugaaa');
-                            console.log(selectedImage.get('product_permalink'));
+                            // console.log('slugaaa');
+                            // console.log(selectedImage.get('product_permalink'));
                             if(selectedImage.get('product_permalink') != undefined && selectedImage.get('product_permalink').length > 0) {
                                 getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
                             }
@@ -525,7 +532,7 @@ function getSavedProducts(board_id) {
                         $.cookie("active_image", "");
                     }
                 });
-
+                console.log('c');
                 canvas.on({
                     'object:modified': function (e) {
 
@@ -544,6 +551,7 @@ function getSavedProducts(board_id) {
 }
 
 function createObjectImage(activeObject) {
+    console.log("ACO",activeObject.get('save_url'));
     new_image = activeObject.get('save_url');
     activeObject.getElement().src = new_image;
 
@@ -597,13 +605,13 @@ var filter = new fabric.Image.filters.Convolute({
 }
 
 function find_object(id){
-    console.log('fROM INSIDE');
-    console.log(id);
-    console.log("size canva",canvas.getObjects().length);
+    // console.log('fROM INSIDE');
+    // console.log(id);
+    // console.log("size canva",canvas.getObjects().length);
     $.each(canvas.getObjects(), function(index, obj){
-        console.log(obj.get('id'));
+        // console.log(obj.get('id'));
         if (obj.get('id') == id ){
-            console.log("======");
+            // console.log("======");
           return value;
         }
     });
@@ -623,6 +631,7 @@ function generateHash(object) {
     ha_id = "";
     action = "";
     if (object.get('action') === 'create') {
+        console.log( object.get('hash_id'));
         ha_id = object.get('hash_id');
         action = "create";
     } else {
@@ -635,8 +644,8 @@ function generateHash(object) {
     }else{
         image = null
     }
-    console.log("objekt");
-    console.log(object);
+    // console.log("objekt");
+    // console.log(object);
     hash[ha_id] = {
         action_board: action,
         board_id: board_id,
