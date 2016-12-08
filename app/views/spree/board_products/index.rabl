@@ -1,5 +1,5 @@
 collection @board_products
-attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x
+attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x, :option_id
 image_id = ""
 board_image = ""
 node :board_product do |board_product|
@@ -29,6 +29,11 @@ child :custom_item do
     attributes :name, :id
     node :image_url do |p|
         "data:image/jpeg;base64,#{Base64.encode64(open(p.image(:original).to_s).read)}"
+    end
+end
+child :option do
+    node :image_url do |p|
+        "data:image/jpeg;base64,#{Base64.encode64(open(p.property_image(:original).to_s).read)}"
     end
 end
 

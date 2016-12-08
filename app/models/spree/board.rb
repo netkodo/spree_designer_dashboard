@@ -408,6 +408,8 @@ class Spree::Board < ActiveRecord::Base
         product_image = bp.product.image_for_board(bp)
       elsif bp.custom_item.present?
         product_image = bp.custom_item.custom_image_for_board(bp)
+      elsif bp.option_id.present?
+        product_image = Spree::PropertyConnectImage.option_image_for_board(bp)
       else
         product_image =""
       end

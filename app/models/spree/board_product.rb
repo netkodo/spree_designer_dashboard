@@ -1,5 +1,6 @@
 class Spree::BoardProduct < ActiveRecord::Base
 
+  belongs_to :option, :class_name => "Spree::PropertyConnectImage", :primary_key => "property_image_file_name"
   belongs_to :board
   belongs_to :product
   belongs_to :custom_item
