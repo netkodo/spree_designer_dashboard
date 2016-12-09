@@ -314,11 +314,10 @@ fabric.Object.prototype.setCenterToOrigin = function () {
     });
 };
 
-function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, active, hash_id, callback ) {
-    // console.log("option iD",option_id);
-    // console.log("HASG iD",hash_id);
+function buildImageLayer(canvas, bp, url, slug, id, board_id, custom_item_id, option_id, active, hash_id, callback ) {
     callback = callback || null;
     custom_item_id = custom_item_id || null;
+    board_id = board_id || null;
     option_id = option_id || null;
      fabric.Image.fromURL(url, function (oImg) {
         oImg.scale(1).set({
@@ -334,9 +333,9 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
             minScaleLimit: 0.5,
             hasRotatingPoint: true
         });
-        // console.log("ADASDAS");
-        // console.log(option_id);
+
         oImg.set('id', id);
+        oImg.set('board_id', board_id);
         oImg.set('custom_item_id', custom_item_id);
         oImg.set('option_id', option_id);
         oImg.set('action', active);
@@ -345,7 +344,7 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
         if (!isBlank(oImg.cropped)){
         oImg.set('cropped', true)
         }
-        // console.log(oImg);
+
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
         if (bp.rotation_offset >= 0) {
@@ -354,17 +353,11 @@ function buildImageLayer(canvas, bp, url, slug, id, custom_item_id, option_id, a
         }
      callback(oImg);
     });
-    // console.log("IDIDIDIDID: ",id);
-    // console.log(option_id);
+
     obj = find_object(id);
-    // console.log("qwerty");
-    // console.log("size canva",canvas.getObjects().length);
-    // console.log(obj);
-    // console.log(canvas.getObjects());
+
     if (!isBlank(obj) && false) {
-        console.log('in');
         hash = generateHash(bp);
-        console.log('in after');
         $('.js-input-hash-product').text(JSON.stringify(hash));
     }
 
@@ -400,10 +393,9 @@ function addProductToBoard(event, ui) {
             slug = ui.helper.data('product-slug');
             canvas_id = ui.helper.data('canvas-id');
             custom_item_id = ui.helper.data('custom_item_id');
+            board_id = ui.helper.data('board_id');
             option_id = ui.helper.data('option_id');
-            console.log(ui.helper.data('custom_item_id'));
-            console.log(cloned.data('custom_item_id'));
-            console.log('++');
+
             board_product = {
                 board_id: $('#canvas').data('boardId'),
                 product_id: cloned.data('productId'),
@@ -415,16 +407,11 @@ function addProductToBoard(event, ui) {
                 height: cloned.height()
             };
 
-            hash_key = cloned.data('productId') || cloned.data('custom_item_id');
-            // if(cloned.data('productId') == undefined && cloned.data('custom_item_id') == undefined){
-            //     hash_key = cloned.data('option_id');
-            // }else{
-                hash_key = cloned.data('productId') || cloned.data('custom_item_id') || cloned.data('option_id');
-                hash_key += '-'+random;
-            // }
-            console.log(hash_key);
 
-            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'),cloned.data('option_id'), 'create', hash_key, createObjectImage);
+            hash_key = cloned.data('productId') || cloned.data('custom_item_id') || cloned.data('option_id');
+            hash_key += '-'+random;
+
+            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'), cloned.data('board_id'), cloned.data('custom_item_id'),cloned.data('option_id'), 'create', hash_key, createObjectImage);
             if(cloned.data('productId') != undefined){
                 setTimeout((function () {
                     if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
@@ -438,6 +425,13 @@ function addProductToBoard(event, ui) {
                         }
                     }
                 }), 1000)
+            }else{
+                setTimeout((function () {
+                    board_id = canvas.getActiveObject().get('board_id');
+                    id = canvas.getActiveObject().get('id');
+                    $('#board-product-preview').html('<div class="scout-remove-product-in-board"><a id="remove-product-button" href="javascript:void(0);" data-board-product-id=' + id + ' data-board-id=' + board_id + ' class="btn btn-xs btn-danger">Remove from Room</a></div>');
+                    removeOptionOrCustomItem();
+                }),1000)
             }
 
         }
@@ -480,11 +474,10 @@ function getSavedProducts(board_id) {
                 xhr.setRequestHeader("Accept", "application/json")
             },
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 // add the products to the board
                 $.each(data, function (index, board_product) {
-                    // console.log(index);
-                    // console.log(board_product);
+
                     if(board_product.product != undefined){
                         item_image = board_product.product.image_url
                         item_slug = board_product.product.slug
@@ -495,14 +488,13 @@ function getSavedProducts(board_id) {
                         item_image = board_product.property_connect_image.image_url
                         item_slug = ""
                     }
-                    // console.log(board_product.custom_item.id);
-                    // console.log('---');
+
                     if (board_product.custom_item == undefined && board_product.option_id == undefined){
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null,null, 'update', board_product.id,  createObjectImage);
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, board_product.board_id, null,null, 'update', board_product.id,  createObjectImage);
                     }else if(board_product.custom_item != undefined && board_product.option_id == undefined){
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id,null, 'update', board_product.id,  createObjectImage);
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, board_product.board_id,board_product.custom_item.id,null, 'update', board_product.id,  createObjectImage);
                     }else{
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, board_product.option_id, 'update', board_product.id,  createObjectImage);
+                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, board_product.board_id, null, board_product.option_id, 'update', board_product.id,  createObjectImage);
                     };
                     canvas.renderAll();
                     canvas.discardActiveObject();
@@ -517,10 +509,14 @@ function getSavedProducts(board_id) {
                         // pass the product id and board_id (optional) and BoardProduct id (optional)
                         if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
                             $.cookie("active_image", selectedImage.get('hash_id'));
-                            // console.log('slugaaa');
-                            // console.log(selectedImage.get('product_permalink'));
+
                             if(selectedImage.get('product_permalink') != undefined && selectedImage.get('product_permalink').length > 0) {
                                 getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
+                            }else{
+                                board_id = canvas.getActiveObject().get('board_id');
+                                id = canvas.getActiveObject().get('id');
+                                $('#board-product-preview').html('<div class="scout-remove-product-in-board"><a id="remove-product-button" href="javascript:void(0);" data-board-product-id='+id+' data-board-id='+board_id+' class="btn btn-xs btn-danger">Remove from Room</a></div>');
+                                removeOptionOrCustomItem();
                             }
                         }
                     }
@@ -548,8 +544,28 @@ function getSavedProducts(board_id) {
     );
 }
 
+function removeOptionOrCustomItem(){
+    $('#remove-product-button').click(function() {
+
+        if(board_id != undefined && board_product_id != undefined){
+            var board_product_id = $(this).data('boardProductId');
+            var board_id = $(this).data('boardId');
+            var url = '/rooms/'+board_id+'/board_products/'+board_product_id;
+            $.post(url, {_method:'delete'}, null, "script");
+        }else{
+            var board_product_id = canvas.getActiveObject().get('hash_id');
+        }
+        canvas.getActiveObject().remove();
+        $('#board-product-preview').html('<div style="text-align: center; padding-top: 20px;">The product was removed from your room.</div>');
+
+        hash_string = $('.js-input-hash-product').text();
+        hash = JSON.parse(hash_string);
+        delete hash[board_product_id];
+        $('.js-input-hash-product').text(JSON.stringify(hash));
+    });
+};
+
 function createObjectImage(activeObject) {
-    // console.log("ACO",activeObject.get('save_url'));
     new_image = activeObject.get('save_url');
     activeObject.getElement().src = new_image;
 
@@ -575,6 +591,7 @@ function createObjectImage(activeObject) {
         theImage.set('stroke', '#fff');
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
         theImage.set('option_id',activeObject.get('option_id'));
+        theImage.set('board_id',activeObject.get('board_id'));
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
         };
@@ -603,13 +620,8 @@ var filter = new fabric.Image.filters.Convolute({
 }
 
 function find_object(id){
-    // console.log('fROM INSIDE');
-    // console.log(id);
-    // console.log("size canva",canvas.getObjects().length);
     $.each(canvas.getObjects(), function(index, obj){
-        // console.log(obj.get('id'));
         if (obj.get('id') == id ){
-            // console.log("======");
           return value;
         }
     });
@@ -619,7 +631,6 @@ function generateHash(object) {
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
 
-    console.log(value.length)
     if (value.length > 0) {
         hash = JSON.parse(value)
     } else {
@@ -629,7 +640,6 @@ function generateHash(object) {
     ha_id = "";
     action = "";
     if (object.get('action') === 'create') {
-        console.log( object.get('hash_id'));
         ha_id = object.get('hash_id');
         action = "create";
     } else {
@@ -642,8 +652,7 @@ function generateHash(object) {
     }else{
         image = null
     }
-    // console.log("objekt");
-    // console.log(object);
+
     hash[ha_id] = {
         action_board: action,
         board_id: board_id,

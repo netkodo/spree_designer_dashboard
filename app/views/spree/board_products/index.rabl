@@ -1,5 +1,5 @@
 collection @board_products
-attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x, :option_id
+attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x, :option_id, :board_id
 image_id = ""
 board_image = ""
 node :board_product do |board_product|
