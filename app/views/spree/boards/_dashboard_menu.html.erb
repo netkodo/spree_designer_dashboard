@@ -25,7 +25,7 @@
 	<% end %>
   <li class="<%="active" if selected == "store_credit"%>"><a href="/my_store_credit"><i class="fa fa-money"></i> &nbsp; Store Credit</a></li>
   <li class="<%="active" if selected == "questions_and_answers"%>"><a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp; (<span class="question-pending"><%= @questions_amount %> pending</span>)</a></li>
-  <li class="<%="active" if selected == "portfolio"%>"><a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>
+  <!--<li class="<%#="active" if selected == "portfolio"%>"><a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>-->
   <li class="<%="active" if selected == "projects"%>"><a href="/projects"><i class="fa fa-list-alt"></i>&nbsp; Projects </a></li>
   <li class="disabled <%="active" if selected == "payment_solutions"%>"><a href="/payment_solutions"><i class="fa fa-usd"></i>&nbsp; Payment Solutions </a></li>
   <li class="disabled <%="active" if selected == "notifications"%>"><a href="/notifications"><i class="fa fa-envelope-o"></i>&nbsp; Notifications </a></li>

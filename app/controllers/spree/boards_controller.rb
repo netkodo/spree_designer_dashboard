@@ -479,6 +479,8 @@ class Spree::BoardsController < Spree::StoreController
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
 
+      spree_current_user.update_column(:popup_room, false)
+
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])

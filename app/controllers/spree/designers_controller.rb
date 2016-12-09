@@ -56,6 +56,8 @@ class Spree::DesignersController < Spree::StoreController
 
     respond_to do |format|
       if @user.update_attributes(params[:user].permit!)
+        spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
+        session[:popup_portfolio] = true if spree_current_user.popup_portfolio
         format.html { redirect_to designer_dashboard_path(format: 'html'), :notice => 'Your profile was successfully updated.', location: url_for( designer_dashboard_path) }
         format.json { render json: {:location => designer_dashboard_path}, status: :ok }
       else

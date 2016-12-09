@@ -279,6 +279,8 @@ class Spree::PortfoliosController < Spree::StoreController
 
     respond_to do |format|
       if @portfolio.save
+        spree_current_user.update_column(:popup_portfolio, false) if spree_current_user.popup_portfolio
+        session[:popup_room] = true if spree_current_user.popup_room
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio, status: :ok}
       else
