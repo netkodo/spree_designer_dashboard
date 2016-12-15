@@ -374,6 +374,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def product_search
+    Spree::SearchKey.create(key: params[:keywords].strip, user_id: spree_current_user.id) if params[:keywords].present? and spree_current_user.present?
     params.merge(:per_page => 100)
     if params[:s].present?
       w = params[:s].each do |key, val|
