@@ -25,7 +25,7 @@ $ ->
 
   changeTableView = (type) ->
     if type == true
-      $(".table.table-board-listing thead").html("<th class='status'>&nbsp;</th><th colspan='2'>Rooms</th>")
+      $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
       $(".table.table-board-listing colgroup").html(
         "   <col style='width: 5%' />
             <col style='width: 20%' />
@@ -33,9 +33,9 @@ $ ->
       )
       $(".designer_commission_style").addClass('hidden')
     else
-      $(".table.table-board-listing thead").html(
+      $(".table.table-board-listing thead tr").html(
         "     <th class='status'>&nbsp;</th>
-              <th colspan='2'>Rooms</th>
+              <th colspan='2'></th>
               <th class='align-center'># Products</th>
               <th class='align-center'># Views</th>
               <th class='align-center'>Revenue</th>"
@@ -67,6 +67,9 @@ $ ->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
       changeTableView($(@).data('private'))
+      $(".btn-tab.js-get-room-type").each ->
+        $(@).removeClass('active')
+      $(@).addClass('active')
   ,'.js-get-room-type'
 
   $(document).on

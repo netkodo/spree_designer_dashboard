@@ -142,7 +142,7 @@ class Spree::BoardsController < Spree::StoreController
       @boards = spree_current_user.boards.where(removal: false)
     elsif spree_current_user.designer_registrations.first.status == "to the trade designer"
       @designer_type = "to the trade designer"
-      @boards = spree_current_user.boards.where(removal: false,private: true)
+      @boards = spree_current_user.boards.where(removal: false,private: false)
     end
   end
 
