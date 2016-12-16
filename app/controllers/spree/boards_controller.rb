@@ -382,6 +382,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def product_search
+    Spree::SearchKey.create(key: params[:keywords].strip, user_id: spree_current_user.id) if params[:keywords].present? and spree_current_user.present?
     params.merge(:per_page => 100)
     if params[:s].present?
       w = params[:s].each do |key, val|
@@ -485,6 +486,7 @@ class Spree::BoardsController < Spree::StoreController
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
         portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
+        portfolio.room.portfolios.update_all(board_id: @board.id)
       else
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
       end
@@ -552,8 +554,9 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
-    @portfolios = spree_current_user.portfolios
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
+    @portfolios = spree_current_user.portfolios.select{|x| !x.board_id.present?}
+    @portfolios << @board.portfolio if @board.portfolio.present?
 
     @category = []
     @subcategory = []
