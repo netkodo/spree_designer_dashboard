@@ -22,15 +22,15 @@
 	<div class="col-md-7">	
 		<div class="board-details">
 			<div class="board-section board-image-section text-center">
-        <% if @portfolio.board.portfolio.present? %>
-          <%= image_tag @portfolio.board.portfolio.portfolio_image.url(:large), class: 'img-board' %>
+        <% if @portfolio.board.portfolios.present? %>
+          <%= image_tag @portfolio.portfolio_image.url(:large), class: 'img-board' %>
         <% else %>
           <%= board_image(@portfolio.board,:original)%>
         <% end %>
 			</div>
-      <% if @portfolio.board.portfolio.present? %>
+      <% if @portfolio.board.portfolios.present? %>
         <div class="large-image col-md-6 large-image-margin">
-          <a class="js-show-large-image-board" data-orginal-image=<%= @portfolio.board.portfolio.portfolio_image.url(:original) %> > View large </a>
+          <a class="js-show-large-image-board" data-orginal-image=<%= @portfolio.portfolio_image.url(:original) %> > View large </a>
         </div>
 			<% end %>
 			<% if false %>
@@ -152,7 +152,7 @@
 
         <%
           media,description = ""
-          media = @portfolio.board.portfolio.present? ? @portfolio.board.portfolio.portfolio_image.url.split("?")[0].to_s : (@portfolio.board.board_image.attachment.url.split("?")[0].to_s if @portfolio.board.board_image.present?)
+          media = @portfolio.board.portfolios.present? ? @portfolio.portfolio_image.url.split("?")[0].to_s : (@portfolio.board.board_image.attachment.url.split("?")[0].to_s if @portfolio.board.board_image.present?)
           description = strip_tags(@portfolio.board.description) if @portfolio.board.description.present?
           board_name = @portfolio.board.name if @portfolio.board.name.present?
         %>
@@ -281,7 +281,7 @@
 
       <div class="board-listing col-md-6 row">
         <div class="board-image">
-          <% if @portfolio.board.portfolio.present? %>
+          <% if @portfolio.board.portfolios.present? %>
             <%=link_to board_image(@portfolio.board,:large), room_path(@portfolio.board)%>
           <% end %>
         </div>
