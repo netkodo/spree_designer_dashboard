@@ -597,7 +597,7 @@ class Spree::Board < ActiveRecord::Base
   def calculate_tax
     designer=self.designer.designer_registrations.first
     if designer.present?
-      dest_state = Spree::State.find(self.project.state_id)
+      # dest_state = Spree::State.find(self.project.state_id)
       origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
       destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: self.project.state)
 

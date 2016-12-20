@@ -7,6 +7,9 @@
       </div>
       <div class="modal-body">
         <div id="modal-location-body">
+          <div class="row text-right">
+            Time spent: <%= "%03dh %02dm %02ds" % [@t/3600%24, @t/60%60, @t%60] %>
+          </div>
           <% if @history.present? %>
             <% @history.each do |h| %>
               <div class="row">

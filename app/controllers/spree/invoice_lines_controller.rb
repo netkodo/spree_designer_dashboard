@@ -58,15 +58,17 @@ class Spree::InvoiceLinesController < Spree::StoreController
     content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
 
     pdf = WickedPdf.new.pdf_from_string(content)
-    save_path = Rails.root.join('public','filename.pdf')
+    save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
     File.open(save_path, 'wb') do |file|
       file << pdf
     end
 
-    board.send_email_with_invoice(designer.email,designer.full_name,pdf)
+    # board.send_email_with_invoice(designer.email,designer.full_name,pdf)
+
+    pdf_file = File.open(save_path,"r")
 
     respond_to do |format|
-      if true
+      if Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
         Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
         format.json {render json: {:message => "ok"}, status: :ok}
       else

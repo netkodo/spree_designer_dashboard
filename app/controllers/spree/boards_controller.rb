@@ -137,12 +137,13 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
+    @projects = Spree::Project.where(user_id: spree_current_user.id).order("project_name asc")
     if spree_current_user.designer_registrations.first.status == "room designer"
       @designer_type = "room designer"
       @boards = spree_current_user.boards.where(removal: false)
     elsif spree_current_user.designer_registrations.first.status == "to the trade designer"
       @designer_type = "to the trade designer"
-      @boards = spree_current_user.boards.where(removal: false,private: true)
+      @boards = spree_current_user.boards.where(removal: false,private: false)
     end
   end
 
@@ -479,6 +480,8 @@ class Spree::BoardsController < Spree::StoreController
     @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
+      time_spent=DateTime.now.to_time-@board.time_start.to_time
+      @board.update_column(:time_spent, time_spent)
 
       spree_current_user.update_column(:popup_room, false)
 
@@ -554,6 +557,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
+    @board.update_column(:time_start, DateTime.now)
+    @portfolios = spree_current_user.portfolios
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
     @portfolios = spree_current_user.portfolios.select{|x| !x.board_id.present?}
     @portfolios << @board.portfolio if @board.portfolio.present?

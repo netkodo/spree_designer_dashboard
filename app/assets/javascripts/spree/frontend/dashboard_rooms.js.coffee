@@ -23,9 +23,23 @@ $ ->
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
 
+  changeMenu = (type) ->
+    if type == true
+      $('.menu-public').addClass('hidden')
+      $('.menu-private').removeClass('hidden')
+    else
+      $('.menu-public').removeClass('hidden')
+      $('.menu-private').addClass('hidden')
+
+  hideNotSelectedProjects = (type,activeProject) ->
+    if type == true
+      $('.table-board-listing tbody .true').each ->
+        if !$(@).hasClass("project#{activeProject}")
+          $(@).addClass('hidden')
+
   changeTableView = (type) ->
     if type == true
-      $(".table.table-board-listing thead").html("<th class='status'>&nbsp;</th><th colspan='2'>Rooms</th>")
+      $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
       $(".table.table-board-listing colgroup").html(
         "   <col style='width: 5%' />
             <col style='width: 20%' />
@@ -33,9 +47,9 @@ $ ->
       )
       $(".designer_commission_style").addClass('hidden')
     else
-      $(".table.table-board-listing thead").html(
+      $(".table.table-board-listing thead tr").html(
         "     <th class='status'>&nbsp;</th>
-              <th colspan='2'>Rooms</th>
+              <th colspan='2'></th>
               <th class='align-center'># Products</th>
               <th class='align-center'># Views</th>
               <th class='align-center'>Revenue</th>"
@@ -67,6 +81,11 @@ $ ->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
       changeTableView($(@).data('private'))
+      changeMenu($(@).data('private'))
+      hideNotSelectedProjects($(@).data('private'),$("#project_select").val())
+      $(".btn-tab.js-get-room-type").each ->
+        $(@).removeClass('active')
+      $(@).addClass('active')
   ,'.js-get-room-type'
 
   $(document).on
@@ -190,6 +209,27 @@ $ ->
 
   $(document).on
     click: (e) ->
+      $("#send-contract").modal()
+  ,".js-send-contract"
+
+  $(document).on
+    click: (e) ->
+      $("#modal-location-body .confirmation").addClass("hidden")
+      $("#modal-location-body .success-sent").removeClass("hidden")
+      setTimeout () ->
+        $("#send-contract").modal('hide')
+        $("#modal-location-body .confirmation").removeClass("hidden")
+        $("#modal-location-body .success-sent").addClass("hidden")
+      ,'1000'
+  ,".js-send-contract-confirmation"
+
+  $(document).on
+    click: (e) ->
+      $("#send-contract").modal('hide')
+  ,".close-modal"
+
+  $(document).on
+    click: (e) ->
       my_this = $(@)
       e.preventDefault()
       $.ajax
@@ -210,9 +250,24 @@ $ ->
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
       $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
-      $(".table.table-board-listing tbody.project tr.true.project#{$(@).val()}").removeClass('hidden')
-      $(".table.table-board-listing tbody.project tr.true").not(".project#{$(@).val()}").addClass('hidden')
+      $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
+      $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
+      $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
   ,'#project_select'
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).data('url')
+        data: {project: {status: $(@).data('status')}}
+        success: (response) ->
+          console.log 'success'
+        error: (repsonse) ->
+          console.log repsonse
+  ,'.js-close-open-project'
 
   $(document).on
     change: (e) ->
