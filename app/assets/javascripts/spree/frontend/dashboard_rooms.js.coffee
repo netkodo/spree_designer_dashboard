@@ -229,9 +229,24 @@ $ ->
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
       $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+      $('.close-project').data('url',"/projects/#{$(@).val()}/close")
       $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
       $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
   ,'#project_select'
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).data('url')
+        data: {project: {status: $(@).data('status')}}
+        success: (response) ->
+          console.log 'success'
+        error: (repsonse) ->
+          console.log repsonse
+  ,'.js-close-open-project'
 
   $(document).on
     change: (e) ->

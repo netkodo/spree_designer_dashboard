@@ -40,7 +40,7 @@
                       <%= link_to "Project Details", edit_project_path(@projects.first.id), :class => "btn btn-primary edit-project" %>
                     </div>
                     <div class="col-md-3 text-center">
-                      <%= link_to "End Project", "#", :class => "btn btn-primary edit-project" %>
+                      <%= link_to "End Project", "#", data: {url: close_open_project_path(@projects.first.id), status: "close"}, :class => "btn btn-primary close-project js-close-open-project" %>
                     </div>
                   </div>
                   <div class="row">
