@@ -20,7 +20,7 @@ class Spree::Board < ActiveRecord::Base
 
   has_one :board_image, as: :viewable, order: :position, dependent: :destroy, class_name: "Spree::BoardImage"
   has_one :conversation, :class_name => "Mailboxer::Conversation"
-  has_many :portfolios, dependent: :destroy
+  has_one :portfolio, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
   has_many :invoice_lines
