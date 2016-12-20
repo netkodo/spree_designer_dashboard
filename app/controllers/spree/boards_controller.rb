@@ -479,6 +479,8 @@ class Spree::BoardsController < Spree::StoreController
     @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
+      time_spent=DateTime.now.to_time-@board.time_start.to_time
+      @board.update_column(:time_spent, time_spent)
 
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
@@ -551,6 +553,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
+    @board.update_column(:time_start, DateTime.now)
     @portfolios = spree_current_user.portfolios
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 

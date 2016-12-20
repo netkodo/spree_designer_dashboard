@@ -2,6 +2,7 @@ class Spree::BoardHistoryController < Spree::StoreController
 
   def board_history
     @history = Spree::BoardHistory.where(board_id: params[:board_id],user_id: params[:user_id]).order("created_at desc")
+    @t = Spree::Board.find(params[:board_id]).time_spent #time_spent on specific room
     render "board_history", layout: false
   end
 
