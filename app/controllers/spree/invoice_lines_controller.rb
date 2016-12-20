@@ -58,7 +58,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
     content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
 
     pdf = WickedPdf.new.pdf_from_string(content)
-    save_path = Rails.root.join('public','filename.pdf')
+    save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
     File.open(save_path, 'wb') do |file|
       file << pdf
     end
