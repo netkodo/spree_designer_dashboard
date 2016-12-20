@@ -53,8 +53,12 @@
                 <h1>PROJECT DETAILS</h1>
               </div>
               <%= render :partial => "step4", locals: {f: f, u: update} %>
+              <%= render :partial => "project_history" %>
+              <div class="row text-center">
+                <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+              </div>
               <div class="form-actions text-center">
-                <%= f.submit "UPDATE CONTRACT", :class => 'btn btn-primary btn-no-radius' %>
+                <%= f.submit "SAVE", :class => 'btn btn-primary btn-no-radius' %>
               </div>
             </div>
 
@@ -65,3 +69,5 @@
     <% end %>
   </div>
 </div>
+
+<%= render partial: "send_contract_modal" %>

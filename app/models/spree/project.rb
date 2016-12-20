@@ -1,5 +1,6 @@
 class Spree::Project < ActiveRecord::Base
   has_many :boards
+  has_many :project_histories
 
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'

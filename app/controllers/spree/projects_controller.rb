@@ -20,6 +20,7 @@ class Spree::ProjectsController < Spree::StoreController
 
   def edit
     @project = Spree::Project.find(params[:id])
+    @project_history = @project.project_histories
   end
 
   def update

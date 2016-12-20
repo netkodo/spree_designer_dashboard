@@ -209,6 +209,27 @@ $ ->
 
   $(document).on
     click: (e) ->
+      $("#send-contract").modal()
+  ,".js-send-contract"
+
+  $(document).on
+    click: (e) ->
+      $("#modal-location-body .confirmation").addClass("hidden")
+      $("#modal-location-body .success-sent").removeClass("hidden")
+      setTimeout () ->
+        $("#send-contract").modal('hide')
+        $("#modal-location-body .confirmation").removeClass("hidden")
+        $("#modal-location-body .success-sent").addClass("hidden")
+      ,'1000'
+  ,".js-send-contract-confirmation"
+
+  $(document).on
+    click: (e) ->
+      $("#send-contract").modal('hide')
+  ,".close-modal"
+
+  $(document).on
+    click: (e) ->
       my_this = $(@)
       e.preventDefault()
       $.ajax
