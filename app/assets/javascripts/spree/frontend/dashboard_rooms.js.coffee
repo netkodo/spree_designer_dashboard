@@ -23,6 +23,20 @@ $ ->
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
 
+  changeMenu = (type) ->
+    if type == true
+      $('.menu-public').addClass('hidden')
+      $('.menu-private').removeClass('hidden')
+    else
+      $('.menu-public').removeClass('hidden')
+      $('.menu-private').addClass('hidden')
+
+  hideNotSelectedProjects = (type,activeProject) ->
+    if type == true
+      $('.table-board-listing tbody .true').each ->
+        if !$(@).hasClass("project#{activeProject}")
+          $(@).addClass('hidden')
+
   changeTableView = (type) ->
     if type == true
       $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
@@ -67,6 +81,8 @@ $ ->
       e.preventDefault()
       getRoomsDependsOnType($(@).data('private'))
       changeTableView($(@).data('private'))
+      changeMenu($(@).data('private'))
+      hideNotSelectedProjects($(@).data('private'),$("#project_select").val())
       $(".btn-tab.js-get-room-type").each ->
         $(@).removeClass('active')
       $(@).addClass('active')
@@ -213,8 +229,8 @@ $ ->
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
       $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
-      $(".table.table-board-listing tbody.project tr.true.project#{$(@).val()}").removeClass('hidden')
-      $(".table.table-board-listing tbody.project tr.true").not(".project#{$(@).val()}").addClass('hidden')
+      $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
+      $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
   ,'#project_select'
 
   $(document).on
