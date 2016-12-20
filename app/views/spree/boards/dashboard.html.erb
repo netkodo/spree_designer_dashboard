@@ -54,7 +54,7 @@
           </thead>
           <tbody class="dashboard">
           <% @boards.each do |board|%>
-              <tr id="<%= board.id %>" class="<%= !board.private %> <%= board.private ? '' : 'hidden' %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %>">
+              <tr id="<%= board.id %>" class="<%= board.private %> <%= board.private ? 'hidden' : '' %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
                   <% if board.generated %>
@@ -93,7 +93,7 @@
 
                   </div>
                 </td>
-                <% if board.private %>
+                <% unless board.private %>
                   <td class="stat align-center"><%= board.board_products.size %></td>
                   <td class="stat align-center"><%= board.impressionist_count %></td>
                   <td class="stat align-center"><%= board.board_commission.to_s %></td>
