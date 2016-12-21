@@ -480,7 +480,8 @@ class Spree::BoardsController < Spree::StoreController
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
       time_spent=DateTime.now.to_time-@board.time_start.to_time
-      @board.update_column(:time_spent, time_spent)
+      current_spent=@board.time_spent
+      @board.update_column(:time_spent, time_spent+current_spent)
 
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
