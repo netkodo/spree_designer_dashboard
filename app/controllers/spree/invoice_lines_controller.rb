@@ -71,6 +71,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
     respond_to do |format|
       if Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
         Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
+        File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {:message => "ok"}, status: :ok}
       else
         format.json {render json: {:message => "error"},status: :unprocessable_entity}
