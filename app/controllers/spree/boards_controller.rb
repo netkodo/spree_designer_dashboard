@@ -476,7 +476,7 @@ class Spree::BoardsController < Spree::StoreController
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
         portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
-        portfolio.room.portfolios.update_all(board_id: @board.id)
+        portfolio.room.portfolios.where.not(id: params[:is_assigned_to_portfolio]).update_all(board_id: @board.id, updated_at: DateTime.now+20.seconds)
       else
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
       end
@@ -544,9 +544,10 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
-    @portfolio_id = @board.portfolio.id if @board.portfolio.present?
+    @portfolio_id = @board.portfolios.order(:updated_at).first.id if @board.portfolios.present?
     @portfolios = spree_current_user.portfolios.select{|x| !x.board_id.present?}
-    @portfolios << @board.portfolio if @board.portfolio.present?
+    # @portfolios << @board.portfolio if @board.portfolio.present?
+    @board.portfolios.map{|x| @portfolios << x}
 
     @category = []
     @subcategory = []
