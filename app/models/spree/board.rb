@@ -601,7 +601,7 @@ class Spree::Board < ActiveRecord::Base
       origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
       destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: self.project.state)
 
-      transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
+      transaction = ::TaxCloud::Transaction.new(customer_id: designer.user_id, order_id: self.project.id, cart_id: self.project.id,origin: origin, destination: destination)
       self.board_products.each_with_index do |item,index|
         transaction.cart_items << get_item_data_for_tax(item,index)
       end
