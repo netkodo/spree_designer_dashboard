@@ -621,7 +621,7 @@ class Spree::Board < ActiveRecord::Base
     )
   end
 
-  def send_email_with_invoice(to_addr,to_name,pdf)
+  def send_email_with_invoice(from_addr,to_addr,to_name,pdf)
     html_content = ''
     m = Mandrill::API.new(MANDRILL_KEY)
 
@@ -650,7 +650,7 @@ class Spree::Board < ActiveRecord::Base
                 :name => to_name
             }
         ],
-        :from_email => to_addr,
+        :from_email => from_addr,
         :track_opens => true,
         :track_clicks => true,
         :url_strip_qs => false,

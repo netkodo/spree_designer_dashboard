@@ -63,7 +63,8 @@ class Spree::InvoiceLinesController < Spree::StoreController
       file << pdf
     end
 
-    # board.send_email_with_invoice(designer.email,designer.full_name,pdf)
+    from_addr = "designer@scoutandnimble.com"
+    board.send_email_with_invoice(from_addr,designer.email,designer.full_name,pdf)
 
     pdf_file = File.open(save_path,"r")
 
