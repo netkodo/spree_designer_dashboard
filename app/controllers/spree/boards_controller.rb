@@ -628,9 +628,9 @@ class Spree::BoardsController < Spree::StoreController
     @category_find = Spree::Taxonomy.where(:name => 'Department').first.root.children
     @category_find.map do |tax|
       if tab.present?
-        if tab.include?(tax.name)
+        # if tab.include?(tax.name)
           @category << [tax.name, tax.id]
-        end
+        # end
       else
         @category << [tax.name, tax.id]
       end
