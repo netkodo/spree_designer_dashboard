@@ -489,7 +489,7 @@ class Spree::BoardsController < Spree::StoreController
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
-        portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
+        @board.private ? portfolio.update(board_id: @board.id) : portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
         portfolio.room.portfolios.where.not(id: params[:is_assigned_to_portfolio]).update_all(board_id: @board.id, updated_at: DateTime.now+20.seconds)
       else
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
