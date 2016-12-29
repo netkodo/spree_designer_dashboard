@@ -9,7 +9,7 @@ module Spree
                       default_style: :primary,
                       url: '/spree/board_image/:id/:style/:basename.:extension',
                       path: 'board_image/:id/:style/:basename.:extension',
-                      convert_options: { all: '-strip -auto-orient' }
+                      convert_options: { all: '-strip -auto-orient -quality 80' }
     validates_attachment_presence :attachment
     validate :no_attachment_errors
 
