@@ -55,7 +55,7 @@
 		<% else %>
 			<style>
 				.ch-img-<%=designer.id %> { 
-				    background-image: url(<%=designer.user_images.first.attachment(:primary)%>);
+				    background-image: url('/assets/spinner.gif');
                     /*background-repeat: no-repeat;*/
                     /*background-position: center;*/
                     /*background-size: 220px 220px ;*/
@@ -63,7 +63,7 @@
 			</style>
 			<li style="margin-top: 60px;">
 			
-		        <div class="ch-item ch-img-<%=designer.id %>">
+		        <div class="ch-item ch-img-<%=designer.id %> lazyload" data-original="<%=designer.user_images.first.attachment(:primary)%>">
 		          <a href="/<%=designer.username%>" >
 		             <div class="ch-info">
 		                <h3><%= designer.company_name %></h3>
