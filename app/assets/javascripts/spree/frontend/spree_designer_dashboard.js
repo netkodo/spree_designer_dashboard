@@ -22,6 +22,7 @@ function initializeProductSearchForm() {
 
         /* Put the results in a div */
         posting.done(function (data) {
+            scrollPagination();
             $('#products-preloader').hide();
             url = $('.solr-filter-products').data('search-url');
             keywords = $('#product_keywords').val();
