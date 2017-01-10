@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-3">
+        <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+    </div>
+
+    <div class="col-md-9">
+
+      <div class="row">
+        <h1>Edit Contract</h1>
+      </div>
+      <div class="row">
+        <%= form_for @contract, url: {action: 'update'}, format: :json, html: {id: 'js-update-contract'} do |f| %>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :designer_name %>
+                <%= f.text_field :designer_name, class: 'form-control' %>
+              </div>
+
+              <div class="form-group">
+                <%= label_tag :designer_sign %>
+                <%= text_field_tag :signature_designer_code,"",name: "contract[signature_designer_code]", class: 'form-control hidden' %>
+                <div id="signature-designer" class="signature"></div>
+                <div class="signature-designer-clear btn btn-primary">CLEAR</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= label_tag :client_name %>
+                <%= f.text_field :client_name, class: 'form-control' %>
+              </div>
+
+              <!--<div class="form-group">-->
+              <%#= label_tag :client_sign %>
+              <%#= text_field_tag :signature_client_code,"", name: "contract[signature_client_code]", class: 'form-control hidden' %>
+              <!--<div id="signature-client" class="signature"></div>-->
+              <!--<div class="signature-client-clear btn btn-primary">CLEAR</div>-->
+              <!--</div>-->
+            </div>
+
+
+            <div class="col-md-12 text-right">
+              <%= link_to "Cancel",projects_path, class: "btn btn-default" %>
+              <%= f.submit "Update", class: "btn btn-primary" %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+</div>
+
+<div id="board-history-modal-handler"></div>

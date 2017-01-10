@@ -57,8 +57,13 @@ Spree::Core::Engine.routes.draw do
   resources :projects do
     member do
       post :close_open, defaults: {format: 'json'}
+      # get :contract
+      resources :contracts, param: :cid
     end
   end
+  # match 'projects/:pid/contracts/:cid' => "contracts#show"
+  get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
+  patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
 
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}

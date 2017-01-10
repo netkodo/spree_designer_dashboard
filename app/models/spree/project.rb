@@ -1,6 +1,7 @@
 class Spree::Project < ActiveRecord::Base
   has_many :boards, dependent: :destroy
   has_many :project_histories, dependent: :destroy
+  has_one :contract, dependent: :destroy
 
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'
