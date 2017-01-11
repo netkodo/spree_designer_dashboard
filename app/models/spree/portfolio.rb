@@ -16,7 +16,7 @@ class Spree::Portfolio < ActiveRecord::Base
                     styles: { small: '90x90>',carousel: '200x200>', medium: '400x300#', large: '600x600>' },
                     default_style: :medium,
                     path: 'portfolio_images/:id/:style/:basename.:extension',
-                    convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
+                    convert_options: { all: '-strip -auto-orient -colorspace sRGB -quality 80' }
 
   validates_attachment_presence :portfolio_image, only: [:create_portfolio]
 
