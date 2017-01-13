@@ -21,13 +21,6 @@
               <%= f.label :designer_name %>
               <%= f.text_field :designer_name, class: 'form-control' %>
             </div>
-
-            <div class="form-group">
-              <%= label_tag :designer_sign %>
-              <%= text_field_tag :signature_designer_code,"",name: "contract[signature_designer_code]", class: 'form-control hidden' %>
-              <div id="signature-designer" class="signature"></div>
-              <div class="signature-designer-clear btn btn-primary">CLEAR</div>
-            </div>
           </div>
 
           <div class="col-md-6">
@@ -35,20 +28,13 @@
               <%= label_tag :client_name %>
               <%= f.text_field :client_name, class: 'form-control' %>
             </div>
-
-            <!--<div class="form-group">-->
-              <%#= label_tag :client_sign %>
-              <%#= text_field_tag :signature_client_code,"", name: "contract[signature_client_code]", class: 'form-control hidden' %>
-              <!--<div id="signature-client" class="signature"></div>-->
-              <!--<div class="signature-client-clear btn btn-primary">CLEAR</div>-->
-            <!--</div>-->
           </div>
 
 
           <div class="col-md-12 text-right">
             <%= link_to "Cancel",projects_path, class: "btn btn-default" %>
-            <%= f.submit "Save", class: "btn btn-primary", value: false %>
-            <%= f.submit "Save & Send", class: "btn btn-primary", value: true %>
+            <%= f.button "Save", type: :submit, class: "btn btn-primary", value: false %>
+            <%= f.button "Save & Send", type: :submit, class: "btn btn-primary", value: true %>
           </div>
         <% end %>
       </div>

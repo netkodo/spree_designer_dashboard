@@ -24,37 +24,31 @@ $ ->
     dataType: 'json'
     method: 'post'
     beforeSend: () ->
-      console.log 'b4send'
+      $("form[id*='-contract'] .btn").addClass('disabled')
     success: (response) ->
-      console.log 'success'
-      console.log response
       window.location.href = response.location
     error: (response) ->
-      console.log 'error'
-      console.log response
+      $("form[id*='-contract'] .btn").removeClass('disabled')
+      console.log response.message
 
   $('#js-sign-contract').ajaxForm
     dataType: 'json'
     method: 'post'
     beforeSend: () ->
-      console.log 'b4send'
+      $("form[id*='-contract'] .btn").addClass('disabled')
     success: (response) ->
-      console.log 'success'
-      console.log response
       window.location.href = response.location
     error: (response) ->
-      console.log 'error'
-      console.log response
+      $("form[id*='-contract'] .btn").removeClass('disabled')
+      console.log response.message
 
   $('#js-update-contract').ajaxForm
     dataType: 'json'
     method: 'post'
     beforeSend: () ->
-      console.log 'b4send'
+      $("form[id*='-contract'] .btn").addClass('disabled')
     success: (response) ->
-      console.log 'success'
-      console.log response
       window.location.href = response.location
     error: (response) ->
-      console.log 'error'
-      console.log response
+      $("form[id*='-contract'] .btn").removeClass('disabled')
+      console.log response.message
