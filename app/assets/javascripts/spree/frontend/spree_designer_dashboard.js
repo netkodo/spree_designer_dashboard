@@ -90,7 +90,7 @@ $(document).on({
     click: function(e) {
         e.preventDefault();
         options = {};
-        v = $crop_image.cropper('getCroppedCanvas');
+        v = $crop_image.cropper('getCroppedCanvas',{fillColor: '#ffffff'});
         var obj = canvas.getActiveObject();
         obj.set('save_url', v.toDataURL());
         obj.set('cropped', true);
@@ -110,7 +110,7 @@ $(document).on({
             hash[ha_id]["image"] = v.toDataURL();
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
-        var obj2 = canvas.getActiveObject()
+        var obj2 = canvas.getActiveObject();
         if(!isBlank(obj)) {
           setTimeout(function(){
             hash2 = generateHash(obj2);
