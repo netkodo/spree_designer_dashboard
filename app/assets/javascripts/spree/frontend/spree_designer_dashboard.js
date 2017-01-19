@@ -367,8 +367,8 @@ function addProductToBoard(event, ui) {
     $(this).append(cloned.removeClass('board-lightbox-product').addClass('board-lightbox-product-cloned'));
 
     //calculate the origin based on the position and size
-    center_x = cloned.position().left + parseFloat(cloned.width()) / 2.0
-    center_y = cloned.position().top + parseFloat(cloned.height()) / 2.0
+    center_x = cloned.position().left + parseFloat(cloned.width()) / 2.0;
+    center_y = cloned.position().top + parseFloat(cloned.height()) / 2.0;
 
     random = Math.floor((Math.random() * 10) + 1);
     image_url = ui.helper.data('canvas-img-base');
@@ -431,7 +431,7 @@ function moveLayer(layer, direction) {
 }
 
 function getSavedProducts(board_id) {
-    var url = '/rooms/' + board_id + '/board_products.json'
+    var url = '/rooms/' + board_id + '/board_products.json';
 
     $.ajax({
             url: url, dataType: "json",
