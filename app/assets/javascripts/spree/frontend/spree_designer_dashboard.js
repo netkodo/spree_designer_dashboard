@@ -505,10 +505,11 @@ function createObjectImage(activeObject) {
         theImage.set('flipX', activeObject.get('flipX'));
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
-        theImage.set('stroke', '#fff');
+        theImage.set('stroke', '#ffffff');
+        theImage.strokeWidth = 2;
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
-        };
+        }
 
         canvas.add(theImage);
         if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
