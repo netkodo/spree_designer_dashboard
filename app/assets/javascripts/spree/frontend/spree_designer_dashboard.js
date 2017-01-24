@@ -508,7 +508,7 @@ function createObjectImage(activeObject) {
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         theImage.set('stroke', '#ffffff');
-        if(activeObject.get('action')=='create'){
+        if(canvas.getObjects().length == 0){
             theImage.set('z_index',canvas.getObjects().length);
         }else{
             max = canvas.getObjects()[0].z_index;
