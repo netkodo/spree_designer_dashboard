@@ -469,7 +469,7 @@ function getSavedProducts(board_id) {
                     'object:modified': function (e) {
 
                         if (canvas.getActiveGroup() === null || canvas.getActiveGroup() === undefined) {
-                            activeObject = e.target
+                            activeObject = e.target;
                             createObjectImage(activeObject);
                         }
                     }
@@ -512,10 +512,10 @@ function createObjectImage(activeObject) {
         }
 
         canvas.add(theImage);
-        if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
-            theImage.filters.push(generateFilter());
-            theImage.applyFilters(canvas.renderAll.bind(canvas));
-        }
+        // if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
+        //     theImage.filters.push(generateFilter());
+        //     theImage.applyFilters(canvas.renderAll.bind(canvas));
+        // }
         hash = generateHash(theImage);
         $('.js-input-hash-product').text(JSON.stringify(hash));
         canvas.remove(activeObject);
@@ -564,7 +564,7 @@ function generateHash(object) {
     }
     image = "";
     if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
-        image = object.get('save_url'); //hash[ha_id]['image']
+        image = hash[ha_id]['image']
     }else{
         image = null
     }
