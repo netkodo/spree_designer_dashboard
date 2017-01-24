@@ -506,7 +506,9 @@ function createObjectImage(activeObject) {
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         theImage.set('stroke', '#ffffff');
-        theImage.set('z_index',canvas.getObjects().length);
+        if(activeObject.get('action')=='create'){
+            theImage.set('z_index',canvas.getObjects().length);
+        }
         //theImage.strokeWidth = 2;
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
