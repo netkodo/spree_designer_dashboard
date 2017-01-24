@@ -327,6 +327,7 @@ function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) 
             flipX: bp.flip_x,
             width: bp.width,
             height: bp.height,
+            z_index: bp.z_index,
             lockUniScaling: true,
             minScaleLimit: 0.5,
             hasRotatingPoint: true
@@ -496,6 +497,7 @@ function createObjectImage(activeObject) {
         theImage.lockUniScaling = true;
         theImage.minScaleLimit = 0.5;
         theImage.hasRotatingPoint = true;
+        theImage.z_index = activeObject.get('z_index');
         theImage.set('width', Number(activeObject.get('width').toFixed(0)));
         theImage.set('height', Number(activeObject.get('height').toFixed(0)));
         theImage.set('id', activeObject.get('id'));
@@ -508,6 +510,14 @@ function createObjectImage(activeObject) {
         theImage.set('stroke', '#ffffff');
         if(activeObject.get('action')=='create'){
             theImage.set('z_index',canvas.getObjects().length);
+        }else{
+            max = canvas.getObjects()[0].z_index;
+            canvas.forEachObject(function(o){
+                if(max<=o.z_index){
+                    max=o.z_index
+                }
+            });
+            theImage.set('z_index',max+1);
         }
         //theImage.strokeWidth = 2;
         if (!isBlank(activeObject.cropped)){
