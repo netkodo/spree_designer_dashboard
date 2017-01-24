@@ -107,7 +107,7 @@ $(document).on({
             } else {
                 ha_id = obj.get('id');
             }
-            hash[ha_id]["image"] = v.toDataURL();
+            hash[ha_id]["image"] = obj.toDataURL();
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
         var obj2 = canvas.getActiveObject();
@@ -581,7 +581,7 @@ function generateHash(object) {
         image: image
     };
     if(object.get('action') === 'create'){
-        hash[ha_id]['image']=object.getElement().src
+        hash[ha_id]['image']=object.toDataURL(); //getElement().src
     }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');
