@@ -506,7 +506,7 @@ function createObjectImage(activeObject) {
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         theImage.set('stroke', '#ffffff');
-        theImage.strokeWidth = 2;
+        // theImage.strokeWidth = 2;
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
         }
@@ -564,7 +564,7 @@ function generateHash(object) {
     }
     image = "";
     if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
-        image = hash[ha_id]['image']
+        image = object.get('save_url'); //hash[ha_id]['image']
     }else{
         image = null
     }
@@ -581,7 +581,7 @@ function generateHash(object) {
         image: image
     };
     if(object.get('action') === 'create'){
-        hash[ha_id]['image']=object.toDataURL(); //getElement().src
+        hash[ha_id]['image']=object.getElement().src
     }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');
