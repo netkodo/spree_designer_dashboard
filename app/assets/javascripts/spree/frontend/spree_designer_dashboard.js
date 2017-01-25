@@ -557,7 +557,6 @@ function find_object(id){
 }
 
 function generateHash(object) {
-    flipx = object.flipX;
 
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
@@ -580,22 +579,9 @@ function generateHash(object) {
     }
     image = "";
     if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
-        if(flipx){
-            image = object.toDataURL()
-        }else{
-            image = hash[ha_id]['image']
-        }
+        image = hash[ha_id]['image'];
     }else{
-        if(flipx){
-            image = object.toDataURL()
-        }else{
-            image = null;
-        }
-    }
-    if(flipx){
-        flip_x_tmp = !object.get('flipX');
-    }else{
-        flip_x_tmp = object.get('flipX');
+        image = null;
     }
 
     hash[ha_id] = {
@@ -607,15 +593,11 @@ function generateHash(object) {
         width: object.getWidth(),
         height: object.getHeight(),
         rotation_offset: object.getAngle(0),
-        flip_x: flip_x_tmp,
+        flip_x: object.get('flipX'),
         image: image
     };
     if(object.get('action') === 'create'){
-        if(flipx){
-            hash[ha_id]['image']=object.toDataURL()
-        }else{
-            hash[ha_id]['image']=object.getElement().src
-        }
+        hash[ha_id]['image']=object.getElement().src;
     }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');

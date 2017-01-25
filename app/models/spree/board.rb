@@ -411,6 +411,9 @@ class Spree::Board < ActiveRecord::Base
         # set the rotation
         product_image.rotate!(bp.rotation_offset)
 
+        #flip! is for vertical mirror
+        #flop! is for horizontal mirror
+        product_image.flop! if bp.flip_x == true
         # if turned sideways, then swap the width and height when scaling
         if [90, 270].include?(bp.rotation_offset)
           product_image.scale!(bp.height, bp.width)
