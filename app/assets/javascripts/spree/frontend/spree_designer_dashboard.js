@@ -129,13 +129,13 @@ $(document).on({
         obj = canvas.getActiveObject();
         if(!isBlank(obj)){
             renderMirror(obj);
-            hash = generateHash(obj,true);
+            hash = generateHash(obj,obj.flipX);
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
         var obj2 = canvas.getActiveObject()
         if(!isBlank(obj2)) {
           setTimeout(function(){
-          hash2 = generateHash(obj2,true);
+          hash2 = generateHash(obj2,obj.flipX);
           $('.js-input-hash-product').text(JSON.stringify(hash2));
             console.log('sleep')
           }, 1000)
@@ -592,6 +592,12 @@ function generateHash(object, flipx) {
             image = null;
         }
     }
+    if(flipx){
+        flip_x_tmp = !object.get('flipX');
+    }else{
+        flip_x_tmp = object.get('flipX');
+    }
+
     hash[ha_id] = {
         action_board: action,
         board_id: board_id,
@@ -601,11 +607,15 @@ function generateHash(object, flipx) {
         width: object.getWidth(),
         height: object.getHeight(),
         rotation_offset: object.getAngle(0),
-        flip_x: object.get('flipX'),
+        flip_x: flip_x_tmp,
         image: image
     };
     if(object.get('action') === 'create'){
-        hash[ha_id]['image']=object.getElement().src
+        if(flipx){
+            hash[ha_id]['image']=object.toDataURL()
+        }else{
+            hash[ha_id]['image']=object.getElement().src
+        }
     }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');
