@@ -129,13 +129,13 @@ $(document).on({
         obj = canvas.getActiveObject();
         if(!isBlank(obj)){
             renderMirror(obj);
-            hash = generateHash(obj,obj.flipX);
+            hash = generateHash(obj);
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
         var obj2 = canvas.getActiveObject()
         if(!isBlank(obj2)) {
           setTimeout(function(){
-          hash2 = generateHash(obj2,obj.flipX);
+          hash2 = generateHash(obj2);
           $('.js-input-hash-product').text(JSON.stringify(hash2));
             console.log('sleep')
           }, 1000)
@@ -556,8 +556,8 @@ function find_object(id){
     });
 }
 
-function generateHash(object, flipx) {
-    flipx = flipx || false;
+function generateHash(object) {
+    flipx = object.flipX;
 
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
