@@ -414,6 +414,9 @@ class Spree::Board < ActiveRecord::Base
         product_image =""
       end
       if product_image.present?
+        #flip! is for vertical mirror
+        #flop! is for horizontal mirror
+        product_image.flop! if bp.flip_x == true
 
         # set the rotation
         product_image.rotate!(bp.rotation_offset)

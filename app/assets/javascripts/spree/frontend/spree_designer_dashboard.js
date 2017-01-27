@@ -22,6 +22,7 @@ function initializeProductSearchForm() {
 
         /* Put the results in a div */
         posting.done(function (data) {
+            scrollPagination();
             $('#products-preloader').hide();
             url = $('.solr-filter-products').data('search-url');
             keywords = $('#product_keywords').val();
@@ -89,7 +90,7 @@ $(document).on({
     click: function(e) {
         e.preventDefault();
         options = {};
-        v = $crop_image.cropper('getCroppedCanvas');
+        v = $crop_image.cropper('getCroppedCanvas',{fillColor: '#ffffff'});
         var obj = canvas.getActiveObject();
         obj.set('save_url', v.toDataURL());
         obj.set('cropped', true);
@@ -106,10 +107,10 @@ $(document).on({
             } else {
                 ha_id = obj.get('id');
             }
-            hash[ha_id]["image"] = v.toDataURL();
+            hash[ha_id]["image"] = obj.toDataURL();
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
-        var obj2 = canvas.getActiveObject()
+        var obj2 = canvas.getActiveObject();
         if(!isBlank(obj)) {
           setTimeout(function(){
             hash2 = generateHash(obj2);
@@ -329,6 +330,7 @@ function buildImageLayer(canvas, bp, url, slug, id, board_id, custom_item_id, op
             flipX: bp.flip_x,
             width: bp.width,
             height: bp.height,
+            z_index: bp.z_index,
             lockUniScaling: true,
             minScaleLimit: 0.5,
             hasRotatingPoint: true
@@ -376,8 +378,8 @@ function addProductToBoard(event, ui) {
     $(this).append(cloned.removeClass('board-lightbox-product').addClass('board-lightbox-product-cloned'));
 
     //calculate the origin based on the position and size
-    center_x = cloned.position().left + parseFloat(cloned.width()) / 2.0
-    center_y = cloned.position().top + parseFloat(cloned.height()) / 2.0
+    center_x = cloned.position().left + parseFloat(cloned.width()) / 2.0;
+    center_y = cloned.position().top + parseFloat(cloned.height()) / 2.0;
 
     random = Math.floor((Math.random() * 10) + 1);
     image_url = ui.helper.data('canvas-img-base');
@@ -466,7 +468,7 @@ function moveLayer(layer, direction) {
 }
 
 function getSavedProducts(board_id) {
-    var url = '/rooms/' + board_id + '/board_products.json'
+    var url = '/rooms/' + board_id + '/board_products.json';
 
     $.ajax({
             url: url, dataType: "json",
@@ -531,7 +533,7 @@ function getSavedProducts(board_id) {
                     'object:modified': function (e) {
 
                         if (canvas.getActiveGroup() === null || canvas.getActiveGroup() === undefined) {
-                            activeObject = e.target
+                            activeObject = e.target;
                             createObjectImage(activeObject);
                         }
                     }
@@ -579,6 +581,7 @@ function createObjectImage(activeObject) {
         theImage.lockUniScaling = true;
         theImage.minScaleLimit = 0.5;
         theImage.hasRotatingPoint = true;
+        theImage.z_index = activeObject.get('z_index');
         theImage.set('width', Number(activeObject.get('width').toFixed(0)));
         theImage.set('height', Number(activeObject.get('height').toFixed(0)));
         theImage.set('id', activeObject.get('id'));
@@ -588,19 +591,33 @@ function createObjectImage(activeObject) {
         theImage.set('flipX', activeObject.get('flipX'));
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
+        theImage.set('stroke', '#ffffff');
+
+        if(canvas.getObjects().length == 1){
+            theImage.set('z_index',canvas.getObjects().length);
+        }else{
+            max = canvas.getObjects()[0].z_index;
+            canvas.forEachObject(function(o){
+                if(max<=o.z_index){
+                    max=o.z_index
+                }
+            });
+            theImage.set('z_index',max+1);
+        }
+        //theImage.strokeWidth = 2;
         theImage.set('stroke', '#fff');
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
         theImage.set('option_id',activeObject.get('option_id'));
         theImage.set('board_id',activeObject.get('board_id'));
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
-        };
+        }
 
         canvas.add(theImage);
-        if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
-            theImage.filters.push(generateFilter());
-            theImage.applyFilters(canvas.renderAll.bind(canvas));
-        }
+        // if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
+        //     theImage.filters.push(generateFilter());
+        //     theImage.applyFilters(canvas.renderAll.bind(canvas));
+        // }
         hash = generateHash(theImage);
         $('.js-input-hash-product').text(JSON.stringify(hash));
         canvas.remove(activeObject);
@@ -628,6 +645,7 @@ function find_object(id){
 }
 
 function generateHash(object) {
+
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
 
@@ -648,9 +666,9 @@ function generateHash(object) {
     }
     image = "";
     if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
-        image = hash[ha_id]['image']
+        image = hash[ha_id]['image'];
     }else{
-        image = null
+        image = null;
     }
 
     hash[ha_id] = {
@@ -668,7 +686,7 @@ function generateHash(object) {
         image: image
     };
     if(object.get('action') === 'create'){
-        hash[ha_id]['image']=object.getElement().src
+        hash[ha_id]['image']=object.getElement().src;
     }
     if (object.get('z_index') >= 0) {
         hash[ha_id]['z_index'] = object.get('z_index');
