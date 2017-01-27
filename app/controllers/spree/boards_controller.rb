@@ -482,6 +482,7 @@ class Spree::BoardsController < Spree::StoreController
       @board.submit_for_publication! if params[:board][:status] == "submitted_for_publication"
       # @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
+      spree_current_user.user_ac_event_add("first_room_added") unless spree_current_user.active_campaign.first_room_added
       respond_to do |format|
         format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
         format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
@@ -499,6 +500,7 @@ class Spree::BoardsController < Spree::StoreController
     @board = Spree::Board.find_by slug: params[:id]
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.submit_for_publication
+    spree_current_user.user_ac_event_add("first_room_published") unless spree_current_user.active_campaign.first_room_published
     html_content = "There is a new room for you to review."
     html_content << "<br /><br />Message from Designer:<br /><br />#{params[:board][:state_message]}" if params[:board] and params[:board][:state_message] and !params[:board][:state_message].blank?
 

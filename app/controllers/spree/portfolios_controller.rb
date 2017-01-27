@@ -279,6 +279,7 @@ class Spree::PortfoliosController < Spree::StoreController
 
     respond_to do |format|
       if @portfolio.save
+        spree_current_user.user_ac_event_add("first_portfolio_added") unless spree_current_user.active_campaign.first_portfolio_added
         format.html {redirect_to portfolio_path}
         format.json {render json: @portfolio, status: :ok}
       else
