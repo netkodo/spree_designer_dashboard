@@ -137,8 +137,14 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
-    @boards = spree_current_user.boards.where(removal: false)
+    if spree_current_user.designer_registrations.first.status == "room designer"
+      @designer_type = "room designer"
+      @boards = spree_current_user.boards.where(removal: false)
+    elsif spree_current_user.designer_registrations.first.status == "to the trade designer"
+      @designer_type = "to the trade designer"
+      @boards = spree_current_user.boards.where(removal: false,private: true)
     end
+  end
 
   def profile
     @user = spree_current_user
@@ -287,11 +293,12 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def new
-    @board = Spree::Board.new(:name => "Untitled Room")
+    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private])
     @board.designer = spree_current_user
-    @board.save!
-    redirect_to design_board_path(@board)
-
+    if @board.save!
+      Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
+      redirect_to design_board_path(@board)
+    end
     #@colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
 
     #1.upto(5) do |n|
@@ -768,7 +775,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def board_params
-    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
+    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline,:customer_address, :customer_zipcode, :state_id, :customer_city)
   end
   # redirect to the edit action after create
   #create.response do |wants|

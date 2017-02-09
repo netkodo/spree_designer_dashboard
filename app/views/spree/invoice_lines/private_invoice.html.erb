@@ -1,0 +1,62 @@
+<table class="table-invoice <%= @board.id %>" data-board_id="<%= @board.id %>">
+  <thead>
+    <tr>
+      <th class="align-center">IMAGE</th>
+      <th class="align-center">SKU</th>
+      <th class="align-center">NAME</th>
+      <th class="align-center">YOUR COST</th>
+      <th class="align-center">CUSTOMER COST</th>
+    </tr>
+  </thead>
+  <tbody class="text-center">
+    <% @board_products.each do |bp| %>
+      <% if bp.product.present? %>
+        <tr data-id="<%= bp.id %>" data-custom="false">
+          <td>
+            <%= listing_image(bp.product, :itemprop => 'image',class:'img-responsive') %>
+          </td>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
+            <span class="edit">edit</span>
+          </td>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+            <%= bp.product.price %>
+          </td>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
+            <%= bp.get_item_data('cost') %>
+            <span class="edit">edit</span>
+          </td>
+        </tr>
+      <% else %>
+        <tr data-id="<%= bp.id %>" data-custom="true">
+          <td>
+           <%= image_tag bp.custom_item.image(:medium), class: 'img-responsive' %>
+          </td>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
+            <span class="edit">edit</span>
+          </td>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+            <%= bp.custom_item.cost %>
+          </td>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
+            <%= bp.get_item_data('cost') %>
+            <span class="edit">edit</span>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<div class="text-right">
+  <div class="btn btn-xs btn-default text-right close-invoice">Close</div>
+  <div class="btn btn-xs btn-primary text-right save-invoice" data-board_id="<%= @board.id %>" data-user_id="<%= spree_current_user.id %>">Save</div>
+</div>
