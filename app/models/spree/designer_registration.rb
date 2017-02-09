@@ -6,7 +6,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
   #validates_presence_of :first_name, :last_name
 
-  after_create :send_designer_welcome
+  #after_create :send_designer_welcome  #depracted ac took over
   after_create :update_profile_information
   after_update :update_designer_status
 
@@ -76,6 +76,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   end
 
+  #Depracated
   def send_designer_welcome
     html_content = ''
     logger.info "Sending the mail to #{self.user.email}"
