@@ -315,9 +315,8 @@ fabric.Object.prototype.setCenterToOrigin = function () {
     });
 };
 
-function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_id, callback ) {
+function buildImageLayer(canvas, bp, url, slug, id, active, hash_id, callback ) {
     callback = callback || null;
-    custom_item_id = custom_item_id || null
      fabric.Image.fromURL(url, function (oImg) {
         oImg.scale(1).set({
             save_url: url,
@@ -334,7 +333,6 @@ function buildImageLayer(canvas, bp, url, slug, id,custom_item_id, active, hash_
             hasRotatingPoint: true
         });
         oImg.set('id', id);
-        oImg.set('custom_item_id', custom_item_id);
         oImg.set('action', active);
         oImg.set('product_permalink', slug);
         oImg.set('hash_id', hash_id);
@@ -386,34 +384,21 @@ function addProductToBoard(event, ui) {
             canvas_url = ui.helper.data('canvas-img-base');
             slug = ui.helper.data('product-slug');
             canvas_id = ui.helper.data('canvas-id');
-            custom_item_id = ui.helper.data('custom_item_id');
-            console.log(ui.helper.data('custom_item_id'));
-            console.log(cloned.data('custom_item_id'));
-            console.log('++');
             board_product = {
                 board_id: $('#canvas').data('boardId'),
                 product_id: cloned.data('productId'),
-                custom_item_id: cloned.data('custom_item_id'),
                 center_point_x: center_x,
                 center_point_y: center_y,
                 width: cloned.width(),
                 height: cloned.height()
             };
-            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'),cloned.data('custom_item_id'), 'create', cloned.data('productId') || cloned.data('custom_item_id') + '-' + random, createObjectImage);
-            if(cloned.data('productId') != undefined){
-                setTimeout((function () {
-                    if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
-                        $.cookie("active_image", canvas.getActiveObject().get('hash_id'));
-
-                        console.log('slug');
-                        console.log(slug);
-                        console.log(slug.length);
-                        if(slug.length > 0){
-                            getProductDetails(slug, $('#canvas').data('boardId'), cloned.data('productId'))
-                        }
-                    }
-                }), 1000)
-            }
+            buildImageLayer(canvas, board_product, url, slug, cloned.data('productId'), 'create', cloned.data('productId') + '-' + random, createObjectImage);
+            setTimeout((function () {
+                if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
+                    $.cookie("active_image", canvas.getActiveObject().get('hash_id'));
+                    getProductDetails(slug, $('#canvas').data('boardId'), cloned.data('productId'))
+                }
+            }), 1000)
 
         }
     });
@@ -455,25 +440,9 @@ function getSavedProducts(board_id) {
                 xhr.setRequestHeader("Accept", "application/json")
             },
             success: function (data) {
-                console.log(data);
                 // add the products to the board
                 $.each(data, function (index, board_product) {
-                    console.log(index);
-                    console.log(board_product);
-                    if(board_product.product != undefined){
-                        item_image = board_product.product.image_url
-                        item_slug = board_product.product.slug
-                    }else{
-                        item_image = board_product.custom_item.image_url
-                        item_slug = ""
-                    }
-                    // console.log(board_product.custom_item.id);
-                    // console.log('---')
-                    if (board_product.custom_item == undefined){
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id, null, 'update', board_product.id,  createObjectImage);
-                    }else{
-                        buildImageLayer(canvas, board_product, item_image, item_slug, board_product.id,board_product.custom_item.id, 'update', board_product.id,  createObjectImage);
-                    };
+                    buildImageLayer(canvas, board_product, board_product.product.image_url, board_product.product.slug, board_product.id, 'update', board_product.id,  createObjectImage);
                     canvas.renderAll();
                     canvas.discardActiveObject();
                 });
@@ -486,12 +455,8 @@ function getSavedProducts(board_id) {
                         selectedImage = options.target;
                         // pass the product id and board_id (optional) and BoardProduct id (optional)
                         if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
-                            $.cookie("active_image", selectedImage.get('hash_id'));
-                            console.log('slugaaa');
-                            console.log(selectedImage.get('product_permalink'));
-                            if(selectedImage.get('product_permalink') != undefined && selectedImage.get('product_permalink').length > 0) {
-                                getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
-                            }
+                            $.cookie("active_image", selectedImage.get('hash_id'))
+                            getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
                         }
                     }
                     else {
@@ -622,7 +587,6 @@ function generateHash(object) {
     hash[ha_id] = {
         action_board: action,
         board_id: board_id,
-        custom_item_id: object.get('custom_item_id'),
         product_id: object.get('id'),
         center_point_x: object.getCenterPoint().x,
         center_point_y: object.getCenterPoint().y,

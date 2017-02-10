@@ -23,8 +23,6 @@ class Spree::Board < ActiveRecord::Base
   has_one :portfolio, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
-  has_many :invoice_lines
-  has_many :board_histories, dependent: :destroy
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
@@ -405,8 +403,6 @@ class Spree::Board < ActiveRecord::Base
       if bp.present? and bp.product.present?
 
         product_image = bp.product.image_for_board(bp)
-      elsif bp.custom_item.present?
-        product_image = bp.custom_item.custom_image_for_board(bp)
       else
         product_image =""
       end
@@ -475,6 +471,7 @@ class Spree::Board < ActiveRecord::Base
 
   def create_or_update_board_product(params,board_id,email)
     Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
+
     Resque.enqueue(RoomUpdate, params,board_id)
 
     # if params[:products_board].present?
@@ -485,7 +482,6 @@ class Spree::Board < ActiveRecord::Base
     #     if product_hash['action_board'] == 'update'
     #       board_product = self.board_products.where(id: product_hash['product_id']).first
     #       if board_product.present?
-    #         Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present? ? board_product.product.name : board_product.custom_item.name}")
     #         if product_hash['image'].present?
     #           crop_image(product_hash['image'], board_product)
     #         end
@@ -499,32 +495,10 @@ class Spree::Board < ActiveRecord::Base
     #         attr = product_hash.except!('action_board', 'product_id', 'image')
     #         board_product = product.board_products.new(attr)
     #         if board_product.save
-    #           Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.product.name}")
     #           if image.present?
     #             crop_image(image, board_product)
     #           end
     #           board_product.update(z_index: product_hash['z_index'])
-    #         end
-    #       else
-    #         puts 'nie istnieje'
-    #         puts 'nie istnieje'
-    #         puts 'nie istnieje'
-    #         custom = Spree::CustomItem.find(product_hash['custom_item_id'])
-    #         puts custom.inspect
-    #         if custom.present?
-    #           image = product_hash['image']
-    #           attr = product_hash.except!('action_board', 'product_id', 'image')
-    #           board_product = Spree::BoardProduct.new(attr)
-    #           if board_product.save
-    #             Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.custom_item.name}")
-    #             if image.present?
-    #               crop_image(image, board_product)
-    #             end
-    #             board_product.update(z_index: product_hash['z_index'])
-    #           end
-    #           puts "END "
-    #           puts "END "
-    #           puts "END "
     #         end
     #       end
     #     end
@@ -592,102 +566,6 @@ class Spree::Board < ActiveRecord::Base
     sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
 
     logger.info sending
-  end
-
-  def calculate_tax
-    designer=self.designer.designer_registrations.first
-    if designer.present?
-      dest_state = Spree::State.find(self.state_id)
-      origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
-      destination=::TaxCloud::Address.new(address1:  self.customer_address, city: self.customer_city, zip5: self.customer_zipcode, state: dest_state.abbr)
-
-      transaction = ::TaxCloud::Transaction.new(customer_id: 102, order_id: 12, cart_id: 12,origin: origin, destination: destination)
-      self.board_products.each_with_index do |item,index|
-        transaction.cart_items << get_item_data_for_tax(item,index)
-      end
-
-      response = transaction.lookup
-    end
-  end
-
-  def get_item_data_for_tax(item,index)
-    ::TaxCloud::CartItem.new(
-      index: index,
-      # item_id: item.get_item_data('name')[0...50],
-      item_id: item.get_item_data('sku'),
-      tic: Spree::Config.taxcloud_shipping_tic,
-      price: item.get_item_data('cost'),
-      quantity: 1
-    )
-  end
-
-  def send_email_with_invoice(to_addr,to_name,pdf)
-    html_content = ''
-    m = Mandrill::API.new(MANDRILL_KEY)
-
-    colors = []
-    products = []
-    self.colors.each do |c|
-      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name, :swatch_val => c.swatch_val}
-    end
-
-    products = []
-    self.board_products.each do |bp|
-      if bp.product.present?
-        products << {:img => bp.product.images.first.attachment.url, :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
-      else
-        products << {:img => bp.custom_item.image(:original), :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
-      end
-    end
-
-    message = {
-        :subject => self.name,
-        :from_name => "INVOICE",
-        :text => "INVOICE",
-        :to => [
-            {
-                :email => to_addr,
-                :name => to_name
-            }
-        ],
-        :from_email => to_addr,
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com",
-        :merge_language => "handlebars",
-        :attachments => [
-            {
-                :type => "pdf",
-                :name => "invoice.pdf",
-                :content => Base64.encode64(pdf)
-            }
-        ],
-        :merge_vars => [
-            {
-                :rcpt => to_addr,
-                :vars => [
-                    {
-                        :name => "boardimage",
-                        :content => self.board_image.attachment(:original)#.split('?')[0]
-                    },
-                    {
-                        :name => "colors",
-                        :content => colors
-                    },
-                    {
-                        :name => "products",
-                        :content => products
-                    },
-                    {
-                        :name => "notes",
-                        :content => self.description
-                    }
-                ]
-            }
-        ]
-    }
-    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
   end
 
 

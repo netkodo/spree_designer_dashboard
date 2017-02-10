@@ -13,8 +13,7 @@
             <% products.in_groups_of(3, false) do |row_products| %>
                 <div class="row">
                   <% for product in row_products %>
-                    <% if product.is_a? Spree::Product %>
-                      <% is_bookmarked = product.is_bookmarked_by?(spree_current_user)  %>
+                      <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
                       <div class="col-md-4">
                         <div id="board-product-select-<%= product.id %>" class="board-product-select">
                           <div class="board-product-select-image">
@@ -74,23 +73,6 @@
                           <% end %>
                         </div>
                       </div>
-                    <% else %>
-                          <div class="col-md-4">
-                            <div id="board-product-select-<%= product.id %>" class="board-product-select">
-                              <div class="board-product-select-image">
-                                <div class="board-lightbox-product" id="board-custom-item-id-<%= product.id %>" data-custom_item_id="<%= product.id %>" id="<%= product.id %>" data-canvas-img-base="<%= product.image.url(:original) %>" data-img-url="<%=product.image.url(:medium)%>">
-                                  <div style="position: relative;">
-                                    <!--<a href="javascript:void(0);" class="button-remove-product" style="font-family: helvetica; font-size: 12px; line-height: 12px; font-weight: bold; background-color: #fff; padding: 4px 7px; border-width: 0 0 1px 1px; border-style: none; border-color: #ccc; right: 0px; top: 0; position: absolute; display: none;">x</a>-->
-                                    <!--<a href="javascript:void(0);" class="add-to-board-link" data-product-id="<%#=product.slug %>">-->
-                                      <% if product.image%>
-                                          <%= image_tag product.image.url(:medium), {:class => 'board-lightbox-product-img img-responsive custom-item-image'}%>
-                                      <% end %>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                    <% end %>
                   <% end %>
                 </div>
             <% end%>

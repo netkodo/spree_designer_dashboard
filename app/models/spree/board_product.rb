@@ -1,8 +1,7 @@
 class Spree::BoardProduct < ActiveRecord::Base
 
   belongs_to :board
-  belongs_to :product
-  belongs_to :custom_item
+  belongs_to :product	
   before_create :set_z_index
 
   has_attached_file :photo,

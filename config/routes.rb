@@ -92,14 +92,6 @@ Spree::Core::Engine.routes.draw do
 
   post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
 
-  post "/private_invoice" => "invoice_lines#private_invoice", as: :private_invoice, :defaults => {:format => 'html'}
-  post "/send_invoice_email" => "invoice_lines#send_invoice_email", as: :send_invoice_email, :defaults => {:format => 'json'}
-  get "/show_invoice_email" => "invoice_lines#show_invoice_email", as: :show_invoice_email, :defaults => {:format => 'html'}
-  post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
-
-  post "/board_history" => "board_history#board_history", as: :board_history, :defaults => {:format => 'html'}
-  post "/create_board_history" => "board_history#create", as: :create_board_history, :defaults => {:format => 'json'}
-
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
   post '/rooms/add_answer' => "boards#add_answer"
