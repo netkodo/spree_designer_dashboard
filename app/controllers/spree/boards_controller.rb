@@ -483,6 +483,7 @@ class Spree::BoardsController < Spree::StoreController
       # @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
       spree_current_user.user_ac_event_add("first_room_added") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_room_added
+      spree_current_user.update_column(:popup_room, false)
       respond_to do |format|
         format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
         format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
