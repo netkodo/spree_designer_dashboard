@@ -35,14 +35,16 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     end
 
     if @designer_registration.save
-      redirect_to designer_registration_thanks_path
+      session[:fb_pixel_email] = current_spree_user.email
+      redirect_to designer_registration_thanks_url
     else
       render action: 'new'
     end
   end
   
   def thanks
-    
+    @fb_pixel_email = session[:fb_pixel_email]
+    session.delete(:fb_pixel_email)
   end
 
   # PATCH/PUT /designer_registrations/1
