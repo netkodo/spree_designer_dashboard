@@ -37,7 +37,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
         when "room designer"
           boards = user.boards.where(status: "published").count
-          if boards > 0 and user.user_images.count == 1
+          if user.user_images.count == 1#boards > 0 and
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1, :show_designer_profile => 1})
           else
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
