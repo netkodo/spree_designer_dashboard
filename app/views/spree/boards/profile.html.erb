@@ -21,6 +21,7 @@
         <div class="form-group">
           <%= f.label :profile_display_name, Spree.t(:profile_display_name) %>
           <%= f.text_field :profile_display_name, :class => 'form-control' %>
+          <div class="error profile_display_name"></div>
         </div>
       </div>
     </div>
@@ -30,6 +31,7 @@
         <div class="form-group">
           <%= f.label :username, Spree.t(:username) %>
           <%= f.text_field :username, :class => 'form-control' %>
+          <div class="error username"></div>
         </div>
       </div>
     </div>
@@ -55,12 +57,14 @@
         <div class="form-group">
           <%= f.label :company_name, Spree.t(:company_or_blog_name) %>
           <%= f.text_field :company_name, :class => 'form-control' %>
+          <div class="error company_name"></div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <%= f.label :website_url, Spree.t(:company_or_blog_url) %>
           <%= f.text_field :website_url, :class => 'form-control' %>
+          <div class="error website_url"></div>
         </div>
       </div>
     </div>
@@ -69,6 +73,7 @@
         <div class="form-group">
           <%= f.label :location, Spree.t(:location) %>
           <%= f.text_field :location, :class => 'form-control' %>
+          <div class="error location"></div>
         </div>
       </div>
     </div>
@@ -81,7 +86,7 @@
           <%= f.label :description, Spree.t("Tell us a little about yourself") %>
           <span class="help-block">Briefly tell customers about yourself. About 5 or 6 sentences is a good length.</span>
           <%= f.text_area :description, :class => 'form-control', :rows => 4 %>
-
+          <div class="error description"></div>
         </div>
       </div>
     </div>
@@ -91,7 +96,7 @@
           <%= f.label :designer_quote, Spree.t("Short Quote") %>
           <span class="help-block">Got something special (yet succinct) to say? This is your chance.</span>
           <%= f.text_area :designer_quote, :class => 'form-control', :rows => 4 %>
-
+          <div class="error designer_quote"></div>
         </div>
       </div>
     </div>
