@@ -85,4 +85,8 @@ class Spree::Portfolio < ActiveRecord::Base
     tab
   end
 
+  def create_slug
+    self.update_column(:slug, "#{self.name.gsub(" ","_")}-#{self.id}")
+  end
+
 end
