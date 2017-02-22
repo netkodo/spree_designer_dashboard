@@ -19,6 +19,8 @@ class Spree::DesignersController < Spree::StoreController
   def update
     @user = spree_current_user
 
+    @user.validate_description = true
+
     if params[:user].present?
       if params[:user][:user_images].present?
         @user.user_images.destroy_all
@@ -58,6 +60,7 @@ class Spree::DesignersController < Spree::StoreController
 
     respond_to do |format|
       if @user.update_attributes(params[:user].permit!)
+        @user.validate_description = false
         spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
         session[:popup_portfolio] = true if spree_current_user.popup_portfolio
         format.html { redirect_to designer_dashboard_path(format: 'html'), :notice => 'Your profile was successfully updated.', location: url_for( designer_dashboard_path) }
