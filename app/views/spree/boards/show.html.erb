@@ -22,12 +22,20 @@
 	<div class="col-md-7">
 		<div class="board-details">
 			<div class="board-section board-image-section text-center">
-          <%= board_image(@board,:large)%>
+          <% if @board.portfolio.present? %>
+            <%= image_tag @board.portfolio.portfolio_image.url, class: 'img-board' %>
+          <% else %>
+            <%= board_image(@board,:large)%>
+          <% end %>
 			</div>
       <% if @board.portfolio.present? %>
         <div class="large-image col-md-6 large-image-margin">
-          <a class="js-show-large-image-board" data-orginal-image=<%= @board.board_image.present? ? @board.board_image.attachment.url(:large) : "/assets/frontend/boards/large_default.png"%> > View large </a>
+          <a class="js-show-large-image-board" data-orginal-image=<%= @board.portfolio.portfolio_image.present? ? @board.portfolio.portfolio_image.url(:large) : "/assets/frontend/boards/large_default.png"%> > View large </a>
         </div>
+      <% else %>
+          <div class="large-image col-md-6 large-image-margin">
+            <a class="js-show-large-image-board" data-orginal-image=<%= @board.board_image.present? ? @board.board_image.attachment.url(:large) : "/assets/frontend/boards/large_default.png"%> > View large </a>
+          </div>
 			<% end %>
 			<% if false %>
 			<% unless @board.colors.blank? %>
@@ -286,7 +294,7 @@
 
         <% t = [] %>
         <% t << @board.portfolio if @board.portfolio.present? %>
-        <% @board.other_designer_boards.map{|b| t << b} if !@board.other_designer_boards.blank? %>
+        <%# @board.other_designer_boards.map{|b| t << b} if !@board.other_designer_boards.blank? %>
         <% if t.size > 2 %>
           <div class="container col-md-12 other-room-slider">
             <ul class="nbs-flexisel-ul">
