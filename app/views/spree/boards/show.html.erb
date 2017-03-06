@@ -292,18 +292,19 @@
 
       <div class="row">
 
-        <% t = [] %>
-        <% t << @board.portfolio if @board.portfolio.present? %>
+        <%# t = [] %>
+        <%# t << @board.portfolio if @board.portfolio.present? %>
         <%# @board.other_designer_boards.map{|b| t << b} if !@board.other_designer_boards.blank? %>
-        <% if t.size > 2 %>
+        <% if @board.portfolio.room.portfolios.size > 2 %>
           <div class="container col-md-12 other-room-slider">
             <ul class="nbs-flexisel-ul">
-              <% t.each do |room| %>
+              <% @board.portfolio.room.portfolios.each do |room| %>
                 <li>
                   <div class="board-listing col-md-12">
                     <% if room.instance_of? Spree::Portfolio %>
                       <div class="board-image text-center col-md-12">
-                        <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
+                        <%#= link_to image_tag(room.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), room_path(room.slug)%>
+                        <%= image_tag(room.portfolio_image.url(:carousel), class: 'room-tied-portfolio js-swap-image', data: {default: room.portfolio_image.url, original: room.portfolio_image.url(:original)}) %>
                       </div>
                     <% else %>
                       <div class="board-image text-center col-md-12">
@@ -316,11 +317,11 @@
           </ul>
         </div>
       <% else %>
-        <% t.each do |room| %>
+        <% @board.portfolio.room.portfolios.each do |room| %>
           <div class="board-listing col-md-6">
             <% if room.instance_of? Spree::Portfolio %>
               <div class="board-image text-center">
-                <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board)%>
+                <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), room_path(room.slug)%>
               </div>
             <% else %>
               <div class="board-image">

@@ -475,6 +475,7 @@ class Spree::BoardsController < Spree::StoreController
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
         portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
+        @board.update_attribute(:slug, portfolio.slug)
       else
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
       end

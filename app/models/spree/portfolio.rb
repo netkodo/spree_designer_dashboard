@@ -86,7 +86,7 @@ class Spree::Portfolio < ActiveRecord::Base
   end
 
   def create_slug
-    self.update_column(:slug, "#{self.name.gsub(" ","_")}-#{self.id}")
+    self.update_column(:slug, "#{self.user.last_name.downcase}-#{self.name.gsub(" ","-")}-#{self.id}")
   end
 
 end
