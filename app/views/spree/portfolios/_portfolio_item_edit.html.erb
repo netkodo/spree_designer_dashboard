@@ -7,7 +7,7 @@
           <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p) %>
       <% else %>
           <%#= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
-          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p) %>
+          <%= link_to image_tag(p.portfolio_image.url),show_portfolio_path(p.slug) %>
       <% end %>
     </div>
 
