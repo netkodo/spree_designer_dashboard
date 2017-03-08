@@ -146,7 +146,7 @@ Spree::Product.class_eval do
       if board_product.photo.present?
         image = board_product.photo
         image_url = image.url(:product)
-        Magick::ImageList.new(image_url)
+        Magick::ImageList.new(image_url.gsub("https","http")) # image magick doesnt read form https
       else
         image = Spree::Image.where(id: board_product.image_id).first
         if image.present?
