@@ -470,7 +470,7 @@ class Spree::Board < ActiveRecord::Base
 
 
   def create_or_update_board_product(params,board_id,email)
-    Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
+    # Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
 
     Resque.enqueue(RoomUpdate, params,board_id)
 
