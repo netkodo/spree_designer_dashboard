@@ -28,8 +28,8 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     @designer_registration = current_spree_user.designer_registrations.new(designer_registration_params)
     @designer_registration.status = 'pending'
 
-    @designer_registration.user.first_name=params[:designer_registration][:first_name]
-    @designer_registration.user.last_name=params[:designer_registration][:last_name]
+    @designer_registration.user.first_name=params[:designer_registration][:first_name].strip
+    @designer_registration.user.last_name=params[:designer_registration][:last_name].strip
     if @designer_registration.user.save
       Rails.logger.info "FIRST/LAST NAME SET"
     end
