@@ -605,7 +605,7 @@ function createObjectImage(activeObject) {
             theImage.set('z_index',max+1);
         }
         //theImage.strokeWidth = 2;
-        theImage.set('stroke', '#fff');
+        // theImage.set('stroke', '#fff');
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
         theImage.set('option_id',activeObject.get('option_id'));
         theImage.set('board_id',activeObject.get('board_id'));
