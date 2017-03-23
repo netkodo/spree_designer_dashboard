@@ -437,8 +437,8 @@ class Spree::Board < ActiveRecord::Base
         white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
-      white_canvas.format = 'jpeg'
-      file = Tempfile.new("room_#{self.id}.jpg")
+      white_canvas.format = 'png'
+      file = Tempfile.new("room_#{self.id}.png")
       white_canvas.write(file.path)
     end
       #self.board_image.destroy if self.board_image
