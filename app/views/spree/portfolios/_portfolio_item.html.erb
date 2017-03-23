@@ -23,7 +23,7 @@
 
         <div class="col-md-6 col-xs-8 col-sm-5 profile-link small-paddings">
           <div class="designer_name_div">
-            <span class="designer_name"><%= link_to(p.user.full_name.strip.gsub("  "," ").gsub(" ","&nbsp;").html_safe,"/#{p.user.username}") %></span>
+            <span class="designer_name"><%= link_to(p.user.full_name.strip,"/#{p.user.username}") %></span>
           </div>
           <div class="designer_company_div">
             <span class="designer_company"><%= p.user.company_name %></span>
