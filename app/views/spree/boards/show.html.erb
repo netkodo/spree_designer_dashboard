@@ -295,7 +295,7 @@
                   <div class="board-listing col-md-12">
                     <% if room.instance_of? Spree::Portfolio %>
                       <div class="board-image text-center col-md-12">
-                        <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.id)%>
+                        <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.portfolio.id)%>
                       </div>
                     <% else %>
                       <div class="board-image text-center col-md-12">
