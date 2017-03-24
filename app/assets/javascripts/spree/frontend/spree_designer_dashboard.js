@@ -589,7 +589,7 @@ function createObjectImage(activeObject) {
         theImage.set('product_permalink', activeObject.get('product_permalink'));
         theImage.set('hash_id', activeObject.get('hash_id'));
         theImage.set('flipX', activeObject.get('flipX'));
-        theImage.set('save_url', activeObject.toDataURL('png'));
+        theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         // theImage.set('stroke', '#ffffff');
 
