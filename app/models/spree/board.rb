@@ -439,7 +439,7 @@ class Spree::Board < ActiveRecord::Base
           top_left_y = bp.center_point_y - bp.height/2
         end
 
-        white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp) #AddCompositeOp
+        white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
       white_canvas.format = 'png'
