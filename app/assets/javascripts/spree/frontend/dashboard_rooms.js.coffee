@@ -214,13 +214,23 @@ $ ->
 
   $(document).on
     click: (e) ->
-      $("#modal-location-body .confirmation").addClass("hidden")
-      $("#modal-location-body .success-sent").removeClass("hidden")
-      setTimeout () ->
-        $("#send-contract").modal('hide')
-        $("#modal-location-body .confirmation").removeClass("hidden")
-        $("#modal-location-body .success-sent").addClass("hidden")
-      ,'1000'
+
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).data('url')
+        success: (response) ->
+          console.log response
+          $("#modal-location-body .confirmation").addClass("hidden")
+          $("#modal-location-body .success-sent").removeClass("hidden")
+          setTimeout () ->
+            $("#send-contract").modal('hide')
+            $("#modal-location-body .confirmation").removeClass("hidden")
+            $("#modal-location-body .success-sent").addClass("hidden")
+          ,'1000'
+        error: (response) ->
+          console.log 'error'
+          console.log response
   ,".js-send-contract-confirmation"
 
   $(document).on
