@@ -93,6 +93,8 @@ $ ->
       e.preventDefault()
       $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
       $(".table.table-board-listing tbody.project tr.true.project#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('project_id')}").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      board_id = $(@).parents('tr.invoice').find('table').data('board_id')
+      $("##{board_id}").find(".js-private-invoice").removeClass('disabled')
       $(@).parents('tr.invoice').remove()
   ,'.close-invoice'
 
@@ -137,6 +139,7 @@ $ ->
       invoice = generateInvoiceHash($(@).data('board_id'))
       console.log invoice
       obj = $(@).parents('tr.invoice')
+      board_id = obj.find('table').data('board_id')
       my_this = $(@)
       $.ajax
         dataType: 'json'
@@ -149,6 +152,7 @@ $ ->
         success: (response) ->
           $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
           $(".table.table-board-listing tbody.project tr.true.project#{$(my_this).data('project_id')}").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
+          $("##{board_id}").find(".js-private-invoice").removeClass('disabled')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->
             obj.remove()
@@ -156,6 +160,7 @@ $ ->
           console.log response
         error: (response) ->
           $(@).html('Save')
+          $("##{board_id}").find(".js-private-invoice").removeClass('disabled')
           console.log 'error'
           console.log response
   ,'.save-invoice'
@@ -171,6 +176,7 @@ $ ->
     click: (e)->
       e.preventDefault()
       my_this = $(@)
+      my_this.addClass('disabled')
       $.ajax
         dataType: 'html'
         method: 'POST'
@@ -214,13 +220,34 @@ $ ->
 
   $(document).on
     click: (e) ->
-      $("#modal-location-body .confirmation").addClass("hidden")
-      $("#modal-location-body .success-sent").removeClass("hidden")
-      setTimeout () ->
-        $("#send-contract").modal('hide')
-        $("#modal-location-body .confirmation").removeClass("hidden")
-        $("#modal-location-body .success-sent").addClass("hidden")
-      ,'1000'
+
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).data('url')
+        beforeSend: () ->
+          $('.js-send-contract-confirmation').addClass('disabled').text('Sending...')
+        success: (response) ->
+          console.log response
+          $("#modal-location-body .confirmation").addClass("hidden")
+          $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
+          $("#modal-location-body .success-sent").removeClass("hidden")
+          $(".project-history-group").prepend(response.history_item)
+          setTimeout () ->
+            $("#send-contract").modal('hide')
+            $("#modal-location-body .confirmation").removeClass("hidden")
+            $("#modal-location-body .success-sent").addClass("hidden")
+          ,'1000'
+        error: (response) ->
+          $("#modal-location-body .confirmation").addClass("hidden")
+          $("#modal-location-body .error").removeClass("hidden")
+          setTimeout () ->
+            $("#send-contract").modal('hide')
+            $("#modal-location-body .confirmation").removeClass("hidden")
+            $("#modal-location-body .error").addClass("hidden")
+          ,'1000'
+          console.log 'error'
+          console.log response
   ,".js-send-contract-confirmation"
 
   $(document).on
@@ -250,6 +277,7 @@ $ ->
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
       $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+      $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
       $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
       $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
       $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')

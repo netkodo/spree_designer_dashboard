@@ -12,20 +12,10 @@
           ATTACHMENT
         </div>
       </div>
-      <% @project_history.each do |ph| %>
-          <div class="row project-history-content">
-            <div class="col-md-4">
-              <%= t(ph.action) %>
-            </div>
-            <div class="col-md-4">
-              <%= ph.created_at.to_date.to_formatted_s(:long) %>
-            </div>
-            <div class="col-md-4">
-              <%= link_to ph.pdf.url do %>
-                  <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
-              <% end %>
-            </div>
-          </div>
-      <% end %>
+      <div class="project-history-group">
+        <% @project_history.each do |ph| %>
+            <%= render partial: 'project_history_item', locals: {ph: ph} %>
+        <% end %>
+      </div>
   <% end %>
 </div>

@@ -13,6 +13,7 @@ Spree::User.class_eval do
   has_one :logo_image, as: :viewable, dependent: :destroy, class_name: "Spree::LogoImage"
   has_one :feature_image, as: :viewable, dependent: :destroy, class_name: "Spree::FeatureImage"
   accepts_nested_attributes_for :user_images, :logo_image, :marketing_images, :feature_image
+  has_many :projects, dependent: :destroy
   is_impressionable
   
   def self.designers

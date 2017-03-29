@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-md-3">
+        <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+    </div>
+
+    <div class="col-md-9">
+
+      <div class="row">
+        <h1>Contract</h1>
+      </div>
+      <div class="row">
+        <%= form_for @contract, url: {action: 'update', format: :json}, html: {id: 'js-update-contract'} do |f| %>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :designer_name %>
+                <% if @contract.client_signed %>
+                    <%= @contract.designer_name %>
+                <% else %>
+                  <%= f.text_field :designer_name, class: 'form-control' %>
+                <% end %>
+              </div>
+
+              <% if @contract.client_signed %>
+                <div class="form-group">
+                  <%= label_tag :designer_sign %>
+                  <%= text_field_tag :signature_designer_code,"",name: "contract[signature_designer_code]", class: 'form-control hidden' %>
+                  <div id="signature-designer" class="signature"></div>
+                  <div class="signature-designer-clear btn btn-primary">CLEAR</div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= label_tag :client_name %>
+                <% if @contract.client_signed %>
+                    <%= @contract.client_name %>
+                <% else %>
+                  <%= f.text_field :client_name, class: 'form-control' %>
+                <% end %>
+              </div>
+
+              <% if @contract.client_signed %>
+                <div class="form-group">
+                  <%= label_tag :designer_sign %>
+                  <%= image_tag @contract.client_sign(:original) %>
+                </div>
+              <% end %>
+
+            </div>
+
+
+            <div class="col-md-12 text-right">
+              <%= link_to "Cancel",projects_path, class: "btn btn-default" %>
+              <% if @contract.client_signed %>
+                <%= f.button "Sign", type: :submit, class: "btn btn-primary" %>
+              <% else %>
+                <%= f.button "Save", type: :submit, class: "btn btn-primary", value: false %>
+                <%= f.button "Save & Send", type: :submit, class: "btn btn-primary", value: true %>
+              <% end %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+</div>
+
+<div id="board-history-modal-handler"></div>

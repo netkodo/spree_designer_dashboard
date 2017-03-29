@@ -20,7 +20,7 @@ class Spree::ProjectsController < Spree::StoreController
 
   def edit
     @project = Spree::Project.find(params[:id])
-    @project_history = @project.project_histories
+    @project_history = @project.project_histories.order("created_at desc")
   end
 
   def update

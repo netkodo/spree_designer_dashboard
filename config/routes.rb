@@ -57,8 +57,13 @@ Spree::Core::Engine.routes.draw do
   resources :projects do
     member do
       post :close_open, defaults: {format: 'json'}
+      # get :contract
+      resources :contracts, param: :cid
     end
   end
+  # match 'projects/:pid/contracts/:cid' => "contracts#show"
+  get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
+  patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
 
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
@@ -103,6 +108,9 @@ Spree::Core::Engine.routes.draw do
   post "/send_invoice_email" => "invoice_lines#send_invoice_email", as: :send_invoice_email, :defaults => {:format => 'json'}
   get "/show_invoice_email" => "invoice_lines#show_invoice_email", as: :show_invoice_email, :defaults => {:format => 'html'}
   post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
+
+  post "/send_contract/:id" => "contracts#send_contract", as: :send_contract, :defaults => {:format => 'json'}
+  get "/show_contract/:id" => "contracts#show_contract", as: :show_contract, :defaults => {:format => 'html'}
 
   post "/board_history" => "board_history#board_history", as: :board_history, :defaults => {:format => 'html'}
   post "/create_board_history" => "board_history#create", as: :create_board_history, :defaults => {:format => 'json'}

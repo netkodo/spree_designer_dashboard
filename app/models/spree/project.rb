@@ -1,6 +1,8 @@
 class Spree::Project < ActiveRecord::Base
   has_many :boards, dependent: :destroy
   has_many :project_histories, dependent: :destroy
+  has_one :contract, dependent: :destroy
+  belongs_to :user
 
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'
@@ -27,4 +29,36 @@ class Spree::Project < ActiveRecord::Base
       end
     end
   end
+
+  def send_contract(from_addr,to_addr,to_name,pdf)
+    html_content = ''
+    m = Mandrill::API.new(MANDRILL_KEY)
+
+    message = {
+        :subject => "CONTARCT",
+        :from_name => "INVOICE",
+        :text => "INVOICE",
+        :to => [
+            {
+                :email => to_addr,
+                :name => to_name
+            }
+        ],
+        :from_email => from_addr,
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com",
+        :merge_language => "handlebars",
+        :attachments => [
+            {
+                :type => "pdf",
+                :name => "contract.pdf",
+                :content => Base64.encode64(pdf)
+            }
+        ]
+    }
+    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
+  end
+
 end

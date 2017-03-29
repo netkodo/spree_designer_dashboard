@@ -13,13 +13,17 @@
               Are You sure to send contract?
             </div>
             <div class="col-md-4 col-md-offset-4 text-center">
-              <div class="btn btn-primary js-send-contract-confirmation">YES</div>
+              <div class="btn btn-primary js-send-contract-confirmation" data-url="<%= send_contract_path(@project) %>">YES</div>
               <div class="btn btn-default close-modal">NO</div>
             </div>
           </div>
 
           <div class="success-sent hidden row">
             <div class='text-center row col-md-8 col-md-offset-2'><i class="fa fa-check success" aria-hidden="true"></i>Contract was sent successfully!</div>
+          </div>
+
+          <div class="error hidden row">
+            <div class='text-center row col-md-8 col-md-offset-2'><i class="fa fa-times error" aria-hidden="true"></i>Error. Try again.</div>
           </div>
 
         </div>

@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-3">
+        <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+    </div>
+
+    <div class="col-md-9">
+      <div class="row">
+        <h1>Contract Details</h1>
+      </div>
+      <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= label_tag :designer_name %>
+              <%= @contract.designer_name %>
+            </div>
+
+            <div class="form-group">
+              <%= label_tag :designer_sign %>
+              <%= image_tag @contract.designer_sign(:original) %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= label_tag :client_name %>
+              <%= @contract.client_name %>
+            </div>
+
+            <div class="form-group">
+              <%= label_tag :client_sign %>
+              <%= image_tag @contract.client_sign(:original) %>
+            </div>
+          </div>
+
+        <div class="col-md-12 text-right">
+          <%= link_to "Back",projects_path, class: "btn btn-default" %>
+        </div>
+      </div>
+    </div>
+</div>
