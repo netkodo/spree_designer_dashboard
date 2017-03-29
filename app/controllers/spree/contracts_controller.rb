@@ -123,13 +123,40 @@ class Spree::ContractsController < Spree::StoreController
     end
 
     from_addr = "designer@scoutandnimble.com"
-    @project.send_contract(from_addr,"dniedzialkowski@netkodo.com","TESTS",pdf)
+    # @project.send_contract(from_addr,"dniedzialkowski@netkodo.com","TESTS",pdf)
 
     respond_to do |format|
       if true
         format.json {render json: {message: "success"}, status: :ok}
       else
         format.json {render json: {message: "success"}, status: :unprocessable_entity}
+      end
+    end
+
+
+  end
+
+
+  def show_contract
+
+    @project = Spree::Project.find(params[:id])
+
+    # contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user})
+    #
+    # pdf = WickedPdf.new.pdf_from_string(contract)
+    # save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
+    # File.open(save_path, 'wb') do |file|
+    #   file << pdf
+    # end
+    #
+    # from_addr = "designer@scoutandnimble.com"
+    # @project.send_contract(from_addr,"dniedzialkowski@netkodo.com","TESTS",pdf)
+
+    respond_to do |format|
+      if true
+        format.html {render '/spree/contracts/show_contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user}, status: :ok}
+      else
+        format.html {render json: {message: "success"}, status: :unprocessable_entity}
       end
     end
 
