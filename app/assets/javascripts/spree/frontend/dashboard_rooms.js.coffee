@@ -219,9 +219,12 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: $(@).data('url')
+        beforeSend: () ->
+          $('.js-send-contract-confirmation').addClass('disabled').text('Sending...')
         success: (response) ->
           console.log response
           $("#modal-location-body .confirmation").addClass("hidden")
+          $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
           setTimeout () ->
             $("#send-contract").modal('hide')
@@ -229,6 +232,13 @@ $ ->
             $("#modal-location-body .success-sent").addClass("hidden")
           ,'1000'
         error: (response) ->
+          $("#modal-location-body .confirmation").addClass("hidden")
+          $("#modal-location-body .error").removeClass("hidden")
+          setTimeout () ->
+            $("#send-contract").modal('hide')
+            $("#modal-location-body .confirmation").removeClass("hidden")
+            $("#modal-location-body .error").addClass("hidden")
+          ,'1000'
           console.log 'error'
           console.log response
   ,".js-send-contract-confirmation"
