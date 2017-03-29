@@ -122,12 +122,22 @@ class Spree::ContractsController < Spree::StoreController
       file << pdf
     end
 
+    if Rails.env == "production" or Rails.env == "staging"
+      mail_to = "sam@scoutandnimble.com"
+    else
+      mail_to = "dniedzialkowski@netkodo.com"
+    end
     from_addr = "designer@scoutandnimble.com"
-    # @project.send_contract(from_addr,"dniedzialkowski@netkodo.com","TESTS",pdf)
+    @project.send_contract(from_addr,mail_to,"CONTRACT",pdf)
+
+    pdf_file = File.open(save_path,"r")
 
     respond_to do |format|
       if true
-        format.json {render json: {message: "success"}, status: :ok}
+        history = Spree::ProjectHistory.create(action: "contract_sent",project_id: @project.id, pdf: pdf_file)
+        history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
+        File.delete(save_path) if File.exist?(save_path)
+        format.json {render json: {message: "success", history_item: history_item}, status: :ok}
       else
         format.json {render json: {message: "success"}, status: :unprocessable_entity}
       end
@@ -140,17 +150,6 @@ class Spree::ContractsController < Spree::StoreController
   def show_contract
 
     @project = Spree::Project.find(params[:id])
-
-    # contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user})
-    #
-    # pdf = WickedPdf.new.pdf_from_string(contract)
-    # save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
-    # File.open(save_path, 'wb') do |file|
-    #   file << pdf
-    # end
-    #
-    # from_addr = "designer@scoutandnimble.com"
-    # @project.send_contract(from_addr,"dniedzialkowski@netkodo.com","TESTS",pdf)
 
     respond_to do |format|
       if true
