@@ -48,7 +48,7 @@ module Spree
 
       respond_to do |format|
         if @user_review.save and @review.update(used: true)
-          Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New product review by #{user_name}:",@product.name,params[:product_review][:text] if Rails.env != "staging"
+          Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com","New product review by #{user_name}:",@product.name,params[:product_review][:text] if Rails.env != "staging"
           flash[:success] = "Thanks for Your review"
           format.json {render json: @user_review, status: :ok}
         else
