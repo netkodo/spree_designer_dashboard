@@ -53,7 +53,8 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           user.designer_ac_registration("to the trade designer")
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
+          # self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
+          Spree::Mailers::DesignerMailer.declined_to_designer_email(user.email,"Your application has been declined!").deliver
       end
     end
   end
