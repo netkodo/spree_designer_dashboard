@@ -165,7 +165,8 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.publish
     @board.send_email_according_to_board("Hi #{@board.designer.full_name}, <br />Your room <strong>#{@board.name}</strong> has been approved and published.  You can <a href=\"#{@board.to_url}\">visit your room here</a> to check it out.","Your room has been approved!","Scout & Nimble",params[:board][:state_message],"simple-template") if params[:board][:send_message] == "on"
-    @board.send_email_according_to_board("","Your room has been approved!","Scout & Nimble","","approved-room-new-email")
+    # @board.send_email_according_to_board("","Your room has been approved!","Scout & Nimble","","approved-room-new-email")
+    Spree::Mailers::BoardMailer.approved_room_email(@board.designer.email,"Your room has been approved!").deliver
 
     user=@board.designer
     boards = user.boards.where(status: "published").count
