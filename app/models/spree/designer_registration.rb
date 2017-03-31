@@ -1,5 +1,5 @@
 class Spree::DesignerRegistration < ActiveRecord::Base
-  require 'mandrill'
+  # require 'mandrill'
   #attr_accessible :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :company_name, :status, :first_name, :last_name
   belongs_to :user, :class_name => "User"
 
@@ -78,94 +78,94 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   end
   
   #Depracated
-  def send_designer_welcome
-    html_content = ''
-    logger.info "Sending the mail to #{self.user.email}"
+  # def send_designer_welcome
+  #   html_content = ''
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "Thank you for submitting your application!",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "Thanks for registering to be a Scout & Nimble room designer.  Please stay tuned as we'll be in touch soon!  \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   message_for_self = {
+  #       :subject => "New user has applied: #{self.user.first_name} #{self.user.last_name}",
+  #       :from_name => "Jesse Bodine",
+  #       :text => "New user has applied: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => "designer@scoutandnimble.com",
+  #               :name => "Scout & Nimble"
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com",
+  #
+  #       :merge_vars => [
+  #           {
+  #               :rcpt => self.user.email,
+  #               :vars => [
+  #                   {
+  #                       :name => "firstname",
+  #                       :content => self.user.first_name
+  #                   },
+  #                   {
+  #                       :name => "lastname",
+  #                       :content => self.user.last_name
+  #                   }
+  #               ]
+  #           }
+  #       ]
+  #   }
+  #
+  #   sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
+  #   sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
+  #   logger.info sending_self
+  #   logger.info sending
+  #
+  #
+  # end
 
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Thank you for submitting your application!",
-        :from_name => "Jesse Bodine",
-        :text => "Thanks for registering to be a Scout & Nimble room designer.  Please stay tuned as we'll be in touch soon!  \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    message_for_self = {
-        :subject => "New user has applied: #{self.user.first_name} #{self.user.last_name}",
-        :from_name => "Jesse Bodine",
-        :text => "New user has applied: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => "designer@scoutandnimble.com",
-                :name => "Scout & Nimble"
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com",
-
-        :merge_vars => [
-            {
-                :rcpt => self.user.email,
-                :vars => [
-                    {
-                        :name => "firstname",
-                        :content => self.user.first_name
-                    },
-                    {
-                        :name => "lastname",
-                        :content => self.user.last_name
-                    }
-                ]
-            }
-        ]
-    }
-
-    sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
-    sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
-    logger.info sending_self
-    logger.info sending
-
-
-  end
-
-  def send_email_to_designer(html_content,subject,from_name,text,template)
-    html_content = html_content
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => subject,
-        :from_name => from_name,
-        :text => text,
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}], message, true)
-
-    logger.info sending
-  end
+  # def send_email_to_designer(html_content,subject,from_name,text,template)
+  #   html_content = html_content
+  #   logger.info "Sending the mail to #{self.user.email}"
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => subject,
+  #       :from_name => from_name,
+  #       :text => text,
+  #       :to => [
+  #           {
+  #               :email => self.user.email,
+  #               :name => self.user.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}], message, true)
+  #
+  #   logger.info sending
+  # end
 
 end
