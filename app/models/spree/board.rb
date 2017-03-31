@@ -515,58 +515,58 @@ class Spree::Board < ActiveRecord::Base
       end
   end
 
-  def send_revision_request_email(message_content="")
+  # def send_revision_request_email(message_content="")
+  #
+  #   html_content = "Hi #{self.designer.full_name}, <br /> Your room, \"#{self.name}\" has been reviewed and needs revision before publishing.  Please visit the <a href=\"#{self.to_url}/design\">design page</a> to make any revisions. "
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => "Your room status has changed: needs revision",
+  #       :from_name => "Scout & Nimble",
+  #       :text => "#{message_content} \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.designer.email,
+  #               :name => self.designer.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template('simple-template', [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => message_content}], message, true)
+  #
+  #   logger.info sending
+  # end
 
-    html_content = "Hi #{self.designer.full_name}, <br /> Your room, \"#{self.name}\" has been reviewed and needs revision before publishing.  Please visit the <a href=\"#{self.to_url}/design\">design page</a> to make any revisions. "
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Your room status has changed: needs revision",
-        :from_name => "Scout & Nimble",
-        :text => "#{message_content} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.designer.email,
-                :name => self.designer.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template('simple-template', [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => message_content}], message, true)
-
-    logger.info sending
-  end
-
-  def send_email_according_to_board(html_content,subject,from_name,text,template)
-    html_content = html_content
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => subject,
-        :from_name => from_name,
-        :text => "#{text} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.designer.email,
-                :name => self.designer.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
-
-    logger.info sending
-  end
+  # def send_email_according_to_board(html_content,subject,from_name,text,template)
+  #   html_content = html_content
+  #
+  #   m = Mandrill::API.new(MANDRILL_KEY)
+  #   message = {
+  #       :subject => subject,
+  #       :from_name => from_name,
+  #       :text => "#{text} \n\n The Scout & Nimble Team",
+  #       :to => [
+  #           {
+  #               :email => self.designer.email,
+  #               :name => self.designer.full_name
+  #           }
+  #       ],
+  #       :from_email => "designer@scoutandnimble.com",
+  #       :track_opens => true,
+  #       :track_clicks => true,
+  #       :url_strip_qs => false,
+  #       :signing_domain => "scoutandnimble.com"
+  #   }
+  #
+  #   sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
+  #
+  #   logger.info sending
+  # end
 
 
 end
