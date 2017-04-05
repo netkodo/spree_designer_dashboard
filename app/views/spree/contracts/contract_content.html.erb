@@ -2,9 +2,10 @@
 <head>
   <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
 </head>
-<body>
+<body style="border: none;">
 <div class="container contract-content">
   <div class="row">
+    <h2 class="pdf-contract-header text-center">INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ORDER FORM</h2>
     <div class="col-xs-6">
       <div>First name: <%= designer.first_name %></div>
       <div>Last name: <%= designer.last_name %></div>
@@ -24,8 +25,8 @@
   </div>
 
   <div class="row pdf-small-margin">
-    <div class="col-xs-12">
-      <strong>Interior Design and Purchasing Services</strong> (the "<strong>Services</strong>") are comprised of <strong>interior design</strong> services and <strong>purchasing work</strong>.
+    <div class="col-xs-16">
+      The "<strong>Services</strong>" are comprised of <strong>Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
     </div>
   </div>
 
@@ -41,7 +42,15 @@
         <li>assistance preparing the project budget and project schedule; and</li>
         <li>all other design related criteria for the interior spaces.</li>
       </ul>
-      Services Fees for Interior Design Services:  $<%= project.rate %>. [<%= project.rate_type.gsub("_"," ") %>.]
+      <strong class="underline">Services Fees for Interior Design Services:</strong><br>
+      <strong class="pdf-rp">Rate Type: <%= project.rate_type.gsub("_"," ") %></strong><br>
+      <strong class="pdf-rp">Rate Amount: $<%= project.rate %></strong><br><br>
+
+      <strong class="underline">Up Front Fee:</strong><br>
+      <strong class="pdf-rp">$ ????????<br><br></strong>
+
+      <strong class="underline"> Client Billing Cycle:</strong><br>
+      <strong class="pdf-rp"><%= project.customer_billing_cycle.gsub("_"," ") %></strong>
     </div>
     <div class="col-xs-6">
       The purchasing work aspects of the Services will include, but not be limited to, arranging the:
@@ -51,7 +60,12 @@
         <li><strong>freight and shipping charges, and</strong></li>
         <li><strong>payment of merchandise.</strong></li>
       </ul>
-      <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.
+      <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
+
+      <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed ????%.<br><br>
+      <% if project.charge %>
+          <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
+      <% end %>
     </div>
   </div>
 
@@ -63,7 +77,12 @@
 
   <div class="row">
     <div class="col-xs-16">
-      <strong>Description of "Project":</strong> [Insert description and scope of project here.  Imported from Scout and Nimble website]
+      <strong>Description of "Project":</strong><br>
+      <% if project.description.length > 100 %>
+          <%= project.description.truncate(100) %>
+      <% else %>
+          <%= project.description %>
+      <% end %>
     </div>
   </div>
 
@@ -92,7 +111,7 @@
       <ol type="I">
         <li>
           <h4 class="blue">SERVICES</h4>
-          <span class="blue">The Services shall include interior design and purchasing services (the "Services"), as described below:</span>
+          <span class="blue">The Services shall include interior design and purchasing services (the "<strong>Services</strong>"), as described below:</span>
           <ol type="A">
             <li>
               <h4 class="blue">Interior Design Services</h4>
@@ -109,7 +128,7 @@
 
                 <li><strong>Consent to Photography.</strong>  The Designer will have the permission from the Client to photograph the finished product.  The Client will allow the Designer to enter the location the services were performed to take photographs.  The Designer will be able to use the photographs for promoting their services.</li>
 
-                <li><strong>Subcontractor Responsibility.</strong> Designer may provide a referral for contractors and installers, which are not employees of designers but rather independent contractors. Designer may also meet with contractors and installers for estimates and review the contractors' and installers' work to determine whether the work is proceding in general conformity with Designer's plan concepts. However,</li>
+                <li><strong>Subcontractor Responsibility.</strong> Designer may provide a referral for contractors and installers, which are not employees of designers but rather independent contractors. Designer may also meet with contractors and installers for estimates and review the contractors' and installers' work to determine whether the work is proceding in general conformity with Designer's plan concepts. </li>
               </ol>
             </li>
           </ol>
@@ -125,7 +144,7 @@
             <li class="list-none">
               <ol type="1" start="7">
                 <li class="list-none">
-                  constant observation of contractors' work at the Project site is not a part of Designer's duties.  Designer is not responsible for the performance, quality, timely completion or delivery of any work, materials or equipment furnished by contractors. Designers will not intermediate disputes between the Client and recommended contractors or installers.
+                  However, constant observation of contractors' work at the Project site is not a part of Designer's duties.  Designer is not responsible for the performance, quality, timely completion or delivery of any work, materials or equipment furnished by contractors. Designers will not intermediate disputes between the Client and recommended contractors or installers.
                 </li>
                 <li>
                   <strong>Ownership of Designs.</strong> All concepts, drawings, and specifications prepared by Designer (a.k.a. "<strong>Project Documents</strong>"), and all copyrights and other proprietary rights applicable thereto, remain at all times Designer's property. Project Documents may not be used by Client for any purpose other than completion of the Project by Designer. If the nature of the Project requires engagement by Client of any contractors to perform work based upon Designer's concepts, drawings or interior design specifications, the Client will enter into contracts directly with the appropriate contractor after obtaining written approval from Designer.
@@ -136,12 +155,12 @@
 
           <ol type="A" start="2">
             <li>
-              <h4 class="blue">Purchasing Services</h4>
+              <h4 class="blue">Merchandise Purchasing Services </h4>
               <ol type="1">
                 <li>Purchasing Services are the purchases of Merchandise by Designer for the Client. The Services with regards to purchasing services will include, but not be limited to, the following:
                   <ol type="a">
                     <li><strong>Purchasing of Merchandise.</strong>  The Merchandise to be purchased for the project will be purchased by the Designer on behalf of the Client.  The Client will not purchase items, whether individual or multiple, for the project.</li>
-                    <li><strong>Purchase Pre-Approval.</strong> Merchandise to be purchased through Designer will be specified on a Purchase Order ("PO") email by Designer and submitted for the Client's written acceptance (email reply is acceptable). Each PO will identify the item, its price, sales tax, and estimated freight or shipping cost to the Client (if available). A PO may be sent in the form of a pro forma Invoice.</li>
+                    <li><strong>Purchase Pre-Approval.</strong> Merchandise to be purchased through Designer will be specified on a Purchase Order ("<strong>PO</strong>") email by Designer and submitted for the Client's written acceptance (email reply is acceptable). Each PO will identify the item, its price, sales tax, and estimated freight or shipping cost to the Client (if available). A PO may be sent in the form of a pro forma Invoice.</li>
                     <li><strong>Freight and Shipping Charges.</strong> Freight and Shipping covers a range of different services and charges.  Freight and shipping charges are often not available at the time of order. If they are not available, the Client agrees to pay applicable freight and shipping, even if</li>
                   </ol>
 
@@ -182,9 +201,9 @@
                 <li>
                   <strong>Purchase Payment.</strong> No item will be ordered by Designer until the PO acceptance has been received by Designer and payment for Merchandise has been received. If the cost of the Merchandise is greater than what is originally estimated in the PO the Client will pay the Designer for the difference.  If the cost of the Merchandise is less than what is originally estimate in the PO the Designer will reimburse the Client for the difference.
                 </li>
-                <li>
-                  Client will be charged <strong><%= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> on all merchandise purchased for the project during the project period.  Additionally, if Client makes their own merchandise purchases for the project that the Designer has recommended, the Client is required to provide receipts of the purchases. <strong><%= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> merchandise cost will be charged to the Client by the Designer.
-                </li>
+                <!--<li>-->
+                <!--Client will be charged <strong><%#= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> on all merchandise purchased for the project during the project period.  Additionally, if Client makes their own merchandise purchases for the project that the Designer has recommended, the Client is required to provide receipts of the purchases. <strong><%#= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> merchandise cost will be charged to the Client by the Designer.-->
+                <!--</li>-->
                 <li>
                   <strong>Merchandise Availability.</strong> Merchandise comes in and out of stock with regularity. Client agrees to submit payment for Merchandise with 10 days of approving the PO. Merchandise revisions that are needed due to, both, a delay in payment, and an item being discontinued, will result in additional hourly fees at the Interior Design Service Rate.
                 </li>
@@ -192,7 +211,7 @@
                   <strong>No Other Fees.</strong> The Client will pay no other fees or charges for the Purchasing Service itself.
                 </li>
                 <li>
-                  <strong>Damage to Merchandise.</strong> Client shall inspect all merchandise upon delivery and advise the freight company of any damage or non-conformity at that time. The Client should not accept any Merchandise that has damaged packaging unless it is opened and
+                  <strong>Damage to Merchandise.</strong> Client shall inspect all merchandise upon delivery and advise the freight company of any damage or non-conformity at that time. The Client should not accept any Merchandise that has damaged packaging unless it is opened and inspected at the time of delivery. The Client will have 24 hours to inspect Merchandise. Should Merchandise be delivered damaged, the Client must immediately call Designer and email Designer pictures of the damaged Merchandise. Upon verification of damage, Designer reserves the right to fix or replace damaged pieces at no additional cost to the Client; otherwise, Designer will order a replacement for the damaged Merchandise. In either case, the Client will not be
                 </li>
               </ol>
             </li>
@@ -207,9 +226,9 @@
 
           <ol type="A" start="2">
             <li class="list-none">
-              <ol type="1" start="7">
+              <ol type="1" start="6">
                 <li class="list-none">
-                  inspected at the time of delivery. For undamaged/unopened deliveries, the Client will have 24 hours to inspect Merchandise. Should Merchandise be delivered damaged, the Client must immediately call Designer and email Designer pictures of the damaged Merchandise. Upon verification of damage, Designer reserves the right to fix or replace damaged pieces at no additional cost to the Client; otherwise, Designer will order a replacement for the damaged Merchandise. In either case, the Client will not be responsible to pay any additional freight costs.
+                  responsible to pay any additional freight costs.
                 </li>
                 <li>
                   <strong>Returns of Standard (Non-Custom) Merchandise.</strong> Should the client return any Merchandise purchased through Designer for reasons other than damage, the client will receive an 80% refund of the Client Price. Client shall pay to Designer a restocking fee equal to 20% of the Client price, plus the cost of freight to return the item to the vendor. All returns must occur in the original packaging, and all Merchandise must be unused and undamaged.
@@ -217,21 +236,27 @@
                 <li>
                   <strong>Custom Merchandise is Non-Refundable.</strong> All sales of custom Merchandise are final and non-refundable unless Merchandise contains manufacturer damage.
                 </li>
+                <% if project.charge %>
+                    <li>
+                      <strong>Merchandise Percentage: </strong>
+                      Client will be charged on merchandise purchased for the project during the project period based on the terms outlined in the above PO.
+                    </li>
+                <% end %>
               </ol>
             </li>
           </ol>
         </li>
         <li>
-          <h4 class="blue">Interior Design Services</h4>
+          <h4 class="blue">FEE ARRANGMENT</h4>
           <ol type="A">
             <li>
-              The Client agrees to pay Designer a $<%= project.rate %> for the Interior Design Services.
+              The Client agrees to pay Designer the rate amount set forth in the PO for the Interior Design Services.
             </li>
             <li>
-              Invoicing. The <%= project.customer_billing_cycle.gsub("_"," ") %> will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.
+              <strong>Invoicing, Outstanding Fees, and Taxes.</strong> The Fee will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer’s net income.
             </li>
             <li>
-              <strong>Incidental Expenses.</strong> The <%= project.customer_billing_cycle.gsub("_"," ") %> will cover all project Interior Design Services, but does not cover incidental expenses which must be reimbursed by the Client (samples, copy fees, etc.)
+              <strong>Incidental Expenses.</strong> The Fee will cover all project Interior Design services, but does not cover incidental expenses which must be reimbursed by the Client (samples, copy fees, etc.)
             </li>
             <li>
               <strong>Additional Fees for Increased Project Scope.</strong> Should the Client require additional Services beyond the original scope of work, the fee schedule will be amended.
@@ -252,14 +277,17 @@
         <li class="list-none">
           <ol type="A" start="6">
             <li>
-              <strong>Flat Rate Contracts.</strong>  In the event of a flat rate for Interior Design Services.  Upon completion of a design, the Client is allowed a maximum of 2 revisions per room design. Unless otherwise agreed by Designer, formal revision requests must be submitted in writing or in person within 3 business days of receipt of the initial room design submission or revised room design submission.  Revisions are defined as any request communicated to Designer via the phone, text message, email, or in person, that requests products to be replaced or changed for a single room design.
-            </li>
-            <li>
               <strong>Fee Payments.</strong> Customer will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the “Fees”). If Customer believes that Designer has billed Customer incorrectly, Customer must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to Company’s customer support department.
             </li>
-            <li>
-              Designer may choose to bill through an invoice, in which case, full payment for invoices issued in any given month must be received by the Designer 30 days after the mailing date of the invoice.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer’s net income.
-            </li>
+            <% if true or project.rate_type == "flat_rate" %>
+                <li>
+                  <strong>Flat Rate Contracts.</strong>  In the event of a flat rate for Interior Design Services.  Upon completion of a design, the Client is allowed a maximum of 2 revisions per room design. Unless otherwise agreed by Designer, formal revision requests must be submitted in writing or in person within 3 business days of receipt of the initial room design submission or revised room design submission.  Revisions are defined as any request communicated to Designer via the phone, text message, email, or in person, that requests products to be replaced or changed for a single room design.
+                </li>
+            <% end %>
+
+            <!--<li>-->
+            <!--Designer may choose to bill through an invoice, in which case, full payment for invoices issued in any given month must be received by the Designer 30 days after the mailing date of the invoice.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer’s net income.-->
+            <!--</li>-->
           </ol>
         </li>
         <li>
@@ -269,7 +297,7 @@
               <strong>Amendments to the Contract.</strong>  Any amendments made to this Agreement will be made in writing and must be made with the consent of all parties involved.
             </li>
             <li>
-              <strong>Agreement Termination.</strong> This Agreement may be terminated by either party upon the other party’s default in performance, but only upon written notice to the other party, specifying the nature and extent of default. If reasonable and practicable, the defaulting party shall have the opportunity to cure such default in performance within 30 days from the date of receipt of such notice, or such other time as is reasonable under the circumstances.  Designer may immediately terminate this Agreement if Clien
+              <strong>Agreement Termination.</strong> This Agreement may be terminated by either party upon the other party’s default in performance, but only upon written notice to the other party, specifying the nature and extent of default. If reasonable and practicable, the defaulting party shall have the opportunity to cure such default in performance within 30 days from the date of receipt of such notice, or such other time as is reasonable under the circumstances.  Designer may immediately terminate this Agreement if Client fails to make any timely payments of Fees.  Termination shall be without prejudice to any and all other rights and remedies of Designer and Client shall remain liable for all outstanding obligations owed by Client to Designer and for all items of Merchandise, Interior Designs Services, and other services on order as of the termination date. Termination shall not void any existing POs, and Client shall continue to be responsible for any obligation incurred prior to the
             </li>
           </ol>
         </li>
@@ -280,22 +308,25 @@
         <li class="list-none">
           <ol type="A" start="2">
             <li class="list-none">
-              fails to make any timely payments of Fees.  Termination shall be without prejudice to any and all other rights and remedies of Designer and Client shall remain liable for all outstanding obligations owed by Client to Designer and for all items of Merchandise, Interior Designs Services, and other services on order as of the termination date. Termination shall not void any existing POs, and Client shall continue to be responsible for any obligation incurred prior to the effective date of termination. Any termination by Client must occur with at least 7 days advanced written notice to Designer.
+              effective date of termination. Any termination by Client must occur with at least 7 days advanced written notice to Designer.
             </li>
             <li>
               <strong>Agreement Suspension.</strong> If the Project is suspended by the Client for more than 30 consecutive days, Client shall compensate Designer for Services performed prior to note of such suspension.  When the Project is resumed the Designer compensation shall be equitably adjusted to provide for expenses incurred in the interruption and resumption of the Designer Services.
             </li>
             <li>
-              <strong>Dispute Resolution, Jurisdiction and Choice of Law.</strong> Any controversy or claim arising out of or relating to this Agreement, or breach thereof, shall be decided by litigation in the appropriate state or federal circuit, district or equivalent court of the State and County where Designer resides. The laws of the State of Designer’s principal place of business shall govern this Agreement, without regard to choice of laws provisions. In any dispute arising out of this Agreement, the prevailing party shall be entitled to recovery of its reasonable and actual attorney fees and expenses. In the event of collection by Designer, Client shall pay all attorneys fees, expenses, and costs of collection, regardless of whether or not any lawsuit is filed.
+              <strong>Dispute Resolution, Jurisdiction and Choice of Law.</strong> Any controversy or claim arising out of or relating to this Agreement, or breach thereof, shall be decided by litigation in the appropriate state or federal circuit, district or equivalent court of the State and County where Designer resides. The laws of the State of Designer’s principal place of business shall govern this Agreement, without regard to choice of laws provisions. In any dispute arising out of this Agreement, the prevailing party shall be entitled to recovery of its reasonable and actual attorney fees and expenses. In the event of collection by Designer, Client shall pay all attorneys’ fees, expenses, and costs of collection, regardless of whether or not any lawsuit is filed.
             </li>
             <li>
               <strong>Limit of Responsibility.</strong> Designer shall not be responsible or liable for required permits, HOA approvals, governmental approvals, engineering, architectural services, manufacturing defects, acts of God, delays or actions of third parties.
             </li>
             <li>
-              <strong>Extensions.</strong> Subject to earlier termination as provided below, this Agreement is for the Initial Service Term as specified in the Order Form, and shall be automatically renewed for additional periods of the same duration as the Initial Service Term (collectively, the “Term”), unless either party requests termination at least thirty (30) days prior to the end of the then-current term.
+              <strong>Extensions.</strong> Subject to earlier termination as provided below, this Agreement is for the Initial Service Term as specified in the Order Form, and shall be automatically renewed for additional periods of the same duration as the Initial Service Term (collectively, the "Term"), unless either party requests termination at least thirty (30) days prior to the end of the then-current term.
             </li>
             <li>
-              <strong>Survival.</strong> All sections of this Agreement which by their nature should survive termination will survive termination, including, without limitation, accrued rights to payment, confidentiality
+              <strong>Survival.</strong> All sections of this Agreement which by their nature should survive termination will survive termination, including, without limitation, accrued rights to payment, confidentiality obligations, warranty disclaimers, and limitations of liability
+            </li>
+            <li>
+              <strong>Severability.</strong> If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable.
             </li>
           </ol>
         </li>
@@ -308,18 +339,15 @@
     <div class="col-xs-6">
       <ol type="I">
         <li class="list-none">
-          <ol type="A" start="7">
-            <li class="list-none">
-              obligations, warranty disclaimers, and limitations of liability.
+          <ol type="A" start="8">
+            <!--<li>-->
+            <!--If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable-->
+            <!--</li>-->
+            <li>
+              <strong>Assignment.</strong> This Agreement is not assignable, transferable or sublicensable by Client, except with Designer’s prior written consent.  Designer may transfer and assign any of its rights and obligations under this Agreement without Client’s consent.
             </li>
             <li>
-              If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable
-            </li>
-            <li>
-              <strong>Assignment.</strong> This Agreement is not assignable, transferable or sublicensable by Client, except with Designer’s prior written consent.  Designer may transfer and assign any of its rights and obligations under this Agreement without Client’s consent
-            </li>
-            <li>
-              <strong>Merger.</strong> This Agreement is the complete and exclusive statement of the mutual understandings of the parties, and supersedes and cancels all previous
+              <strong>Merger.</strong> This Agreement is the complete and exclusive statement of the mutual understandings of the parties, and supersedes and cancels all previous written and oral agreements, communications and other understandings relating to the subject matter of this Agreement. All waivers and modifications must be in a writing, and signed by both parties, except as otherwise provided herein.  No agency, partnership,
             </li>
           </ol>
         </li>
@@ -330,16 +358,25 @@
         <li class="list-none">
           <ol type="A" start="10">
             <li class="list-none">
-              written and oral agreements, communications and other understandings relating to the subject matter of this Agreement. All waivers and modifications must be in a writing, and signed by both parties, except as otherwise provided herein.  No agency, partnership, joint venture, or employment is created as a result of this Agreement and Customer does not have any authority of any kind to bind the Designer in any respect whatsoever.
+              joint venture, or employment is created as a result of this Agreement and Client does not have any authority of any kind to bind the Designer in any respect whatsoever.
             </li>
             <li>
-              <strong>Notices.</strong> All notices under this Agreement shall be in writing to the recipient party’s address in the Order Form, unless otherwise updated in writing, and will be deemed to have been duly given when received, if personally delivered; when receipt is electronically confirmed, if transmitted by facsimile or e-mail; the day after it is sent, if sent for next day delivery by a recognized overnight delivery service; and upon receipt, if sent by certified or registered mail, return receipt requested
+              <strong>Notices.</strong> All notices under this Agreement shall be in writing to the recipient party’s address in the Order Form, unless otherwise updated in writing, and will be deemed to have been duly given when received, if personally delivered; when receipt is electronically confirmed, if transmitted by facsimile or e-mail; the day after it is sent, if sent for next day delivery by a recognized overnight delivery service; and upon receipt, if sent by certified or registered mail, return receipt requested.
             </li>
           </ol>
         </li>
       </ol>
     </div>
   </div>
+
+  <% if project.description.length > 100 %>
+      <div class="row pdf-new-page content">
+        <h2 class="pdf-contract-header text-center">Description of "Project":</h2>
+        <div class="col-xs-16">
+          <%= project.description %>
+        </div>
+      </div>
+  <% end %>
 
 </div>
 </body>
