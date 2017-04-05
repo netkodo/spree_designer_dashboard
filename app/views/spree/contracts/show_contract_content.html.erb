@@ -4,7 +4,7 @@
 </head>
 <body style="border: none;">
 <div class="container contract-content">
-  <div class="row">
+  <div class="row content">
     <h2 class="pdf-contract-header text-center">INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ORDER FORM</h2>
     <div class="col-xs-6">
       <div>First name: <%= designer.first_name %></div>
@@ -24,13 +24,13 @@
 
   </div>
 
-  <div class="row pdf-small-margin">
+  <div class="row content pdf-small-margin">
     <div class="col-xs-16">
       The "<strong>Services</strong>" are comprised of <strong>Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
     </div>
   </div>
 
-  <div class="row pdf-small-margin">
+  <div class="row content pdf-small-margin">
     <div class="col-xs-6">
       <strong>Interior Design</strong> aspects of the Services will include, but not be limited to, providing:
       <ul>
@@ -46,8 +46,8 @@
       <strong class="pdf-rp">Rate Type: <%= project.rate_type.gsub("_"," ") %></strong><br>
       <strong class="pdf-rp">Rate Amount: $<%= project.rate %></strong><br><br>
 
-      <strong class="underline">Up Front Fee:</strong><br>
-      <strong class="pdf-rp">$ ????????<br><br></strong>
+      <!--<strong class="underline">Up Front Fee:</strong><br>-->
+      <!--<strong class="pdf-rp">$ ????????<br><br></strong>-->
 
       <strong class="underline"> Client Billing Cycle:</strong><br>
       <strong class="pdf-rp"><%= project.customer_billing_cycle.gsub("_"," ") %></strong>
@@ -62,31 +62,33 @@
       </ul>
       <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
 
-      <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed ????%.<br><br>
+      <!--<strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed ????%.<br><br>-->
       <% if project.charge %>
           <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
       <% end %>
     </div>
   </div>
 
-  <div class="row pdf-small-margin">
+  <div class="row content pdf-small-margin">
     <div class="col-xs-16">
-      <strong>Term of Services:</strong>  The term of this Agreement for Designer's Services shall begin on the Effective Date and end on ________, unless extended or terminated as provided in this Agreement.
+      <strong>Term of Services: </strong>
+      The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "Effective Date") and end on project completion, unless extended or terminated as provided in this Agreement.
     </div>
+    <br>
   </div>
 
-  <div class="row">
+  <div class="row content">
     <div class="col-xs-16">
       <strong>Description of "Project":</strong><br>
-      <% if project.description.length > 100 %>
-          <%= project.description.truncate(100) %>
+      <% if project.description.length > 800 %>
+          Description is in an Addendum.
       <% else %>
           <%= project.description %>
       <% end %>
     </div>
   </div>
 
-  <div class="row pdf-new-page pdf-small-margin">
+  <div class="row content pdf-new-page pdf-small-margin">
     <div class="col-xs-16">
       This INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ("<strong>Agreement</strong>") is entered into on [Insert Date] (the "<strong>Effective Date</strong>") between the Designer and the Client listed above.
       THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS THAT FOLLOW. It contains, among other things description of interior design services, purchasing services, manner of payment, and agreement termination.
@@ -253,7 +255,7 @@
               The Client agrees to pay Designer the rate amount set forth in the PO for the Interior Design Services.
             </li>
             <li>
-              <strong>Invoicing, Outstanding Fees, and Taxes.</strong> The Fee will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer’s net income.
+              <strong>Invoicing, Outstanding Fees, and Taxes.</strong> The Fee will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer's net income.
             </li>
             <li>
               <strong>Incidental Expenses.</strong> The Fee will cover all project Interior Design services, but does not cover incidental expenses which must be reimbursed by the Client (samples, copy fees, etc.)
@@ -277,7 +279,7 @@
         <li class="list-none">
           <ol type="A" start="6">
             <li>
-              <strong>Fee Payments.</strong> Customer will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the “Fees”). If Customer believes that Designer has billed Customer incorrectly, Customer must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to Company’s customer support department.
+              <strong>Fee Payments.</strong> Customer will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the "Fees"). If Customer believes that Designer has billed Customer incorrectly, Customer must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to Company's customer support department.
             </li>
             <% if true or project.rate_type == "flat_rate" %>
                 <li>
@@ -286,7 +288,7 @@
             <% end %>
 
             <!--<li>-->
-            <!--Designer may choose to bill through an invoice, in which case, full payment for invoices issued in any given month must be received by the Designer 30 days after the mailing date of the invoice.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer’s net income.-->
+            <!--Designer may choose to bill through an invoice, in which case, full payment for invoices issued in any given month must be received by the Designer 30 days after the mailing date of the invoice.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer's net income.-->
             <!--</li>-->
           </ol>
         </li>
@@ -297,7 +299,7 @@
               <strong>Amendments to the Contract.</strong>  Any amendments made to this Agreement will be made in writing and must be made with the consent of all parties involved.
             </li>
             <li>
-              <strong>Agreement Termination.</strong> This Agreement may be terminated by either party upon the other party’s default in performance, but only upon written notice to the other party, specifying the nature and extent of default. If reasonable and practicable, the defaulting party shall have the opportunity to cure such default in performance within 30 days from the date of receipt of such notice, or such other time as is reasonable under the circumstances.  Designer may immediately terminate this Agreement if Client fails to make any timely payments of Fees.  Termination shall be without prejudice to any and all other rights and remedies of Designer and Client shall remain liable for all outstanding obligations owed by Client to Designer and for all items of Merchandise, Interior Designs Services, and other services on order as of the termination date. Termination shall not void any existing POs, and Client shall continue to be responsible for any obligation incurred prior to the
+              <strong>Agreement Termination.</strong> This Agreement may be terminated by either party upon the other party's default in performance, but only upon written notice to the other party, specifying the nature and extent of default. If reasonable and practicable, the defaulting party shall have the opportunity to cure such default in performance within 30 days from the date of receipt of such notice, or such other time as is reasonable under the circumstances.  Designer may immediately terminate this Agreement if Client fails to make any timely payments of Fees.  Termination shall be without prejudice to any and all other rights and remedies of Designer and Client shall remain liable for all outstanding obligations owed by Client to Designer and for all items of Merchandise, Interior Designs Services, and other services on order as of the termination date. Termination shall not void any existing POs, and Client shall continue to be responsible for any obligation incurred prior to the
             </li>
           </ol>
         </li>
@@ -314,7 +316,7 @@
               <strong>Agreement Suspension.</strong> If the Project is suspended by the Client for more than 30 consecutive days, Client shall compensate Designer for Services performed prior to note of such suspension.  When the Project is resumed the Designer compensation shall be equitably adjusted to provide for expenses incurred in the interruption and resumption of the Designer Services.
             </li>
             <li>
-              <strong>Dispute Resolution, Jurisdiction and Choice of Law.</strong> Any controversy or claim arising out of or relating to this Agreement, or breach thereof, shall be decided by litigation in the appropriate state or federal circuit, district or equivalent court of the State and County where Designer resides. The laws of the State of Designer’s principal place of business shall govern this Agreement, without regard to choice of laws provisions. In any dispute arising out of this Agreement, the prevailing party shall be entitled to recovery of its reasonable and actual attorney fees and expenses. In the event of collection by Designer, Client shall pay all attorneys’ fees, expenses, and costs of collection, regardless of whether or not any lawsuit is filed.
+              <strong>Dispute Resolution, Jurisdiction and Choice of Law.</strong> Any controversy or claim arising out of or relating to this Agreement, or breach thereof, shall be decided by litigation in the appropriate state or federal circuit, district or equivalent court of the State and County where Designer resides. The laws of the State of Designer's principal place of business shall govern this Agreement, without regard to choice of laws provisions. In any dispute arising out of this Agreement, the prevailing party shall be entitled to recovery of its reasonable and actual attorney fees and expenses. In the event of collection by Designer, Client shall pay all attorneys' fees, expenses, and costs of collection, regardless of whether or not any lawsuit is filed.
             </li>
             <li>
               <strong>Limit of Responsibility.</strong> Designer shall not be responsible or liable for required permits, HOA approvals, governmental approvals, engineering, architectural services, manufacturing defects, acts of God, delays or actions of third parties.
@@ -344,7 +346,7 @@
             <!--If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable-->
             <!--</li>-->
             <li>
-              <strong>Assignment.</strong> This Agreement is not assignable, transferable or sublicensable by Client, except with Designer’s prior written consent.  Designer may transfer and assign any of its rights and obligations under this Agreement without Client’s consent.
+              <strong>Assignment.</strong> This Agreement is not assignable, transferable or sublicensable by Client, except with Designer's prior written consent.  Designer may transfer and assign any of its rights and obligations under this Agreement without Client's consent.
             </li>
             <li>
               <strong>Merger.</strong> This Agreement is the complete and exclusive statement of the mutual understandings of the parties, and supersedes and cancels all previous written and oral agreements, communications and other understandings relating to the subject matter of this Agreement. All waivers and modifications must be in a writing, and signed by both parties, except as otherwise provided herein.  No agency, partnership,
@@ -361,7 +363,7 @@
               joint venture, or employment is created as a result of this Agreement and Client does not have any authority of any kind to bind the Designer in any respect whatsoever.
             </li>
             <li>
-              <strong>Notices.</strong> All notices under this Agreement shall be in writing to the recipient party’s address in the Order Form, unless otherwise updated in writing, and will be deemed to have been duly given when received, if personally delivered; when receipt is electronically confirmed, if transmitted by facsimile or e-mail; the day after it is sent, if sent for next day delivery by a recognized overnight delivery service; and upon receipt, if sent by certified or registered mail, return receipt requested.
+              <strong>Notices.</strong> All notices under this Agreement shall be in writing to the recipient party's address in the Order Form, unless otherwise updated in writing, and will be deemed to have been duly given when received, if personally delivered; when receipt is electronically confirmed, if transmitted by facsimile or e-mail; the day after it is sent, if sent for next day delivery by a recognized overnight delivery service; and upon receipt, if sent by certified or registered mail, return receipt requested.
             </li>
           </ol>
         </li>
@@ -369,10 +371,11 @@
     </div>
   </div>
 
-  <% if project.description.length > 100 %>
+  <% if project.description.length > 800 %>
       <div class="row pdf-new-page content">
-        <h2 class="pdf-contract-header text-center">Description of "Project":</h2>
+        <h2 class="pdf-contract-header text-center">Addendum</h2>
         <div class="col-xs-16">
+          <strong>Description of "Project":</strong><br>
           <%= project.description %>
         </div>
       </div>
