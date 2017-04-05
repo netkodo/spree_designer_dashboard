@@ -7,8 +7,8 @@ $ ->
     $("#signature_designer_code").val( $("#signature-designer").jSignature("getData","default") )
     console.log 'chaged'
 
-  $("#signature-client").jSignature();
-  $("#signature-designer").jSignature();
+  $("#signature-client").jSignature({width:400,height: 150});
+  $("#signature-designer").jSignature({width:400,height: 150});
 
   $(document).on
     click: (e) ->
