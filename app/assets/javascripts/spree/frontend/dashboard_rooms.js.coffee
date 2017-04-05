@@ -338,6 +338,7 @@ $ ->
       if step == 2
         $('.step1 .data').html("<p>
           #{$('#project_project_name').val()}<br>
+          #{$('#project_desctiption').val().substring(0,97)}...<br><br>
           #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
           #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
           </p>

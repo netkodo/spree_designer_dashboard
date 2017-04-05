@@ -30,6 +30,15 @@ class Spree::Project < ActiveRecord::Base
     end
   end
 
+  def charge_on_statement
+    case self.charge_on
+      when "all_products"
+        "on all products purchased related to merchandise ordering, whether or not they are included in the Project."
+      when "alternate"
+        "if Client buys alternate merchandise not presented by the Designer for the Project."
+    end
+  end
+
   def send_contract(from_addr,to_addr,to_name,pdf)
     html_content = ''
     m = Mandrill::API.new(MANDRILL_KEY)
