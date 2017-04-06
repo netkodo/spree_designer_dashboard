@@ -46,8 +46,10 @@
       <strong class="pdf-rp">Rate Type: <%= project.rate_type.gsub("_"," ") %></strong><br>
       <strong class="pdf-rp">Rate Amount: $<%= project.rate %></strong><br><br>
 
-      <!--<strong class="underline">Up Front Fee:</strong><br>-->
-      <!--<strong class="pdf-rp">$ ????????<br><br></strong>-->
+      <% if project.upfront_deposit %>
+        <strong class="underline">Up Front Fee:</strong><br>
+        <strong class="pdf-rp">$ <%= project.deposit_amount %><br><br></strong>
+      <% end %>
 
       <strong class="underline"> Client Billing Cycle:</strong><br>
       <strong class="pdf-rp"><%= project.customer_billing_cycle.gsub("_"," ") %></strong>
@@ -62,7 +64,9 @@
       </ul>
       <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
 
-      <!--<strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed ????%.<br><br>-->
+      <% if project.pass_discount %>
+      <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed <%= project.discount_amount %>%.<br><br>
+      <% end %>
       <% if project.charge %>
           <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
       <% end %>

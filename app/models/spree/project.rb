@@ -30,6 +30,19 @@ class Spree::Project < ActiveRecord::Base
     end
   end
 
+  def display_rate_type
+    case self.rate_type
+      when 'flat_rate_room'
+        'flat rate / per room'
+      when 'flat_rate_project'
+        'flat rate / entire project'
+      when 'hourly_rate'
+        'hourly rate'
+      else
+        'ERROR'
+    end
+  end
+
   def charge_on_statement
     case self.charge_on
       when "all_products"

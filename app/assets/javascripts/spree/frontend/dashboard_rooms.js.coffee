@@ -300,7 +300,7 @@ $ ->
   $(document).on
     change: (e) ->
       $(@).removeClass('select-placeholder')
-  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on"
+  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on, #project_upfront_deposit, #pass_discount"
 
   $(document).on
     change: (e) ->
@@ -338,7 +338,7 @@ $ ->
       if step == 2
         $('.step1 .data').html("<p>
           #{$('#project_project_name').val()}<br>
-          #{$('#project_desctiption').val().substring(0,97)}...<br><br>
+          #{$('#project_description').val().substring(0,100)}<br><br>
           #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
           #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
           </p>
@@ -347,19 +347,31 @@ $ ->
           #{$('#project_phone').val()}
           </p>")
       else if step == 3
-        if $('#project_rate_type').val() == "flat_rate"
-          str = "<p>
-            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
-            #{$('#project_rate').val()}<br>
-            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
-            </p>"
+        if $('#project_upfront_deposit').val() == 'true'
+          upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
         else
-          str = "<p>
-            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
-            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
-            </p>"
+          upfront_deposit = "Upfront deposit: No"
+#        {$('#project_upfront_deposit').val()}<br>
+#        {$('#project_deposit_amount').val()}<br>
+#        if $('#project_rate_type').val() == "flat_rate"
+        str = "<p>
+          #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+          #{$('#project_rate').val()}<br>
+          #{upfront_deposit}<br>
+          #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+          </p>"
+#        else
+#          str = "<p>
+#            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+#            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+#            </p>"
         $('.step2 .data').html(str)
       else if step == 4
+        if $('#project_pass_discount').val() == 'true'
+          pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
+        else
+          pass_discount = "Pass discount: No"
+
         if $('#project_charge').val() == 'true'
           if $("#project_charge_on").val() == 'all_products'
             charge_on = "On all products"
@@ -369,12 +381,14 @@ $ ->
               #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
               Percentage: Yes<br>
               #{charge_on}<br>
-              Charge: #{$('#project_charge_percentage').val()}%
+              Charge: #{$('#project_charge_percentage').val()}%<br>
+              #{pass_discount}
             </p>"
         else
           str = "<p>
               #{$('#contract_type').find('option:selected').text()}<br>
-              Percentage: No
+              Percentage: No<br>
+              #{pass_discount}
             </p>"
         $('.step3 .data').html(str)
 
@@ -383,15 +397,12 @@ $ ->
   $(document).on
     change: (e) ->
       $('#project_customer_billing_cycle').parents('.form-group').show()
-      if $(@).val() == "flat_rate"
-        $('#project_rate').parents('.form-group').show()
-        $('#project_customer_billing_cycle').html('
-          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
-          <option value="at_start" class="option-color">BILL AT START OF PROJECT</option>
-          <option value="at_completion" class="option-color">BILL AT PROJECT COMPLETION</option>
-          ')
+      if $(@).val() == 'hourly_rate'
+        $('#project_rate').parents('.form-group').find('.info').show()
       else
-        $('#project_rate').parents('.form-group').hide()
+        $('#project_rate').parents('.form-group').find('.info').hide()
+
+      if $(@).val() == "flat_rate_project" or $(@).val() == 'hourly_rate'
         $('#project_customer_billing_cycle').html('
           <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
           <option value="weekly" class="option-color">WEEKLY</option>
@@ -399,4 +410,26 @@ $ ->
           <option value="monthly" class="option-color">MONTHLY</option>
           <option value="at_completion" class="option-color">AT PROJECT COMPLETION</option>
         ')
+      else
+        $('#project_customer_billing_cycle').html('
+          <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
+          <option value="at_start" class="option-color">BILL AT START OF PROJECT</option>
+          <option value="at_completion" class="option-color">BILL AT PROJECT COMPLETION</option>
+          ')
   ,"#project_rate_type"
+
+  $(document).on
+    change: (e) ->
+      if $(@).val() == 'true'
+        $('#project_deposit_amount').parents('.form-group').show()
+      else
+        $('#project_deposit_amount').parents('.form-group').hide()
+  ,"#project_upfront_deposit"
+
+  $(document).on
+    change: (e) ->
+      if $(@).val() == 'true'
+        $('#project_discount_amount').parents('.form-group').show()
+      else
+        $('#project_discount_amount').parents('.form-group').hide()
+  ,"#project_pass_discount"

@@ -27,8 +27,9 @@
   <div class="col-md-6 data">
     <% if u %>
     <p>
-      <%= @project.rate_type == 'flat_rate' ? 'Flat Rate' : 'Hourly Rate' %><br>
-      <%= @project.rate_type == 'flat_rate' ? @project.rate : '' %><br>
+      <%= @project.display_rate_type %><br>
+      <%= @project.rate %><br>
+      Upfront deposit: <%= @project.upfront_deposit ?  @project.deposit_amount : "No" %><br>
       <%= @project.get_customer_billing_cycle %>
     </p>
     <% end %>
@@ -42,14 +43,15 @@
   </div>
   <div class="col-md-6 data">
     <% if u %>
-        <%= @project.rate_type == 'flat_rate' ? 'Flat Rate' : 'Hourly Rate' %><br>
+        <%= @project.display_rate_type %><br>
         <% if @project.charge %>
           Percentage: Yes<br>
           <%= @project.charge_on == 'alternate' ? 'On Alternate Products' : 'On All Products' %><br>
-          Charge: <%= @project.charge_percentage %>%
+          Charge: <%= @project.charge_percentage %>%<br>
         <% else %>
-          Percentage: No
+          Percentage: No<br>
         <% end %>
+        Pass discount: <%= @project.pass_discount ? "#{@project.discount_amount}%" : "No" %>
     <% end %>
   </div>
 </div>
