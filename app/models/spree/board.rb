@@ -388,6 +388,9 @@ class Spree::Board < ActiveRecord::Base
 
   def generate_image
     white_canvas = ::Magick::Image.new(630, 360) { self.background_color = "white" }
+    # activate alpha channel on white_canavas to get transparency working
+    white_canvas.alpha = Magick::ActivateAlphaChannel
+
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
     file = nil
     self.board_products.each do |bp|
@@ -411,6 +414,15 @@ class Spree::Board < ActiveRecord::Base
         #flop! is for horizontal mirror
         product_image.flop! if bp.flip_x == true
 
+        # changing format to get alpha channel
+        product_image.format = "png"
+        # setting fuzz for similar colors to color which we want transform to transparent
+        # number should be low to prevent from cutting middle of product
+        product_image.fuzz = "4%"
+        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
+        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
+        product_image = product_image.paint_transparent('#ffffff',Magick::TransparentOpacity)
+
         # set the rotation
         product_image.rotate!(bp.rotation_offset)
 
@@ -430,8 +442,8 @@ class Spree::Board < ActiveRecord::Base
         white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
-      white_canvas.format = 'jpeg'
-      file = Tempfile.new("room_#{self.id}.jpg")
+      white_canvas.format = 'png'
+      file = Tempfile.new("room_#{self.id}.png")
       white_canvas.write(file.path)
     end
       #self.board_image.destroy if self.board_image

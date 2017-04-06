@@ -507,7 +507,7 @@ function createObjectImage(activeObject) {
         theImage.set('flipX', activeObject.get('flipX'));
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
-        theImage.set('stroke', '#ffffff');
+        // theImage.set('stroke', '#ffffff');
 
         if(canvas.getObjects().length == 1){
             theImage.set('z_index',canvas.getObjects().length);
@@ -530,6 +530,14 @@ function createObjectImage(activeObject) {
         //     theImage.filters.push(generateFilter());
         //     theImage.applyFilters(canvas.renderAll.bind(canvas));
         // }
+
+        var transparent_filter = new fabric.Image.filters.RemoveWhite({
+            threshold: 10,
+            distance: 200
+        });
+        theImage.filters.push(transparent_filter);
+        theImage.applyFilters(canvas.renderAll.bind(canvas));
+
         hash = generateHash(theImage);
         $('.js-input-hash-product').text(JSON.stringify(hash));
         canvas.remove(activeObject);
@@ -561,7 +569,7 @@ function generateHash(object) {
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
 
-    console.log(value.length)
+    // console.log(value.length);
     if (value.length > 0) {
         hash = JSON.parse(value)
     } else {
