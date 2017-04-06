@@ -328,6 +328,13 @@
 	</div>
 </div>
 
+<% if !@board.related_boards.blank? %>
+    <h3>Related Rooms</h3>
+    <%= render :partial => "boards_list", :locals => {:boards => @board.related_boards}%>
+<% else %>
+    <div class="empty-state">There are no related boards at this time.</div>
+<% end%>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="board-section board-products-section">
@@ -344,12 +351,7 @@
     <%#= render :partial => "boards_list", :locals => {:boards => @board.other_designer_boards}%>
 <%# end %>
 
-<h3>Related Rooms</h3>
-<% if !@board.related_boards.blank? %>
-	<%= render :partial => "boards_list", :locals => {:boards => @board.related_boards}%>
-<% else %>
-	<div class="empty-state">There are no related boards at this time.</div>
-<% end%>
+
 
  <div class="fb-comments" data-href="<%=url_for(:only_path => false)%>" data-numposts="5" data-colorscheme="light"></div>
 
