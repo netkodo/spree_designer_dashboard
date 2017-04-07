@@ -153,7 +153,7 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if true
-        format.html {render '/spree/contracts/show_contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user}, status: :ok}
+        format.html {render '/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user}, status: :ok}
       else
         format.html {render json: {message: "success"}, status: :unprocessable_entity}
       end
