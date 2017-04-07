@@ -19,7 +19,7 @@
 </div>
 
 <div class="form-group" style="<%= u ? '' : 'display: none;' %>">
-  <%#= f.select :charge_percentage, options_for_select([['Choose percentage to charge:','placeholder',{disabled: 'disabled'}],['5%','5',{class: 'option-color'}],['10%','10',{class: 'option-color'}],['15%','15',{class: 'option-color'}],['20%','20',{class: 'option-color'}],['25%','25',{class: 'option-color'}]],@project.charge_percentage || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
-  <%= f.text_field :charge_percentage, placeholder: "Enter Percentage to charge Client (ex: 10)", class: "form-control text-center" %>
+  <%= f.select :charge_percentage, options_for_select([['Choose percentage to charge:','placeholder',{disabled: 'disabled'}],['5%','5',{class: 'option-color'}],['10%','10',{class: 'option-color'}],['15%','15',{class: 'option-color'}],['20%','20',{class: 'option-color'}],['25%','25',{class: 'option-color'}]],@project.charge_percentage || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
+  <%#= f.text_field :charge_percentage, placeholder: "Enter Percentage to charge Client (ex: 10)", class: "form-control text-center" %>
   <div class="info"></div>
 </div>
