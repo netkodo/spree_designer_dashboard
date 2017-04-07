@@ -4,98 +4,107 @@
 </head>
 <body style="border: none;">
 <div class="container contract-content">
-  <div class="row content">
-    <h2 class="pdf-contract-header text-center">INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ORDER FORM</h2>
-    <div class="col-xs-6">
-      <div>First name: <%= designer.first_name %></div>
-      <div>Last name: <%= designer.last_name %></div>
-      <div>Website: <%= designer.website %></div>
-      <div>Company name: <%= designer.company_name %></div>
-      <div>Phone: <%= designer.phone %></div>
-    </div>
-    <div class="col-xs-6">
-      <div>Address1: <%= designer.address1 %></div>
-      <div>Address2: <%= designer.address2 %></div>
-      <div>City: <%= designer.city %></div>
-      <div>State: <%= designer.state %></div>
-      <div>Postal code: <%= designer.postal_code %></div>
-      <div>Email: <%= user.email %></div>
-    </div>
+  <h2 class="pdf-contract-header text-center">INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ORDER FORM</h2>
+  <table class="pdf-contract-table">
+    <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 50%" />
+    </colgroup>
+    <tbody>
+    <tr>
+      <div class="row content">
+        <td class="user-data">
+          <div>First name: <%= designer.first_name %></div>
+          <div>Last name: <%= designer.last_name %></div>
+          <div>Website: <%= designer.website %></div>
+          <div>Company name: <%= designer.company_name %></div>
+          <div>Phone: <%= designer.phone %></div>
+        </td>
+        <td class="user-data">
+          <div>Address1: <%= designer.address1 %></div>
+          <div>Address2: <%= designer.address2 %></div>
+          <div>City: <%= designer.city %></div>
+          <div>State: <%= designer.state %></div>
+          <div>Postal code: <%= designer.postal_code %></div>
+          <div>Email: <%= user.email %></div>
+        </td>
+      </div>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="">
+          The "<strong>Services</strong>" are comprised of <strong>Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Interior Design</strong> aspects of the Services will include, but not be limited to, providing:
+        <ul>
+          <li>a complete design concept including specifications of all finishes and materials;</li>
 
-  </div>
+          <li>a floor plan layout of interior spaces; the selecting of fabrics, finishes, furnishings, and window treatments;</li>
+          <li>a specification of wall coverings finishes and colors;</li>
+          <li>oversight of production and fabrication requirements;</li>
+          <li>assistance preparing the project budget and project schedule; and</li>
+          <li>all other design related criteria for the interior spaces.</li>
+        </ul>
+        <strong class="underline">Services Fees for Interior Design Services:</strong><br>
+        <span class="pdf-rp"><strong>Rate Type: </strong><%= project.display_rate_type %></span><br>
+        <span class="pdf-rp"><strong>Rate Amount: </strong>$<%= project.rate %></span><br><br>
 
-  <div class="row content pdf-small-margin">
-    <div class="col-xs-16">
-      The "<strong>Services</strong>" are comprised of <strong>Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
-    </div>
-  </div>
+        <% if project.upfront_deposit %>
+            <strong><span class="underline">Up Front Fee</span>: </strong>
+            $<%= project.deposit_amount %><br><br>
+        <% end %>
 
-  <div class="row content pdf-small-margin">
-    <div class="col-xs-6">
-      <strong>Interior Design</strong> aspects of the Services will include, but not be limited to, providing:
-      <ul>
-        <li>a complete design concept including specifications of all finishes and materials;</li>
+        <strong><span class="underline">Client Billing Cycle</span>: </strong>
+        <%= project.get_customer_billing_cycle %>
 
-        <li>a floor plan layout of interior spaces; the selecting of fabrics, finishes, furnishings, and window treatments;</li>
-        <li>a specification of wall coverings finishes and colors;</li>
-        <li>oversight of production and fabrication requirements;</li>
-        <li>assistance preparing the project budget and project schedule; and</li>
-        <li>all other design related criteria for the interior spaces.</li>
-      </ul>
-      <strong class="underline">Services Fees for Interior Design Services:</strong><br>
-      <strong class="pdf-rp">Rate Type: <%= project.rate_type.gsub("_"," ") %></strong><br>
-      <strong class="pdf-rp">Rate Amount: $<%= project.rate %></strong><br><br>
+      </td>
+      <td>
+        The purchasing work aspects of the Services will include, but not be limited to, arranging the:
+        <ul>
+          <li>purchase of merchandise,</li>
+          <li><strong>purchase pre-approval,</strong></li>
+          <li><strong>freight and shipping charges, and</strong></li>
+          <li><strong>payment of merchandise.</strong></li>
+        </ul>
+        <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
 
-      <% if project.upfront_deposit %>
-        <strong class="underline">Up Front Fee:</strong><br>
-        <strong class="pdf-rp">$ <%= project.deposit_amount %><br><br></strong>
-      <% end %>
+        <% if project.pass_discount %>
+            <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed <%= project.discount_amount %>%.<br><br>
+        <% end %>
 
-      <strong class="underline"> Client Billing Cycle:</strong><br>
-      <strong class="pdf-rp"><%= project.customer_billing_cycle.gsub("_"," ") %></strong>
-    </div>
-    <div class="col-xs-6">
-      The purchasing work aspects of the Services will include, but not be limited to, arranging the:
-      <ul>
-        <li>purchase of merchandise,</li>
-        <li><strong>purchase pre-approval,</strong></li>
-        <li><strong>freight and shipping charges, and</strong></li>
-        <li><strong>payment of merchandise.</strong></li>
-      </ul>
-      <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
-
-      <% if project.pass_discount %>
-      <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed <%= project.discount_amount %>%.<br><br>
-      <% end %>
-      <% if project.charge %>
-          <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="row content pdf-small-margin">
-    <div class="col-xs-16">
-      <strong>Term of Services: </strong>
-      The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "Effective Date") and end on project completion, unless extended or terminated as provided in this Agreement.
-    </div>
-    <br>
-  </div>
-
-  <div class="row content">
-    <div class="col-xs-16">
-      <strong>Description of "Project":</strong><br>
-      <% if project.description.length > 800 %>
-          Description is in an Addendum.
-      <% else %>
-          <%= project.description %>
-      <% end %>
-    </div>
-  </div>
+        <% if project.charge %>
+            <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>%
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <strong>Term of Services: </strong>
+        The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "Effective Date") and end on project completion, unless extended or terminated as provided in this Agreement.
+        <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <strong>Description of "Project":</strong><br>
+        <% if project.description.length > 600 %>
+            Description is in an Addendum.
+        <% else %>
+            <%= project.description %>
+        <% end %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
   <div class="row content pdf-new-page pdf-small-margin">
-    <div class="col-xs-16">
-      This INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ("<strong>Agreement</strong>") is entered into on [Insert Date] (the "<strong>Effective Date</strong>") between the Designer and the Client listed above.
-      THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS THAT FOLLOW. It contains, among other things description of interior design services, purchasing services, manner of payment, and agreement termination.
+    <div class="col-xs-12">
+      This INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ("<strong>Agreement</strong>") is entered into on <%= Date.today.to_formatted_s(:long) %> (the "<strong>Effective Date</strong>") between the Designer and the Client listed above.
+      <strong class="underline">THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS THAT FOLLOW.</strong> It contains, among other things description of interior design services, purchasing services, manner of payment, and agreement termination.<br><br>
       There shall be no force or effect to any different terms of any related purchase order or similar form, even if signed by the parties after the date hereof.  By signing to this Agreement, the Client and the Designer acknowledge the terms and conditions contained within this Agreement and further acknowledge that this Agreement, along with subsequent written correspondence regarding, but not limited to, pricing, fees, terms, and timelines, together represent a complete contract between the Client and the Designer
     </div>
     <div class="col-xs-6 pdf-small-margin">
@@ -193,7 +202,7 @@
                 <li class="list-none">
                   <ol type="a" class="list-none">
                     <li>they were not included in the PO or pro forma invoice. </li>
-                    <ol type="a">
+                    <ol type="1" class="pdf-custom-list">
                       <li><strong>Freight Shipping.</strong>  Freight Shipping is the shipping of items by large transportation modes such as semi-trailer truck, trains, and airplane.</li>
                       <li><strong>Small Parcel Shipping.</strong>  Small parcel shipping is the shipping of items by van or other comparable modes of transportation</li>
                       <li><strong>White Glove Services.</strong>  These services include the moving, loading, and unloading of merchandise into the desired location.</li>
@@ -207,9 +216,6 @@
                 <li>
                   <strong>Purchase Payment.</strong> No item will be ordered by Designer until the PO acceptance has been received by Designer and payment for Merchandise has been received. If the cost of the Merchandise is greater than what is originally estimated in the PO the Client will pay the Designer for the difference.  If the cost of the Merchandise is less than what is originally estimate in the PO the Designer will reimburse the Client for the difference.
                 </li>
-                <!--<li>-->
-                <!--Client will be charged <strong><%#= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> on all merchandise purchased for the project during the project period.  Additionally, if Client makes their own merchandise purchases for the project that the Designer has recommended, the Client is required to provide receipts of the purchases. <strong><%#= project.charge_percentage.present? ? project.charge_percentage : '0' %>%</strong> merchandise cost will be charged to the Client by the Designer.-->
-                <!--</li>-->
                 <li>
                   <strong>Merchandise Availability.</strong> Merchandise comes in and out of stock with regularity. Client agrees to submit payment for Merchandise with 10 days of approving the PO. Merchandise revisions that are needed due to, both, a delay in payment, and an item being discontinued, will result in additional hourly fees at the Interior Design Service Rate.
                 </li>
@@ -285,22 +291,21 @@
             <li>
               <strong>Fee Payments.</strong> Customer will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the "Fees"). If Customer believes that Designer has billed Customer incorrectly, Customer must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to Company's customer support department.
             </li>
-            <% if true or project.rate_type == "flat_rate" %>
+            <% if project.rate_type == "flat_rate_room" or project.rate_type == "flat_rate_project" %>
                 <li>
-                  <strong>Flat Rate Contracts.</strong>  In the event of a flat rate for Interior Design Services.  Upon completion of a design, the Client is allowed a maximum of 2 revisions per room design. Unless otherwise agreed by Designer, formal revision requests must be submitted in writing or in person within 3 business days of receipt of the initial room design submission or revised room design submission.  Revisions are defined as any request communicated to Designer via the phone, text message, email, or in person, that requests products to be replaced or changed for a single room design.
+                  <strong>Flat Rate Contract Revisions.</strong> Upon completion of a design, the Client is allowed a maximum of 2 revisions per room design. Unless otherwise agreed by Designer, formal revision requests must be submitted in writing or in person within 3 business days of receipt of the initial room design submission or revised room design submission.  Revisions are defined as any request communicated to Designer via the phone, text message, email, or in person, that requests products to be replaced or changed for a single room design.
                 </li>
             <% end %>
-
-            <!--<li>-->
-            <!--Designer may choose to bill through an invoice, in which case, full payment for invoices issued in any given month must be received by the Designer 30 days after the mailing date of the invoice.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer's net income.-->
-            <!--</li>-->
           </ol>
         </li>
         <li>
           <h4 class="blue">ADDITIONAL TERMS</h4>
           <ol type="A">
             <li>
-              <strong>Amendments to the Contract.</strong>  Any amendments made to this Agreement will be made in writing and must be made with the consent of all parties involved.
+              <strong>Amendments to the Contract.</strong> Any amendments made to this Agreement will be made in writing and must be made with the consent of all parties involved.
+            </li>
+            <li>
+              <strong>Electronic Signatures.</strong> Each party agrees that the electronic signatures of the parties to this Agreement are intended to authenticate this writing and have the same force and effect as manual signatures.
             </li>
             <li>
               <strong>Agreement Termination.</strong> This Agreement may be terminated by either party upon the other party's default in performance, but only upon written notice to the other party, specifying the nature and extent of default. If reasonable and practicable, the defaulting party shall have the opportunity to cure such default in performance within 30 days from the date of receipt of such notice, or such other time as is reasonable under the circumstances.  Designer may immediately terminate this Agreement if Client fails to make any timely payments of Fees.  Termination shall be without prejudice to any and all other rights and remedies of Designer and Client shall remain liable for all outstanding obligations owed by Client to Designer and for all items of Merchandise, Interior Designs Services, and other services on order as of the termination date. Termination shall not void any existing POs, and Client shall continue to be responsible for any obligation incurred prior to the
@@ -312,7 +317,7 @@
     <div class="col-xs-6">
       <ol type="I">
         <li class="list-none">
-          <ol type="A" start="2">
+          <ol type="A" start="3">
             <li class="list-none">
               effective date of termination. Any termination by Client must occur with at least 7 days advanced written notice to Designer.
             </li>
@@ -329,7 +334,7 @@
               <strong>Extensions.</strong> Subject to earlier termination as provided below, this Agreement is for the Initial Service Term as specified in the Order Form, and shall be automatically renewed for additional periods of the same duration as the Initial Service Term (collectively, the "Term"), unless either party requests termination at least thirty (30) days prior to the end of the then-current term.
             </li>
             <li>
-              <strong>Survival.</strong> All sections of this Agreement which by their nature should survive termination will survive termination, including, without limitation, accrued rights to payment, confidentiality obligations, warranty disclaimers, and limitations of liability
+              <strong>Survival.</strong> All sections of this Agreement which by their nature should survive termination will survive termination, including, without limitation, accrued rights to payment, confidentiality obligations, warranty disclaimers, and limitations of liability.
             </li>
             <li>
               <strong>Severability.</strong> If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable.
@@ -345,10 +350,7 @@
     <div class="col-xs-6">
       <ol type="I">
         <li class="list-none">
-          <ol type="A" start="8">
-            <!--<li>-->
-            <!--If any provision of this Agreement is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable-->
-            <!--</li>-->
+          <ol type="A" start="10">
             <li>
               <strong>Assignment.</strong> This Agreement is not assignable, transferable or sublicensable by Client, except with Designer's prior written consent.  Designer may transfer and assign any of its rights and obligations under this Agreement without Client's consent.
             </li>
@@ -362,7 +364,7 @@
     <div class="col-xs-6">
       <ol type="I">
         <li class="list-none">
-          <ol type="A" start="10">
+          <ol type="A" start="11">
             <li class="list-none">
               joint venture, or employment is created as a result of this Agreement and Client does not have any authority of any kind to bind the Designer in any respect whatsoever.
             </li>
@@ -375,7 +377,7 @@
     </div>
   </div>
 
-  <% if project.description.length > 800 %>
+  <% if project.description.length > 600 %>
       <div class="row pdf-new-page content">
         <h2 class="pdf-contract-header text-center">Addendum</h2>
         <div class="col-xs-16">

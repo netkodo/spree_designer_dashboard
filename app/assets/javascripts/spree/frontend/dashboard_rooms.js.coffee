@@ -303,14 +303,6 @@ $ ->
   ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on, #project_upfront_deposit, #pass_discount"
 
   $(document).on
-    change: (e) ->
-      $(@).removeClass('select-placeholder')
-      $('#contract_type').html("
-        <option value='placeholder' selected='selected' disabled='disabled'>#{$('#project_rate_type').find('option:selected').text()}</option>
-        ")
-  ,"#project_rate_type"
-
-  $(document).on
     click: (e) ->
       e.preventDefault()
       step = $(@).data('step')
@@ -351,20 +343,12 @@ $ ->
           upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
         else
           upfront_deposit = "Upfront deposit: No"
-#        {$('#project_upfront_deposit').val()}<br>
-#        {$('#project_deposit_amount').val()}<br>
-#        if $('#project_rate_type').val() == "flat_rate"
         str = "<p>
           #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
           #{$('#project_rate').val()}<br>
           #{upfront_deposit}<br>
           #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
           </p>"
-#        else
-#          str = "<p>
-#            #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
-#            #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
-#            </p>"
         $('.step2 .data').html(str)
       else if step == 4
         if $('#project_pass_discount').val() == 'true'

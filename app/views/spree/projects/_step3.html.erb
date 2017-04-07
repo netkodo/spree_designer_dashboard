@@ -1,19 +1,10 @@
 <div class="form-group">
-  <%= f.select :pass_discount, options_for_select([['Charge upfront deposit','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.pass_discount || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}"%>
+  <%= f.select :pass_discount, options_for_select([['Pass product discounts onto customer','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.pass_discount || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}"%>
   <div class="info"></div>
 </div>
 
 <div class="form-group" style="display: <%= @project.upfront_deposit ? 'block;' : 'none;' %>">
   <%= f.text_field :discount_amount, :placeholder => 'Enter Discount Percentage (Ex: 10)', :class => 'form-control text-center' %>
-  <div class="info"></div>
-</div>
-
-<div class="form-group">
-  <% if u %>
-    <%= select_tag :contract_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['FLAT RATE','flat_rate',{class: 'option-color'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}]],@project.rate_type), :class => 'form-control text-center',disabled: 'disabled'%>
-  <% else %>
-    <%= select_tag :contract_type, options_for_select([]),disabled: 'disabled', :class => 'form-control text-center'%>
-  <% end %>
   <div class="info"></div>
 </div>
 
@@ -28,7 +19,7 @@
 </div>
 
 <div class="form-group" style="<%= u ? '' : 'display: none;' %>">
-  <%#= f.select :charge_percentage, options_for_select([['Choose percentage to charge:','placeholder',{disabled: 'disabled'}],['5%','5',{class: 'option-color'}],['10%','10',{class: 'option-color'}],['15%','15',{class: 'option-color'}],['20%','20',{class: 'option-color'}],['25%','25',{class: 'option-color'}]],@project.charge_percentage || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
-  <%= f.text_field :charge_percentage, placeholder: "Enter Percentage to charge Client (ex: 10)", class: "form-control text-center" %>
+  <%= f.select :charge_percentage, options_for_select([['Choose percentage to charge:','placeholder',{disabled: 'disabled'}],['5%','5',{class: 'option-color'}],['10%','10',{class: 'option-color'}],['15%','15',{class: 'option-color'}],['20%','20',{class: 'option-color'}],['25%','25',{class: 'option-color'}]],@project.charge_percentage || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
+  <%#= f.text_field :charge_percentage, placeholder: "Enter Percentage to charge Client (ex: 10)", class: "form-control text-center" %>
   <div class="info"></div>
 </div>
