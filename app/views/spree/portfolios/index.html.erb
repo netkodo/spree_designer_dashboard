@@ -2,6 +2,34 @@
     <%= javascript_include_tag 'spree/portfolio.js' %>
 <% end %>
 
+<div class="row room-header">
+  <div class="col-md-12">
+    <%= image_tag "frontend/boards/header.jpg", class: "img-responsive",lazyload: true %>
+  </div>
+
+  <div class="col-md-12">
+    <hr class="scout-divider">
+    <div class="room-text">
+      Easily shop hundreds of designer rooms to achive the perfect look. Get expert<br>
+      designer insight and take the guesswork out of decorating your home.
+    </div>
+    <hr class="scout-divider">
+  </div>
+
+
+  <div class="col-md-6">
+    <a href="/portfolios">
+      <%= image_tag "frontend/boards/left.jpg", class: "img-responsive",lazyload: true %>
+    </a>
+  </div>
+
+  <div class="col-md-6">
+    <a href="/rooms">
+      <%= image_tag "frontend/boards/right.jpg", class: "img-responsive",lazyload: true %>
+    </a>
+  </div>
+</div>
+
   <div class="row portfolios" id="portfolios-content">
 
     <% if @portfolios.any? %>

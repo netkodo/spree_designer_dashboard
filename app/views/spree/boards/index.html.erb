@@ -3,7 +3,7 @@
 <% end %>
 <div class="row room-header">
   <div class="col-md-12">
-    <%= image_tag "frontend/boards/header.jpg", class: "img-responsive" %>
+    <%= image_tag "frontend/boards/header.jpg", class: "img-responsive",lazyload: true %>
   </div>
 
   <div class="col-md-12">
@@ -17,12 +17,16 @@
 
 
   <div class="col-md-6">
-    <%= image_tag "frontend/boards/left.jpg", class: "img-responsive" %>
+    <a href="/portfolios">
+      <%= image_tag "frontend/boards/left.jpg", class: "img-responsive",lazyload: true %>
+    </a>
   </div>
 
   <div class="col-md-6">
-    <%= image_tag "frontend/boards/right.jpg", class: "img-responsive" %>
-</div>
+    <a href="/rooms">
+      <%= image_tag "frontend/boards/right.jpg", class: "img-responsive",lazyload: true %>
+    </a>
+  </div>
 </div>
 
 <div class="row" id="board-content">
