@@ -50,7 +50,7 @@
 
         <% if p.board.present? and p.board.status=="published" %>
             <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings shop-the-look">
-              <%= link_to "Shop the Look",show_portfolio_url(p), class: "btn btn-primary" %>
+              <%= link_to "Shop the Look",show_portfolio_url(p.slug), class: "btn btn-primary" %>
             </div>
         <% end %>
       </div>

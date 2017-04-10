@@ -5,7 +5,11 @@
 		<div class="col-md-6">
 			<div id="board-<%= board.id %>" class="board-listing">
 				<div class="board-image">
-				<%= link_to board_image(board, :large), room_path(board)%>
+        <% if board.portfolio.present? %>
+				  <%= link_to image_tag(board.portfolio.portfolio_image.url, lazyload: true), room_path(board)%>
+        <% else %>
+          <%= link_to board_image(board, :large), room_path(board)%>
+        <% end %>
 				</div>
 				<div class="board-info">
 					<div class="board-meta">
