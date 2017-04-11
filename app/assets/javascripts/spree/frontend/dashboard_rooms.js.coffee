@@ -310,6 +310,8 @@ $ ->
       $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
       $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
       $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
+      $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+      $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
   ,'#project_select'
 
   $(document).on
