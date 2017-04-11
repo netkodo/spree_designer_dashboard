@@ -774,7 +774,8 @@ class Spree::BoardsController < Spree::StoreController
     board = Spree::Board.find_by_slug(params[:id])
     respond_to do |format|
       if board.board_products.where.not(custom_item_id: nil).empty?
-        board.update_column(:private,false)
+        board.update_columns(private: false,project_id: nil, time_spent: nil, time_start: nil)
+        board.touch
         actions = render_to_string(partial: "/spree/boards/board_actions_public.html.erb", locals: {board: board}, formats: ['html'])
         columns = render_to_string(partial: "/spree/boards/board_public_columns.html.erb", locals: {board: board}, formats: ['html'])
         format.json {render json: {message: "Board set as public", actions: actions, columns: columns}, status: :ok}
