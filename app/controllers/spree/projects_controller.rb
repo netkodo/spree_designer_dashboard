@@ -40,7 +40,7 @@ class Spree::ProjectsController < Spree::StoreController
     @project = Spree::Project.find(params[:id])
     respond_to do |format|
       if @project.update(project_params)
-        format.json {render json: {message: 'updated'}, status: :ok}
+        format.json {render json: {message: 'Project updated'}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end

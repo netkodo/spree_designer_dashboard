@@ -777,6 +777,20 @@ class Spree::BoardsController < Spree::StoreController
     end
   end
 
+  def make_public
+    board = Spree::Board.find_by_slug(params[:id])
+    respond_to do |format|
+      if board.board_products.where.not(custom_item_id: nil).empty?
+        board.update_column(:private,false)
+        actions = render_to_string(partial: "/spree/boards/board_actions_public.html.erb", locals: {board: board}, formats: ['html'])
+        columns = render_to_string(partial: "/spree/boards/board_public_columns.html.erb", locals: {board: board}, formats: ['html'])
+        format.json {render json: {message: "Board set as public", actions: actions, columns: columns}, status: :ok}
+      else
+        format.json {render json: {message: "Remove custom products from this room"}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   private
   def prep_search_collections
     @room_taxons = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }

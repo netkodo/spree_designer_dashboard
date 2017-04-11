@@ -33,9 +33,7 @@ $ ->
 
   hideNotSelectedProjects = (type,activeProject) ->
     if type == true
-      $('.table-board-listing tbody .true').each ->
-        if !$(@).hasClass("project#{activeProject}")
-          $(@).addClass('hidden')
+      $('.table-board-listing tbody .true').addClass('hidden')
 
   changeTableView = (type) ->
     if type == true
@@ -86,6 +84,9 @@ $ ->
       $(".btn-tab.js-get-room-type").each ->
         $(@).removeClass('active')
       $(@).addClass('active')
+      $('#project_select').val("")
+      $(".project-managment").addClass('hidden')
+      $('#h1_project_name').html("")
   ,'.js-get-room-type'
 
   $(document).on
@@ -273,10 +274,33 @@ $ ->
   ,'.js-histroy'
 
   $(document).on
+    click: (e) ->
+      my_this = $(@)
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).attr('href')
+        success: (response) ->
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-check success'></i>#{response.message}</div>")
+          setTimeout () ->
+            $( $('.notification-to-remove'), my_this.parent() ).remove()
+          ,'2000'
+          my_this.parents('tr').removeClass('true').addClass('false hidden').append(response.columns)
+          my_this.parents('.board-actions').html(response.actions)
+        error: (response) ->
+          res=JSON.parse(response.responseText);
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-times error'></i>#{res.message}</div>")
+          setTimeout () ->
+            $( $('.notification-to-remove'), my_this.parent() ).remove()
+          ,'2000'
+  ,".js-make-public"
+
+  $(document).on
     change: (e) ->
-      $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+      $('.project-managment').removeClass('hidden')
+      $("#project_action").data('id',$(@).val())
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
-      $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
       $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
       $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
       $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
@@ -285,17 +309,38 @@ $ ->
 
   $(document).on
     click: (e) ->
-      e.preventDefault()
-      $.ajax
-        dataType: 'json'
-        method: 'POST'
-        url: $(@).data('url')
-        data: {project: {status: $(@).data('status')}}
-        success: (response) ->
-          console.log 'success'
-        error: (repsonse) ->
-          console.log repsonse
-  ,'.js-close-open-project'
+      status = $('#project_action').data('status')
+      id = $('#project_action').data('id')
+      switch $("#project_action").val()
+        when "project-details"
+          $(@).addClass('disabled').text('Processing...')
+          window.location.href = "/projects/#{id}/edit"
+        when "add-room"
+          $(@).addClass('disabled').text('Processing...')
+          window.location.href = "/rooms/new?private=true&project_id=#{id}"
+        when "end-project"
+          my_this = $(@)
+          $.ajax
+            dataType: 'json'
+            method: 'POST'
+            url: "/projects/#{id}/close_open"
+            data: {project: {status: status}}
+            beforeSend: () ->
+              my_this.addClass('disabled').text('Processing...')
+            success: (response) ->
+              my_this.removeClass('disabled').text('Submit')
+              $('.project-managment').append("<div class='text-center project-information success'>#{response.message}</div>")
+              setTimeout () ->
+                $('.project-information').remove()
+              ,'2000'
+            error: (response) ->
+              res=JSON.parse(response.responseText);
+              my_this.removeClass('disabled').text('Submit')
+              $('.project-managment').append("<div class='text-center project-information error'>#{res.message}</div>")
+              setTimeout () ->
+                $('.project-information').remove()
+              ,'2000'
+  ,"#submit-action"
 
   $(document).on
     change: (e) ->
