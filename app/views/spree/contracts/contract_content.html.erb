@@ -91,10 +91,12 @@
     <tr>
       <td colspan="2">
         <strong>Description of "Project":</strong><br>
-        <% if project.description.length > 600 %>
-            Description is in an Addendum.
-        <% else %>
-            <%= project.description %>
+        <% if project.description.present? %>
+          <% if project.description.length > 600 %>
+              Description is in an Addendum.
+          <% else %>
+              <%= project.description %>
+          <% end %>
         <% end %>
       </td>
     </tr>
