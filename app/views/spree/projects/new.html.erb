@@ -49,8 +49,11 @@
                    <h1>PROJECT DETAILS</h1>
                  </div>
                  <%= render :partial => "step4", locals: {f: f, u: update} %>
+                 <div class="row text-center">
+                   <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: -1, format: :pdf) ,class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
+                 </div>
                  <div class="form-actions text-right">
-                   <%= f.submit "FINISH & SEND CONTRACT", :class => 'btn btn-primary' %>
+                   <%= f.submit "SAVE", :class => 'btn btn-primary' %>
                  </div>
                </div>
 

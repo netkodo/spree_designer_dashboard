@@ -1,6 +1,6 @@
 <html>
 <head>
-  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css') %>
 </head>
 <body style="border: none;">
 <div class="container contract-content">
@@ -107,16 +107,18 @@
       <strong class="underline">THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS THAT FOLLOW.</strong> It contains, among other things description of interior design services, purchasing services, manner of payment, and agreement termination.<br><br>
       There shall be no force or effect to any different terms of any related purchase order or similar form, even if signed by the parties after the date hereof.  By signing to this Agreement, the Client and the Designer acknowledge the terms and conditions contained within this Agreement and further acknowledge that this Agreement, along with subsequent written correspondence regarding, but not limited to, pricing, fees, terms, and timelines, together represent a complete contract between the Client and the Designer
     </div>
-    <div class="col-xs-6 pdf-small-margin">
-      <strong>Designer</strong><br>
-      Name: <%= user.full_name %><br>
-      <%= image_tag contract.designer_sign.url %>
-    </div>
-    <div class="col-xs-6 pdf-small-margin">
-      <strong>Client</strong><br>
-      Name: <%= project.project_name %><br>
-      <%= image_tag contract.client_sign.url %>
-    </div>
+    <% if contract.present? %>
+      <div class="col-xs-6 pdf-small-margin">
+        <strong>Designer</strong><br>
+        Name: <%= user.full_name %><br>
+        <%= image_tag contract.designer_sign.url %>
+      </div>
+      <div class="col-xs-6 pdf-small-margin">
+        <strong>Client</strong><br>
+        Name: <%= project.project_name %><br>
+        <%= image_tag contract.client_sign.url %>
+      </div>
+    <% end %>
   </div>
 
 

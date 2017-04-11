@@ -147,16 +147,20 @@ class Spree::ContractsController < Spree::StoreController
   end
 
 
-  def show_contract
-
-    @project = Spree::Project.find(params[:id])
+  def preview_contract
+    if params[:id] == "-1"
+      params.permit!
+      user = Spree::User.find(params[:project][:user_id])
+      designer = user.designer_registrations.first
+      project = Spree::Project.new(params[:project])
+    else
+      project = Spree::Project.find(params[:id])
+      user = project.user
+      designer = user.designer_registrations.first
+    end
 
     respond_to do |format|
-      if true
-        format.html {render '/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user}, status: :ok}
-      else
-        format.html {render json: {message: "success"}, status: :unprocessable_entity}
-      end
+      format.pdf {render pdf: "pdf", template: '/spree/contracts/contract_content.html.erb', locals: {contract: project.contract, project: project, designer: designer, user: user}, user_style_sheet: 'spree/frontend/styles.css'}
     end
 
 
