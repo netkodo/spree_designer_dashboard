@@ -25,27 +25,29 @@
                   </div>
                 <% else %>
                   <div class="col-md-12 text-center">
-                    <h1 id="h1_project_name"><%= @projects.first.project_name %> Project</h1>
+                    <h1 id="h1_project_name"><%#= @projects.first.project_name %> <!-- Project --></h1>
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]},@projects.first.id), :class => 'form-control' %>
+                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}]),""), :class => 'form-control' %>
                     </div>
                     <div class="col-md-3 text-right">
                       <%= link_to "Start New Project", new_project_path, :class => "btn btn-primary btn-no-radius" %>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-3 col-md-offset-3 text-center">
-                      <%= link_to "Project Details", edit_project_path(@projects.first.id), :class => "btn btn-primary edit-project" %>
+                    <div class="project-managment hidden">
+                    <div class="row">
+                      <div class="col-md-3 col-md-offset-3 text-center">
+                        <%= link_to "Project Details", "", :class => "btn btn-primary edit-project" %>
+                      </div>
+                      <div class="col-md-3 text-center">
+                        <%= link_to "End Project", "#", data: {url: "", status: "close"}, :class => "btn btn-primary close-project js-close-open-project" %>
+                      </div>
                     </div>
-                    <div class="col-md-3 text-center">
-                      <%= link_to "End Project", "#", data: {url: close_open_project_path(@projects.first.id), status: "close"}, :class => "btn btn-primary close-project js-close-open-project" %>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12 text-center">
-                      <%= link_to "Add a Room", new_room_path(private: true,project_id: @projects.first.id), :class => "btn btn-primary add-project-room btn-no-radius" %>
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <%= link_to "Add a Room", "", :class => "btn btn-primary add-project-room btn-no-radius" %>
+                      </div>
                     </div>
                   </div>
                 <% end %>

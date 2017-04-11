@@ -33,9 +33,7 @@ $ ->
 
   hideNotSelectedProjects = (type,activeProject) ->
     if type == true
-      $('.table-board-listing tbody .true').each ->
-        if !$(@).hasClass("project#{activeProject}")
-          $(@).addClass('hidden')
+      $('.table-board-listing tbody .true').addClass('hidden')
 
   changeTableView = (type) ->
     if type == true
@@ -86,6 +84,9 @@ $ ->
       $(".btn-tab.js-get-room-type").each ->
         $(@).removeClass('active')
       $(@).addClass('active')
+      $('#project_select').val("")
+      $(".project-managment").addClass('hidden')
+      $('#h1_project_name').html("")
   ,'.js-get-room-type'
 
   $(document).on
@@ -297,6 +298,7 @@ $ ->
 
   $(document).on
     change: (e) ->
+      $('.project-managment').removeClass('hidden')
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
       $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
