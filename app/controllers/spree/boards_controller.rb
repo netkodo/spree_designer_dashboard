@@ -267,7 +267,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def show_portfolio
-    @portfolio = Spree::Portfolio.find_by_slug(params[:slug])
+    @portfolio = Spree::Portfolio.find_by_slug(params[:slug]) || Spree::Portfolio.find(params[:slug])
     @same_room_images = @portfolio.room.portfolios.select{|x| x.id != @portfolio.id}
     @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?",@portfolio.room_type,@portfolio.style,@portfolio.wall_color).order("RAND()").limit(4)
     # impressionist(@portfolio)
