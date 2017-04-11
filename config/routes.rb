@@ -112,7 +112,7 @@ Spree::Core::Engine.routes.draw do
   post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
 
   post "/send_contract/:id" => "contracts#send_contract", as: :send_contract, :defaults => {:format => 'json'}
-  get "/show_contract/:id" => "contracts#show_contract", as: :show_contract, :defaults => {:format => 'html'}
+  get "/preview_contract/:id" => "contracts#preview_contract", as: :preview_contract, :defaults => {:format => 'html'}
 
   post "/board_history" => "board_history#board_history", as: :board_history, :defaults => {:format => 'html'}
   post "/create_board_history" => "board_history#create", as: :create_board_history, :defaults => {:format => 'json'}

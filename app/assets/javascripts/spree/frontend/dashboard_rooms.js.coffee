@@ -216,6 +216,11 @@ $ ->
 
   $(document).on
     click: (e) ->
+      console.log "review"
+  ,".js-preview-contract"
+
+  $(document).on
+    click: (e) ->
       $("#send-contract").modal()
   ,".js-send-contract"
 
@@ -396,6 +401,10 @@ $ ->
           </p>"
         $('.step2 .data').html(str)
       else if step == 4
+        if $("#create_project_form").length
+          url = $("#preview_contract").attr("href")
+          serialize = $("#create_project_form").serialize()
+          $("#preview_contract").attr("href", "#{url}?#{serialize}")
         if $('#project_pass_discount').val() == 'true'
           pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
         else
