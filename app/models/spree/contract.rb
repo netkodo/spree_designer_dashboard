@@ -16,7 +16,8 @@ class Spree::Contract < ActiveRecord::Base
 
   def self.send_contract_email(email, template, subject, link)
     html_content = ''
-    # email = 'dniedzialkowski@netkodo.com' if Rails.env == "development"
+    email = 'dniedzialkowski@netkodo.com' if Rails.env == "development"
+    email = 'sam@scoutandnimble.com' if Rails.env == "staging"
     Rails.env == "development" ? dev ="<development>" : dev=""
     subject = "#{subject} #{dev}"
     m = Mandrill::API.new(MANDRILL_KEY)
