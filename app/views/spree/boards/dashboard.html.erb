@@ -86,8 +86,9 @@
           </tr>
           </thead>
           <tbody class="dashboard">
-          <% cache @boards do %>
+          <%# cache @board do %>
             <% @boards.each do |board|%>
+              <% cache board do %>
                 <tr id="<%= board.id %>" class="<%= board.private %> <%= board.private ? 'hidden' : '' %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %> <%= board.project.present? ? "project#{board.project.id}" : "" %>">
                   <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                   <td class="board-thumb">
@@ -117,8 +118,9 @@
 
 
                 </tr>
-            <% end%>
-          <% end %>
+              <% end %>
+            <% end %>
+          <%# end %>
           </tbody>
         </table>
         <%- if spree_current_user.designer_commission.present?  %>

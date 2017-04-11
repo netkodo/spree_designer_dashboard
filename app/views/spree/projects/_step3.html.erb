@@ -14,7 +14,7 @@
 </div>
 
 <div class="form-group" style="<%= u ? '' : 'display: none;' %>">
-  <%= f.select :charge_on, options_for_select([['Charge Percentage:','placeholder',{disabled: 'disabled'}],['On all products purchased reladed to contract work,<br> whether they are included in your designs or not'.html_safe,'all_products',{class: 'option-color'}],['Only if customer buys alternate products outside of contract terms<br> that are not included in your designs'.html_safe,'alternate',{class: 'option-color'}]],@project.charge_on || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
+  <%= f.select :charge_on, options_for_select([['Charge Percentage:','placeholder',{disabled: 'disabled'}],['On all products purchased related to contract work,<br> whether they are included in your designs or not'.html_safe,'all_products',{class: 'option-color'}],['Only if customer buys alternate products outside of contract terms<br> that are not included in your designs'.html_safe,'alternate',{class: 'option-color'}]],@project.charge_on || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}" %>
   <div class="info"></div>
 </div>
 
