@@ -36,17 +36,14 @@
                     </div>
                   </div>
                     <div class="project-managment hidden">
-                    <div class="row">
-                      <div class="col-md-3 col-md-offset-3 text-center">
-                        <%= link_to "Project Details", "", :class => "btn btn-primary edit-project" %>
-                      </div>
-                      <div class="col-md-3 text-center">
-                        <%= link_to "End Project", "#", data: {url: "", status: "close"}, :class => "btn btn-primary close-project js-close-open-project" %>
+                    <div class="row mtop">
+                      <div class="col-md-6 col-md-offset-3">
+                      <%= select_tag :project_action, options_for_select([["Project Details","project-details"],["Add a Room","add-room"],["End Project","end-project"]]),class:"form-control", data: {id: "", status: "close"} %>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row mtop">
                       <div class="col-md-12 text-center">
-                        <%= link_to "Add a Room", "", :class => "btn btn-primary add-project-room btn-no-radius" %>
+                        <div id="submit-action" class="btn btn-primary btn-no-radius">Submit</div>
                       </div>
                     </div>
                   </div>
