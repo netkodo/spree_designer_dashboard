@@ -273,6 +273,29 @@ $ ->
   ,'.js-histroy'
 
   $(document).on
+    click: (e) ->
+      my_this = $(@)
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).attr('href')
+        success: (response) ->
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-check success'></i>#{response.message}</div>")
+          setTimeout () ->
+            $( $('.notification-to-remove'), my_this.parent() ).remove()
+          ,'2000'
+          my_this.parents('tr').removeClass('true').addClass('false hidden').append(response.columns)
+          my_this.parents('.board-actions').html(response.actions)
+        error: (response) ->
+          res=JSON.parse(response.responseText);
+          my_this.parent().append("<div class='notification-to-remove'><i class='fa fa-times error'></i>#{res.message}</div>")
+          setTimeout () ->
+            $( $('.notification-to-remove'), my_this.parent() ).remove()
+          ,'2000'
+  ,".js-make-public"
+
+  $(document).on
     change: (e) ->
       $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
       $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")

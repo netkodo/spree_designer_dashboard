@@ -15,7 +15,9 @@ Spree::Core::Engine.routes.draw do
     resources :colors
   end
   resources :rooms, controller: 'boards'  do
-
+    member do
+      post :make_public, :defaults => {format: :json}
+    end
     collection do
       post :search_all_categories
       post :product_result
