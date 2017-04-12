@@ -55,7 +55,7 @@
               <%= render :partial => "step4", locals: {f: f, u: update} %>
               <%= render :partial => "project_history" %>
               <div class="row text-center">
-                <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", target: "_blank" %>
+                <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
               </div>
               <div class="row text-center">
                 <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
