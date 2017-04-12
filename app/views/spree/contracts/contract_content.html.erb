@@ -33,7 +33,7 @@
     <tr>
       <td colspan="2">
         <div class="">
-          The "<strong>Services</strong>" are comprised of <strong>Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
+          The "<strong>Services</strong>" are comprised of <strong> Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
         </div>
       </td>
     </tr>
@@ -63,9 +63,9 @@
 
       </td>
       <td>
-        The purchasing work aspects of the Services will include, but not be limited to, arranging the:
+        The <strong>Merchandise Purchasing</strong> work aspects of the Services will include, but not be limited to, arranging the:
         <ul>
-          <li>purchase of merchandise,</li>
+          <li><strong>purchase of merchandise,</strong></li>
           <li><strong>purchase pre-approval,</strong></li>
           <li><strong>freight and shipping charges, and</strong></li>
           <li><strong>payment of merchandise.</strong></li>
@@ -105,9 +105,9 @@
 
   <div class="row content pdf-new-page pdf-small-margin">
     <div class="col-xs-12">
-      This INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ("<strong>Agreement</strong>") is entered into on <%= Date.today.to_formatted_s(:long) %> (the "<strong>Effective Date</strong>") between the Designer and the Client listed above.
-      <strong class="underline">THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS THAT FOLLOW.</strong> It contains, among other things description of interior design services, purchasing services, manner of payment, and agreement termination.<br><br>
-      There shall be no force or effect to any different terms of any related purchase order or similar form, even if signed by the parties after the date hereof.  By signing to this Agreement, the Client and the Designer acknowledge the terms and conditions contained within this Agreement and further acknowledge that this Agreement, along with subsequent written correspondence regarding, but not limited to, pricing, fees, terms, and timelines, together represent a complete contract between the Client and the Designer
+      This INTERIOR DESIGN AND PURCHASING SERVICES AGREEMENT ("<strong>Agreement</strong>") is entered into as of the Effective Date between the Designer and the Client listed above.
+      <strong class="underline">THIS AGREEMENT INCLUDES AND INCORPORATES THE PRECEDING ORDER FORM, AS WELL AS THE  TERMS AND CONDITIONS AND ANY ADDENDA THAT FOLLOW.</strong> It contains, among other things description of interior design and merchandise purchasing services, manner of payment, and agreement termination.  <br><br>
+      The undersigned Client and the Designer hereby acknowledge and agree to the terms and conditions contained in this Agreement, and further acknowledge that this Agreement, along with subsequent required details and documentation regarding, but not limited to, pricing/fees, terms, and timing, together represent a complete contract between the Client and the Designer.
     </div>
     <% if contract.present? %>
       <div class="col-xs-6 pdf-small-margin">
@@ -247,7 +247,7 @@
                   responsible to pay any additional freight costs.
                 </li>
                 <li>
-                  <strong>Returns of Standard (Non-Custom) Merchandise.</strong> Should the client return any Merchandise purchased through Designer for reasons other than damage, the client will receive an 80% refund of the Client Price. Client shall pay to Designer a restocking fee equal to 20% of the Client price, plus the cost of freight to return the item to the vendor. All returns must occur in the original packaging, and all Merchandise must be unused and undamaged.
+                  <strong>Returns of Standard (Non-Custom) Merchandise.</strong> Should the client return any Merchandise purchased through Designer for reasons other than damage, the client will receive an 80% refund of the price the Client paid. Client shall pay to Designer a restocking fee equal to 20% of the Client price, plus the cost of freight to return the item to the vendor. All returns must occur in the original packaging, and all Merchandise must be unused and undamaged.
                 </li>
                 <li>
                   <strong>Custom Merchandise is Non-Refundable.</strong> All sales of custom Merchandise are final and non-refundable unless Merchandise contains manufacturer damage.
@@ -278,7 +278,7 @@
               <strong>Additional Fees for Increased Project Scope.</strong> Should the Client require additional Services beyond the original scope of work, the fee schedule will be amended.
             </li>
             <li>
-              <strong>Communications.</strong> All communications between Client and <%= designer.company_name %> related to project inquiries, will occur Monday - Friday between the hours or 8:00 a.m. - 5:00 p.m., unless mutually agreed upon by both parties.
+              <strong>Communications.</strong> All communications between Client and Designer related to project inquiries, will occur Monday - Friday between the hours or 8:00a.m. - 5:00 p.m., unless mutually agreed upon by both parties.
             </li>
           </ol>
         </li>
@@ -293,7 +293,7 @@
         <li class="list-none">
           <ol type="A" start="6">
             <li>
-              <strong>Fee Payments.</strong> Customer will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the "Fees"). If Customer believes that Designer has billed Customer incorrectly, Customer must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to Company's customer support department.
+              <strong>Fee Payments.</strong> Client will pay Designer the then applicable fees described in the preceding Order Form for the Services and Implementation Services in accordance with the terms therein (the "<strong>Fees</strong>"). If Client believes that Designer has billed Client incorrectly, Client must contact Designer no later than 60 days after the closing date on the first billing statement in which the error or problem appeared, in order to receive an adjustment or credit.  Inquiries should be directed to the Designer or to the Designer's customer support department.
             </li>
             <% if project.rate_type == "flat_rate_room" or project.rate_type == "flat_rate_project" %>
                 <li>
