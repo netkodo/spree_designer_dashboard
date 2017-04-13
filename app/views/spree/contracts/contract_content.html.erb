@@ -14,8 +14,8 @@
     <tr>
       <div class="row content">
         <td class="user-data">
-          <div>First name: <%= designer.first_name %></div>
-          <div>Last name: <%= designer.last_name %></div>
+          <div>First name: <%= designer.first_name.present? ? designer.first_name : user.first_name %></div>
+          <div>Last name: <%= designer.last_name.present? ? designer.last_name : user.last_name %></div>
           <div>Website: <%= designer.website %></div>
           <div>Company name: <%= designer.company_name %></div>
           <div>Phone: <%= designer.phone %></div>
