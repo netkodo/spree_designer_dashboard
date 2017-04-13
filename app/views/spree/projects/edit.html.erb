@@ -44,7 +44,6 @@
                     <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="2">back</button>
                 <% end %>
                 <button class="btn btn-primary text-right project-next-step btn-no-radius" data-step="4">next</button>
-                <%#= f.submit "Save", :class => 'btn btn-primary' %>
               </div>
             </div>
 
@@ -58,7 +57,17 @@
                 <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
               </div>
               <div class="row text-center">
-                <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+                <% if @project.contract.present? %>
+                    <% if @project.contract.client_signed and !@project.contract.designer_signed %>
+                      <%= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
+                    <% elsif @project.contract.client_signed and @project.contract.designer_signed %>
+                      <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+                    <% else %>
+                      <div class="btn btn-primary send-contract disabled">Client haven't signed contract yet.</div>
+                    <% end %>
+                <% else %>
+                  <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+                <% end %>
               </div>
               <div class="form-actions text-center">
                 <%= f.submit "SAVE", :class => 'btn btn-primary btn-no-radius' %>

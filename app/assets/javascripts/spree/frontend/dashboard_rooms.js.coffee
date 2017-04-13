@@ -239,6 +239,9 @@ $ ->
           $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
           $(".project-history-group").prepend(response.history_item)
+          if response.location.length
+            obj = $(".js-send-contract")
+            obj.text("Client haven't signed contract yet.").removeClass('js-send-contract').addClass('disabled')
           setTimeout () ->
             $("#send-contract").modal('hide')
             $("#modal-location-body .confirmation").removeClass("hidden")

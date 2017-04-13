@@ -12,9 +12,9 @@ class Spree::ProjectsController < Spree::StoreController
     @project = Spree::Project.new(project_params)
 
     if @project.save
-      redirect_to "/projects"
+      redirect_to edit_project_path(@project)
     else
-
+      redirect_to projects_path
     end
   end
 
