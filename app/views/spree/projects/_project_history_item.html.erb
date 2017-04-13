@@ -6,8 +6,10 @@
     <%= ph.created_at.to_date.to_formatted_s(:long) %>
   </div>
   <div class="col-md-4">
-    <%= link_to ph.pdf.url do %>
-        <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
+    <% if ph.pdf.present? %>
+      <%= link_to ph.pdf.url do %>
+          <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
+      <% end %>
     <% end %>
   </div>
 </div>

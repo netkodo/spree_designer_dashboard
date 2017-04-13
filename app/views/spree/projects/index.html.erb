@@ -29,9 +29,6 @@
             <%= link_to "Add a Room", new_room_path(private: true,project_id: @projects.first.id), :class => "btn btn-primary add-project-room" %>
           </div>
         </div>
-        <div class="row">
-          <%= link_to "Contract", new_contract_path(@projects.first.id), class: "btn btn-primary create-contract" %>
-        </div>
         <table class="table table-board-listing">
           <colgroup>
             <col style="width: 5%" />

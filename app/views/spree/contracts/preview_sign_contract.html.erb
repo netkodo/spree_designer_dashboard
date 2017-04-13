@@ -3,6 +3,13 @@
       <div class="row">
         <h1>Preview & Sign Contract</h1>
       </div>
+
+      <div class="row">
+        <%= render partial: 'contract_preview',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user} %>
+      </div>
+
+      <hr>
+
       <div class="row">
         <%= form_for @contract, url: sign_contract_path(format: :json), html: {id: 'js-sign-contract'} do |f| %>
 

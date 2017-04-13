@@ -1,21 +1,21 @@
 <div class="project-history text-center">
-  <% if @project_history.present? %>
-      <h3>PROJECT HISTORY</h3>
-      <div class="row project-history-header">
-        <div class="col-md-4">
-          SUBJECT
-        </div>
-        <div class="col-md-4">
-          DATE
-        </div>
-        <div class="col-md-4">
-          ATTACHMENT
-        </div>
-      </div>
-      <div class="project-history-group">
-        <% @project_history.each do |ph| %>
-            <%= render partial: 'project_history_item', locals: {ph: ph} %>
-        <% end %>
-      </div>
-  <% end %>
+  <h3>PROJECT HISTORY</h3>
+  <div class="row project-history-header">
+    <div class="col-md-4">
+      SUBJECT
+    </div>
+    <div class="col-md-4">
+      DATE
+    </div>
+    <div class="col-md-4">
+      ATTACHMENT
+    </div>
+  </div>
+  <div class="project-history-group">
+    <% if @project_history.present? %>
+      <% @project_history.each do |ph| %>
+          <%= render partial: 'project_history_item', locals: {ph: ph} %>
+      <% end %>
+    <% end %>
+  </div>
 </div>

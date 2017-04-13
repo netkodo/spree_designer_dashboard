@@ -11,19 +11,27 @@ class Spree::ContractsController < Spree::StoreController
       end
     else
       @contract = Spree::Contract.new
+      @project = Spree::Project.find(params[:id])
     end
   end
 
   def create
-    @contract = Spree::Contract.joins(:project).new(contract_params)
-
+    @contract = Spree::Contract.joins(:project).new(project_id: params[:id])
+    project = @contract.project
     respond_to do |format|
       if @contract.save
+        history = Spree::ProjectHistory.create(action: "contract_to_sign_sent",project_id: project.id)
+        history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
+
         @contract.update_column(:token, SecureRandom.uuid) unless @contract.token.present?
-        if params[:button] == 'true'
-          Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "https://www.scoutandnimble.comsign_contract/#{@contract.token}")
-        end
-        format.json {render json: {message: 'success', location: projects_path}, status: :ok}
+        @contract.update_columns(designer_name: project.user.full_name, client_name: project.project_name)
+
+        url = 'https://www.scoutandnimble'
+        url = 'http://scout.dev:3000' if Rails.env == "development"
+        url = 'http://54.172.90.33' if Rails.env == "staging"
+
+        Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "#{url}/sign_contract/#{@contract.token}")
+        format.json {render json: {message: 'success', location: edit_project_path(project), history_item: history_item}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end
@@ -32,6 +40,7 @@ class Spree::ContractsController < Spree::StoreController
 
   def preview_sign_contract
     @contract = Spree::Contract.find_by(token: params[:token])
+    @project = @contract.project
     if @contract.client_signed
       flash[:alert] = "You have already signed that contract"
       redirect_to root_path
@@ -95,15 +104,11 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if @contract.save
-        if params[:button].present? and params[:button] == 'true'
-          Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "https://www.scoutandnimble.com/sign_contract/#{@contract.token}")
-        end
-
         if check_sign
           @contract.update_column(:designer_signed, true)
           File.delete(file_img_d)
         end
-        format.json {render json: {message: 'success', location: projects_path}, status: :ok}
+        format.json {render json: {message: 'success', location: edit_project_path(@contract.project)}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end
