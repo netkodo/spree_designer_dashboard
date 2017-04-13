@@ -19,14 +19,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <%= f.label :designer_name %>
-              <%= f.text_field :designer_name, class: 'form-control' %>
+              <%= f.text_field :designer_name, value: @project.try(:project_name), class: 'form-control' %>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <%= label_tag :client_name %>
-              <%= f.text_field :client_name, class: 'form-control' %>
+              <%= f.text_field :client_name, value: @project.user.try(:full_name), class: 'form-control' %>
             </div>
           </div>
 

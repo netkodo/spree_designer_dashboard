@@ -11,6 +11,7 @@ class Spree::ContractsController < Spree::StoreController
       end
     else
       @contract = Spree::Contract.new
+      @project = Spree::Project.find(params[:id])
     end
   end
 
