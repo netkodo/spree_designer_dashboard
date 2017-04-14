@@ -328,6 +328,9 @@ $ ->
         when "add-room"
           $(@).addClass('disabled').text('Processing...')
           window.location.href = "/rooms/new?private=true&project_id=#{id}"
+        when "add-project"
+          $(@).addClass('disabled').text('Processing...')
+          window.location.href = "/projects/new"
         when "end-project"
           my_this = $(@)
           $.ajax
