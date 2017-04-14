@@ -4,6 +4,8 @@ class Spree::Project < ActiveRecord::Base
   has_one :contract, dependent: :destroy
   belongs_to :user
 
+  scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
+
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'
       case self.customer_billing_cycle
