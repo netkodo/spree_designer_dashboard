@@ -307,7 +307,6 @@ $ ->
   $(document).on
     change: (e) ->
       if $(@).val() == "new_project"
-        console.log 'test'
         window.location.href = "/projects/new"
       else
         $('.project-managment').removeClass('hidden')
@@ -317,7 +316,7 @@ $ ->
         $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
         $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
         $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
-        $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+        $('.edit-project').attr('href',"/projects/#{$(@).val()}")
         $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
   ,'#project_select'
 
@@ -328,7 +327,7 @@ $ ->
       switch $("#project_action").val()
         when "project-details"
           $(@).addClass('disabled').text('Processing...')
-          window.location.href = "/projects/#{id}/edit"
+          window.location.href = "/projects/#{id}"
         when "add-room"
           $(@).addClass('disabled').text('Processing...')
           window.location.href = "/rooms/new?private=true&project_id=#{id}"
