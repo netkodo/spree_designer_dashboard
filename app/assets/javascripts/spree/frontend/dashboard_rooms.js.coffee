@@ -306,15 +306,19 @@ $ ->
 
   $(document).on
     change: (e) ->
-      $('.project-managment').removeClass('hidden')
-      $("#project_action").data('id',$(@).val())
-      $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
-      $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
-      $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
-      $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
-      $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
-      $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
-      $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+      if $(@).val() == "new_project"
+        console.log 'test'
+        window.location.href = "/projects/new"
+      else
+        $('.project-managment').removeClass('hidden')
+        $("#project_action").data('id',$(@).val())
+        $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
+        $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
+        $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
+        $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
+        $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
+        $('.edit-project').attr('href',"/projects/#{$(@).val()}/edit")
+        $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
   ,'#project_select'
 
   $(document).on
