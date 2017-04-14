@@ -12,12 +12,17 @@ class Spree::ProjectsController < Spree::StoreController
     @project = Spree::Project.new
   end
 
+  def show
+    @project = Spree::Project.find(params[:id])
+    @project_history = @project.project_histories.order("created_at desc")
+  end
+
   def create
     @project = Spree::Project.new(project_params)
 
     if @project.save
       # redirect_to edit_project_path(@project)
-      redirect_to projects_path(project_id: @project.id)
+      redirect_to project_path(@project)
     else
       redirect_to projects_path
     end
@@ -31,9 +36,9 @@ class Spree::ProjectsController < Spree::StoreController
   def update
     @project = Spree::Project.find(params[:id])
     if @project.update(project_params)
-      redirect_to "/projects"
+      redirect_to project_path(@project)
     else
-
+      redirect_to projects_path
     end
   end
 

@@ -8,7 +8,7 @@
         <% update = @project.created_at.present? ? true : false %>
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
-            <div class="step step-1" style="display: none;">
+            <div class="step step-1" style="<%= (params[:step].present? and params[:step]) == '1' ? '' : 'display: none;' %>">
               <h2>STEP 1</h2>
               <div class="col-md-12 text-center">
                 <h1>Customer Information</h1>
@@ -19,7 +19,7 @@
               </div>
             </div>
 
-            <div class="step step-2" style="display: none;">
+            <div class="step step-2" style="<%= (params[:step].present? and params[:step]) == '2' ? '' : 'display: none;' %>">
               <h2>STEP 2</h2>
               <div class="col-md-12 text-center">
                 <h1>Billing Method</h1>
@@ -33,7 +33,7 @@
               </div>
             </div>
 
-            <div class="step step-3" style="display: none;">
+            <div class="step step-3" style="<%= (params[:step].present? and params[:step]) == '3' ? '' : 'display: none;' %>">
               <h2>STEP 3</h2>
               <div class="col-md-12 text-center">
                 <h1>Select a Contract</h1>
@@ -43,34 +43,8 @@
                 <%if update %>
                     <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="2">Back</button>
                 <% end %>
-                <button class="btn btn-primary text-right project-next-step btn-no-radius" data-step="4">Next</button>
-              </div>
-            </div>
-
-            <div class="step step-4">
-              <div class="col-md-12 text-center">
-                <h1>PROJECT DETAILS</h1>
-              </div>
-              <%= render :partial => "step4", locals: {f: f, u: update} %>
-              <%= render :partial => "project_history" %>
-              <div class="row text-center">
-                <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
-              </div>
-              <div class="row text-center">
-                <% if @project.contract.present? %>
-                    <% if @project.contract.client_signed and !@project.contract.designer_signed %>
-                      <%= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
-                    <% elsif @project.contract.client_signed and @project.contract.designer_signed %>
-                      <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
-                    <% else %>
-                      <div class="btn btn-primary send-contract disabled">Client haven't signed contract yet.</div>
-                    <% end %>
-                <% else %>
-                  <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
-                <% end %>
-              </div>
-              <div class="form-actions text-center">
-                <%= f.submit "UPDATE", :class => 'btn btn-primary btn-no-radius' %>
+                <!--<button class="btn btn-primary text-right project-next-step btn-no-radius" data-step="4">Next</button>-->
+                <%= f.submit "Save", :class => 'btn btn-primary btn-no-radius' %>
               </div>
             </div>
 
@@ -81,5 +55,3 @@
     <% end %>
   </div>
 </div>
-
-<%= render partial: "send_contract_modal" %>

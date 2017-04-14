@@ -1,0 +1,109 @@
+<div class="row">
+  <div class="col-md-3">
+    <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+  </div>
+
+  <div class="col-md-9">
+
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+
+            <div class="step step-4">
+              <div class="col-md-12 text-center">
+                <h1>PROJECT DETAILS</h1>
+              </div>
+
+              <div class="row project-step step1 text-center">
+                <div class="col-md-4">
+                  <p><span class="step-name">Customer Info:</span></p>
+                  <p>
+                  <%= link_to edit_project_path(id: @project.id,step: 1), class: "project-edit" do %>
+                      <span class="project-edit">EDIT</span>
+                  <% end %>
+                  </p>
+                </div>
+                <div class="col-md-6 data">
+                  <p>
+                    <%= @project.project_name %><br>
+                    <%= @project.description.truncate(100) if @project.description.present? %><br><br>
+                    <%= @project.address1 %>, <%= @project.address2 %><br>
+                    <%= @project.city %>, <%= @project.state %>, <%= @project.zip_code %>
+                  </p>
+                  <p>
+                    <%= @project.email %><br>
+                    <%= @project.phone %>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row project-step step2 text-center">
+                <div class="col-md-4">
+                  <p><span class="step-name">Billing Method:</span></p>
+                  <p>
+                    <%= link_to edit_project_path(id: @project.id,step: 2), class: "project-edit" do %>
+                        <span class="project-edit">EDIT</span>
+                    <% end %>
+                  </p>
+                </div>
+                <div class="col-md-6 data">
+                  <p>
+                    <%= @project.display_rate_type %><br>
+                    <%= @project.rate %><br>
+                    Upfront deposit: <%= @project.upfront_deposit ?  @project.deposit_amount : "No" %><br>
+                    <%= @project.get_customer_billing_cycle %>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row project-step step3 text-center">
+                <div class="col-md-4">
+                  <p><span class="step-name">Contract Terms:</span></p>
+                  <p>
+                    <%= link_to edit_project_path(id: @project.id,step: 3), class: "project-edit" do %>
+                        <span class="project-edit">EDIT</span>
+                    <% end %>
+                  </p>
+                </div>
+                <div class="col-md-6 data">
+                  <%= @project.display_rate_type %><br>
+                  <% if @project.charge %>
+                      Percentage: Yes<br>
+                      <%= @project.charge_on == 'alternate' ? 'On Alternate Products' : 'On All Products' %><br>
+                      Charge: <%= @project.charge_percentage %>%<br>
+                  <% else %>
+                      Percentage: No<br>
+                  <% end %>
+                  Pass discount: <%= @project.pass_discount ? "#{@project.discount_amount}%" : "No" %>
+                </div>
+              </div>
+
+
+              <%= render :partial => "project_history" %>
+              <div class="row text-center">
+                <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
+              </div>
+              <div class="row text-center">
+                <% if @project.contract.present? %>
+                    <% if @project.contract.client_signed and !@project.contract.designer_signed %>
+                        <%= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
+                    <% elsif @project.contract.client_signed and @project.contract.designer_signed %>
+                        <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+                    <% else %>
+                        <div class="btn btn-primary send-contract disabled">Client haven't signed contract yet.</div>
+                    <% end %>
+                <% else %>
+                    <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
+                <% end %>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+
+  </div>
+</div>
+
+<%= render partial: "send_contract_modal" %>

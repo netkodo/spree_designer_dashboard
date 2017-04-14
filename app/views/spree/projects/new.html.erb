@@ -39,23 +39,11 @@
                  <%= render :partial => "step3", locals: {f: f, u: update} %>
                    <div class="form-actions text-right">
                      <!--<button class="btn btn-primary text-right project-prev-step" data-step="2">prev</button>-->
-                     <button class="btn btn-primary text-right project-prev-step" data-step="4">Next</button>
-                    <%#= f.submit "Save", :class => 'btn btn-primary' %>
+                     <!--<button class="btn btn-primary text-right project-prev-step" data-step="4">Next</button>-->
+                    <%= f.submit "Save", :class => 'btn btn-primary' %>
                   </div>
                </div>
 
-               <div class="step step-4" style="display: none;">
-                 <div class="col-md-12 text-center">
-                   <h1>PROJECT DETAILS</h1>
-                 </div>
-                 <%= render :partial => "step4", locals: {f: f, u: update} %>
-                 <div class="row text-center">
-                   <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: -1, format: :pdf) ,class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
-                 </div>
-                 <div class="form-actions text-right">
-                   <%= f.submit "SAVE", :class => 'btn btn-primary' %>
-                 </div>
-               </div>
 
              </div>
           </div>
