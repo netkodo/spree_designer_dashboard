@@ -1,5 +1,7 @@
 class Spree::ContractsController < Spree::StoreController
 
+  before_filter :require_authentication
+
   def new
     project = Spree::Project.includes(:contract).find(params[:id])
     contract = project.contract
@@ -68,7 +70,7 @@ class Spree::ContractsController < Spree::StoreController
         url = 'http://scout.dev:3000' if Rails.env == "development"
         url = 'http://54.172.90.33' if Rails.env == "staging"
 
-        Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/edit")
+        Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/contracts/#{@contract.id}/edit")
         File.delete(file_img_c)
         flash[:alert] = "You have successfully signed contract"
         format.json {render json: {message: 'success', location: root_path }, status: :ok}
@@ -111,6 +113,7 @@ class Spree::ContractsController < Spree::StoreController
     respond_to do |format|
       if @contract.save
         if check_sign
+          Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: project.id)
           @contract.update_column(:designer_signed, true)
           File.delete(file_img_d)
         end
