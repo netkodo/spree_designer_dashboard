@@ -30,6 +30,11 @@ class Spree::Board < ActiveRecord::Base
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
 
+  scope :private, -> { where(private: true) }
+  scope :private_by_user, -> (id) { joins(:project).where(private: true, designer_id: id).order("project_name asc") }
+  scope :public, -> { where(private: false) }
+  scope :public_by_user, -> (id) { joins(:project).where(private: false, designer_id: id).order("project_name asc") }
+
   def slug_candidates
     [
 
