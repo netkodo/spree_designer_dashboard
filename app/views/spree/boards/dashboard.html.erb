@@ -29,7 +29,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}]).push(["Start New Project","new_project"]),""), :class => 'form-control' %>
+                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}]).push(["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}],["Start New Project","new_project"]),""), :class => 'form-control' %>
                     </div>
                     <!--<div class="col-md-3 text-right">-->
                       <%#= link_to "Start New Project", new_project_path, :class => "btn btn-primary btn-no-radius" %>
