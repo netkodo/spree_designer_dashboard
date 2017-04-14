@@ -113,7 +113,7 @@ class Spree::ContractsController < Spree::StoreController
     respond_to do |format|
       if @contract.save
         if check_sign
-          Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: project.id)
+          Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
           @contract.update_column(:designer_signed, true)
           File.delete(file_img_d)
         end
