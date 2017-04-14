@@ -62,6 +62,7 @@ class Spree::ContractsController < Spree::StoreController
     respond_to do |format|
       if @contract.save
         @contract.update_column(:client_signed, true)
+        Spree::ProjectHistory.create(action: "contract_signed",project_id: @contract.project_id)
         Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "")
         File.delete(file_img_c)
         flash[:alert] = "You have successfully signed contract"
