@@ -1,6 +1,6 @@
 class Spree::ContractsController < Spree::StoreController
 
-  before_filter :require_authentication
+  before_filter :require_authentication, except: [:sign_contract, :preview_sign_contract]
 
   def new
     project = Spree::Project.includes(:contract).find(params[:id])
