@@ -1,5 +1,7 @@
 class Spree::ProjectsController < Spree::StoreController
 
+  before_filter :require_authentication
+
   def index
     params[:project_id].present? ? @selected_project = Spree::Project.where(user_id: spree_current_user.id).find(params[:project_id]) : @selected_project = nil
     @projects = Spree::Project.where(user_id: spree_current_user.id).order("project_name asc")
