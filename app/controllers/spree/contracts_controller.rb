@@ -28,11 +28,12 @@ class Spree::ContractsController < Spree::StoreController
         @contract.update_column(:token, SecureRandom.uuid) unless @contract.token.present?
         @contract.update_columns(designer_name: project.user.full_name, client_name: project.project_name)
 
-        url = 'https://www.scoutandnimble'
-        url = 'http://scout.dev:3000' if Rails.env == "development"
-        url = 'http://54.172.90.33' if Rails.env == "staging"
+        # url = 'https://www.scoutandnimble'
+        # url = 'http://scout.dev:3000' if Rails.env == "development"
+        # url = 'http://54.172.90.33' if Rails.env == "staging"
 
-        Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "#{url}/sign_contract/#{@contract.token}")
+        # Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "#{url}/sign_contract/#{@contract.token}")
+        Spree::Mailers::ContractMailer.contract_sign_for_client(@contract.project.email,@contract.project.user,@contract.token).deliver
         format.json {render json: {message: 'success', location: edit_project_path(project), history_item: history_item}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
