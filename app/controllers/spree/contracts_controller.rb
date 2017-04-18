@@ -141,13 +141,18 @@ class Spree::ContractsController < Spree::StoreController
     else
       mail_to = "dniedzialkowski@netkodo.com"
     end
-    from_addr = "designer@scoutandnimble.com"
-    @project.send_contract(from_addr,mail_to,"CONTRACT",pdf)
+    # from_addr = "designer@scoutandnimble.com"
+    # @project.send_contract(from_addr,mail_to,"CONTRACT",pdf)
 
     pdf_file = File.open(save_path,"r")
 
+    images = []
+    @project.boards.each do |board|
+      images << board.board_image.attachment.url(:large) if board.board_image.present?
+    end
+
     respond_to do |format|
-      if true
+      if Spree::Mailers::ContractMailer.contract_email_with_pdf(mail_to,@project.user,save_path,images).deliver
         history = Spree::ProjectHistory.create(action: "contract_sent",project_id: @project.id, pdf: pdf_file)
         history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
         File.delete(save_path) if File.exist?(save_path)
