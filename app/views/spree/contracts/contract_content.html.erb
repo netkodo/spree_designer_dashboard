@@ -31,6 +31,21 @@
       </div>
     </tr>
     <tr>
+      <td class="user-data">
+        <div><strong>Client:</strong> <%= project.project_name %></div>
+        <div>Phone: <%= project.phone %></div>
+        <div>E-Mail: <%= project.email %></div>
+      </td>
+      <td class="user-data">
+        <div><strong>Address:</strong></div>
+        <div><%= project.address1 %></div>
+        <div><%= project.address2 %></div>
+        <div>City: <%= project.city %></div>
+        <div>State: <%= project.state %></div>
+        <div>Postal code: <%= project.zip_code %></div>
+      </td>
+    </tr>
+    <tr>
       <td colspan="2">
         <div class="">
           The "<strong>Services</strong>" are comprised of <strong> Interior Design</strong> services and <strong>Merchandise Purchasing</strong> work.
@@ -92,7 +107,7 @@
       <td colspan="2">
         <strong>Description of "Project":</strong><br>
         <% if project.description.present? %>
-          <% if project.description.length > 600 %>
+          <% if project.description.length > 200 %>
               Description is in an Addendum.
           <% else %>
               <%= project.description %>
@@ -381,7 +396,7 @@
     </div>
   </div>
 
-  <% if project.description.present? and project.description.length > 600 %>
+  <% if project.description.present? and project.description.length > 200 %>
       <div class="row pdf-new-page content">
         <h2 class="pdf-contract-header text-center">Addendum</h2>
         <div class="col-xs-16">
