@@ -64,14 +64,15 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if @contract.save
-        @contract.update_column(:client_signed, true)
         Spree::ProjectHistory.create(action: "contract_signed_by_client",project_id: @contract.project_id)
 
-        url = 'https://www.scoutandnimble'
-        url = 'http://scout.dev:3000' if Rails.env == "development"
-        url = 'http://54.172.90.33' if Rails.env == "staging"
-
-        Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/contracts/#{@contract.id}/edit")
+        # url = 'https://www.scoutandnimble'
+        # url = 'http://scout.dev:3000' if Rails.env == "development"
+        # url = 'http://54.172.90.33' if Rails.env == "staging"
+        #
+        # Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/contracts/#{@contract.id}/edit")
+        Spree::Mailers::ContractMailer.contract_signed_by_client(@contract.project.user.email,@contract.project.project_name,@contract).deliver
+        @contract.update_column(:client_signed, true)
         File.delete(file_img_c)
         flash[:alert] = "You have successfully signed contract"
         format.json {render json: {message: 'success', location: root_path }, status: :ok}
