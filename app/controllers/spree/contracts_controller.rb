@@ -28,11 +28,12 @@ class Spree::ContractsController < Spree::StoreController
         @contract.update_column(:token, SecureRandom.uuid) unless @contract.token.present?
         @contract.update_columns(designer_name: project.user.full_name, client_name: project.project_name)
 
-        url = 'https://www.scoutandnimble'
-        url = 'http://scout.dev:3000' if Rails.env == "development"
-        url = 'http://54.172.90.33' if Rails.env == "staging"
+        # url = 'https://www.scoutandnimble'
+        # url = 'http://scout.dev:3000' if Rails.env == "development"
+        # url = 'http://54.172.90.33' if Rails.env == "staging"
 
-        Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "#{url}/sign_contract/#{@contract.token}")
+        # Spree::Contract.send_contract_email(@contract.project.email, "contract-email", "You have contract from designer (#{@contract.designer_name}) to sign", "#{url}/sign_contract/#{@contract.token}")
+        Spree::Mailers::ContractMailer.contract_sign_for_client(@contract.project.email,@contract.project.user,@contract.token).deliver
         format.json {render json: {message: 'success', location: edit_project_path(project), history_item: history_item}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
@@ -63,14 +64,15 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if @contract.save
-        @contract.update_column(:client_signed, true)
         Spree::ProjectHistory.create(action: "contract_signed_by_client",project_id: @contract.project_id)
 
-        url = 'https://www.scoutandnimble'
-        url = 'http://scout.dev:3000' if Rails.env == "development"
-        url = 'http://54.172.90.33' if Rails.env == "staging"
-
-        Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/contracts/#{@contract.id}/edit")
+        # url = 'https://www.scoutandnimble'
+        # url = 'http://scout.dev:3000' if Rails.env == "development"
+        # url = 'http://54.172.90.33' if Rails.env == "staging"
+        #
+        # Spree::Contract.send_contract_email(@contract.project.user.email, "contract-email", "Contract has been signed by client #{@contract.project.project_name}", "#{url}/projects/#{@contract.project_id}/contracts/#{@contract.id}/edit")
+        Spree::Mailers::ContractMailer.contract_signed_by_client(@contract.project.user.email,@contract.project.project_name,@contract).deliver
+        @contract.update_column(:client_signed, true)
         File.delete(file_img_c)
         flash[:alert] = "You have successfully signed contract"
         format.json {render json: {message: 'success', location: root_path }, status: :ok}
@@ -117,7 +119,7 @@ class Spree::ContractsController < Spree::StoreController
           @contract.update_column(:designer_signed, true)
           File.delete(file_img_d)
         end
-        format.json {render json: {message: 'success', location: edit_project_path(@contract.project)}, status: :ok}
+        format.json {render json: {message: 'success', location: project_path(@contract.project)}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end
@@ -141,13 +143,18 @@ class Spree::ContractsController < Spree::StoreController
     else
       mail_to = "dniedzialkowski@netkodo.com"
     end
-    from_addr = "designer@scoutandnimble.com"
-    @project.send_contract(from_addr,mail_to,"CONTRACT",pdf)
+    # from_addr = "designer@scoutandnimble.com"
+    # @project.send_contract(from_addr,mail_to,"CONTRACT",pdf)
 
     pdf_file = File.open(save_path,"r")
 
+    images = []
+    @project.boards.each do |board|
+      images << board.board_image.attachment.url(:large) if board.board_image.present?
+    end
+
     respond_to do |format|
-      if true
+      if Spree::Mailers::ContractMailer.contract_email_with_pdf(mail_to,@project.user,save_path,images).deliver
         history = Spree::ProjectHistory.create(action: "contract_sent",project_id: @project.id, pdf: pdf_file)
         history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
         File.delete(save_path) if File.exist?(save_path)

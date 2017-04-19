@@ -63,13 +63,20 @@ class Spree::InvoiceLinesController < Spree::StoreController
       file << pdf
     end
 
-    from_addr = "designer@scoutandnimble.com"
-    board.send_email_with_invoice(from_addr,designer.email,designer.full_name,pdf)
+    # from_addr = "designer@scoutandnimble.com"
+    # board.send_email_with_invoice(from_addr,designer.email,designer.full_name,pdf)
+
+    if Rails.env == "production" or Rails.env == "staging"
+      mail_to = "sam@scoutandnimble.com"
+    else
+      mail_to = "dniedzialkowski@netkodo.com"
+    end
 
     pdf_file = File.open(save_path,"r")
 
     respond_to do |format|
-      if Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
+      if Spree::Mailers::ContractMailer.invoice(mail_to,designer,save_path).deliver
+        Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
         Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
         File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {:message => "ok"}, status: :ok}

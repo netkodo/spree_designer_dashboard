@@ -234,12 +234,12 @@ $ ->
         beforeSend: () ->
           $('.js-send-contract-confirmation').addClass('disabled').text('Sending...')
         success: (response) ->
-          console.log response
+#          console.log response
           $("#modal-location-body .confirmation").addClass("hidden")
           $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
           $(".project-history-group").prepend(response.history_item)
-          if response.location.length
+          if response.location != undefined
             obj = $(".js-send-contract")
             obj.text("Client haven't signed contract yet.").removeClass('js-send-contract').addClass('disabled')
           setTimeout () ->
@@ -256,7 +256,7 @@ $ ->
             $("#modal-location-body .error").addClass("hidden")
           ,'1000'
           console.log 'error'
-          console.log response
+#          console.log response
   ,".js-send-contract-confirmation"
 
   $(document).on
