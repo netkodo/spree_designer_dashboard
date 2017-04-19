@@ -9,6 +9,13 @@
       <div class="row">
         <h1>Contract</h1>
       </div>
+
+      <div class="row">
+        <%= render partial: 'contract_preview',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user} %>
+      </div>
+
+      <hr>
+
       <div class="row">
         <%= form_for @contract, url: {action: 'update', format: :json}, html: {id: 'js-update-contract'} do |f| %>
 

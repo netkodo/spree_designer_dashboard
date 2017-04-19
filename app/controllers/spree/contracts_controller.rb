@@ -119,7 +119,7 @@ class Spree::ContractsController < Spree::StoreController
           @contract.update_column(:designer_signed, true)
           File.delete(file_img_d)
         end
-        format.json {render json: {message: 'success', location: edit_project_path(@contract.project)}, status: :ok}
+        format.json {render json: {message: 'success', location: project_path(@contract.project)}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end
