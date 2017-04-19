@@ -325,6 +325,19 @@ $ ->
       status = $('#project_action').data('status')
       id = $('#project_action').data('id')
       switch $("#project_action").val()
+        when "remove-project"
+          if confirm("Are you sure?")
+            my_this = $(@)
+            $.ajax
+              method: 'DELETE'
+              url: "/projects/#{id}"
+              beforeSend: () ->
+                my_this.addClass('disabled').text('Processing...')
+              success: (response) ->
+                window.location.href = response.location
+#                my_this.removeClass('disabled').text('Submit')
+              error: (response) ->
+                my_this.removeClass('disabled').text('Submit')
         when "project-details"
           $(@).addClass('disabled').text('Processing...')
           window.location.href = "/projects/#{id}"

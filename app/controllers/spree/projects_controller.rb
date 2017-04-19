@@ -42,8 +42,13 @@ class Spree::ProjectsController < Spree::StoreController
     end
   end
 
-  def edit_details
-
+  def destroy
+    @project = Spree::Project.find(params[:id])
+    if @project.destroy
+      render json: {location: projects_path}
+    else
+      render json: {location: projects_path}
+    end
   end
 
   def close_open
