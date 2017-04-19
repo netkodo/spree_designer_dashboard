@@ -4,3 +4,4 @@
 <% if board.project.present? %><div class="btn btn-default btn-sm js-private-email">Email</div><% end %>
 <div class="btn btn-default btn-sm js-histroy">History</div>
 <%= link_to "Make public", make_public_room_path(board), class: "btn btn-default btn-sm js-make-public" %>
+<%= link_to 'Remove',  board,  method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-default btn-sm" %>
