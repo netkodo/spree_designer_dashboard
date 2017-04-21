@@ -3,6 +3,7 @@ class Spree::Project < ActiveRecord::Base
   has_many :project_histories, dependent: :destroy
   has_one :contract, dependent: :destroy
   belongs_to :user
+  has_many :project_invoice_lines
 
   scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
 

@@ -61,6 +61,7 @@ Spree::Core::Engine.routes.draw do
       post :close_open, defaults: {format: 'json'}
       # get :contract
       resources :contracts, param: :cid
+      resources :project_invoice_lines, param: :iid
     end
   end
   # match 'projects/:pid/contracts/:cid' => "contracts#show"
