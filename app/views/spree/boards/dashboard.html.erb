@@ -6,14 +6,10 @@
   <div class="col-md-9">
     <div class="page-header clearfix">
       <div class="row">
-        <!--<div class="col-md-6">-->
-          <!--<h1>Your Rooms</h1>-->
-        <!--</div>-->
         <div class="col-md-12 header-actions">
 
 
           <% if @designer_type == "room designer" %>
-              <%#= link_to "Add a Private Room", new_room_path(private: true), :class => "btn btn-primary" %>
               <div class="row menu-public">
                 <%= link_to "Add a Room", new_room_path(private: false), :class => "btn btn-primary btn-no-radius" %>
               </div>
@@ -25,15 +21,12 @@
                   </div>
                 <% else %>
                   <div class="col-md-12 text-center">
-                    <h1 id="h1_project_name"><%#= @projects.first.project_name %> <!-- Project --></h1>
+                    <h1 id="h1_project_name"></h1>
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}]).push(["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}],["Start New Project","new_project"]),""), :class => 'form-control' %>
+                      <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),""), :class => 'form-control' %>
                     </div>
-                    <!--<div class="col-md-3 text-right">-->
-                      <%#= link_to "Start New Project", new_project_path, :class => "btn btn-primary btn-no-radius" %>
-                    <!--</div>-->
                   </div>
                     <div class="project-managment hidden">
                     <div class="row mtop">
