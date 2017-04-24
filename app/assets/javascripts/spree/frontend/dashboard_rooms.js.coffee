@@ -499,3 +499,18 @@ $ ->
       else
         $('#project_discount_amount').parents('.form-group').hide()
   ,"#project_pass_discount"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      if confirm("Are you sure?")
+        obj = $(@)
+        $.ajax
+          dataType: 'json'
+          method: 'DELETE'
+          url:  $(@).attr('href')
+          success: (resp) ->
+            obj.parents('tr').remove()
+          error: (resp) ->
+            console.log 'error'
+  ,".js-project-remove-room"

@@ -752,7 +752,11 @@ class Spree::BoardsController < Spree::StoreController
     else
       flash[:warning] = "We could not delete this room."
     end
-    redirect_to designer_dashboard_path
+    respond_to do |format|
+      format.html { redirect_to designer_dashboard_path }
+      format.json { render json: {message: "success"}, status: :ok }
+    end
+
   end
 
   def add_board_favorite

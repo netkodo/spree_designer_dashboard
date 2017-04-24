@@ -11,21 +11,17 @@
           </div>
       <% else %>
         <div class="col-md-12 text-center">
-          <h1 id="h1_project_name"><%#= @projects.first.project_name %> <%= @selected_project.present? ? "#{@selected_project.project_name} Project" : "" %> </h1>
+          <h1 id="h1_project_name"> <%= @selected_project.present? ? "#{@selected_project.project_name} Project" : "" %> </h1>
         </div>
         <div class="row">
           <div class="col-md-6 col-md-offset-3">
-            <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}]).push(["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}],["Start New Project","new_project",{class: 'bold'}]),"#{@selected_project.present? ? @selected_project.id : ''}"), :class => 'form-control' %>
+            <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),"#{@selected_project.present? ? @selected_project.id : ''}"), :class => 'form-control' %>
           </div>
-          <!--<div class="col-md-3 text-right">-->
-            <%#= link_to "Start New Project", new_project_path, :class => "btn btn-primary" %>
-          <!--</div>-->
         </div>
         <div class="project-managment <%= @selected_project.present? ? "" : "hidden" %>">
           <div class="row mtop">
             <div class="col-md-6 col-md-offset-3">
               <%= select_tag :project_action, options_for_select([["Project Details","project-details"],["Add a Room","add-room"],["Remove Project","remove-project"]]),class:"form-control", data: {id: @selected_project.present? ? @selected_project.id : '', status: "close"} %>
-              <!--,["Add Project","add-project"]-->
             </div>
           </div>
           <div class="row mtop">
@@ -34,14 +30,6 @@
             </div>
           </div>
         </div>
-        <!--<div class="row">-->
-          <!--<div class="col-md-6 col-md-offset-3 text-center">-->
-            <%#= link_to "Edit Project Details", edit_project_path(@projects.first.id), :class => "btn btn-primary edit-project" %>
-          <!--</div>-->
-          <!--<div class="col-md-3 text-right">-->
-            <%#= link_to "Add a Room", new_room_path(private: true,project_id: @projects.first.id), :class => "btn btn-primary add-project-room" %>
-          <!--</div>-->
-        <!--</div>-->
         <table class="table table-board-listing">
           <colgroup>
             <col style="width: 5%" />
@@ -70,6 +58,7 @@
                       <% if board.project.present? %><div class="btn btn-default btn-sm js-private-email">Email</div><% end %>
                       <div class="btn btn-default btn-sm js-histroy">History</div>
                       <%= link_to 'Remove',  board,  method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-default btn-sm" %>
+                      <a href="<%= board_path(id: board.slug, format: :json) %>" class="btn btn-default btn-sm js-project-remove-room">Remove</a>
                   </div>
                 </td>
               </tr>
