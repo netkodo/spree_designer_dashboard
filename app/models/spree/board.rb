@@ -96,7 +96,7 @@ class Spree::Board < ActiveRecord::Base
 
 
   def update_state_published
-    self.update(status: 'published')
+    self.update(status: 'published') if self.designer.designer_registrations.first.status != "test designer"
   end
 
   def set_state_transition_context(message, user)

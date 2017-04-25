@@ -51,8 +51,8 @@ class Spree::DesignersController < Spree::StoreController
     @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
 
     designer = Spree::DesignerRegistration.where(user_id:@user.id).first
-    boards = @user.boards.where(status: "published").count
-    if @user.user_images.count == 1 and designer.status="room designer" #boards > 0 and
+    # boards = @user.boards.where(status: "published").count
+    if @user.user_images.count == 1 and designer.status=="room designer" #boards > 0 and
       @user.update(:show_designer_profile => 1)
     else
       @user.update(:show_designer_profile => 0)

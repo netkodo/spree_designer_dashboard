@@ -21,7 +21,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   end
 
   def self.status_options
-    [["Pending Review", "pending"], ["Room Designer", "room designer"], ["To the Trade Designer", "to the trade designer"], ["Declined", "declined"]]
+    [["Pending Review", "pending"], ["Room Designer", "room designer"], ["To the Trade Designer", "to the trade designer"], ["Test Designer", "test designer"], ["Declined", "declined"]]
   end
 
   def update_designer_status
@@ -36,7 +36,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         when "pending"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
         when "room designer"
-          boards = user.boards.where(status: "published").count
+          # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1, :show_designer_profile => 1})
           else
@@ -51,6 +51,15 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
           user.designer_ac_registration("to the trade designer")
+        when "test designer"
+          # boards = user.boards.where(status: "published").count
+          if user.user_images.count == 1#boards > 0 and
+            user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1, :show_designer_profile => 0})
+          else
+            user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
+          end
+
+          user.designer_ac_registration("room designer")
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
           self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
