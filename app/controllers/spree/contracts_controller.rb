@@ -117,6 +117,32 @@ class Spree::ContractsController < Spree::StoreController
         if check_sign
           Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
           @contract.update_column(:designer_signed, true)
+
+          contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user})
+
+          pdf = WickedPdf.new.pdf_from_string(contract)
+          save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
+          File.open(save_path, 'wb') do |file|
+            file << pdf
+          end
+
+          if Rails.env == "production" or Rails.env == "staging"
+            mail_to = "sam@scoutandnimble.com"
+          else
+            mail_to = "dniedzialkowski@netkodo.com"
+          end
+
+          pdf_file = File.open(save_path,"r")
+
+          images = []
+          @contract.project.boards.each do |board|
+            images << board.board_image.attachment.url(:large) if board.board_image.present?
+          end
+          if Spree::Mailers::ContractMailer.contract_email_with_pdf(mail_to,@contract.project.user,save_path,images).deliver
+            Spree::ProjectHistory.create(action: "contract_sent",project_id: @contract.project_id, pdf: pdf_file)
+            File.delete(save_path) if File.exist?(save_path)
+          end
+
           File.delete(file_img_d)
         end
         format.json {render json: {message: 'success', location: project_path(@contract.project)}, status: :ok}
