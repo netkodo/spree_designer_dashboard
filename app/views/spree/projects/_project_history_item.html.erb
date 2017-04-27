@@ -6,9 +6,16 @@
     <%= ph.created_at.to_date.to_formatted_s(:long) %>
   </div>
   <div class="col-md-4">
-    <% if ph.pdf.present? %>
-      <%= link_to ph.pdf.url do %>
+    <% if ph.action == "invoice_ready" %>
+        <i class="fa fa-2x fa-file-excel-o" aria-hidden="true"></i>
+        <%= link_to "EDIT", edit_invoice_project_invoice_lines_path(ph.project_id), target: "_blank" %>
+        /
+        REMOVE
+    <% else %>
+      <% if ph.pdf.present? %>
+        <%= link_to ph.pdf.url do %>
           <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
+        <% end %>
       <% end %>
     <% end %>
   </div>
