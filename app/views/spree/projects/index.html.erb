@@ -15,7 +15,7 @@
         </div>
         <div class="row">
           <div class="col-md-6 col-md-offset-3">
-            <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Select project","",{disabled: 'disabled'}],["Start or Select Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),"#{@selected_project.present? ? @selected_project.id : ''}"), :class => 'form-control' %>
+            <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Start or Select Project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),"#{@selected_project.present? ? @selected_project.id : ''}"), :class => 'form-control' %>
           </div>
         </div>
         <div class="project-managment <%= @selected_project.present? ? "" : "hidden" %>">
