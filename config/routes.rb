@@ -63,6 +63,7 @@ Spree::Core::Engine.routes.draw do
       resources :contracts, param: :cid
       resources :project_invoice_lines, param: :iid do
         collection do
+          post :update_invoice
           get :edit_invoice
           post :generate_invoice_manually, defaults: {format: 'json'}
         end
