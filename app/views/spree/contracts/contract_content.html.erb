@@ -66,10 +66,10 @@
         </ul>
         <strong class="underline">Services Fees for Interior Design Services:</strong><br>
         <span class="pdf-rp"><strong>Rate Type: </strong><%= project.display_rate_type %></span><br>
-        <span class="pdf-rp"><strong>Rate Amount: </strong>$<%= project.rate %></span><br><br>
+        <span class="pdf-rp"><strong><%= project.rate_title %>: </strong><%= project.show_dolar %><%= project.display_rate %><%= project.show_percentage %></span><br><br>
 
         <% if project.upfront_deposit %>
-            <strong><span class="underline">Up Front Fee</span>: </strong>
+            <strong><span class="underline">Upfront Fee</span>: </strong>
             $<%= project.deposit_amount %><br><br>
         <% end %>
 
@@ -85,21 +85,21 @@
           <li><strong>freight and shipping charges, and</strong></li>
           <li><strong>payment of merchandise.</strong></li>
         </ul>
-        <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the <strong>Purchasing Order</strong> detailed later.<br><br>
+        <strong>Services Fees for Purchasing Services:</strong> The fees for the Purchasing Services will be determined once the Designer and Client agree to what merchandise will be purchased.  The amount will be determined in the Purchasing Order detailed later.<br><br>
 
         <% if project.pass_discount %>
-            <strong>Product Discounts</strong> - designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed <%= project.discount_amount %>%.<br><br>
+            <strong>Product Discounts</strong> - Designer agrees to pass to the Client the Designer's actual trade discounts, not to exceed <%= project.discount_amount %>%.<br><br>
         <% end %>
 
         <% if project.charge %>
-            <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
+            <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>%<br><%= project.charge_on_statement %>
         <% end %>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <strong>Term of Services: </strong>
-        The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "Effective Date") and end on project completion, unless extended or terminated as provided in this Agreement.
+        The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "<strong>Effective Date</strong>") and end on project completion, unless extended or terminated as provided in this Agreement.
         <br>
       </td>
     </tr>
@@ -107,7 +107,7 @@
       <td colspan="2">
         <strong>Description of "Project":</strong><br>
         <% if project.description.present? %>
-          <% if project.description.length > 200 %>
+          <% if project.description.length > 140 %>
               Description is in an Addendum.
           <% else %>
               <%= project.description %>
@@ -145,7 +145,7 @@
       <ol type="I">
         <li>
           <h4 class="blue">SERVICES</h4>
-          <span class="blue">The Services shall include interior design and purchasing services (the "<strong>Services</strong>"), as described below:</span>
+          <span class="blue">The Services shall include Interior Design and Purchasing Services (the "<strong>Services</strong>"), as described below:</span>
           <ol type="A">
             <li>
               <h4 class="blue">Interior Design Services</h4>
@@ -191,7 +191,7 @@
             <li>
               <h4 class="blue">Merchandise Purchasing Services </h4>
               <ol type="1">
-                <li>Purchasing Services are the purchases of Merchandise by Designer for the Client. The Services with regards to purchasing services will include, but not be limited to, the following:
+                <li><strong>Meaning</strong>. Purchasing Services are the purchases of Merchandise by Designer for the Client. The Services with regards to purchasing services will include, but not be limited to, the following:
                   <ol type="a">
                     <li><strong>Purchasing of Merchandise.</strong>  The Merchandise to be purchased for the project will be purchased by the Designer on behalf of the Client.  The Client will not purchase items, whether individual or multiple, for the project.</li>
                     <li><strong>Purchase Pre-Approval.</strong> Merchandise to be purchased through Designer will be specified on a Purchase Order ("<strong>PO</strong>") email by Designer and submitted for the Client's written acceptance (email reply is acceptable). Each PO will identify the item, its price, sales tax, and estimated freight or shipping cost to the Client (if available). A PO may be sent in the form of a pro forma Invoice.</li>
@@ -284,7 +284,7 @@
               The Client agrees to pay Designer the rate amount set forth in the PO for the Interior Design Services.
             </li>
             <li>
-              <strong>Invoicing, Outstanding Fees, and Taxes.</strong> The Fee will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer's net income.
+              <strong>Invoicing, Outstanding Fees, and Taxes.</strong> The Fee (defined below) will be invoiced to the Client within 30 days of the initial room design submission to the Client and is payable to Designer within 30 (thirty) days of invoice date.  Unpaid amounts are subject to a finance charge of 1.5% per month on any outstanding balance, or the maximum charges permitted by law, whichever is lower, plus all expenses of collection, and may result in immediate termination of Services. Client shall be responsible for all taxes associated with the Services, other than U.S. taxes based on the Designer's net income.
             </li>
             <li>
               <strong>Incidental Expenses.</strong> The Fee will cover all project Interior Design services, but does not cover incidental expenses which must be reimbursed by the Client (samples, copy fees, etc.)
@@ -396,7 +396,7 @@
     </div>
   </div>
 
-  <% if project.description.present? and project.description.length > 200 %>
+  <% if project.description.present? and project.description.length > 140 %>
       <div class="row pdf-new-page content">
         <h2 class="pdf-contract-header text-center">Addendum</h2>
         <div class="col-xs-16">

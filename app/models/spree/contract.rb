@@ -35,6 +35,10 @@ class Spree::Contract < ActiveRecord::Base
     end
   end
 
+  def signed?
+    self.designer_signed or self.designer_signed
+  end
+
   def self.send_contract_email(email, template, subject, link)
     html_content = ''
     email = 'dniedzialkowski@netkodo.com' if Rails.env == "development"

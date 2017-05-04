@@ -463,6 +463,12 @@ $ ->
   $(document).on
     change: (e) ->
       $('#project_customer_billing_cycle').parents('.form-group').show()
+
+      if $(@).val() == 'flat_rate_percentage'
+        $("#project_rate").attr('placeholder','ENTER PERCENTAGE (EX: 100.00)')
+      else
+        $("#project_rate").attr('placeholder','ENTER RATE (EX: 100.00)')
+
       if $(@).val() == 'hourly_rate'
         $('#project_rate').parents('.form-group').find('.info').show()
       else
