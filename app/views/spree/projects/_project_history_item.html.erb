@@ -10,7 +10,7 @@
         <i class="fa fa-2x fa-file-excel-o" aria-hidden="true"></i>
         <%= link_to "EDIT", edit_invoice_project_invoice_lines_path(ph.project_id) %>
         /
-        REMOVE
+        <%= link_to "REMOVE",  send_invoice_project_invoice_lines_path(ph.project_id), class: "js-send-project-invoice-lines" %>
     <% else %>
       <% if ph.pdf.present? %>
         <%= link_to ph.pdf.url do %>

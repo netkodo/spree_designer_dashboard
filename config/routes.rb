@@ -66,6 +66,7 @@ Spree::Core::Engine.routes.draw do
           post :update_invoice
           get :edit_invoice
           post :generate_invoice_manually, defaults: {format: 'json'}
+          post :send_invoice, defaults: {format: 'json'}
         end
       end
     end
