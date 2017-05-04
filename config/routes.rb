@@ -71,6 +71,9 @@ Spree::Core::Engine.routes.draw do
       end
     end
   end
+
+  resources :project_history, only: [:destroy], defaults: {format: :json}
+
   # match 'projects/:pid/contracts/:cid' => "contracts#show"
   get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
   patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
