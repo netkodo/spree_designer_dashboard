@@ -1,10 +1,10 @@
 <div class="form-group">
-  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}],['FLAT RATE / PER ROOM','flat_rate_room',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT','flat_rate_project',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{u ? '':'select-placeholder'}" %>
+  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}],['FLAT RATE / PER ROOM','flat_rate_room',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT','flat_rate_project',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT IN THE FORM OF A PERCENTAGE','flat_rate_percentage',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{u ? '':'select-placeholder'}" %>
   <div class="info"></div>
 </div>
 
 <div class="form-group">
-  <%= f.text_field :rate, :placeholder => 'ENTER RATE (EX: 100.00)', :class => 'form-control text-center' %>
+  <%= f.text_field :rate, :placeholder => @project.rate_type == 'flat_rate_percentage' ? 'ENTER PERCENTAGE (EX: 100.00)' : 'ENTER RATE (EX: 100.00)', :class => 'form-control text-center' %>
   <div class="info" style="display: <%= (@project.rate_type == 'flat_rate' and @project.rate_type.present?) ? 'block;' : 'none;' %>">Notes: Hourly rates are calculated based on time<br>
     spent working on your project. Flat Rates are generally<br>
     charged to the customer per rooms you’ve created for<br>

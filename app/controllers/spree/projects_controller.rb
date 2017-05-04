@@ -36,6 +36,7 @@ class Spree::ProjectsController < Spree::StoreController
   def update
     @project = Spree::Project.find(params[:id])
     if @project.update(project_params)
+      @project.contract.destroy if @project.contract.signed?
       redirect_to project_path(@project)
     else
       redirect_to projects_path

@@ -41,17 +41,40 @@ class Spree::Project < ActiveRecord::Base
         'flat rate / entire project'
       when 'hourly_rate'
         'hourly rate'
+      when 'flat_rate_percentage'
+        'flat rate / percentage of entire project'
       else
         'ERROR'
     end
   end
 
+  def rate_title
+    case self.rate_type
+      when 'flat_rate_percentage'
+        'Percentage Amount'
+      else
+        'Rate Amount'
+    end
+  end
+
+  def show_percentage
+    self.rate_type == 'flat_rate_percentage' ? '%' : ''
+  end
+
+  def show_dolar
+    self.rate_type == 'flat_rate_percentage' ? '' : '$'
+  end
+
+  def display_rate
+    self.rate_type == 'flat_rate_percentage' ? self.rate.to_i : self.rate
+  end
+
   def charge_on_statement
     case self.charge_on
       when "all_products"
-        "on all products purchased related to merchandise ordering, whether or not they are included in the Project."
+        "On all merchandise purchases related to the Project (defined below)."
       when "alternate"
-        "if Client buys alternate merchandise not presented by the Designer for the Project."
+        "Only if Client purchases alternate merchandise not selected by the Designer for the Project (defined below)."
     end
   end
 

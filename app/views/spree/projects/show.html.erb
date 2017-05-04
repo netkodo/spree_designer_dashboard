@@ -86,7 +86,7 @@
                 <% if @project.contract.present? %>
                     <% if @project.contract.client_signed and !@project.contract.designer_signed %>
                         <%= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
-                    <% elsif @project.contract.client_signed and @project.contract.designer_signed %>
+                    <% elsif !@project.contract.client_signed and !@project.contract.designer_signed %>
                         <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
                     <% else %>
                         <div class="btn btn-primary send-contract disabled">Client hasn't signed contract yet.</div>
