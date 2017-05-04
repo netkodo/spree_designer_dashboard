@@ -92,14 +92,14 @@
         <% end %>
 
         <% if project.charge %>
-            <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>%<br><%= project.charge_on_statement %>
+            <strong>Merchandise Purchasing Charges:</strong> <%= project.charge_percentage %>% <%= project.charge_on_statement %>
         <% end %>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <strong>Term of Services: </strong>
-        The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "Effective Date") and end on project completion, unless extended or terminated as provided in this Agreement.
+        The term of this Agreement for Designer's Services shall begin on <%= Date.today.to_formatted_s(:long) %> (the "<strong>Effective Date</strong>") and end on project completion, unless extended or terminated as provided in this Agreement.
         <br>
       </td>
     </tr>
