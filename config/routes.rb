@@ -66,10 +66,14 @@ Spree::Core::Engine.routes.draw do
           post :update_invoice
           get :edit_invoice
           post :generate_invoice_manually, defaults: {format: 'json'}
+          post :send_invoice, defaults: {format: 'json'}
         end
       end
     end
   end
+
+  resources :project_history, only: [:destroy], defaults: {format: :json}
+
   # match 'projects/:pid/contracts/:cid' => "contracts#show"
   get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
   patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
