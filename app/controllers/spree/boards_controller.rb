@@ -495,9 +495,9 @@ class Spree::BoardsController < Spree::StoreController
       # @board.queue_image_generation
       @board.designer.update(tutorial_roombuilder: true)
       respond_to do |format|
-        format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
-        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
-        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+        format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}
+        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}}
+        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}}
       end
     else
       puts @board.errors.collect { |e| e.to_s }

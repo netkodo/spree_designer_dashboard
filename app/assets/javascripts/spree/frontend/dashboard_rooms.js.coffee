@@ -1,3 +1,78 @@
+@globalChange = (el) ->
+  $('.project-managment').removeClass('hidden')
+  $("#project_action").data('id',el.val())
+  $('#h1_project_name').html("#{el.find('option:selected').text()} Project")
+  $('.create-contract').attr('href',"/projects/#{el.val()}/contracts/new")
+  $('.close-project').data('url',"/projects/#{el.val()}/close_open")
+  $(".table.table-board-listing tbody tr.true.project#{el.val()}").removeClass('hidden')
+  $(".table.table-board-listing tbody tr.true").not(".project#{el.val()}").addClass('hidden')
+  $('.edit-project').attr('href',"/projects/#{el.val()}")
+  $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{el.val()}")
+
+@clearHidden = () ->
+  $('.table-board-listing tbody tr').each ->
+    $(@).removeClass('hidden')
+
+@getRoomsDependsOnType = (type) ->
+    clearHidden()
+    if type == true
+      $('.table-board-listing tbody .false').each ->
+        $(@).addClass('hidden')
+    else
+      $('.table-board-listing tbody .true').each ->
+        $(@).addClass('hidden')
+
+@changeMenu = (type) ->
+  if type == true
+    $('.menu-public').addClass('hidden')
+    $('.menu-private').removeClass('hidden')
+  else
+    $('.menu-public').removeClass('hidden')
+    $('.menu-private').addClass('hidden')
+
+@hideNotSelectedProjects = (type,activeProject) ->
+  if type == true
+    $('.table-board-listing tbody .true').addClass('hidden')
+
+@changeTableView = (type) ->
+  if type == true
+    $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
+    $(".table.table-board-listing colgroup").html(
+      "   <col style='width: 5%' />
+          <col style='width: 20%' />
+          <col style='width: 75%' />"
+    )
+    $(".designer_commission_style").addClass('hidden')
+  else
+    $(".table.table-board-listing thead tr").html(
+      "     <th class='status'>&nbsp;</th>
+            <th colspan='2'></th>
+            <th class='align-center'># Products</th>
+            <th class='align-center'># Views</th>
+            <th class='align-center'>Revenue</th>"
+    )
+    $(".table.table-board-listing colgroup").html(
+      "   <col style='width: 5%' />
+          <col style='width: 20%' />
+          <col style='width: 40%' />
+          <col style='width: 12%' />
+          <col style='width: 10%' />
+          <col style='width: 10%' />"
+    )
+    $(".designer_commission_style").removeClass('hidden')
+
+@globalClickChange = (el) ->
+  getRoomsDependsOnType(el.data('private'))
+  changeTableView(el.data('private'))
+  changeMenu(el.data('private'))
+  hideNotSelectedProjects(el.data('private'),$("#project_select").val())
+  $(".btn-tab.js-get-room-type").each ->
+    $(@).removeClass('active')
+  $(@).addClass('active')
+  $('#project_select').val("")
+  $(".project-managment").addClass('hidden')
+  $('#h1_project_name').html("")
+
 $ ->
   addToHistory = (user_id,board_id,action) ->
     $.ajax
@@ -8,59 +83,6 @@ $ ->
       success: (response) ->
 
       error: (response) ->
-
-
-  clearHidden = () ->
-    $('.table-board-listing tbody tr').each ->
-      $(@).removeClass('hidden')
-
-  getRoomsDependsOnType = (type) ->
-    clearHidden()
-    if type == true
-      $('.table-board-listing tbody .false').each ->
-        $(@).addClass('hidden')
-    else
-      $('.table-board-listing tbody .true').each ->
-        $(@).addClass('hidden')
-
-  changeMenu = (type) ->
-    if type == true
-      $('.menu-public').addClass('hidden')
-      $('.menu-private').removeClass('hidden')
-    else
-      $('.menu-public').removeClass('hidden')
-      $('.menu-private').addClass('hidden')
-
-  hideNotSelectedProjects = (type,activeProject) ->
-    if type == true
-      $('.table-board-listing tbody .true').addClass('hidden')
-
-  changeTableView = (type) ->
-    if type == true
-      $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
-      $(".table.table-board-listing colgroup").html(
-        "   <col style='width: 5%' />
-            <col style='width: 20%' />
-            <col style='width: 75%' />"
-      )
-      $(".designer_commission_style").addClass('hidden')
-    else
-      $(".table.table-board-listing thead tr").html(
-        "     <th class='status'>&nbsp;</th>
-              <th colspan='2'></th>
-              <th class='align-center'># Products</th>
-              <th class='align-center'># Views</th>
-              <th class='align-center'>Revenue</th>"
-      )
-      $(".table.table-board-listing colgroup").html(
-        "   <col style='width: 5%' />
-            <col style='width: 20%' />
-            <col style='width: 40%' />
-            <col style='width: 12%' />
-            <col style='width: 10%' />
-            <col style='width: 10%' />"
-      )
-      $(".designer_commission_style").removeClass('hidden')
 
   generateInvoiceHash = (invoice) ->
     hash = {}
@@ -77,16 +99,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      getRoomsDependsOnType($(@).data('private'))
-      changeTableView($(@).data('private'))
-      changeMenu($(@).data('private'))
-      hideNotSelectedProjects($(@).data('private'),$("#project_select").val())
-      $(".btn-tab.js-get-room-type").each ->
-        $(@).removeClass('active')
-      $(@).addClass('active')
-      $('#project_select').val("")
-      $(".project-managment").addClass('hidden')
-      $('#h1_project_name').html("")
+      globalClickChange( $(@) )
   ,'.js-get-room-type'
 
   $(document).on
@@ -318,15 +331,7 @@ $ ->
           error: (response) ->
             console.log response.message
       else
-        $('.project-managment').removeClass('hidden')
-        $("#project_action").data('id',$(@).val())
-        $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
-        $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
-        $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
-        $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
-        $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
-        $('.edit-project').attr('href',"/projects/#{$(@).val()}")
-        $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+        globalChange( $(@) )
   ,'#project_select'
 
   $(document).on

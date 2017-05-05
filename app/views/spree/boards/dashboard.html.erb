@@ -150,4 +150,12 @@
       tutorial.set(dashboard_after_save);
       tutorial.run();
     }
+    <% if params[:private].present? and (params[:private]=='true' or params[:private]==true) %>
+      btn = $(".js-get-room-type[data-private='true']");
+      globalClickChange(btn);
+      console.log('test');
+      el = $("#project_select option[value=<%= params[:id] %>]");
+      console.log(el);
+      globalChange(el);
+    <% end %>
 </script>
