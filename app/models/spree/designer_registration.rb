@@ -51,6 +51,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
           user.designer_ac_registration("to the trade designer")
+          user.user_ac_event_add("trade_designer_accepted_event")
         when "test designer"
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
