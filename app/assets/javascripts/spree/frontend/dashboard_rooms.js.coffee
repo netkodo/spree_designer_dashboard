@@ -67,8 +67,8 @@
   changeMenu(el.data('private'))
   hideNotSelectedProjects(el.data('private'),$("#project_select").val())
   $(".btn-tab.js-get-room-type").each ->
-    $(@).removeClass('active')
-  $(@).addClass('active')
+    el.removeClass('active')
+  el.addClass('active')
   $('#project_select').val("")
   $(".project-managment").addClass('hidden')
   $('#h1_project_name').html("")
