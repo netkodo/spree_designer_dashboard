@@ -307,7 +307,16 @@ $ ->
   $(document).on
     change: (e) ->
       if $(@).val() == "new_project"
-        window.location.href = "/projects/new"
+#        window.location.href = "/projects/new"
+        $.ajax
+          dataType: 'json'
+          method: 'POST'
+          url: "/create_project"
+          success: (response) ->
+            console.log response.message
+            window.location.href = response.location
+          error: (response) ->
+            console.log response.message
       else
         $('.project-managment').removeClass('hidden')
         $("#project_action").data('id',$(@).val())
@@ -401,62 +410,65 @@ $ ->
       step = $(@).data('step')
       $('.step').hide()
       $(".step-#{step}").show()
-      if step == 2
-        $('.step1 .data').html("<p>
-          #{$('#project_project_name').val()}<br>
-          #{$('#project_description').val().substring(0,100)}<br><br>
-          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
-          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
-          </p>
-          <p>
-          #{$('#project_email').val()}<br>
-          #{$('#project_phone').val()}
-          </p>")
-      else if step == 3
-        if $('#project_upfront_deposit').val() == 'true'
-          upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
-        else
-          upfront_deposit = "Upfront deposit: No"
-        str = "<p>
-          #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
-          #{$('#project_rate').val()}<br>
-          #{upfront_deposit}<br>
-          #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
-          </p>"
-        $('.step2 .data').html(str)
-      else if step == 4
-        if $("#create_project_form").length
-          url = $("#preview_contract").attr("href")
-          serialize = $("#create_project_form").serialize()
-          $("#preview_contract").attr("href", "#{url}?#{serialize}")
-        else if $("#update_project_form").length
-          url = "/preview_contract/-1.pdf"
-          serialize = $("#update_project_form").serialize()
-          $("#preview_contract").attr("href", "#{url}?#{serialize}")
-        if $('#project_pass_discount').val() == 'true'
-          pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
-        else
-          pass_discount = "Pass discount: No"
+      $('#update_project_form').ajaxSubmit()
 
-        if $('#project_charge').val() == 'true'
-          if $("#project_charge_on").val() == 'all_products'
-            charge_on = "On all products"
-          else
-            charge_on = "On alternate products"
-          str = "<p>
-              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
-              Percentage: Yes<br>
-              #{charge_on}<br>
-              Charge: #{$('#project_charge_percentage').val()}%<br>
-              #{pass_discount}
-            </p>"
-        else
-          str = "<p>
-              #{$('#contract_type').find('option:selected').text()}<br>
-              Percentage: No<br>
-              #{pass_discount}
-            </p>"
-        $('.step3 .data').html(str)
+      #deprecated due to not using step 4
+#      if step == 2
+#        $('.step1 .data').html("<p>
+#          #{$('#project_project_name').val()}<br>
+#          #{$('#project_description').val().substring(0,100)}<br><br>
+#          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
+#          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
+#          </p>
+#          <p>
+#          #{$('#project_email').val()}<br>
+#          #{$('#project_phone').val()}
+#          </p>")
+#      else if step == 3
+#        if $('#project_upfront_deposit').val() == 'true'
+#          upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
+#        else
+#          upfront_deposit = "Upfront deposit: No"
+#        str = "<p>
+#          #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+#          #{$('#project_rate').val()}<br>
+#          #{upfront_deposit}<br>
+#          #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+#          </p>"
+#        $('.step2 .data').html(str)
+#      else if step == 4
+#        if $("#create_project_form").length
+#          url = $("#preview_contract").attr("href")
+#          serialize = $("#create_project_form").serialize()
+#          $("#preview_contract").attr("href", "#{url}?#{serialize}")
+#        else if $("#update_project_form").length
+#          url = "/preview_contract/-1.pdf"
+#          serialize = $("#update_project_form").serialize()
+#          $("#preview_contract").attr("href", "#{url}?#{serialize}")
+#        if $('#project_pass_discount').val() == 'true'
+#          pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
+#        else
+#          pass_discount = "Pass discount: No"
+
+#        if $('#project_charge').val() == 'true'
+#          if $("#project_charge_on").val() == 'all_products'
+#            charge_on = "On all products"
+#          else
+#            charge_on = "On alternate products"
+#          str = "<p>
+#              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
+#              Percentage: Yes<br>
+#              #{charge_on}<br>
+#              Charge: #{$('#project_charge_percentage').val()}%<br>
+#              #{pass_discount}
+#            </p>"
+#        else
+#          str = "<p>
+#              #{$('#contract_type').find('option:selected').text()}<br>
+#              Percentage: No<br>
+#              #{pass_discount}
+#            </p>"
+#        $('.step3 .data').html(str)
 
   ,".project-next-step, .project-prev-step"
 
