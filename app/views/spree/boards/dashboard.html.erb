@@ -153,9 +153,8 @@
     <% if params[:private].present? and (params[:private]=='true' or params[:private]==true) %>
       btn = $(".js-get-room-type[data-private='true']");
       globalClickChange(btn);
-      console.log('test');
       el = $("#project_select option[value=<%= params[:id] %>]");
-      console.log(el);
+      $("#project_select").val(<%= params[:id] %>);
       globalChange(el);
     <% end %>
 </script>
