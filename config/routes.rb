@@ -72,6 +72,9 @@ Spree::Core::Engine.routes.draw do
     end
   end
 
+  post "/create_project" => "projects#create_project", as: :create_project, defaults: {format: 'json'}
+
+
   resources :project_history, only: [:destroy], defaults: {format: :json}
 
   # match 'projects/:pid/contracts/:cid' => "contracts#show"

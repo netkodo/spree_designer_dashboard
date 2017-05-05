@@ -1,3 +1,77 @@
+@globalChange = (el) ->
+  $('.project-managment').removeClass('hidden')
+  $("#project_action").data('id',el.val())
+  $('#h1_project_name').html("#{el.find('option:selected').text()} Project")
+  $('.create-contract').attr('href',"/projects/#{el.val()}/contracts/new")
+  $('.close-project').data('url',"/projects/#{el.val()}/close_open")
+  $(".table.table-board-listing tbody tr.true.project#{el.val()}").removeClass('hidden')
+  $(".table.table-board-listing tbody tr.true").not(".project#{el.val()}").addClass('hidden')
+  $('.edit-project').attr('href',"/projects/#{el.val()}")
+  $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{el.val()}")
+
+@clearHidden = () ->
+  $('.table-board-listing tbody tr').each ->
+    $(@).removeClass('hidden')
+
+@getRoomsDependsOnType = (type) ->
+    clearHidden()
+    if type == true
+      $('.table-board-listing tbody .false').each ->
+        $(@).addClass('hidden')
+    else
+      $('.table-board-listing tbody .true').each ->
+        $(@).addClass('hidden')
+
+@changeMenu = (type) ->
+  if type == true
+    $('.menu-public').addClass('hidden')
+    $('.menu-private').removeClass('hidden')
+  else
+    $('.menu-public').removeClass('hidden')
+    $('.menu-private').addClass('hidden')
+
+@hideNotSelectedProjects = (type,activeProject) ->
+  if type == true
+    $('.table-board-listing tbody .true').addClass('hidden')
+
+@changeTableView = (type) ->
+  if type == true
+    $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
+    $(".table.table-board-listing colgroup").html(
+      "   <col style='width: 5%' />
+          <col style='width: 20%' />
+          <col style='width: 75%' />"
+    )
+    $(".designer_commission_style").addClass('hidden')
+  else
+    $(".table.table-board-listing thead tr").html(
+      "     <th class='status'>&nbsp;</th>
+            <th colspan='2'></th>
+            <th class='align-center'># Products</th>
+            <th class='align-center'># Views</th>
+            <th class='align-center'>Revenue</th>"
+    )
+    $(".table.table-board-listing colgroup").html(
+      "   <col style='width: 5%' />
+          <col style='width: 20%' />
+          <col style='width: 40%' />
+          <col style='width: 12%' />
+          <col style='width: 10%' />
+          <col style='width: 10%' />"
+    )
+    $(".designer_commission_style").removeClass('hidden')
+
+@globalClickChange = (el) ->
+  getRoomsDependsOnType(el.data('private'))
+  changeTableView(el.data('private'))
+  changeMenu(el.data('private'))
+  hideNotSelectedProjects(el.data('private'),$("#project_select").val())
+  $(".btn-tab.js-get-room-type").removeClass('active')
+  el.addClass('active')
+  $('#project_select').val("")
+  $(".project-managment").addClass('hidden')
+  $('#h1_project_name').html("")
+
 $ ->
   addToHistory = (user_id,board_id,action) ->
     $.ajax
@@ -8,59 +82,6 @@ $ ->
       success: (response) ->
 
       error: (response) ->
-
-
-  clearHidden = () ->
-    $('.table-board-listing tbody tr').each ->
-      $(@).removeClass('hidden')
-
-  getRoomsDependsOnType = (type) ->
-    clearHidden()
-    if type == true
-      $('.table-board-listing tbody .false').each ->
-        $(@).addClass('hidden')
-    else
-      $('.table-board-listing tbody .true').each ->
-        $(@).addClass('hidden')
-
-  changeMenu = (type) ->
-    if type == true
-      $('.menu-public').addClass('hidden')
-      $('.menu-private').removeClass('hidden')
-    else
-      $('.menu-public').removeClass('hidden')
-      $('.menu-private').addClass('hidden')
-
-  hideNotSelectedProjects = (type,activeProject) ->
-    if type == true
-      $('.table-board-listing tbody .true').addClass('hidden')
-
-  changeTableView = (type) ->
-    if type == true
-      $(".table.table-board-listing thead tr").html("<th class='status'>&nbsp;</th><th colspan='2'></th>")
-      $(".table.table-board-listing colgroup").html(
-        "   <col style='width: 5%' />
-            <col style='width: 20%' />
-            <col style='width: 75%' />"
-      )
-      $(".designer_commission_style").addClass('hidden')
-    else
-      $(".table.table-board-listing thead tr").html(
-        "     <th class='status'>&nbsp;</th>
-              <th colspan='2'></th>
-              <th class='align-center'># Products</th>
-              <th class='align-center'># Views</th>
-              <th class='align-center'>Revenue</th>"
-      )
-      $(".table.table-board-listing colgroup").html(
-        "   <col style='width: 5%' />
-            <col style='width: 20%' />
-            <col style='width: 40%' />
-            <col style='width: 12%' />
-            <col style='width: 10%' />
-            <col style='width: 10%' />"
-      )
-      $(".designer_commission_style").removeClass('hidden')
 
   generateInvoiceHash = (invoice) ->
     hash = {}
@@ -77,16 +98,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      getRoomsDependsOnType($(@).data('private'))
-      changeTableView($(@).data('private'))
-      changeMenu($(@).data('private'))
-      hideNotSelectedProjects($(@).data('private'),$("#project_select").val())
-      $(".btn-tab.js-get-room-type").each ->
-        $(@).removeClass('active')
-      $(@).addClass('active')
-      $('#project_select').val("")
-      $(".project-managment").addClass('hidden')
-      $('#h1_project_name').html("")
+      globalClickChange( $(@) )
   ,'.js-get-room-type'
 
   $(document).on
@@ -307,17 +319,18 @@ $ ->
   $(document).on
     change: (e) ->
       if $(@).val() == "new_project"
-        window.location.href = "/projects/new"
+#        window.location.href = "/projects/new"
+        $.ajax
+          dataType: 'json'
+          method: 'POST'
+          url: "/create_project"
+          success: (response) ->
+            console.log response.message
+            window.location.href = response.location
+          error: (response) ->
+            console.log response.message
       else
-        $('.project-managment').removeClass('hidden')
-        $("#project_action").data('id',$(@).val())
-        $('#h1_project_name').html("#{$(@).find('option:selected').text()} Project")
-        $('.create-contract').attr('href',"/projects/#{$(@).val()}/contracts/new")
-        $('.close-project').data('url',"/projects/#{$(@).val()}/close_open")
-        $(".table.table-board-listing tbody tr.true.project#{$(@).val()}").removeClass('hidden')
-        $(".table.table-board-listing tbody tr.true").not(".project#{$(@).val()}").addClass('hidden')
-        $('.edit-project').attr('href',"/projects/#{$(@).val()}")
-        $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{$(@).val()}")
+        globalChange( $(@) )
   ,'#project_select'
 
   $(document).on
@@ -401,62 +414,65 @@ $ ->
       step = $(@).data('step')
       $('.step').hide()
       $(".step-#{step}").show()
-      if step == 2
-        $('.step1 .data').html("<p>
-          #{$('#project_project_name').val()}<br>
-          #{$('#project_description').val().substring(0,100)}<br><br>
-          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
-          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
-          </p>
-          <p>
-          #{$('#project_email').val()}<br>
-          #{$('#project_phone').val()}
-          </p>")
-      else if step == 3
-        if $('#project_upfront_deposit').val() == 'true'
-          upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
-        else
-          upfront_deposit = "Upfront deposit: No"
-        str = "<p>
-          #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
-          #{$('#project_rate').val()}<br>
-          #{upfront_deposit}<br>
-          #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
-          </p>"
-        $('.step2 .data').html(str)
-      else if step == 4
-        if $("#create_project_form").length
-          url = $("#preview_contract").attr("href")
-          serialize = $("#create_project_form").serialize()
-          $("#preview_contract").attr("href", "#{url}?#{serialize}")
-        else if $("#update_project_form").length
-          url = "/preview_contract/-1.pdf"
-          serialize = $("#update_project_form").serialize()
-          $("#preview_contract").attr("href", "#{url}?#{serialize}")
-        if $('#project_pass_discount').val() == 'true'
-          pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
-        else
-          pass_discount = "Pass discount: No"
+      $('#update_project_form').ajaxSubmit()
 
-        if $('#project_charge').val() == 'true'
-          if $("#project_charge_on").val() == 'all_products'
-            charge_on = "On all products"
-          else
-            charge_on = "On alternate products"
-          str = "<p>
-              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
-              Percentage: Yes<br>
-              #{charge_on}<br>
-              Charge: #{$('#project_charge_percentage').val()}%<br>
-              #{pass_discount}
-            </p>"
-        else
-          str = "<p>
-              #{$('#contract_type').find('option:selected').text()}<br>
-              Percentage: No<br>
-              #{pass_discount}
-            </p>"
-        $('.step3 .data').html(str)
+      #deprecated due to not using step 4
+#      if step == 2
+#        $('.step1 .data').html("<p>
+#          #{$('#project_project_name').val()}<br>
+#          #{$('#project_description').val().substring(0,100)}<br><br>
+#          #{$('#project_address1').val()}, #{$('#project_address2').val()}<br>
+#          #{$('#project_city').val()}, #{$('#project_state').val()}, #{$('#project_zip_code').val()}
+#          </p>
+#          <p>
+#          #{$('#project_email').val()}<br>
+#          #{$('#project_phone').val()}
+#          </p>")
+#      else if step == 3
+#        if $('#project_upfront_deposit').val() == 'true'
+#          upfront_deposit = "Upfront deposit: #{$('#project_deposit_amount').val()}"
+#        else
+#          upfront_deposit = "Upfront deposit: No"
+#        str = "<p>
+#          #{$('#project_rate_type').find('option:selected').text().toLowerCase()}<br>
+#          #{$('#project_rate').val()}<br>
+#          #{upfront_deposit}<br>
+#          #{$('#project_customer_billing_cycle').find('option:selected').text().toLowerCase()}
+#          </p>"
+#        $('.step2 .data').html(str)
+#      else if step == 4
+#        if $("#create_project_form").length
+#          url = $("#preview_contract").attr("href")
+#          serialize = $("#create_project_form").serialize()
+#          $("#preview_contract").attr("href", "#{url}?#{serialize}")
+#        else if $("#update_project_form").length
+#          url = "/preview_contract/-1.pdf"
+#          serialize = $("#update_project_form").serialize()
+#          $("#preview_contract").attr("href", "#{url}?#{serialize}")
+#        if $('#project_pass_discount').val() == 'true'
+#          pass_discount = "Pass discount: #{$('#project_discount_amount').val()}%"
+#        else
+#          pass_discount = "Pass discount: No"
+
+#        if $('#project_charge').val() == 'true'
+#          if $("#project_charge_on").val() == 'all_products'
+#            charge_on = "On all products"
+#          else
+#            charge_on = "On alternate products"
+#          str = "<p>
+#              #{$('#contract_type').find('option:selected').text().toLowerCase()}<br>
+#              Percentage: Yes<br>
+#              #{charge_on}<br>
+#              Charge: #{$('#project_charge_percentage').val()}%<br>
+#              #{pass_discount}
+#            </p>"
+#        else
+#          str = "<p>
+#              #{$('#contract_type').find('option:selected').text()}<br>
+#              Percentage: No<br>
+#              #{pass_discount}
+#            </p>"
+#        $('.step3 .data').html(str)
 
   ,".project-next-step, .project-prev-step"
 

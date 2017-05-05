@@ -28,6 +28,17 @@ class Spree::ProjectsController < Spree::StoreController
     end
   end
 
+  def create_project
+    @project = Spree::Project.new
+    respond_to do |format|
+      if @project.save
+        format.json { render json: {message: 'success', location: edit_project_path(id: @project, step: 1)}, status: :created}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   def edit
     @project = Spree::Project.find(params[:id])
     @project_history = @project.project_histories.order("created_at desc")
@@ -35,11 +46,17 @@ class Spree::ProjectsController < Spree::StoreController
 
   def update
     @project = Spree::Project.find(params[:id])
-    if @project.update(project_params)
-      @project.contract.destroy if @project.contract.signed?
-      redirect_to project_path(@project)
-    else
-      redirect_to projects_path
+    respond_to do |format|
+      if @project.update(project_params)
+        @project.contract.destroy if @project.contract.present? and @project.contract.signed?
+        format.html { redirect_to project_path(@project) }
+        format.json { render json: {message: "success"}, status: :ok }
+        format.js { render json: {message: "success"}, status: :ok }
+      else
+        format.html { redirect_to projects_path }
+        format.json { render json: {message: "error"}, status: :unprocessable_entity }
+        format.js { render json: {message: "error"}, status: :unprocessable_entity }
+      end
     end
   end
 
