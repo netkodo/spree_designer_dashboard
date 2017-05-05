@@ -66,8 +66,7 @@
   changeTableView(el.data('private'))
   changeMenu(el.data('private'))
   hideNotSelectedProjects(el.data('private'),$("#project_select").val())
-  $(".btn-tab.js-get-room-type").each ->
-    el.removeClass('active')
+  $(".btn-tab.js-get-room-type").removeClass('active')
   el.addClass('active')
   $('#project_select').val("")
   $(".project-managment").addClass('hidden')
