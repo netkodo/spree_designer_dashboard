@@ -104,8 +104,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
-      $(".table.table-board-listing tbody.project tr.true.project#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('project_id')}").not(".board#{$( $(".table-invoice") , $(@).parents('tr.invoice')).data('board_id')}").removeClass('hidden')
+      $(".table.table-board-listing tbody.dashboard tr.true.project#{$(".table-invoice").data('project_id')}").not(".board#{$(".table-invoice").data('board_id')}").removeClass('hidden')
       board_id = $(@).parents('tr.invoice').find('table').data('board_id')
       $("##{board_id}").find(".js-private-invoice").removeClass('disabled')
       $(@).parents('tr.invoice').remove()
