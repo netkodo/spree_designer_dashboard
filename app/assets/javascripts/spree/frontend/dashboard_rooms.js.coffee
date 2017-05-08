@@ -162,8 +162,7 @@ $ ->
         beforeSend: ()->
           $(@).html('Saving..')
         success: (response) ->
-          $(".table.table-board-listing tbody.dashboard tr.true").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
-          $(".table.table-board-listing tbody.project tr.true.project#{$(my_this).data('project_id')}").not(".board#{$(my_this).data('board_id')}").removeClass('hidden')
+          $(".table.table-board-listing tbody.dashboard tr.true.project#{$(".table-invoice").data('project_id')}").not(".board#{$(".table-invoice").data('board_id')}").removeClass('hidden')
           $("##{board_id}").find(".js-private-invoice").removeClass('disabled')
           obj.html("<td class='no-border' colspan='6'><div class='text-center'><i class='fa fa-check save-edit'></i> Saved</div></td>")
           setTimeout () ->

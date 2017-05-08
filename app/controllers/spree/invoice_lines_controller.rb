@@ -37,6 +37,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
   def private_invoice
     @board = Spree::Board.find(params[:id])
     @board_products = @board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    @subtotals = Spree::BoardProduct.calculate_subtotal(@board_products)
     respond_to do |format|
       if @board_products.present?
         format.html{render layout: false, status: :ok}

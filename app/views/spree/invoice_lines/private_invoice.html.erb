@@ -24,10 +24,10 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.product.price %>
+            <%= bp.product.cost_price %>
           </td>
-          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
-            <%= bp.get_item_data('cost') %>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('price') %>">
+            <%= bp.get_item_data('price') %>
             <span class="edit">edit</span>
           </td>
         </tr>
@@ -47,13 +47,41 @@
           <td>
             <%= bp.custom_item.cost %>
           </td>
-          <td class="edit-cost" data-cost="<%= bp.get_item_data('cost') %>">
-            <%= bp.get_item_data('cost') %>
+          <td class="edit-cost" data-cost="<%= bp.get_item_data('price') %>">
+            <%= bp.get_item_data('price') %>
             <span class="edit">edit</span>
           </td>
         </tr>
       <% end %>
     <% end %>
+    <tr class="summary">
+      <td>Subtotal</td>
+      <td></td>
+      <td></td>
+      <td>$<%= @subtotals[0] %></td>
+      <td>$<%= @subtotals[1] %></td>
+    </tr>
+    <tr class="summary">
+      <td>Est. Sales Tax</td>
+      <td></td>
+      <td></td>
+      <td>$</td>
+      <td>$</td>
+    </tr>
+    <tr class="summary">
+      <td>Shipping</td>
+      <td></td>
+      <td></td>
+      <td>$</td>
+      <td>$</td>
+    </tr>
+    <tr class="summary total">
+      <td>Total</td>
+      <td></td>
+      <td></td>
+      <td>$<%= @subtotals[0] %></td>
+      <td>$<%= @subtotals[1] %></td>
+    </tr>
   </tbody>
 </table>
 <div class="text-right">
