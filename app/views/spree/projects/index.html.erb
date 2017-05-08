@@ -71,3 +71,10 @@
 </div>
 
 <div id="board-history-modal-handler"></div>
+<script>
+<% if params[:id].present? %>
+    el = $("#project_select option[value=<%= params[:id] %>]");
+    $("#project_select").val(<%= params[:id] %>);
+    globalChange(el);
+<% end %>
+</script>
