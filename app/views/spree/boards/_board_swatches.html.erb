@@ -2,6 +2,7 @@
 <% unless board.color_matches.reload.blank? %>
 	<% board.color_matches.reload.each_with_index do |color_match,index| %>
 		<% if color_match.color %>
+            <div>
 		<div class="board-swatch color-match-link" id="add-colors-link-<%=index%>" data-match-id="1" data-color-match-id="<%=color_match.id%>">
 			<div class="board-swatch-color" id="board-swatch-color-<%=index%>" style="background-color: #<%= color_match.color.hex_val%>"></div>
 			<div class="board-swatch-content" id="board-swatch-content-<%=index%>">
@@ -9,7 +10,12 @@
 				<%= color_match.color.swatch_val%>
 				<a href="javascript:void(0);" class="color-match-delete-link" data-color-match-id="<%=color_match.id%>">delete</a>
 			</div>
+
 		</div>
+            <div>
+              Add swatch to room
+          </div>
+          </div>
 		<% end %>
 	<% end %>
 <% end %>
