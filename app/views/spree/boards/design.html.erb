@@ -3,10 +3,13 @@
 		<div class="board-design-section board-design-section-canvas">
           <div class="manage-board-footer my-board-design">
             <% if @board.private %>
+                <div class="custom-item-wrapper">
               <div class="btn btn-primary add-item-dropdown">
                 Add a Item
-                <div class="info">add Item from other retailer to favorites</div>
+
               </div>
+                <div class="info">add Item from other retailer to favorites</div>
+                </div>
               <div class="add-item-data">
 
                 <%= form_for 'custom_item', :url => "/create_custom_item", :html => {:id => "create-custom-item"} do |f| %>
