@@ -185,6 +185,27 @@ $(document).on({
 $(document).on({
     click: function(e){
         e.preventDefault();
+        var color = $(this).data('color');
+        wall_color = new fabric.Rect({
+            id: color,
+            width: 40, height: 40,
+            left: 20, top: 20,
+            fill: color,
+            is_color: true,
+            action: 'create'
+        });
+
+        canvas.add(wall_color);
+        canvas.setActiveObject(wall_color);
+        activeObject = canvas.getActiveObject();
+        generateHash(activeObject);
+        $('.js-input-hash-product').text(JSON.stringify(hash));
+    }
+}, '.js-add-to-room');
+
+$(document).on({
+    click: function(e){
+        e.preventDefault();
         canvas.getActiveObject();
         rotateObject(90);
     }
@@ -313,6 +334,34 @@ fabric.Object.prototype.setCenterToOrigin = function () {
         top: originPoint.y
     });
 };
+
+function buildWallColorLayer(canvas,wall_color,action){
+    fabric.Image.fromURL(wall_color.wall_color, function (oImg) {
+        oImg.scale(1).set({
+            left: wall_color.center_point_x,
+            top: wall_color.center_point_y,
+            originX: 'center',
+            originY: 'center',
+            flipX: wall_color.flip_x,
+            width: wall_color.width,
+            height: wall_color.height,
+            lockUniScaling: true,
+            minScaleLimit: 0.5,
+            hasRotatingPoint: true
+        });
+
+        oImg.set('fill',wall_color.color);
+        oImg.set('is_color',true);
+        oImg.set('action',action);
+
+        canvas.add(oImg);
+        canvas.setActiveObject(oImg);
+        canvas.renderAll();
+        console.log("==****************==");
+        hash = generateHash(oImg);
+        $('.js-input-hash-product').text(JSON.stringify(hash));
+    });
+}
 
 function buildImageLayer(canvas, bp, url, slug, id, board_id, custom_item_id, option_id, active, hash_id, callback ) {
     callback = callback || null;
@@ -466,7 +515,24 @@ function moveLayer(layer, direction) {
 }
 
 function getSavedProducts(board_id) {
-    var url = '/rooms/' + board_id + '/board_products.json'
+    var url = '/rooms/' + board_id + '/board_products.json';
+    var wall_colors_url = '/rooms/' + board_id + '/wall_colors.json';
+
+    $.ajax({
+        url: wall_colors_url,
+        dataType: 'json',
+        success: function(data){
+            console.log(data);
+            $.each(data,function(index,wall_color){
+                console.log(index);
+                console.log(wall_color);
+                buildWallColorLayer(canvas,wall_color,"update")
+            })
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
 
     $.ajax({
             url: url, dataType: "json",
@@ -503,20 +569,25 @@ function getSavedProducts(board_id) {
 
                 // detect which product has focus
                 canvas.on('mouse:down', function (options) {
+                    console.log(options);
                     if (options.target) {
 
                         selectedImage = options.target;
-                        // pass the product id and board_id (optional) and BoardProduct id (optional)
-                        if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
-                            $.cookie("active_image", selectedImage.get('hash_id'));
+                        if (selectedImage.is_color == true) {
+                            console.log('true');
+                        }else{
+                            // pass the product id and board_id (optional) and BoardProduct id (optional)
+                            if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
+                                $.cookie("active_image", selectedImage.get('hash_id'));
 
-                            if(selectedImage.get('product_permalink') != undefined && selectedImage.get('product_permalink').length > 0) {
-                                getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
-                            }else{
-                                board_id = canvas.getActiveObject().get('board_id');
-                                id = canvas.getActiveObject().get('id');
-                                $('#board-product-preview').html('<div class="scout-remove-product-in-board"><a id="remove-product-button" href="javascript:void(0);" data-board-product-id='+id+' data-board-id='+board_id+' class="btn btn-xs btn-danger">Remove from Room</a></div>');
-                                removeOptionOrCustomItem();
+                                if(selectedImage.get('product_permalink') != undefined && selectedImage.get('product_permalink').length > 0) {
+                                    getProductDetails(selectedImage.get('product_permalink'), board_id, selectedImage.get('id'), canvas.getActiveObject().get('variant_image'))
+                                }else{
+                                    board_id = canvas.getActiveObject().get('board_id');
+                                    id = canvas.getActiveObject().get('id');
+                                    $('#board-product-preview').html('<div class="scout-remove-product-in-board"><a id="remove-product-button" href="javascript:void(0);" data-board-product-id='+id+' data-board-id='+board_id+' class="btn btn-xs btn-danger">Remove from Room</a></div>');
+                                    removeOptionOrCustomItem();
+                                }
                             }
                         }
                     }
@@ -532,7 +603,13 @@ function getSavedProducts(board_id) {
 
                         if (canvas.getActiveGroup() === null || canvas.getActiveGroup() === undefined) {
                             activeObject = e.target
-                            createObjectImage(activeObject);
+                            if(activeObject.is_color == true){
+                                console.log('moving');
+                                generateHash(activeObject);
+                                $('.js-input-hash-product').text(JSON.stringify(hash));
+                            }else{
+                                createObjectImage(activeObject);
+                            }
                         }
                     }
                 });
@@ -628,6 +705,8 @@ function find_object(id){
 }
 
 function generateHash(object) {
+    console.log("==");
+    console.log(object);
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
 
@@ -637,41 +716,55 @@ function generateHash(object) {
         hash = {}
     }
 
-    ha_id = "";
-    action = "";
-    if (object.get('action') === 'create') {
-        ha_id = object.get('hash_id');
-        action = "create";
-    } else {
-        ha_id = object.get('id');
-        action = "update";
-    }
-    image = "";
-    if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
-        image = hash[ha_id]['image']
+    if(object.is_color == true) {
+        hash[object.fill]= {
+            action_board: action,
+            board_id: board_id,
+            color: object.fill,
+            center_point_x: object.getCenterPoint().x,
+            center_point_y: object.getCenterPoint().y,
+            width: object.getWidth(),
+            height: object.getHeight(),
+            rotation_offset: object.getAngle(0),
+            flip_x: object.get('flipX')
+        };
     }else{
-        image = null
-    }
+        ha_id = "";
+        action = "";
+        if (object.get('action') === 'create') {
+            ha_id = object.get('hash_id');
+            action = "create";
+        } else {
+            ha_id = object.get('id');
+            action = "update";
+        }
+        image = "";
+        if (!isBlank(hash[ha_id]) && !isBlank(hash[ha_id]['image'])) {
+            image = hash[ha_id]['image']
+        } else {
+            image = null
+        }
 
-    hash[ha_id] = {
-        action_board: action,
-        board_id: board_id,
-        custom_item_id: object.get('custom_item_id'),
-        option_id: object.get('option_id'),
-        product_id: object.get('id'),
-        center_point_x: object.getCenterPoint().x,
-        center_point_y: object.getCenterPoint().y,
-        width: object.getWidth(),
-        height: object.getHeight(),
-        rotation_offset: object.getAngle(0),
-        flip_x: object.get('flipX'),
-        image: image
-    };
-    if(object.get('action') === 'create'){
-        hash[ha_id]['image']=object.getElement().src
-    }
-    if (object.get('z_index') >= 0) {
-        hash[ha_id]['z_index'] = object.get('z_index');
+        hash[ha_id] = {
+            action_board: action,
+            board_id: board_id,
+            custom_item_id: object.get('custom_item_id'),
+            option_id: object.get('option_id'),
+            product_id: object.get('id'),
+            center_point_x: object.getCenterPoint().x,
+            center_point_y: object.getCenterPoint().y,
+            width: object.getWidth(),
+            height: object.getHeight(),
+            rotation_offset: object.getAngle(0),
+            flip_x: object.get('flipX'),
+            image: image
+        };
+        if (object.get('action') === 'create') {
+            hash[ha_id]['image'] = object.getElement().src
+        }
+        if (object.get('z_index') >= 0) {
+            hash[ha_id]['z_index'] = object.get('z_index');
+        }
     }
     return hash
 }

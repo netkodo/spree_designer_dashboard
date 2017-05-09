@@ -10,6 +10,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :products, :through => :board_products
   has_many :color_matches
   has_many :colors, :through => :color_matches
+  has_many :wall_colors
   has_many :conversations, as: :conversationable, class_name: "::Mailboxer::Conversation"
 
   has_and_belongs_to_many :promotion_rules,
@@ -439,10 +440,42 @@ class Spree::Board < ActiveRecord::Base
         white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
+      self.wall_colors.each do |wc|
+        image_url = wc.wall_color.url
+        color_image = Magick::ImageList.new(image_url)
+        top_left_x, top_left_y = wc.top_left_x, wc.top_left_y
+        if wc.height == 0
+          wc.height = 5
+          wc.width = 5 * wc.width
+        end
+        if wc.width == 0
+          wc.width == 5
+          wc.height == 5 * wc.height
+        end
+
+        if color_image.present?
+          product_image.rotate!(wc.rotation_offset)
+          if [90, 270].include?(wc.rotation_offset)
+            product_image.scale!(wc.height, wc.width)
+            top_left_x = wc.center_point_x - wc.height/2
+            top_left_y = wc.center_point_y - wc.width/2
+
+            # original width and height work if it is just rotated 180
+          else
+            product_image.scale!(wc.width, wc.height)
+            top_left_x = wc.center_point_x - wc.width/2
+            top_left_y = wc.center_point_y - wc.height/2
+          end
+          white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
+        end
+
+      end
+
+    end
       white_canvas.format = 'jpeg'
       file = Tempfile.new("room_#{self.id}.jpg")
       white_canvas.write(file.path)
-    end
+
       #self.board_image.destroy if self.board_image
       self.build_board_image if self.board_image.blank?
       #self.board_image.reload
