@@ -9,6 +9,16 @@ class Spree::WallColorsController < Spree::StoreController
     end
   end
 
+  def destroy
+    @wall_color = @board.wall_colors.find_by_slug(params[:slug])
+    if @wall_color.destroy
+      render json: {message: "success"}, staus: :ok
+    else
+      render json: {message: "error"}, staus: :unprocessable_entity
+    end
+
+  end
+
   private
 
   def set_board

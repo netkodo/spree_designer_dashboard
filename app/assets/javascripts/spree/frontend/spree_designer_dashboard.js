@@ -185,15 +185,35 @@ $(document).on({
 $(document).on({
     click: function(e){
         e.preventDefault();
+        $('#board-product-preview').html('');
         var color = $(this).data('color');
+        color = color.substring(1,color.length);
+        random1 = Math.floor((Math.random() * 10) + 1);
+        random2 = Math.floor((Math.random() * 10) + 1);
+
+        id = color+'-'+random1+'-'+random2;
+
         wall_color = new fabric.Rect({
-            id: color,
+            id: id,
             width: 40, height: 40,
             left: 20, top: 20,
-            fill: color,
+            fill: '#'+color,
             is_color: true,
-            action: 'create'
+            action: 'create',
+            slug: color
         });
+
+        if(canvas.getObjects().length == 1){
+            wall_color.set('z_index',canvas.getObjects().length);
+        }else{
+            max = canvas.getObjects()[0].z_index;
+            canvas.forEachObject(function(o){
+                if(max<=o.z_index){
+                    max=o.z_index
+                }
+            });
+            wall_color.set('z_index',max+1);
+        }
 
         canvas.add(wall_color);
         canvas.setActiveObject(wall_color);
@@ -336,6 +356,7 @@ fabric.Object.prototype.setCenterToOrigin = function () {
 };
 
 function buildWallColorLayer(canvas,wall_color,action){
+    $('#board-product-preview').html('');
     fabric.Image.fromURL(wall_color.wall_color, function (oImg) {
         oImg.scale(1).set({
             left: wall_color.center_point_x,
@@ -347,17 +368,21 @@ function buildWallColorLayer(canvas,wall_color,action){
             height: wall_color.height,
             lockUniScaling: true,
             minScaleLimit: 0.5,
-            hasRotatingPoint: true
+            hasRotatingPoint: true,
+            z_index: wall_color.z_index
         });
 
         oImg.set('fill',wall_color.color);
+        oImg.set('slug',wall_color.slug);
         oImg.set('is_color',true);
         oImg.set('action',action);
 
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
+        if (wall_color.rotation_offset >= 0) {
+            rotateObject(wall_color.rotation_offset);
+        }
         canvas.renderAll();
-        console.log("==****************==");
         hash = generateHash(oImg);
         $('.js-input-hash-product').text(JSON.stringify(hash));
     });
@@ -378,6 +403,7 @@ function buildImageLayer(canvas, bp, url, slug, id, board_id, custom_item_id, op
             flipX: bp.flip_x,
             width: bp.width,
             height: bp.height,
+            z_index: bp.z_index,
             lockUniScaling: true,
             minScaleLimit: 0.5,
             hasRotatingPoint: true
@@ -466,9 +492,9 @@ function addProductToBoard(event, ui) {
                     if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== canvas.getActiveObject().get('hash_id').toString()) {
                         $.cookie("active_image", canvas.getActiveObject().get('hash_id'));
 
-                        console.log('slug');
-                        console.log(slug);
-                        console.log(slug.length);
+                        // console.log('slug');
+                        // console.log(slug);
+                        // console.log(slug.length);
                         if(slug.length > 0){
                             getProductDetails(slug, $('#canvas').data('boardId'), cloned.data('productId'))
                         }
@@ -522,10 +548,9 @@ function getSavedProducts(board_id) {
         url: wall_colors_url,
         dataType: 'json',
         success: function(data){
+            console.log('loaded wall colors');
             console.log(data);
             $.each(data,function(index,wall_color){
-                console.log(index);
-                console.log(wall_color);
                 buildWallColorLayer(canvas,wall_color,"update")
             })
         },
@@ -569,12 +594,19 @@ function getSavedProducts(board_id) {
 
                 // detect which product has focus
                 canvas.on('mouse:down', function (options) {
-                    console.log(options);
+
                     if (options.target) {
 
                         selectedImage = options.target;
                         if (selectedImage.is_color == true) {
-                            console.log('true');
+                            slug = canvas.getActiveObject().get('slug');
+                            id = canvas.getActiveObject().get('id');
+                            action = canvas.getActiveObject().get('action');
+                            console.log('selected wall_color');
+
+                            $('#board-product-preview').html('<div class="scout-remove-product-in-board"><a id="remove-wall-color-button" href="javascript:void(0);" data-slug='+slug+' data-board-id='+board_id+' data-id='+id+' class="btn btn-xs btn-danger">Remove from Room</a></div>');
+                            removeWallColor(action);
+
                         }else{
                             // pass the product id and board_id (optional) and BoardProduct id (optional)
                             if ($.cookie("active_image") === undefined || $.cookie("active_image").toString() !== selectedImage.get('hash_id').toString()) {
@@ -604,7 +636,6 @@ function getSavedProducts(board_id) {
                         if (canvas.getActiveGroup() === null || canvas.getActiveGroup() === undefined) {
                             activeObject = e.target
                             if(activeObject.is_color == true){
-                                console.log('moving');
                                 generateHash(activeObject);
                                 $('.js-input-hash-product').text(JSON.stringify(hash));
                             }else{
@@ -619,6 +650,27 @@ function getSavedProducts(board_id) {
             }
         }
     );
+}
+
+function removeWallColor(action){
+    $('#remove-wall-color-button').click(function() {
+        var board_id = $(this).data('board-id');
+        var slug = $(this).data('slug');
+        var id = $(this).data('id');
+
+        canvas.getActiveObject().remove();
+        hash_string = $('.js-input-hash-product').text();
+        hash = JSON.parse(hash_string);
+        if(action == 'create'){
+            delete hash[id];
+        }else{
+            var url = '/rooms/' + board_id + '/wall_colors/' + slug;
+            $.post(url, {_method:'delete'}, null, "script");
+            delete hash[slug];
+        }
+        $('.js-input-hash-product').text(JSON.stringify(hash));
+        $('#board-product-preview').html('')
+    });
 }
 
 function removeOptionOrCustomItem(){
@@ -665,19 +717,41 @@ function createObjectImage(activeObject) {
         theImage.set('flipX', activeObject.get('flipX'));
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
-        theImage.set('stroke', '#fff');
+        // theImage.set('stroke', '#fff');
+        theImage.set('strokeWidth',0);
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
         theImage.set('option_id',activeObject.get('option_id'));
         theImage.set('board_id',activeObject.get('board_id'));
+
+        if(canvas.getObjects().length == 1){
+            theImage.set('z_index',canvas.getObjects().length);
+        }else{
+            max = canvas.getObjects()[0].z_index;
+            canvas.forEachObject(function(o){
+                if(max<=o.z_index){
+                    max=o.z_index
+                }
+            });
+            theImage.set('z_index',max+1);
+        }
+
         if (!isBlank(activeObject.cropped)){
             theImage.set('cropped', true)
         };
 
         canvas.add(theImage);
-        if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
-            theImage.filters.push(generateFilter());
-            theImage.applyFilters(canvas.renderAll.bind(canvas));
-        }
+        // if ((activeObject.scaleX < 2.3 || isBlank(activeObject.scaleX)) && (isBlank(activeObject.cropped)) ) {
+        //     theImage.filters.push(generateFilter());
+        //     theImage.applyFilters(canvas.renderAll.bind(canvas));
+        // }
+
+        var transparent_filter = new fabric.Image.filters.RemoveWhite({
+            threshold: 10,
+            distance: 200
+        });
+        theImage.filters.push(transparent_filter);
+        theImage.applyFilters(canvas.renderAll.bind(canvas));
+
         hash = generateHash(theImage);
         $('.js-input-hash-product').text(JSON.stringify(hash));
         canvas.remove(activeObject);
@@ -705,8 +779,6 @@ function find_object(id){
 }
 
 function generateHash(object) {
-    console.log("==");
-    console.log(object);
     board_id = $('#canvas').data('boardId');
     value = $('.js-input-hash-product').text();
 
@@ -717,8 +789,15 @@ function generateHash(object) {
     }
 
     if(object.is_color == true) {
-        hash[object.fill]= {
-            action_board: action,
+        if(object.action == "update"){
+            id = object.slug;
+        }else{
+            id = object.id;
+        }
+
+        // js for wall colors
+        hash[id]= {
+            action_board: object.action,
             board_id: board_id,
             color: object.fill,
             center_point_x: object.getCenterPoint().x,
@@ -726,8 +805,10 @@ function generateHash(object) {
             width: object.getWidth(),
             height: object.getHeight(),
             rotation_offset: object.getAngle(0),
-            flip_x: object.get('flipX')
+            flip_x: object.get('flipX'),
+            z_index: object.z_index
         };
+        // end js for wall colors
     }else{
         ha_id = "";
         action = "";
