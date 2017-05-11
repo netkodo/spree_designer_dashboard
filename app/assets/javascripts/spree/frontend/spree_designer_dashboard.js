@@ -581,6 +581,20 @@ function getSavedProducts(board_id) {
     var wall_colors_url = '/rooms/' + board_id + '/wall_colors.json';
 
     $.ajax({
+        url: wall_colors_url,
+        dataType: 'json',
+        success: function(data){
+            $.each(data,function(index,wall_color){
+                buildWallColorLayer(canvas,wall_color,"update");
+            });
+
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
+
+    $.ajax({
             url: url, dataType: "json",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -610,31 +624,8 @@ function getSavedProducts(board_id) {
                     };
                     canvas.renderAll();
                     canvas.discardActiveObject();
-                    canvas.getObjects().map(function(o){ console.log(o.z_index); });
-                    canvas.getObjects().map(function(o){ o.moveTo(o.z_index); });
-                    console.log("------------------------");
                 });
-                $.ajax({
-                    url: wall_colors_url,
-                    dataType: 'json',
-                    success: function(data){
-                        // console.log('loaded wall colors');
-                        // console.log(data);
-                        $.each(data,function(index,wall_color){
-                            console.log(wall_color.z_index);
-                            console.log("::");
-                            buildWallColorLayer(canvas,wall_color,"update");
 
-                        });
-                        console.log("AAAAAAAAAAAAAAAAa");
-                        canvas.getObjects().map(function(o){ console.log(o.z_index); });
-                        canvas.getObjects().map(function(o){ o.moveTo(o.z_index); });
-
-                    },
-                    error: function(data){
-                        console.log(data);
-                    }
-                });
                 canvas.discardActiveObject();
 
                 // detect which product has focus
@@ -811,6 +802,7 @@ function createObjectImage(activeObject) {
         canvas.remove(activeObject);
         canvas.renderAll();
         canvas.setActiveObject(theImage);
+        canvas.getActiveObject().moveTo(theImage.z_index)
     };
     activeObject.getElement().load();
 }
