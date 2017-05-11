@@ -17,6 +17,8 @@ Spree::Core::Engine.routes.draw do
   resources :rooms, controller: 'boards'  do
     member do
       post :make_public, :defaults => {format: :json}
+      get "wall_colors" => "wall_colors#wall_colors", as: :wall_colors
+      delete "wall_colors/:slug" => "wall_colors#destroy", as: :destroy_wall_color
     end
     collection do
       post :search_all_categories

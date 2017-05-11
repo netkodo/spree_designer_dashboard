@@ -473,6 +473,9 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def update
+    puts '****'
+    puts params.inspect
+    puts '****'
     session[:page_count]=0
     @board.slug = nil
     @board.update_column(:generated,false)

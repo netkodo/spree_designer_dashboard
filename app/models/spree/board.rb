@@ -10,6 +10,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :products, :through => :board_products
   has_many :color_matches
   has_many :colors, :through => :color_matches
+  has_many :wall_colors, :order => "z_index", dependent: :destroy
   has_many :conversations, as: :conversationable, class_name: "::Mailboxer::Conversation"
 
   has_and_belongs_to_many :promotion_rules,
@@ -400,7 +401,8 @@ class Spree::Board < ActiveRecord::Base
     white_canvas.alpha = Magick::ActivateAlphaChannel
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
     file = nil
-    self.board_products.each do |bp|
+
+    (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each do |bp|
       top_left_x, top_left_y = bp.top_left_x, bp.top_left_y
       if bp.height == 0
         bp.height = 5
@@ -410,61 +412,72 @@ class Spree::Board < ActiveRecord::Base
         bp.width == 5
         bp.height == 5 * bp.height
       end
-      if bp.present? and bp.product.present?
 
-        product_image = bp.product.image_for_board(bp)
-      elsif bp.custom_item.present?
-        product_image = bp.custom_item.custom_image_for_board(bp)
-      elsif bp.option_id.present?
-        product_image = Spree::PropertyConnectImage.option_image_for_board(bp)
-      else
-        product_image =""
+      if bp.instance_of?(Spree::BoardProduct)
+        if bp.present? and bp.product.present?
+
+          image = bp.product.image_for_board(bp)
+        elsif bp.custom_item.present?
+          image = bp.custom_item.custom_image_for_board(bp)
+        elsif bp.option_id.present?
+          image = Spree::PropertyConnectImage.option_image_for_board(bp)
+        else
+          image =""
+        end
+      elsif bp.instance_of?(Spree::WallColor)
+        image_url = bp.wall_color.url
+        image = Magick::ImageList.new(image_url)
       end
-      if product_image.present?
+
+      if image.present?
+        #its needed to preevent 'jagged' white border after rotation
+        image.background_color = "none"
+
         #flip! is for vertical mirror
         #flop! is for horizontal mirror
-        product_image.flop! if bp.flip_x == true
+        image.flop! if bp.flip_x == true
 
         # changing format to get alpha channel
-        product_image.format = "png"
-        # setting fuzz for similar colors to color which we want transform to transparent
-        # number should be low to prevent from cutting middle of product
-        product_image.fuzz = "4%"
-        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
-        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
-        product_image = product_image.paint_transparent('#ffffff',Magick::TransparentOpacity)
+        image.format = "png"
 
         # set the rotation
-        product_image.rotate!(bp.rotation_offset)
-
-        # if turned sideways, then swap the width and height when scaling
+        image.rotate!(bp.rotation_offset)
         if [90, 270].include?(bp.rotation_offset)
-          product_image.scale!(bp.height, bp.width)
+          image.scale!(bp.height, bp.width)
           top_left_x = bp.center_point_x - bp.height/2
           top_left_y = bp.center_point_y - bp.width/2
 
           # original width and height work if it is just rotated 180
         else
-          product_image.scale!(bp.width, bp.height)
+          image.scale!(bp.width, bp.height)
           top_left_x = bp.center_point_x - bp.width/2
           top_left_y = bp.center_point_y - bp.height/2
         end
 
-        white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
+        # setting fuzz for similar colors to color which we want transform to transparent
+        # number should be low to prevent from cutting middle of product
+        image.fuzz = "5%"
+        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
+        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
+        image = image.transparent('#ffffff',Magick::TransparentOpacity)
+
+        white_canvas.composite!(image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
-      white_canvas.format = 'png'
-      file = Tempfile.new("room_#{self.id}.png")
-      white_canvas.write(file.path)
     end
-      #self.board_image.destroy if self.board_image
-      self.build_board_image if self.board_image.blank?
-      #self.board_image.reload
-      self.board_image.attachment = file
-      self.board_image.save
-      # set it to be clean again
-      #self.is_dirty = 0
-      self.dirty_at = nil
+
+    white_canvas.format = 'png'
+    file = Tempfile.new("room_#{self.id}.png")
+    white_canvas.write(file.path)
+
+    #self.board_image.destroy if self.board_image
+    self.build_board_image if self.board_image.blank?
+    #self.board_image.reload
+    self.board_image.attachment = file
+    self.board_image.save
+    # set it to be clean again
+    #self.is_dirty = 0
+    self.dirty_at = nil
 
     self.save
   end

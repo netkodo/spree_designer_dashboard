@@ -4,15 +4,15 @@ $('#color_swatch_preview').html('<%= escape_javascript(raw render(:partial => "g
 $( ".add-swatch-button" ).click(function() {
 
 	active_swatch_element = $( "div.board-colors-container > .active" )
-  	$( "div.board-colors-container > .active > .board-swatch-color" ).css("background-color", '#'+$(this).data('color'))
+  	// $( "div.board-colors-container > .active > .board-swatch-color" ).css("background-color", '#'+$(this).data('color'))
 	//$( "div.board-colors-container > .active" ).removeClass('board-swatch-default')
 	active_swatch_element.removeClass('board-swatch-default')
 
-	swatch_table = '<table class="table table-condensed swatch-table"><tr><td><strong>Swatch #</strong></td><td>'+$(this).data('colorSwatchVal')+'</td></tr><tr><td><strong>Hex</strong></td><td>#'+$(this).data('color')+'</td></tr><tr><td><strong>HSV</strong></td><td>H: '+$(this).data('colorHsvH')+'<br />S: '+$(this).data('colorHsvS')+'<br />V: '+$(this).data('colorHsvV')+'</td></tr></table>'
+	// swatch_table = '<table class="table table-condensed swatch-table"><tr><td><strong>Swatch #</strong></td><td>'+$(this).data('colorSwatchVal')+'</td></tr><tr><td><strong>Hex</strong></td><td>#'+$(this).data('color')+'</td></tr><tr><td><strong>HSV</strong></td><td>H: '+$(this).data('colorHsvH')+'<br />S: '+$(this).data('colorHsvS')+'<br />V: '+$(this).data('colorHsvV')+'</td></tr></table>'
 
-	$( "div.board-colors-container > .active > .board-swatch-content" ).html('<h4>'+$(this).data('colorName')+'</h4>'+$(this).data('colorSwatchVal'))
+	// $( "div.board-colors-container > .active > .board-swatch-content" ).html('<h4>'+$(this).data('colorName')+'</h4>'+$(this).data('colorSwatchVal'))
 
-	$('#colors-modal').modal('hide')
+//	$('#colors-modal').modal('hide')
 
 
 	if (active_swatch_element.data('colorMatchId') > 0){
@@ -27,6 +27,7 @@ $( ".add-swatch-button" ).click(function() {
 		posting.done(function( data ) {
 			//var content = $( data ).find( '#content' );
 			//$( "#result" ).empty().append( content );
+      $('#colors-modal').modal('hide')
 		});
 	}
 
@@ -40,6 +41,7 @@ $( ".add-swatch-button" ).click(function() {
 
 		/* Put the results in a div */
 		posting.done(function( data ) {
+      $('#colors-modal').modal('hide')
 			//var content = $( data ).find( '#content' );
 			//$( "#result" ).empty().append( content );
 		});

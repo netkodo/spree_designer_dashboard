@@ -49,7 +49,7 @@ class Spree::ProjectsController < Spree::StoreController
     respond_to do |format|
       if @project.update(project_params)
         @project.contract.destroy if @project.contract.present? and @project.contract.signed?
-        format.html { redirect_to project_path(@project) }
+        format.html { redirect_to projects_path(id: @project.id) }
         format.json { render json: {message: "success"}, status: :ok }
         format.js { render json: {message: "success"}, status: :ok }
       else

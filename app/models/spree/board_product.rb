@@ -84,5 +84,30 @@ class Spree::BoardProduct < ActiveRecord::Base
     where(:state => "pending_approval")
     #includes(:product).where("isnull(spree_products.deleted_at) and isnull(spree_board_products.approved_at) and isnull(spree_board_products.removed_at)")
   end
-  
+
+  def self.calculate_subtotal(obj)
+    customer_cost = BigDecimal(0)
+    your_cost = BigDecimal(0)
+    obj.each do |s|
+      if s.product.present?
+        if s.invoice_line.present? and s.invoice_line.cost.present?
+          customer_cost += s.invoice_line.cost
+          your_cost += s.invoice_line.cost
+        else
+          customer_cost += s.product.price
+          your_cost += s.product.cost_price
+        end
+      else
+        if s.invoice_line.present? and s.invoice_line.cost.present?
+          customer_cost += s.invoice_line.cost
+          your_cost += s.invoice_line.cost
+        else
+          customer_cost += s.custom_item.price
+          your_cost += s.custom_item.cost
+        end
+      end
+    end
+    [your_cost, customer_cost]
+  end
+
 end
