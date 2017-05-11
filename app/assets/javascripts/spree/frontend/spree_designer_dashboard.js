@@ -580,21 +580,6 @@ function getSavedProducts(board_id) {
     var wall_colors_url = '/rooms/' + board_id + '/wall_colors.json';
 
     $.ajax({
-        url: wall_colors_url,
-        dataType: 'json',
-        success: function(data){
-            console.log('loaded wall colors');
-            console.log(data);
-            $.each(data,function(index,wall_color){
-                buildWallColorLayer(canvas,wall_color,"update")
-            })
-        },
-        error: function(data){
-            console.log(data);
-        }
-    });
-
-    $.ajax({
             url: url, dataType: "json",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -624,6 +609,21 @@ function getSavedProducts(board_id) {
                     };
                     canvas.renderAll();
                     canvas.discardActiveObject();
+                });
+                $.ajax({
+                    url: wall_colors_url,
+                    dataType: 'json',
+                    success: function(data){
+                        console.log('loaded wall colors');
+                        console.log(data);
+                        $.each(data,function(index,wall_color){
+                            buildWallColorLayer(canvas,wall_color,"update")
+                        });
+                        canvas.getObjects().map(function(o){ o.moveTo(o.z_index); })
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
                 });
                 canvas.discardActiveObject();
 
