@@ -431,7 +431,7 @@ class Spree::Board < ActiveRecord::Base
 
       if image.present?
         #its needed to preevent 'jagged' white border after rotation
-        image.background_color = "none"
+        image.background_color = "transparent"
 
         #flip! is for vertical mirror
         #flop! is for horizontal mirror
