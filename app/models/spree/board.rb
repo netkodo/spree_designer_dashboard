@@ -400,17 +400,9 @@ class Spree::Board < ActiveRecord::Base
     # activate alpha channel on white_canavas to get transparency working
     white_canvas.alpha = Magick::ActivateAlphaChannel
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
-    self.wall_colors.reload.collect
     file = nil
 
-    # puts (self.board_products+self.wall_colors).map{|x| [x.z_index]}.inspect
-    puts (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.map{|x| [x.z_index]}.flatten.inspect
-
     (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each do |bp|
-      puts "==="
-      puts "==="
-      puts bp.awesome_inspect
-
       top_left_x, top_left_y = bp.top_left_x, bp.top_left_y
       if bp.height == 0
         bp.height = 5
@@ -422,8 +414,6 @@ class Spree::Board < ActiveRecord::Base
       end
 
       if bp.instance_of?(Spree::BoardProduct)
-        puts "board product"
-
         if bp.present? and bp.product.present?
 
           image = bp.product.image_for_board(bp)
@@ -435,18 +425,13 @@ class Spree::Board < ActiveRecord::Base
           image =""
         end
       elsif bp.instance_of?(Spree::WallColor)
-        puts "wall color"
         image_url = bp.wall_color.url
-        puts image_url
-        image = Magick::ImageList.new(image_url)#{self.background_color = "transparent"}
-        # image =  ::Magick::Image.new(40, 40) { self.background_color = bp.color }
+        image = Magick::ImageList.new(image_url)
       end
 
       if image.present?
-        puts 'image present'
-
-        puts image.inspect
-        puts "::::::::::"
+        #its needed to preevent 'jagged' white border after rotation
+        image.background_color = "none"
 
         #flip! is for vertical mirror
         #flop! is for horizontal mirror
@@ -454,17 +439,9 @@ class Spree::Board < ActiveRecord::Base
 
         # changing format to get alpha channel
         image.format = "png"
-        # setting fuzz for similar colors to color which we want transform to transparent
-        # number should be low to prevent from cutting middle of product
-        image.fuzz = "4%"
-        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
-        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
 
-
-        puts "rotation #{bp.rotation_offset} !!!!!!"
         # set the rotation
         image.rotate!(bp.rotation_offset)
-        puts 'after'
         if [90, 270].include?(bp.rotation_offset)
           image.scale!(bp.height, bp.width)
           top_left_x = bp.center_point_x - bp.height/2
@@ -476,89 +453,19 @@ class Spree::Board < ActiveRecord::Base
           top_left_x = bp.center_point_x - bp.width/2
           top_left_y = bp.center_point_y - bp.height/2
         end
-        image = image.paint_transparent('#ffffff',Magick::TransparentOpacity)
-        puts image.inspect
+
+        # setting fuzz for similar colors to color which we want transform to transparent
+        # number should be low to prevent from cutting middle of product
+        image.fuzz = "5%"
+        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
+        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
+        image = image.transparent('#ffffff',Magick::TransparentOpacity)
+
         white_canvas.composite!(image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
-      puts "==="
-      puts "===\n\n\n"
 
     end
 
-    # self.board_products.each do |bp|
-    #   top_left_x, top_left_y = bp.top_left_x, bp.top_left_y
-    #   if bp.height == 0
-    #     bp.height = 5
-    #     bp.width = 5 * bp.width
-    #   end
-    #   if bp.width == 0
-    #     bp.width == 5
-    #     bp.height == 5 * bp.height
-    #   end
-    #   if bp.present? and bp.product.present?
-    #
-    #     product_image = bp.product.image_for_board(bp)
-    #   elsif bp.custom_item.present?
-    #     product_image = bp.custom_item.custom_image_for_board(bp)
-    #   elsif bp.option_id.present?
-    #     product_image = Spree::PropertyConnectImage.option_image_for_board(bp)
-    #   else
-    #     product_image =""
-    #   end
-    #   if product_image.present?
-    #
-    #     # set the rotation
-    #     product_image.rotate!(bp.rotation_offset)
-    #
-    #     # if turned sideways, then swap the width and height when scaling
-    #     if [90, 270].include?(bp.rotation_offset)
-    #       product_image.scale!(bp.height, bp.width)
-    #       top_left_x = bp.center_point_x - bp.height/2
-    #       top_left_y = bp.center_point_y - bp.width/2
-    #
-    #       # original width and height work if it is just rotated 180
-    #     else
-    #       product_image.scale!(bp.width, bp.height)
-    #       top_left_x = bp.center_point_x - bp.width/2
-    #       top_left_y = bp.center_point_y - bp.height/2
-    #     end
-    #
-    #     white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
-    #   end
-    #
-    # end
-    # puts "KOLORY SCIAN"
-    #
-    # self.wall_colors.each do |wc|
-    #   image_url = wc.wall_color.url
-    #   color_image = Magick::ImageList.new(image_url)
-    #   top_left_x, top_left_y = wc.top_left_x, wc.top_left_y
-    #   if wc.height == 0
-    #     wc.height = 5
-    #     wc.width = 5 * wc.width
-    #   end
-    #   if wc.width == 0
-    #     wc.width == 5
-    #     wc.height == 5 * wc.height
-    #   end
-    #
-    #   if color_image.present?
-    #     color_image.rotate!(wc.rotation_offset)
-    #     if [90, 270].include?(wc.rotation_offset)
-    #       color_image.scale!(wc.height, wc.width)
-    #       top_left_x = wc.center_point_x - wc.height/2
-    #       top_left_y = wc.center_point_y - wc.width/2
-    #
-    #       # original width and height work if it is just rotated 180
-    #     else
-    #       color_image.scale!(wc.width, wc.height)
-    #       top_left_x = wc.center_point_x - wc.width/2
-    #       top_left_y = wc.center_point_y - wc.height/2
-    #     end
-    #     white_canvas.composite!(color_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
-    #   end
-    #
-    # end
     white_canvas.format = 'png'
     file = Tempfile.new("room_#{self.id}.png")
     white_canvas.write(file.path)

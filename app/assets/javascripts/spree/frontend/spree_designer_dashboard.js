@@ -59,6 +59,7 @@ $(document).on({
                 closeClick: true,
                 closeEsc: false,
                 onLoad: function () {
+                    $("#crop-modal #designer-spiner").removeClass('hidden');
                     generateModalCrop(obj);
                 },
                 onClose: function () {
@@ -91,9 +92,13 @@ $(document).on({
         options = {};
         v = $crop_image.cropper('getCroppedCanvas');
         var obj = canvas.getActiveObject();
-        obj.set('save_url', v.toDataURL());
+        if(obj.is_color == true){
+            obj.set('image_base64',v.toDataURL());
+        }else{
+            obj.set('save_url', v.toDataURL());
+            obj.setElement(v);
+        }
         obj.set('cropped', true);
-        obj.setElement(v);
         obj.set('width', v.width/2);
         obj.set('height', v.height/2);
         canvas.renderAll();
@@ -101,15 +106,20 @@ $(document).on({
         hash =  JSON.parse(value);
         ha_id = '';
         if (!isBlank(hash)) {
-            if (obj.get('action') === 'create') {
-                ha_id = obj.get('hash_id');
-            } else {
-                ha_id = obj.get('id');
+            if(obj.is_color == true){
+                ha_id = obj.get('slug');
+                hash[ha_id]["image_base64"] = v.toDataURL();
+            }else{
+                if (obj.get('action') === 'create') {
+                    ha_id = obj.get('hash_id');
+                } else {
+                    ha_id = obj.get('id');
+                }
+                hash[ha_id]["image"] = v.toDataURL();
             }
-            hash[ha_id]["image"] = v.toDataURL();
             $('.js-input-hash-product').text(JSON.stringify(hash));
         }
-        var obj2 = canvas.getActiveObject()
+        var obj2 = canvas.getActiveObject();
         if(!isBlank(obj)) {
           setTimeout(function(){
             hash2 = generateHash(obj2);
@@ -203,7 +213,7 @@ $(document).on({
             slug: color
         });
 
-        if(canvas.getObjects().length == 1){
+        if(canvas.getObjects().length == 0){
             wall_color.set('z_index',canvas.getObjects().length);
         }else{
             max = canvas.getObjects()[0].z_index;
@@ -245,8 +255,17 @@ $(document).on({
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
-    image = encodeURI(dataImg.save_url);
+    if(dataImg.is_color == true){
+        if(dataImg.get('image_base64').length){
+            image = encodeURI(dataImg.get('image_base64'));
+        }else{
+            image = encodeURI(dataImg.toDataURL({format: 'jpeg'}));
+        }
+    }else{
+        image = encodeURI(dataImg.save_url);
+    };
     $('.croppedRoom').append('<img src='+image+'>');
+    $("#crop-modal #designer-spiner").addClass('hidden');
     $crop_image = $('.croppedRoom img');
     var options = {
         aspectRatio: NaN
@@ -376,9 +395,11 @@ function buildWallColorLayer(canvas,wall_color,action){
         oImg.set('slug',wall_color.slug);
         oImg.set('is_color',true);
         oImg.set('action',action);
+        oImg.set('image_base64',wall_color.image_base64);
 
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
+        canvas.getActiveObject().moveTo(wall_color.z_index);
         if (wall_color.rotation_offset >= 0) {
             rotateObject(wall_color.rotation_offset);
         }
@@ -422,6 +443,7 @@ function buildImageLayer(canvas, bp, url, slug, id, board_id, custom_item_id, op
 
         canvas.add(oImg);
         canvas.setActiveObject(oImg);
+        canvas.getActiveObject().moveTo(bp.z_index);
         if (bp.rotation_offset >= 0) {
             rotateObject(bp.rotation_offset);
             canvas.renderAll();
@@ -471,6 +493,18 @@ function addProductToBoard(event, ui) {
             board_id = ui.helper.data('board_id');
             option_id = ui.helper.data('option_id');
 
+            if(canvas.getObjects().length == 0){
+                var z_index = 0
+            }else{
+                max = canvas.getObjects()[0].z_index;
+                canvas.forEachObject(function(o){
+                    if(max<=o.z_index){
+                        max=o.z_index
+                    }
+                });
+                var z_index = max
+            }
+
             board_product = {
                 board_id: $('#canvas').data('boardId'),
                 product_id: cloned.data('productId'),
@@ -479,7 +513,8 @@ function addProductToBoard(event, ui) {
                 center_point_x: center_x,
                 center_point_y: center_y,
                 width: cloned.width(),
-                height: cloned.height()
+                height: cloned.height(),
+                z_index: z_index
             };
 
 
@@ -636,6 +671,14 @@ function getSavedProducts(board_id) {
                         if (canvas.getActiveGroup() === null || canvas.getActiveGroup() === undefined) {
                             activeObject = e.target
                             if(activeObject.is_color == true){
+                                max = canvas.getObjects()[0].z_index;
+                                canvas.forEachObject(function(o){
+                                    if(max<=o.z_index){
+                                        max=o.z_index
+                                    }
+                                });
+                                activeObject.set('z_index',max+1);
+                                activeObject.moveTo(activeObject.get('z_index'));
                                 generateHash(activeObject);
                                 $('.js-input-hash-product').text(JSON.stringify(hash));
                             }else{
@@ -676,9 +719,10 @@ function removeWallColor(action){
 function removeOptionOrCustomItem(){
     $('#remove-product-button').click(function() {
 
+        var board_product_id = $(this).data('boardProductId');
+        var board_id = $(this).data('boardId');
+
         if(board_id != undefined && board_product_id != undefined){
-            var board_product_id = $(this).data('boardProductId');
-            var board_id = $(this).data('boardId');
             var url = '/rooms/'+board_id+'/board_products/'+board_product_id;
             $.post(url, {_method:'delete'}, null, "script");
         }else{
@@ -718,12 +762,11 @@ function createObjectImage(activeObject) {
         theImage.set('save_url', activeObject.get('save_url'));
         theImage.set('variant_image', activeObject.get('variant_image'));
         // theImage.set('stroke', '#fff');
-        theImage.set('strokeWidth',0);
         theImage.set('custom_item_id',activeObject.get('custom_item_id'));
         theImage.set('option_id',activeObject.get('option_id'));
         theImage.set('board_id',activeObject.get('board_id'));
 
-        if(canvas.getObjects().length == 1){
+        if(canvas.getObjects().length == 0){
             theImage.set('z_index',canvas.getObjects().length);
         }else{
             max = canvas.getObjects()[0].z_index;
