@@ -399,7 +399,14 @@ class Spree::Board < ActiveRecord::Base
     white_canvas = ::Magick::Image.new(630, 360) { self.background_color = "white" }
     # activate alpha channel on white_canavas to get transparency working
     white_canvas.alpha = Magick::ActivateAlphaChannel
+
+    # normalize z_index, it's closing gap between them
+    (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each_with_index do |object,index|
+      object.update_column(:z_index, index)
+    end
+
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
+    self.wall_colors.reload.collect
     file = nil
 
     (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each do |bp|
@@ -431,7 +438,7 @@ class Spree::Board < ActiveRecord::Base
 
       if image.present?
         #its needed to preevent 'jagged' white border after rotation
-        image.background_color = "transparent"
+        image.background_color = "none"
 
         #flip! is for vertical mirror
         #flop! is for horizontal mirror
@@ -439,6 +446,14 @@ class Spree::Board < ActiveRecord::Base
 
         # changing format to get alpha channel
         image.format = "png"
+
+        # setting fuzz for similar colors to color which we want transform to transparent
+        # number should be low to prevent from cutting middle of product
+        image.fuzz = "5%"
+
+        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
+        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
+        image = image.transparent('#ffffff',Magick::TransparentOpacity)
 
         # set the rotation
         image.rotate!(bp.rotation_offset)
@@ -453,13 +468,6 @@ class Spree::Board < ActiveRecord::Base
           top_left_x = bp.center_point_x - bp.width/2
           top_left_y = bp.center_point_y - bp.height/2
         end
-
-        # setting fuzz for similar colors to color which we want transform to transparent
-        # number should be low to prevent from cutting middle of product
-        image.fuzz = "5%"
-        #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
-        # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
-        image = image.transparent('#ffffff',Magick::TransparentOpacity)
 
         white_canvas.composite!(image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
