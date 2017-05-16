@@ -23,6 +23,7 @@
 
 <div class="form-group" style="<%= u ? '' : 'display: none;' %>">
   <% if u %>
+      <% tab = ["flat_rate_project",'hourly_rate','flat_rate_percentage'] %>
     <% flat = [['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],['BILL AT START OF PROJECT','at_start'],['BILL AT PROJECT COMPLETION','at_completion']]
         hourly = [
             ['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],
@@ -31,7 +32,7 @@
             ['MONTHLY','monthly'],
             ['AT PROJECT COMPLETION','at_completion'],
         ]
-        @project.rate_type == "flat_rate" ? select = flat : select = hourly
+        select = tab.include?(@project.rate_type) ? hourly : flat
     %>
 
     <%= f.select :customer_billing_cycle, options_for_select(select,@project.customer_billing_cycle),{}, :class => "form-control text-center" %>
