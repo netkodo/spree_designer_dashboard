@@ -488,7 +488,7 @@ $ ->
       else
         $('#project_rate').parents('.form-group').find('.info').hide()
 
-      if $(@).val() == "flat_rate_project" or $(@).val() == 'hourly_rate'
+      if $(@).val() == "flat_rate_project" or $(@).val() == 'hourly_rate' or $(@).val() == "flat_rate_percentage"
         $('#project_customer_billing_cycle').html('
           <option value="placeholder" selected="selected" disabled="disabled">Customer Billing Cycle</option>
           <option value="weekly" class="option-color">WEEKLY</option>
