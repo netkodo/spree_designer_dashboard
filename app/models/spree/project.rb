@@ -6,6 +6,8 @@ class Spree::Project < ActiveRecord::Base
   has_many :project_invoice_lines
 
   scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
+  scope :close, -> {where(status: "close")}
+  scope :open, -> {where(status: "open")}
 
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'
