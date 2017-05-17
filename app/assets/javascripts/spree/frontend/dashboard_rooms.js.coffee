@@ -373,6 +373,9 @@ $ ->
               setTimeout () ->
                 $('.project-information').remove()
               ,'2000'
+              $("#project_select option[value='#{id}']").remove()
+              $('#project_action').val('')
+              $(".table-board-listing .project#{id}").remove()
             error: (response) ->
               res=JSON.parse(response.responseText);
               my_this.removeClass('disabled').text('Submit')
