@@ -49,11 +49,11 @@ class Spree::ProjectsController < Spree::StoreController
     respond_to do |format|
       if @project.update(project_params)
         @project.contract.destroy if @project.contract.present? and @project.contract.signed?
-        format.html { redirect_to projects_path(id: @project.id) }
+        format.html { redirect_to designer_dashboard_path(id: @project.id, private: true) }
         format.json { render json: {message: "success"}, status: :ok }
         format.js { render json: {message: "success"}, status: :ok }
       else
-        format.html { redirect_to projects_path }
+        format.html { redirect_to designer_dashboard_path(id: @project.id, private: true) }
         format.json { render json: {message: "error"}, status: :unprocessable_entity }
         format.js { render json: {message: "error"}, status: :unprocessable_entity }
       end
