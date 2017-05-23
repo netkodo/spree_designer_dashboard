@@ -118,7 +118,7 @@ class Spree::ContractsController < Spree::StoreController
       if @contract.save
         if check_sign
           # Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
-          Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed_by_designer")
+          Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed")
           @contract.update(:designer_signed, true)
 
           contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user})
