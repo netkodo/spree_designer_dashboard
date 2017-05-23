@@ -249,7 +249,10 @@ $ ->
           $("#modal-location-body .confirmation").addClass("hidden")
           $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
-          $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").replaceWith(response.history_item)
+          if $(".project-history-group .project-history-content").length > 0
+            $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").replaceWith(response.history_item)
+          else
+            $(".project-history-group").prepend(response.history_item)
 #          if response.location != undefined
 #            obj = $(".js-send-contract")
 #            obj.text("Client haven't signed contract yet.").removeClass('js-send-contract').addClass('disabled')

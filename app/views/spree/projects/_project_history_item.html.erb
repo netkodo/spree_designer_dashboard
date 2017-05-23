@@ -3,15 +3,26 @@
     <%= Spree.t(ph.action) %> <%= ph.action == "contract_signed_by_client" ? "(#{link_to 'Action Needed',edit_contract_path(id: ph.project,cid: ph.project.contract),class:'text-warning'})".html_safe : "" %>
   </div>
   <div class="col-md-4">
-    <%= ph.updated_at.to_date.to_formatted_s(:long) %>
+    <% if ph.action == "invoice_ready" or ph.action == "pending_invoice" %>
+      <%= (ph.created_at + ph.add_date_base_on_billing_cycle).to_date.to_formatted_s(:long) %>
+    <% else %>
+      <%= ph.updated_at.to_date.to_formatted_s(:long) %>
+    <% end %>
   </div>
   <div class="col-md-4">
-    <% if ph.action == "invoice_ready" %>
+    <% if ph.action == "pending_invoice" %>
         <i class="fa fa-2x fa-file-excel-o" aria-hidden="true"></i>
         <%= link_to "EDIT", edit_invoice_project_invoice_lines_path(ph.project_id) %>
         /
         <%#= link_to "REMOVE",  send_invoice_project_invoice_lines_path(ph.project_id), class: "js-send-project-invoice-lines" %>
         <%= link_to "REMOVE", project_history_path(ph.id), class: 'js-remove-project-history' %>
+    <% elsif ph.action == "invoice_ready" %>
+      <% if ph.pdf.present? %>
+        <%= link_to ph.pdf.url do %>
+          <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
+        <% end %>
+        <i class="fa fa-2x fa-envelope-o" aria-hidden="true"></i>
+      <% end %>
     <% else %>
       <% if ph.pdf.present? %>
         <%= link_to ph.pdf.url do %>

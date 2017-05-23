@@ -31,7 +31,7 @@ class Spree::ContractsController < Spree::StoreController
         history = Spree::ProjectHistory.manage_contract_state(project,"contract_sent")
         history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
 
-        @contract.update_column(:token, SecureRandom.uuid) unless @contract.token.present?
+        @contract.update_column(:token, SecureRandom.uuid)
         @contract.update_columns(designer_name: project.user.full_name, client_name: project.project_name)
 
         Spree::Mailers::ContractMailer.contract_sign_for_client(@contract.project.email,@contract.project.user,@contract.token).deliver
@@ -119,7 +119,10 @@ class Spree::ContractsController < Spree::StoreController
         if check_sign
           # Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
           Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed")
-          @contract.update(:designer_signed, true)
+          @contract.update_column(:designer_signed, true)
+
+          @contract.project.project_histories.create(action: "pending_invoice")
+          # invoice_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: invoice_history}, formats: ['html'] )
 
           contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user})
           @contract.generate_and_send_contract(contract)

@@ -1,6 +1,7 @@
 class Spree::ProjectHistory < ActiveRecord::Base
 
   belongs_to :project
+  has_many :project_invoice_lines
 
   has_attached_file :pdf,
                     :path => "pdf_invoices/:id/:basename.:extension"
@@ -14,6 +15,19 @@ class Spree::ProjectHistory < ActiveRecord::Base
       history =pdf.present? ? Spree::ProjectHistory.create(action: action,project_id: project.id,pdf: pdf) : Spree::ProjectHistory.create(action: action,project_id: project.id)
     end
     history
+  end
+
+  def add_date_base_on_billing_cycle
+    case self.project.customer_billing_cycle
+      when "weekly"
+        1.week
+      when "bi_weekly"
+        2.weeks
+      when "monthly"
+        1.month
+      else
+        0
+    end
   end
 
 end
