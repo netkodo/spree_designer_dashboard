@@ -1,9 +1,9 @@
-<div class="row project-history-content">
+<div class="row project-history-content" data-history-id="<%= ph.id %>">
   <div class="col-md-4">
-    <%= Spree.t(ph.action) %>
+    <%= Spree.t(ph.action) %> <%= ph.action == "contract_signed_by_client" ? "(#{link_to 'Action Needed',edit_contract_path(id: ph.project,cid: ph.project.contract)})".html_safe : "" %>
   </div>
   <div class="col-md-4">
-    <%= ph.created_at.to_date.to_formatted_s(:long) %>
+    <%= ph.updated_at.to_date.to_formatted_s(:long) %>
   </div>
   <div class="col-md-4">
     <% if ph.action == "invoice_ready" %>

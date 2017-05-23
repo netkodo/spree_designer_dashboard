@@ -241,6 +241,7 @@ $ ->
         dataType: 'json'
         method: 'POST'
         url: $(@).data('url')
+        data: {project_id: $(@).data('project-id')}
         beforeSend: () ->
           $('.js-send-contract-confirmation').addClass('disabled').text('Sending...')
         success: (response) ->
@@ -248,10 +249,10 @@ $ ->
           $("#modal-location-body .confirmation").addClass("hidden")
           $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
-          $(".project-history-group").prepend(response.history_item)
-          if response.location != undefined
-            obj = $(".js-send-contract")
-            obj.text("Client haven't signed contract yet.").removeClass('js-send-contract').addClass('disabled')
+          $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").replaceWith(response.history_item)
+#          if response.location != undefined
+#            obj = $(".js-send-contract")
+#            obj.text("Client haven't signed contract yet.").removeClass('js-send-contract').addClass('disabled')
           setTimeout () ->
             $("#send-contract").modal('hide')
             $("#modal-location-body .confirmation").removeClass("hidden")

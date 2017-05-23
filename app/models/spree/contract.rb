@@ -30,7 +30,8 @@ class Spree::Contract < ActiveRecord::Base
     end
 
     if Spree::Mailers::ContractMailer.contract_email_with_pdf(self.project.email,self.project.user,save_path,images).deliver
-      Spree::ProjectHistory.create(action: "contract_sent",project_id: self.project_id, pdf: pdf_file)
+      # Spree::ProjectHistory.create(action: "contract_sent",project_id: self.project_id, pdf: pdf_file)
+      Spree::ProjectHistory.manage_contract_state(self.project,"contract_sent",pdf_file)
       File.delete(save_path) if File.exist?(save_path)
     end
   end

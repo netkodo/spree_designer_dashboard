@@ -18,18 +18,24 @@ class Spree::ContractsController < Spree::StoreController
   end
 
   def create
-    @contract = Spree::Contract.joins(:project).new(project_id: params[:id])
-    project = @contract.project
+    project = Spree::Project.find(params[:project_id])
+    if project.contract.present?
+      @contract = project.contract
+    else
+      @contract = Spree::Contract.joins(:project).new(project_id: params[:id])
+    end
+    @contract.update(client_sign: nil,client_signed: false,designer_sign: nil,designer_signed: false) # removing designer sign may not be needed
     respond_to do |format|
       if @contract.save
-        history = Spree::ProjectHistory.create(action: "contract_to_sign_sent",project_id: project.id)
+        # history = Spree::ProjectHistory.create(action: "contract_to_sign_sent",project_id: project.id)
+        history = Spree::ProjectHistory.manage_contract_state(project,"contract_sent")
         history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
 
         @contract.update_column(:token, SecureRandom.uuid) unless @contract.token.present?
         @contract.update_columns(designer_name: project.user.full_name, client_name: project.project_name)
 
         Spree::Mailers::ContractMailer.contract_sign_for_client(@contract.project.email,@contract.project.user,@contract.token).deliver
-        format.json {render json: {message: 'success', location: edit_project_path(project), history_item: history_item}, status: :ok}
+        format.json {render json: {message: 'success', location: edit_project_path(project), history_item: history_item, history_id: history.id}, status: :ok}
       else
         format.json {render json: {message: 'error'}, status: :unprocessable_entity}
       end
@@ -38,9 +44,14 @@ class Spree::ContractsController < Spree::StoreController
 
   def preview_sign_contract
     @contract = Spree::Contract.find_by(token: params[:token])
-    @project = @contract.project
-    if @contract.client_signed
-      flash[:alert] = "You have already signed that contract"
+    if @contract.present?
+      @project = @contract.project
+      if @contract.client_signed
+        flash[:alert] = "You have already signed that contract"
+        redirect_to root_path
+      end
+    else
+      flash[:alert] = "Token expired"
       redirect_to root_path
     end
   end
@@ -59,7 +70,8 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if @contract.save
-        Spree::ProjectHistory.create(action: "contract_signed_by_client",project_id: @contract.project_id)
+        # Spree::ProjectHistory.create(action: "contract_signed_by_client",project_id: @contract.project_id)
+        Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed_by_client")
 
         Spree::Mailers::ContractMailer.contract_signed_by_client(@contract.project.user.email,@contract.project.project_name,@contract).deliver
         @contract.update_column(:client_signed, true)
@@ -105,8 +117,9 @@ class Spree::ContractsController < Spree::StoreController
     respond_to do |format|
       if @contract.save
         if check_sign
-          Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
-          @contract.update_column(:designer_signed, true)
+          # Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
+          Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed_by_designer")
+          @contract.update(:designer_signed, true)
 
           contract = render_to_string('/spree/contracts/contract_content.html.erb',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user})
           @contract.generate_and_send_contract(contract)
@@ -140,7 +153,8 @@ class Spree::ContractsController < Spree::StoreController
 
     respond_to do |format|
       if Spree::Mailers::ContractMailer.contract_email_with_pdf(@project.email,@project.user,save_path,images).deliver
-        history = Spree::ProjectHistory.create(action: "contract_sent",project_id: @project.id, pdf: pdf_file)
+        # history = Spree::ProjectHistory.create(action: "contract_sent",project_id: @project.id, pdf: pdf_file)
+        Spree::ProjectHistory.manage_contract_state(@project,"contract_sent",pdf_file)
         history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: history}, formats: ['html'] )
         File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {message: "success", history_item: history_item}, status: :ok}
