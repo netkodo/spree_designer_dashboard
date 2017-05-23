@@ -98,9 +98,14 @@
               <div class="row text-center">
                 <%= link_to "ADD INVOICE", new_project_invoice_line_path(@project), class: "btn btn-primary send-contract"%>
               </div>
-              <!--<div class="row text-center">-->
-                <%#= link_to "GENERATE INVOICE MANUALLY", generate_invoice_manually_project_invoice_lines_path(@project), class: "btn btn-primary send-contract js-generate-invoice"%>
-              <!--</div>-->
+              <div class="row text-center">
+                <%= link_to "GENERATE INVOICE MANUALLY", generate_invoice_manually_project_invoice_lines_path(@project), class: "btn btn-primary send-contract js-generate-invoice"%>
+                <br>
+                this is for development use only to generate invice record<br>
+                will be removed<br>
+                because invices aren't generated automaticly yet<br>
+                button generate invoice and send email with notificationto designer
+              </div>
 
             </div>
 
