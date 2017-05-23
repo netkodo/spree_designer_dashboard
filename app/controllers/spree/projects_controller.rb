@@ -1,7 +1,7 @@
 class Spree::ProjectsController < Spree::StoreController
 
   before_filter :require_authentication
-  before_filter :check_owner, except: [:new, :create, :create_project] #:update, :edit, :show, :destroy, :close_open, :index
+  before_filter :check_owner, except: [:index, :new, :create, :create_project] #:update, :edit, :show, :destroy, :close_open, :index
 
   def index
     params[:project_id].present? ? @selected_project = Spree::Project.where(user_id: spree_current_user.id).find(params[:project_id]) : @selected_project = nil
@@ -85,7 +85,7 @@ class Spree::ProjectsController < Spree::StoreController
   private
 
     def check_owner
-      unless spree_current_user.present? and spree_current_user.projects.pluck(:id).include?(params[:id])
+      unless spree_current_user.present? and spree_current_user.projects.pluck(:id).include?(params[:id].to_i)
         flash[:error] = "Access denied"
         redirect_to root_path
       end
