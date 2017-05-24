@@ -119,7 +119,7 @@ $ ->
         when 'edit-sku'
           val = $(@).parent().data('sku')
         when 'edit-cost'
-          val = $(@).parent().data('cost')
+          val = $(@).parent().data('price')
       $(@).parent().html("<input type='text' class='form-control' value=\"#{val}\"><i class='fa fa-check save-edit'></i> <i class='fa fa-times cancel-edit'></i>")
   ,'.edit-name .edit, .edit-sku .edit, .edit-cost .edit'
 
@@ -139,10 +139,10 @@ $ ->
             $(@).parents('td').attr('changed',true)
             $(@).parent().data('sku',val)
         when 'edit-cost'
-          if val != $(@).parent().data('cost')
+          if val != $(@).parent().data('price')
             $(@).parents('tr').attr('changed',true)
             $(@).parents('td').attr('changed',true)
-            $(@).parent().data('cost',val)
+            $(@).parent().data('price',val)
       $(@).parent().html("#{val} <span class='edit'>edit</span>")
   ,'.save-edit'
 
@@ -179,7 +179,7 @@ $ ->
   $(document).on
     click: (e)->
       e.preventDefault()
-      val = $(@).parent().data('cost') || $(@).parent().data('name') || $(@).parent().data('sku')
+      val = $(@).parent().data('price') || $(@).parent().data('name') || $(@).parent().data('sku')
       $(@).parent().html("#{val} <span class='edit'>edit</span>")
   ,'.cancel-edit'
 

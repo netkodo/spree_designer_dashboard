@@ -90,20 +90,20 @@ class Spree::BoardProduct < ActiveRecord::Base
     your_cost = BigDecimal(0)
     obj.each do |s|
       if s.product.present?
-        if s.invoice_line.present? and s.invoice_line.cost.present?
-          customer_cost += s.invoice_line.cost
-          your_cost += s.invoice_line.cost
+        if s.invoice_line.present? and s.invoice_line.price.present?
+          customer_cost += s.invoice_line.price
+          your_cost += s.invoice_line.price
         else
           customer_cost += s.product.price
           your_cost += s.product.cost_price
         end
       else
-        if s.invoice_line.present? and s.invoice_line.cost.present?
-          customer_cost += s.invoice_line.cost
-          your_cost += s.invoice_line.cost
+        if s.invoice_line.present? and s.invoice_line.price.present?
+          customer_cost += s.invoice_line.price
+          your_cost += s.invoice_line.price
         else
           customer_cost += s.custom_item.price
-          your_cost += s.custom_item.cost
+          your_cost += s.custom_item.price
         end
       end
     end
