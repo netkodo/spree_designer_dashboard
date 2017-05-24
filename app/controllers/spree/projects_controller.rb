@@ -15,7 +15,9 @@ class Spree::ProjectsController < Spree::StoreController
 
   def show
     @project = Spree::Project.find(params[:id])
-    @project_history = @project.project_histories.order("created_at desc")
+    pending = @project.project_histories.find_by_action("pending_invoice")
+    @project_history = @project.project_histories.order("created_at desc").select{|x| x.action != "pending_invoice"}
+    @project_history.unshift(pending) if pending.present?
   end
 
   def create
