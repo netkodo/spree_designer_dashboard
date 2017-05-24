@@ -83,24 +83,31 @@
                 <%= link_to "PREVIEW CONTRACT", preview_contract_path(id: @project.id, format: :pdf),class: "btn btn-primary send-contract", id: "preview_contract", target: "_blank" %>
               </div>
               <div class="row text-center">
-                <% if @project.contract.present? %>
-                    <% if @project.contract.client_signed and !@project.contract.designer_signed %>
-                        <%= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
-                    <% elsif !@project.contract.client_signed and !@project.contract.designer_signed %>
-                        <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
-                    <% else %>
-                        <div class="btn btn-primary send-contract disabled">Client hasn't signed contract yet.</div>
-                    <% end %>
-                <% else %>
+                <%# if @project.contract.present? %>
+                    <%# if @project.contract.client_signed and !@project.contract.designer_signed %>
+                        <%#= link_to "SIGN CONTRACT", new_contract_path(@project), class: "btn btn-primary send-contract" %>
+                    <%# elsif !@project.contract.client_signed and !@project.contract.designer_signed %>
+                        <!--<div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>-->
+                    <%# else %>
+                        <!--<div class="btn btn-primary send-contract disabled">Client hasn't signed contract yet.</div>-->
+                    <%# end %>
+                <%# else %>
                     <div class="btn btn-primary send-contract js-send-contract">SEND CONTRACT</div>
-                <% end %>
+                <%# end %>
               </div>
               <div class="row text-center">
                 <%= link_to "ADD INVOICE", new_project_invoice_line_path(@project), class: "btn btn-primary send-contract"%>
               </div>
-              <div class="row text-center">
-                <%= link_to "GENERATE INVOICE MANUALLY", generate_invoice_manually_project_invoice_lines_path(@project), class: "btn btn-primary send-contract js-generate-invoice"%>
-              </div>
+              <% unless Rails.env == "production" %>
+                <div class="row text-center">
+                  <%= link_to "GENERATE INVOICE MANUALLY", generate_invoice_manually_project_invoice_lines_path(@project), class: "btn btn-primary send-contract js-generate-invoice"%>
+                  <br>
+                  this is for development use only to generate invice record<br>
+                  will be removed<br>
+                  because invices aren't generated automaticly yet<br>
+                  button generate invoice and send email with notificationto designer
+                </div>
+              <% end %>
 
             </div>
 

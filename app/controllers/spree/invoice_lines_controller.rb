@@ -68,7 +68,8 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
     respond_to do |format|
       if Spree::Mailers::ContractMailer.invoice(designer.email,designer,save_path).deliver
-        Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
+        # Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
+        Spree::ProjectHistory.manage_contract_state(board.project,"invoice_sent",pdf_file)
         Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
         File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {:message => "ok"}, status: :ok}

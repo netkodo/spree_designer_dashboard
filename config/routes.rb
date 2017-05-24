@@ -63,12 +63,17 @@ Spree::Core::Engine.routes.draw do
       post :close_open, defaults: {format: 'json'}
       # get :contract
       resources :contracts, param: :cid
+      resources :project_history, only: [:destroy], defaults: {format: :json}, param: :ph do
+        member do
+          post :send_invoice
+          get :edit_ready_invoice, defaults: {format: 'html'}
+        end
+      end
       resources :project_invoice_lines, param: :iid do
         collection do
           post :update_invoice
           get :edit_invoice
           post :generate_invoice_manually, defaults: {format: 'json'}
-          post :send_invoice, defaults: {format: 'json'}
         end
       end
     end
@@ -77,7 +82,7 @@ Spree::Core::Engine.routes.draw do
   post "/create_project" => "projects#create_project", as: :create_project, defaults: {format: 'json'}
 
 
-  resources :project_history, only: [:destroy], defaults: {format: :json}
+  # resources :project_history, only: [:destroy], defaults: {format: :json}
 
   # match 'projects/:pid/contracts/:cid' => "contracts#show"
   get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract

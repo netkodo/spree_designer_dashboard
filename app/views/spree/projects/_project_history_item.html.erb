@@ -1,23 +1,60 @@
-<div class="row project-history-content">
+<div class="row project-history-content" data-history-id="<%= ph.id %>">
   <div class="col-md-4">
-    <%= Spree.t(ph.action) %>
+    <%= Spree.t(ph.action) %> <%= ph.action == "contract_signed_by_client" ? "(#{link_to 'Action Needed',edit_contract_path(id: ph.project,cid: ph.project.contract),class:'text-warning'})".html_safe : "" %>
   </div>
-  <div class="col-md-4">
-    <%= ph.created_at.to_date.to_formatted_s(:long) %>
+  <div class="col-md-5">
+    <% if ph.action == "invoice_ready" or ph.action == "pending_invoice" %>
+      <%= (ph.created_at + ph.add_date_base_on_billing_cycle).to_date.to_formatted_s(:long) %>
+    <% else %>
+      <%= ph.updated_at.to_date.to_formatted_s(:long) %>
+    <% end %>
   </div>
-  <div class="col-md-4">
-    <% if ph.action == "invoice_ready" %>
-        <i class="fa fa-2x fa-file-excel-o" aria-hidden="true"></i>
-        <%= link_to "EDIT", edit_invoice_project_invoice_lines_path(ph.project_id) %>
-        /
-        <%#= link_to "REMOVE",  send_invoice_project_invoice_lines_path(ph.project_id), class: "js-send-project-invoice-lines" %>
-        <%= link_to "REMOVE", project_history_path(ph.id), class: 'js-remove-project-history' %>
+  <div class="col-md-3">
+    <% if ph.action == "pending_invoice" %>
+        <i class="fa fa-2x fa-file-excel-o pull-left" aria-hidden="true"></i>
+        <div class="ph-pdf-actions">
+          <%= link_to edit_invoice_project_invoice_lines_path(ph.project_id) do %>
+              <i class="fa fa-edit" aria-hidden="true"></i>
+          <% end %>
+        </div>
+
+    <% elsif ph.action == "invoice_sent" %>
+      <%= link_to ph.pdf.url do %>
+        <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
+      <% end %>
+        <div class="ph-pdf-actions">
+          <%= link_to  send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history' do %>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          <% end %>
+        </div>
+
+    <% elsif ph.action == "invoice_ready" %>
+      <% if ph.pdf.present? %>
+        <%= link_to ph.pdf.url do %>
+          <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
+        <% end %>
+        <div class="ph-pdf-actions">
+          <%= link_to  send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history' do %>
+            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          <% end %>
+          /
+          <%= link_to edit_ready_invoice_project_history_path(id: ph.project_id, ph: ph.id) do %>
+              <i class="fa fa-edit" aria-hidden="true"></i>
+          <% end %>
+          /
+          <%= link_to project_history_path(id: ph.project_id, ph: ph.id), class: 'js-remove-project-history' do %>
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          <% end %>
+        </div>
+      <% end %>
+
     <% else %>
       <% if ph.pdf.present? %>
         <%= link_to ph.pdf.url do %>
-          <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
+          <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
         <% end %>
       <% end %>
+
     <% end %>
   </div>
 </div>

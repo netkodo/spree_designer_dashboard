@@ -1,6 +1,7 @@
 class Spree::ProjectsController < Spree::StoreController
 
   before_filter :require_authentication
+  before_filter :check_owner, except: [:index, :new, :create, :create_project] #:update, :edit, :show, :destroy, :close_open, :index
 
   def index
     params[:project_id].present? ? @selected_project = Spree::Project.where(user_id: spree_current_user.id).find(params[:project_id]) : @selected_project = nil
@@ -14,7 +15,9 @@ class Spree::ProjectsController < Spree::StoreController
 
   def show
     @project = Spree::Project.find(params[:id])
-    @project_history = @project.project_histories.order("created_at desc")
+    pending = @project.project_histories.find_by_action("pending_invoice")
+    @project_history = @project.project_histories.order("created_at desc").select{|x| x.action != "pending_invoice"}
+    @project_history.unshift(pending) if pending.present?
   end
 
   def create
@@ -49,11 +52,11 @@ class Spree::ProjectsController < Spree::StoreController
     respond_to do |format|
       if @project.update(project_params)
         @project.contract.destroy if @project.contract.present? and @project.contract.signed?
-        format.html { redirect_to projects_path(id: @project.id) }
+        format.html { redirect_to designer_dashboard_path(id: @project.id, private: true) }
         format.json { render json: {message: "success"}, status: :ok }
         format.js { render json: {message: "success"}, status: :ok }
       else
-        format.html { redirect_to projects_path }
+        format.html { redirect_to designer_dashboard_path(id: @project.id, private: true) }
         format.json { render json: {message: "error"}, status: :unprocessable_entity }
         format.js { render json: {message: "error"}, status: :unprocessable_entity }
       end
@@ -82,6 +85,13 @@ class Spree::ProjectsController < Spree::StoreController
 
 
   private
+
+    def check_owner
+      unless spree_current_user.present? and spree_current_user.projects.pluck(:id).include?(params[:id].to_i)
+        flash[:error] = "Access denied"
+        redirect_to root_path
+      end
+    end
 
     def project_params
       params.require(:project).permit(:user_id, :project_name, :description, :address1, :address2, :city, :state, :zip_code, :email, :phone, :rate_type, :rate, :customer_billing_cycle, :charge_percentage, :charge, :charge_on, :status, :pass_discount, :discount_amount, :upfront_deposit, :deposit_amount)
