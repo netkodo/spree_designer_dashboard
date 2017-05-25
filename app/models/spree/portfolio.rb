@@ -8,6 +8,8 @@ class Spree::Portfolio < ActiveRecord::Base
   has_many :portfolio_favorites, dependent: :destroy
   belongs_to :room
 
+  has_many :products, through: :portfolio_product_association
+
   scope :visible, -> { where(show: true) }
 
   before_destroy :check_rooms
