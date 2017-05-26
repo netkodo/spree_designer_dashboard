@@ -3,7 +3,6 @@ Spree::Product.class_eval do
   has_many :boards, :through => :board_products
   has_many :bookmarks
   has_many :questions, dependent: :destroy
-  has_many :portfolios, through: :portfolio_product_association
 
   before_save :update_product_publish_status
 

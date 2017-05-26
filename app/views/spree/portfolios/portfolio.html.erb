@@ -137,15 +137,19 @@
 
           <div class="col-md-5">
             <img id="img_prev" src="" alt="" class="img-responsive"/>
-            <%= render :partial => "spree/admin/variants/autocomplete", :formats => :js %>
+            <div class="text-center img_prev_default">
+              <i class="fa fa-picture-o fa-large-img" aria-hidden="true"></i>
+            </div>
+            <%= render :partial => "spree/admin/variants/portfolio_variant_autocomplete", :formats => :js %>
             <div class="row">
               <div class="col-md-12">
-                <%= text_field_tag :variant,"", class: "variant_autocomplete width100" %>
+                <%= text_field_tag :variants_tagged,"", class: "width100 hidden" %>
+                <%= text_field_tag :variant,"", class: "variant_autocomplete_association width100" %>
               </div>
             </div>
-            <script>
-                $(".variant_autocomplete").variantAutocomplete();
-            </script>
+            <div id="tagged_variants" class="row">
+
+            </div>
           </div>
         </div>
 
