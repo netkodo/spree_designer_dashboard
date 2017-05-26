@@ -248,12 +248,11 @@ class Spree::PortfoliosController < Spree::StoreController
 
         tagged_ids = params[:variants_tagged].split(",").uniq.map{|x| x.to_i}
         current_ids = @portfolio.portfolio_variant_associations.pluck(:variant_id).map{|v| v.to_i}
-        remove_ids = tagged_ids.dup
+        remove_ids = current_ids.dup
 
-        remove_ids.each do |id|
+        tagged_ids.each do |id|
           remove_ids.delete(id) if current_ids.include?(id)
         end
-        puts remove_ids.inspect
         @portfolio.portfolio_variant_associations.where(variant_id: remove_ids).destroy_all
 
         tagged_ids.each do |id|
@@ -301,9 +300,9 @@ class Spree::PortfoliosController < Spree::StoreController
 
         tagged_ids = params[:variants_tagged].split(",").uniq.map{|x| x.to_i}
         current_ids = @portfolio.portfolio_variant_associations.pluck(:variant_id).map{|v| v.to_i}
-        remove_ids = tagged_ids.dup
+        remove_ids = current_ids.dup
 
-        remove_ids.each do |id|
+        tagged_ids.each do |id|
           remove_ids.delete(id) if current_ids.include?(id)
         end
         @portfolio.portfolio_variant_associations.where(variant_id: remove_ids).destroy_all
