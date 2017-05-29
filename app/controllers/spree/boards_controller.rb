@@ -475,6 +475,8 @@ class Spree::BoardsController < Spree::StoreController
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
         portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
+
+        portfolio.variants.exists? ? @board.update(state: "published", status: "published") : nil
       else
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
       end
@@ -545,7 +547,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
-    @portfolios = spree_current_user.portfolios
+    except = spree_current_user.portfolios.select{|x| x.variants.exists? and x.board.present? and x.board.status="published"}.map(&:id)
+    @portfolios = spree_current_user.portfolios.where.not(id: except)
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 
     @category = []

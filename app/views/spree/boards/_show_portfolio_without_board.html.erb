@@ -111,6 +111,15 @@
 	</div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <div class="board-section board-products-section portfolio-row-margin">
+      <% if @portfolio.variants.exists? %><h3>Buy Products from this Room</h3><% end %>
+      <%= render :partial => "spree/designers/products_list", :locals => {:products => @portfolio.variants.collect{|x| x.product}}%>
+    </div>
+  </div>
+</div>
+
 <% if @same_room_images.count > 0 %>
   <div class="row col-md-12 portfolio-row-margin">
     <h3>Same Room Images</h3>
