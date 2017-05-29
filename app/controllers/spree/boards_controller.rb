@@ -619,7 +619,7 @@ class Spree::BoardsController < Spree::StoreController
       end
     end
 
-
+    @searcher = build_searcher(params)
     if params[:type].to_s == "categories"
       @category_id = Spree::Taxon.where(id: params[:id]).first
       params[:s] = {} if params[:s].blank?
