@@ -26,7 +26,7 @@ class Spree::Project < ActiveRecord::Base
         when 'bi_weekly'
           'Bi-Weekly'
         when 'monthly'
-          'Mmonthly'
+          'Monthly'
         when 'at_completion'
           'Bill At Project Completion'
         else
