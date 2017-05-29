@@ -73,6 +73,8 @@
   $('#h1_project_name').html("")
 
 $ ->
+  $(".invoice-tooltip").tooltip()
+
   addToHistory = (user_id,board_id,action) ->
     $.ajax
       dataType: 'json'
