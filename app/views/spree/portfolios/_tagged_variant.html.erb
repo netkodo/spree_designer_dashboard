@@ -1,4 +1,4 @@
 <div class='col-md-4 variant' data-id='<%= variant.id %>'>
-  <img src='<%= variant.images.first.attachment(:small) %>' class='img-responsive' />
+  <img src='<%= variant.images.first.attachment(:small) if variant.images.present? %>' class='img-responsive' />
   <span class='remove'><i class='fa fa-times' aria-hidden='true'></i></span>
 </div>
