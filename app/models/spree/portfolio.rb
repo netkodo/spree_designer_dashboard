@@ -84,7 +84,7 @@ class Spree::Portfolio < ActiveRecord::Base
         tab << [tag,tag]
       end
     end
-    tab
+    tab.sort_by{|x| x[0].downcase}
   end
 
 end

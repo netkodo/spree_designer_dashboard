@@ -22,12 +22,12 @@ class Spree::PortfoliosController < Spree::StoreController
         colors << [wc.wall_color,wc.wall_color]
       end
     end
-    room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-    room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-    designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+    room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}.sort_by{|x| x[0]}
+    room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}.sort_by{|x| x[0]}
+    designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}.sort_by{|x| x[0]}
     tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
 
-    colors.each do |v|
+    colors.sort_by{|x| x[0]}.each do |v|
       @colors[v] += 1
     end
 
@@ -120,9 +120,9 @@ class Spree::PortfoliosController < Spree::StoreController
           colors << [wc.wall_color,wc.wall_color]
         end
       end
-      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}
-      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}
-      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
+      room_type = tmp_portfolios.map { |r| [r.room_types.name,r.room_types.id]}.sort_by{|x| x[0]}
+      room_style = tmp_portfolios.map { |s| [s.room_styles.name,s.room_styles.id]}.sort_by{|x| x[0]}
+      designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}.sort_by{|x| x[0]}
       tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
     else
       tmp_portfolios = Spree::Portfolio.visible.order('board_id IS NULL, created_at DESC')
@@ -146,7 +146,7 @@ class Spree::PortfoliosController < Spree::StoreController
       tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
     end
 
-    colors.each do |v|
+    colors.sort_by{|x| x[0]}.each do |v|
       @colors[v] += 1
     end
 
