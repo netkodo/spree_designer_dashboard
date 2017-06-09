@@ -36,6 +36,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
 
     if @designer_registration.save
       session[:fb_pixel_email] = current_spree_user.email
+      @designer_registration.user.designer_ac_signup(@designer_registration.applied_for)
       redirect_to designer_registration_thanks_url
     else
       render action: 'new'

@@ -46,6 +46,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
           # user.add_designer_to_mailchimp
           user.designer_ac_registration("room designer")
+          user.user_ac_event_add("room_designer_accepted_event")
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
