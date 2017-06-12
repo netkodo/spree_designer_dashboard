@@ -5,7 +5,7 @@
 
     <div class="col-md-9">
       <% unless @projects.present? %>
-          <div class="col-md-12 text-center">
+          <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <h1>You don't have any projects</h1>
             <%= link_to "Add One", new_project_path, :class => "btn btn-primary" %>
           </div>
@@ -14,13 +14,13 @@
           <h1 id="h1_project_name"> <%= @selected_project.present? ? "#{@selected_project.project_name} Project" : "" %> </h1>
         </div>
         <div class="row">
-          <div class="col-md-6 col-md-offset-3">
+          <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
             <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Start or Select Project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),"#{@selected_project.present? ? @selected_project.id : ''}"), :class => 'form-control' %>
           </div>
         </div>
         <div class="project-managment <%= @selected_project.present? ? "" : "hidden" %>">
           <div class="row mtop">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
               <%= select_tag :project_action, options_for_select([["Select an Option","",{disabled: 'disabled'}],["Edit / View Project Details","project-details"],["Add a Room for this Project","add-room"],["Open Project","end-project"],["Remove Project","remove-project"]],""),class:"form-control", data: {id: @selected_project.present? ? @selected_project.id : '', status: "open"} %>
             </div>
           </div>

@@ -1,15 +1,15 @@
 <div class="row project-history-content" data-history-id="<%= ph.id %>">
-  <div class="col-md-4">
+  <div class="col-md-4 col-sm-4 col-xs-4">
     <%= Spree.t(ph.action) %> <%= ph.action == "contract_signed_by_client" ? "(#{link_to 'Action Needed',edit_contract_path(id: ph.project,cid: ph.project.contract),class:'text-warning'})".html_safe : "" %>
   </div>
-  <div class="col-md-5">
+  <div class="col-md-5 col-sm-3 col-xs-3">
     <% if ph.action == "invoice_ready" or ph.action == "pending_invoice" %>
       <%= (ph.created_at + ph.add_date_base_on_billing_cycle).to_date.to_formatted_s(:long) %>
     <% else %>
       <%= ph.updated_at.to_date.to_formatted_s(:long) %>
     <% end %>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 col-sm-5 col-sm-5">
     <% if ph.action == "pending_invoice" %>
         <i class="fa fa-2x fa-file-excel-o pull-left" aria-hidden="true"></i>
         <div class="ph-pdf-actions">
