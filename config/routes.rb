@@ -28,7 +28,7 @@ Spree::Core::Engine.routes.draw do
   end
   resources :designer_registrations
 
-
+  get "/all-access-designer" => "designer_registrations#all_access_designer", as: :all_access_designer
 
 
   get "/tutorials" => "designers#tutorials", :as => :tutorials

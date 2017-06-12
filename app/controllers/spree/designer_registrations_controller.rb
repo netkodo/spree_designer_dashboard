@@ -63,6 +63,10 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     redirect_to designer_registrations_url, notice: 'Designer registration was successfully destroyed.'
   end
 
+  def all_access_designer
+
+  end
+
   private
   
     def check_existing_registration
