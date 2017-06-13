@@ -28,13 +28,14 @@ Spree::Core::Engine.routes.draw do
   end
   resources :designer_registrations
 
-  get "/all-access-designer" => "designer_registrations#all_access_designer", as: :all_access_designer
+  get "/designers/all-access-designer" => "designer_registrations#all_access_designer", as: :all_access_designer
 
 
   get "/tutorials" => "designers#tutorials", :as => :tutorials
   get "/designers" => "designers#index", :as => :designers
   get "/designers/thanks" => "designer_registrations#thanks", :as => :designer_registration_thanks
   get "/designers/signup" => "designer_registrations#new", :as => :designer_signup
+  get "/designers/designer_signup" => "designer_registrations#designer_signup", :as => :new_designer_signup
   patch "/designers" => "designers#update", :as => :update_designer
   #post "/designers/signup" => "designers#signup", :as => :create_designer_registration
 

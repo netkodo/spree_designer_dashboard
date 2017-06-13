@@ -8,7 +8,7 @@
       <%= image_tag "frontend/trade-program.png", class: "img-responsive" %>
     </div>
     <div class="text-center">
-      <a href="#" class="btn btn-primary btn-custom">Join Now</a>
+      <a href="/designers/designer_signup" class="btn btn-primary btn-custom">Join Now</a>
     </div>
     <div class="text-center">
       <span class="header">Trade Program</span>
@@ -21,10 +21,10 @@
   </div>
   <div class="col-md-4">
     <div class="text-center">
-      <%= image_tag "frontend/trade-program.png", class: "img-responsive" %>
+      <%= image_tag "frontend/room-designer.png", class: "img-responsive" %>
     </div>
     <div class="text-center">
-      <a href="#" class="btn btn-primary btn-custom">Join Now</a>
+      <a href="/designers/designer_signup" class="btn btn-primary btn-custom">Join Now</a>
     </div>
     <div class="text-center">
       <span class="header">Room Designer</span>
@@ -37,10 +37,10 @@
   </div>
   <div class="col-md-4">
     <div class="text-center">
-      <%= image_tag "frontend/trade-program.png", class: "img-responsive" %>
+      <%= image_tag "frontend/all-access-designer.png", class: "img-responsive" %>
     </div>
     <div class="text-center">
-      <a href="/all-access-designer" class="btn btn-primary btn-custom">Learn More</a>
+      <a href="/designers/all-access-designer" class="btn btn-primary btn-custom">Learn More</a>
       <%#= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom" %>
     </div>
     <div class="text-center">
@@ -53,116 +53,4 @@
       <li>Efficiently track your hours</li>
     </ul>
   </div>
-</div>
-
-
-<div class="row">
-	<div class="col-md-6">
-		<h3>Want to be a Scout & Nimble Room Designer?</h3>
-		<p>Scout & Nimble is the world’s premier marketplace for independent interior design and home décor</p>
-		<p>
-		<ul>
-		<li>Create rooms from the comfort of your own home</li>
-		<li>Earn a supplemental monthly income, while building your brand</li>
-		<li>Get your designs in front of over 150K of our followers</li>
-		</ul>
-		</p>
-		<br><br><br>
-		<!--<h3>Design Trade Program </h3>-->
-		<!--<p>Scout & Nimble offers exclusive trade pricing and services to designers & architects.</p>-->
-
-
-
-
-    <h3>Join our Design Trade Program</h3>
-    <p>
-    Scout & Nimble offers exclusive trade pricing and services to designers & architects.
-		<ul>
-		<li>Receive promotions and incentives for you & your clients</li>
-		<li>Shop our large family of brands </li>
-		<li>Get up to a 15% discount and applicable tax exemptions</li>
-		</ul>
-		</p>
-		
-	</div>
-	<div class="col-md-6">
-		<div class="login-box">
-			<div class="login-header">
-				<h6>Designer Registration</h6>
-			</div>
-			<div class="login-content">
-				
-				<% if spree_current_user %>
-					<h4>Step 2 of 2: Complete designer application</h4>
-					<%= render :partial => "form" %>
-				<% else %>
-					<h4>Step 1 of 2: Create your Scout & Nimble Account</h4>
-					<p>Please enter the information below to create your Scout & Nimble account.</p>
-				<%= render :partial => "login_form" %>
-				
-				<% end %>
-			</div>
-		</div>
-		
-	</div>
-	</div>
-
-  <div class="row designer-registration-content vertical-align">
-    <div class="col-md-6 col-sm-6 col-xs-12 custom-col">
-      <%= image_tag("frontend/designer-registration/1.jpg", class: 'img-responsive')%>
-    </div>
-    <div class="col-md-6 col-sm-6 col-xs-12 text custom-col">
-      <p class="head">Increased brand awareness.</p>
-      There's a lot of power in social media;<br>
-      each follower is a potential customer.<br>
-      Get access to our more than 156,000+<br>
-      Instagram followers to increase your<br>
-      brand awareness - and make some<br>
-      money while you're at it.
-    </div>
-  </div>
-  <div class="row designer-registration-content vertical-align">
-    <div class="col-md-6 col-sm-6 col-xs-12 text custom-col">
-      <p class="head">Earn commission from your designs.</p>
-      Every piece of furniture sold from the<br>
-      rooms you design means more money<br>
-      in your pocket. No strings attached.<br>
-      Seriously. Create stylish room designs<br>
-      with complete creative freedom, all on<br>
-      your own time.
-    </div>
-    <div class="col-md-6 col-sm-6 col-xs-12 custom-col">
-      <%= image_tag("frontend/designer-registration/2.jpg", class: 'img-responsive')%>
-    </div>
-  </div>
-
-  <div class="row designer-registration-content vertical-align">
-    <div class="col-md-6 col-sm-6 col-xs-12 custom-col">
-      <%= image_tag("frontend/designer-registration/3.jpg", class: 'img-responsive')%>
-    </div>
-    <div class="col-md-6 col-sm-6 col-xs-12 text custom-col">
-      <p class="head">Minimize your workload.</p>
-      Streamline the logistics of your business<br>
-      with one-stop shopping. Our large<br>
-      family of brands caters to all styles and<br>
-      tastes so we will assist you in finding<br>
-      exactly what you're looking for. You've<br>
-      really got nothing to lose - it's free, easy,<br>
-      and convenient!
-    </div>
-  </div>
-  <div class="row designer-registration-content vertical-align">
-    <div class="col-md-6 col-sm-6 col-xs-12 text custom-col">
-      <p class="head">Helpful customer service team.</p>
-      Your schedule can be crazy, and we've got<br>
-      a team dedicated to making your life<br>
-      easier. Enjoy product storage options and<br>
-      flexible shipping options to best fit your<br>
-      needs.
-    </div>
-    <div class="col-md-6 col-sm-6 col-xs-12 custom-col">
-      <%= image_tag("frontend/designer-registration/4.jpg", class: 'img-responsive')%>
-    </div>
-  </div>
-
 </div>
