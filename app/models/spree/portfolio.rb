@@ -11,6 +11,8 @@ class Spree::Portfolio < ActiveRecord::Base
   has_many :portfolio_variant_associations, dependent: :destroy
   has_many :variants, through: :portfolio_variant_associations
 
+  is_impressionable
+
   scope :visible, -> { where(show: true) }
 
   before_destroy :check_rooms

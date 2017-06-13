@@ -32,6 +32,7 @@
           </thead>
           <tbody>
           <% @boards.each do |board|%>
+            <% if board.instance_of?(Spree::Board) %>
               <tr id="<%= board.id %>" class="<%= !board.generated ? 'generating' : '' %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
@@ -67,6 +68,23 @@
 
 
               </tr>
+            <% else %>
+              <tr>
+                <td class="status"><span class="label label-published">Published</span></td>
+                <td class="board-thumb">
+                  <%= image_tag board.portfolio_image.url, class: 'img-responsive' %>
+                </td>
+                <td class="board-title">
+                  <%= board.name %>
+                  <div class="board-actions">
+                    <%= link_to "View", show_portfolio_path(board), :class => "btn btn-default btn-sm"%>
+                  </div>
+                </td>
+                <td class="stat align-center"><%= board.variants.size %></td>
+                <td class="stat align-center"><%= board.impressionist_count %></td>
+                <td class="stat align-center"><%= board.portfolio_commission.to_s %></td>
+              </tr>
+            <% end %>
           <% end%>
           </tbody>
         </table>

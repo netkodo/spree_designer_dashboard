@@ -137,8 +137,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
-    @boards = spree_current_user.boards.where(removal: false)
-    end
+    @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by{|x| x.created_at}
+  end
 
   def profile
     @user = spree_current_user
@@ -270,7 +270,7 @@ class Spree::BoardsController < Spree::StoreController
     @portfolio = Spree::Portfolio.find(params[:id])
     @same_room_images = @portfolio.room.portfolios.select{|x| x.id != @portfolio.id}
     @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?",@portfolio.room_type,@portfolio.style,@portfolio.wall_color).order("RAND()").limit(4)
-    # impressionist(@portfolio)
+    impressionist(@portfolio)
   end
 
   def preview
