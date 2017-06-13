@@ -137,7 +137,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
-    @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by{|x| x.created_at}
+    @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
   end
 
   def profile

@@ -77,7 +77,8 @@
                 <td class="board-title">
                   <%= board.name %>
                   <div class="board-actions">
-                    <%= link_to "View", show_portfolio_path(board), :class => "btn btn-default btn-sm"%>
+                    <%= link_to "View Public Page", show_portfolio_path(board), :class => "btn btn-default btn-sm"%>
+                    <%#= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id} %>
                   </div>
                 </td>
                 <td class="stat align-center"><%= board.variants.size %></td>
