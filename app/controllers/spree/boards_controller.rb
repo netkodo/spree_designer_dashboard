@@ -547,7 +547,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
-    except = spree_current_user.portfolios.select{|x| x.variants.exists? and x.board.present? and x.board.status="published"}.map(&:id)
+    except = spree_current_user.portfolios.select{|x| x.variants.exists? or (x.board.present? and x.board.status="published")}.map(&:id)
     @portfolios = spree_current_user.portfolios.where.not(id: except)
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 
