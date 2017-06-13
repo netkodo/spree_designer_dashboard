@@ -30,6 +30,10 @@
                   <%= label_tag :designer_sign %>
                   <%= text_field_tag :signature_designer_code,"",name: "contract[signature_designer_code]", class: 'form-control hidden' %>
                   <div id="signature-designer" class="signature"></div>
+                  <div class="text-right signature-client-buttons">
+                    <div class="signature-designer-clear btn btn-primary">Clear</div>
+                    <%= f.button "Sign", type: :submit, class: "btn btn-primary" %>
+                  </div>
                 </div>
               <% end %>
             </div>
@@ -50,18 +54,18 @@
             </div>
 
 
-            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
-              <% if @contract.client_signed %>
-                <div class="signature-designer-clear btn btn-primary">Clear</div>
-              <% end %>
-              <%= link_to "Back",edit_project_path(@contract.project), class: "btn btn-default" %>
-              <% if @contract.client_signed %>
-                <%= f.button "Sign", type: :submit, class: "btn btn-primary" %>
-              <% else %>
+            <!--<div class="col-md-12 col-sm-12 col-xs-12 text-right">-->
+              <%# if @contract.client_signed %>
+                <!--<div class="signature-designer-clear btn btn-primary">Clear</div>-->
+              <%# end %>
+              <%#= link_to "Back",edit_project_path(@contract.project), class: "btn btn-default" %>
+              <%# if @contract.client_signed %>
+                <%#= f.button "Sign", type: :submit, class: "btn btn-primary" %>
+              <%# else %>
                 <%#= f.button "Save", type: :submit, class: "btn btn-primary", value: false %>
                 <%#= f.button "Save & Send", type: :submit, class: "btn btn-primary", value: true %>
-              <% end %>
-            </div>
+              <%# end %>
+            <!--</div>-->
         <% end %>
       </div>
     </div>

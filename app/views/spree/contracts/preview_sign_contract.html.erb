@@ -31,14 +31,18 @@
               <%= label_tag :client_sign %>
               <%= text_field_tag :signature_client_code,"", name: "contract[signature_client_code]", class: 'form-control hidden' %>
               <div id="signature-client" class="signature"></div>
+              <div class="text-right signature-client-buttons">
+                <div class="signature-client-clear btn btn-primary">Clear</div>
+                <%= f.submit "Sign", class: "btn btn-primary" %>
+              </div>
             </div>
           </div>
 
 
-          <div class="col-md-12 col-sm-12 col-xs-12 text-right">
-            <div class="signature-client-clear btn btn-primary">Clear</div>
-            <%= f.submit "Sign", class: "btn btn-primary" %>
-          </div>
+          <!--<div class="col-md-12 col-sm-12 col-xs-12 text-right" style="width: 340px;">-->
+            <!--<div class="signature-client-clear btn btn-primary">Clear</div>-->
+            <%#= f.submit "Sign", class: "btn btn-primary" %>
+          <!--</div>-->
         <% end %>
       </div>
     </div>
