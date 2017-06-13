@@ -25,7 +25,7 @@
                 <div class="col-md-6 data">
                   <p>
                     <%= @project.project_name %><br>
-                    <%= @project.description.truncate(100) if @project.description.present? %><br><br>
+                    <%= @project.description.truncate(21) if @project.description.present? %><br><br>
                     <%= @project.address1 %>, <%= @project.address2 %><br>
                     <%= @project.city %>, <%= @project.state %>, <%= @project.zip_code %>
                   </p>
