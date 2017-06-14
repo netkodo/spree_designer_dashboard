@@ -4,6 +4,9 @@
 </div>
 
 <div class="row">
+  <div class="col-md-12 text-center">
+    <a class="btn btn-primary btn-custom-large js-jump-to-designer-form">join now</a>
+  </div>
   <div class="col-md-12 all-access">
     <p class="header">let us be your virtual assistant</p>
     The business side of interior design can be tedious and time-consuming.<br>
@@ -102,5 +105,34 @@
     program or contact us at<br>
     designer@scoutandnimble.com to learn more.<br>
     Reference All-Access Inquiry.
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 text-center">
+    <a class="btn btn-primary btn-custom-large js-jump-to-designer-form">join now</a>
+  </div>
+</div>
+
+<div class="row mtl" id="designer-form">
+  <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+    <div class="login-box">
+      <div class="login-header">
+        <h6>Designer Registration</h6>
+      </div>
+      <div class="login-content">
+
+        <% if spree_current_user %>
+            <h4>Step 2 of 2: Complete designer application</h4>
+            <%= render :partial => "form" %>
+        <% else %>
+            <h4>Step 1 of 2: Create your All-Access Account</h4>
+            <p>Please enter the information below to create your account.</p>
+            <%= render :partial => "login_form" %>
+
+        <% end %>
+      </div>
+    </div>
+
   </div>
 </div>
