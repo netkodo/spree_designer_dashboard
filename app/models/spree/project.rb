@@ -29,6 +29,10 @@ class Spree::Project < ActiveRecord::Base
           'Monthly'
         when 'at_completion'
           'Bill At Project Completion'
+        when 'bi_monthly'
+          'Bi-Monthly'
+        when 'quarterly'
+          'Quarterly'
         else
           'ERROR'
       end

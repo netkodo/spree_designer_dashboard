@@ -30,6 +30,8 @@
             ['WEEKLY','weekly'],
             ['BI-WEEKLY','bi_weekly'],
             ['MONTHLY','monthly'],
+            ['BI-MONTHLY','bi_monthly'],
+            ['QUARTERLY','quarterly'],
             ['AT PROJECT COMPLETION','at_completion'],
         ]
         select = tab.include?(@project.rate_type) ? hourly : flat
