@@ -67,7 +67,9 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   end
 
   def all_access_designer
-
+    @user = Spree::User.new
+    @designer_registration = Spree::DesignerRegistration.new
+    @designer_registration.user = @user
   end
 
   private
