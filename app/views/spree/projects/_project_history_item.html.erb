@@ -19,18 +19,18 @@
         </div>
 
     <% elsif ph.action == "invoice_sent" %>
-      <%= link_to ph.pdf.url do %>
+      <%= link_to ph.pdf.url, target: "_blank" do %>
         <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
       <% end %>
         <div class="ph-pdf-actions">
-          <%= link_to  send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "top"}, title: "Resend invoice" do %>
-              <i class="fa fa-envelope-o" aria-hidden="true"></i>
-          <% end %>
+          <%#= link_to  send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "top"}, title: "Resend invoice" do %>
+              <!--<i class="fa fa-envelope-o" aria-hidden="true"></i>-->
+          <%# end %>
         </div>
 
     <% elsif ph.action == "invoice_ready" %>
       <% if ph.pdf.present? %>
-        <%= link_to ph.pdf.url do %>
+        <%= link_to ph.pdf.url, target: "_blank" do %>
           <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
         <% end %>
         <div class="ph-pdf-actions">
@@ -50,7 +50,7 @@
 
     <% else %>
       <% if ph.pdf.present? %>
-        <%= link_to ph.pdf.url do %>
+        <%= link_to ph.pdf.url, target: "_blank" do %>
           <i class="fa fa-2x fa-file-pdf-o pull-left" aria-hidden="true"></i>
         <% end %>
       <% end %>
