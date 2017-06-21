@@ -57,7 +57,7 @@
                           <%= link_to "Preview", preview_board_path(board), :class => "btn btn-default btn-sm"%>
                       <% elsif board.state == "published" %>
                           <%= link_to "View Public Page", room_path(board), :class => "btn btn-default btn-sm"%>
-                          <%= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id} %>
+                          <%= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id, :portfolio => false} %>
                       <% end %>
                     <% end %>
                   </div>
@@ -78,7 +78,7 @@
                   <%= board.name %>
                   <div class="board-actions">
                     <%= link_to "View Public Page", show_portfolio_path(board), :class => "btn btn-default btn-sm"%>
-                    <%#= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id} %>
+                    <%= link_to "Widget", "#", :class => "btn btn-default btn-sm widget-link", data: {container: "body", toggle: "popover", placement: "bottom", :'room-id' => board.id, :portfolio => true} %>
                   </div>
                 </td>
                 <td class="stat align-center"><%= board.variants.size %></td>
