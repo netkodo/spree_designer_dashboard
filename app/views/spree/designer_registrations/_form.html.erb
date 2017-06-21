@@ -103,7 +103,7 @@
     <div class="row">
       <div class="col-lg-12">
         <%= f.label :applied_for, "Select a program" %>
-        <%= f.select :applied_for, [['Room Designer','room designer'],['Trade Program','trade program']], :class => 'field' %>
+        <%= f.select :applied_for, [['Room Designer','room designer'],['Trade Program','trade program'],['All Access','all access']], selected: cookies[:designer_registration], :class => 'field' %>
         <%= f.error_message_on :applied_for %>
       </div>
     </div>
