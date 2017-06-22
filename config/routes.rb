@@ -68,10 +68,12 @@ Spree::Core::Engine.routes.draw do
         member do
           post :send_invoice
           get :edit_ready_invoice, defaults: {format: 'html'}
+          get :edit_custom_invoice, defaults: {format: 'html'}
         end
       end
       resources :project_invoice_lines, param: :iid do
         collection do
+          get :custom_invoice
           post :update_invoice
           get :edit_invoice
           post :generate_invoice_manually, defaults: {format: 'json'}
