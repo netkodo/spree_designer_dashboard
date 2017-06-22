@@ -55,15 +55,15 @@
             <% end %>
         <% end %>
         <div class="ph-pdf-actions">
-          <%= link_to send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "top"}, title: "Send invoice" do %>
+          <%= link_to send_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: 'js-send-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "#{index!=1 ? 'top' : 'left'}"}, title: "Send invoice" do %>
               <i class="fa fa-envelope-o" aria-hidden="true"></i>
           <% end %>
           /
-          <%= link_to edit_custom_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: "invoice-tooltip", data: {toggle:"tooltip", placement: "top"}, title: "Edit invoice" do %>
+          <%= link_to edit_custom_invoice_project_history_path(id: ph.project_id, ph: ph.id), class: "invoice-tooltip", data: {toggle:"tooltip", placement: "#{index!=1 ? 'top' : 'left'}"}, title: "Edit invoice" do %>
               <i class="fa fa-edit" aria-hidden="true"></i>
           <% end %>
           /
-          <%= link_to project_history_path(id: ph.project_id, ph: ph.id), class: 'js-remove-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "top"}, title: "Remove invoice" do %>
+          <%= link_to project_history_path(id: ph.project_id, ph: ph.id), class: 'js-remove-project-history invoice-tooltip', data: {toggle:"tooltip", placement: "#{index!=1 ? 'top' : 'left'}"}, title: "Remove invoice" do %>
               <i class="fa fa-trash" aria-hidden="true"></i>
           <% end %>
         </div>

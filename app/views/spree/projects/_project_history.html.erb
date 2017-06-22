@@ -13,8 +13,8 @@
   </div>
   <div class="project-history-group">
     <% if @project_history.present? %>
-      <% @project_history.each do |ph| %>
-          <%= render partial: 'project_history_item', locals: {ph: ph} %>
+      <% @project_history.each_with_index do |ph,index| %>
+          <%= render partial: 'project_history_item', locals: {ph: ph, index: index+1} %>
       <% end %>
     <% end %>
   </div>
