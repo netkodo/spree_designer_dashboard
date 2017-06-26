@@ -110,4 +110,40 @@ class Spree::BoardProduct < ActiveRecord::Base
     [your_cost, customer_cost]
   end
 
+  def tear_sheet_images
+    if self.product_id.present? and !self.custom_item_id.present?
+      self.product.images.map{|x| x.attachment.url}
+    elsif !self.product_id.present? and self.custom_item_id.present?
+       [custom_item.image.url]
+    else
+      []
+     end
+  end
+
+  def tear_sheet_data(col)
+    if self.product_id.present? and !self.custom_item_id.present?
+      self.product.send(col)
+    elsif !self.product_id.present? and self.custom_item_id.present?
+      self.custom_item.send(col)
+    else
+      ""
+    end
+  end
+
+  def tear_sheet_properties
+    product.product_properties.select{|p| p.value.present?}.map{|x| [x.property.name.gsub('_',' ').camelize, x.value]}
+  end
+
+  def tear_sheet_dimensions(variant)
+    tab = []
+    if variant.present? and ( variant.height or variant.width or variant.depth or variant.length)
+      ["width", "height", "depth", "length"].each do |dim|
+        if variant.send(dim)
+          tab << [dim.camelize,variant.send(dim)]
+        end
+      end
+    end
+    tab
+  end
+
 end

@@ -83,7 +83,7 @@ class Spree::BoardsController < Spree::StoreController
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
 
-    tmp_boards = Spree::Board.published().order("created_at desc")
+    tmp_boards = Spree::Board.published().public.order("created_at desc")
     if session[:hash_board_id].present? and session[:remember_product_page].present?
       @jump_to_board_id = session[:hash_board_id]
       @new_next_page = session[:remember_product_page].to_i + 1

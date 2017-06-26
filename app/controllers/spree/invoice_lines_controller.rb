@@ -58,7 +58,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
     content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
 
-    pdf = WickedPdf.new.pdf_from_string(content)
+    pdf = WickedPdf.new.pdf_from_string(content,{margin: {top:10,bottom:10,left:0,right:0}})
     save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
     File.open(save_path, 'wb') do |file|
       file << pdf
@@ -68,8 +68,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
     respond_to do |format|
       if Spree::Mailers::ContractMailer.invoice(designer.email,designer,save_path).deliver
-        # Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
-        Spree::ProjectHistory.manage_contract_state(board.project,"invoice_sent",pdf_file)
+        Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
         Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
         File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {:message => "ok"}, status: :ok}

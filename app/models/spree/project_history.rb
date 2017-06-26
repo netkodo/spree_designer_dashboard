@@ -25,6 +25,10 @@ class Spree::ProjectHistory < ActiveRecord::Base
         2.weeks
       when "monthly"
         1.month
+      when 'bi_monthly'
+        2.months
+      when 'quarterly'
+        3.months
       else
         0
     end
