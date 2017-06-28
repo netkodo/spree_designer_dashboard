@@ -245,6 +245,20 @@ class Spree::PortfoliosController < Spree::StoreController
 
     respond_to do |format|
       if @portfolio.update(x)
+
+        tagged_ids = params[:variants_tagged].split(",").uniq.map{|x| x.to_i}
+        current_ids = @portfolio.portfolio_variant_associations.pluck(:variant_id).map{|v| v.to_i}
+        remove_ids = current_ids.dup
+
+        tagged_ids.each do |id|
+          remove_ids.delete(id) if current_ids.include?(id)
+        end
+        @portfolio.portfolio_variant_associations.where(variant_id: remove_ids).destroy_all
+
+        tagged_ids.each do |id|
+          @portfolio.portfolio_variant_associations.create(variant_id: id) unless current_ids.include?(id)
+        end
+
         if @portfolio.board.present?
           board = @portfolio.board
           board.update(room_id: params[:portfolio][:room_type],style_id: params[:portfolio][:style])
@@ -283,6 +297,20 @@ class Spree::PortfoliosController < Spree::StoreController
 
     respond_to do |format|
       if @portfolio.save
+
+        tagged_ids = params[:variants_tagged].split(",").uniq.map{|x| x.to_i}
+        current_ids = @portfolio.portfolio_variant_associations.pluck(:variant_id).map{|v| v.to_i}
+        remove_ids = current_ids.dup
+
+        tagged_ids.each do |id|
+          remove_ids.delete(id) if current_ids.include?(id)
+        end
+        @portfolio.portfolio_variant_associations.where(variant_id: remove_ids).destroy_all
+
+        tagged_ids.each do |id|
+          @portfolio.portfolio_variant_associations.create(variant_id: id) unless current_ids.include?(id)
+        end
+
         spree_current_user.user_ac_event_add("first_portfolio_added") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_portfolio_added
         spree_current_user.update_column(:popup_portfolio, false) if spree_current_user.popup_portfolio
         session[:popup_room] = true if spree_current_user.popup_room

@@ -122,6 +122,24 @@
       </div>
     <div class="col-md-5">
       <img id="img_prev" src="<%= @portfolio.portfolio_image.url if @portfolio.portfolio_image.present? %>" alt="" class="img-responsive"/>
+      <div class="text-center img_prev_default" style="<%= 'display: none;' if @portfolio.portfolio_image.present? %>">
+        <i class="fa fa-picture-o fa-large-img" aria-hidden="true"></i>
+      </div>
+      <div class="tag-label">Tag products in this image to earn income</div>
+      <%= render :partial => "spree/admin/variants/autocomplete", :formats => :js %>
+      <div class="row">
+        <div class="col-md-12">
+          <%= text_field_tag :variants_tagged,"", class: "width100 hidden" %>
+          <%= text_field_tag :variant,"", class: "variant_autocomplete_association width100" %>
+        </div>
+      </div>
+      <div id="tagged_variants" class="row">
+        <% if @portfolio.variants.exists? %>
+            <% @portfolio.variants.each do |v| %>
+                <%= render partial: "tagged_variant", locals: {variant: v} %>
+            <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 
