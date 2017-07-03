@@ -68,9 +68,13 @@
   hideNotSelectedProjects(el.data('private'),$("#project_select").val())
   $(".btn-tab.js-get-room-type").removeClass('active')
   el.addClass('active')
-  $('#project_select').val("")
-  $(".project-managment").addClass('hidden')
-  $('#h1_project_name').html("")
+  if $.cookie('active_project_id') != undefined
+    selected = $('#project_select').val($.cookie('active_project_id'))
+    globalChange(selected)
+  else
+    $('#project_select').val("")
+    $(".project-managment").addClass('hidden')
+    $('#h1_project_name').html("")
 
 $ ->
   $(".invoice-tooltip").tooltip()
@@ -335,6 +339,7 @@ $ ->
             console.log response.message
       else
         globalChange( $(@) )
+        $.cookie('active_project_id',$(@).val())
   ,'#project_select'
 
   $(document).on
