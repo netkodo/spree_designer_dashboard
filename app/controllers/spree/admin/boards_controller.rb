@@ -265,12 +265,41 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
 
    logger.info sending   
  end
- 
+
+  def portfolios
+    @portfolios = Spree::Portfolio.includes(user: :designer_registrations).order("created_at desc").page(params[:page] || 1).per(params[:per_page] || 20)
+  end
+
+  def portfolio_visibility
+    portfolio = Spree::Portfolio.find(params[:id])
+    respond_to do |format|
+      if portfolio.present? and portfolio.update_column(:show, to_bool(params[:visible]))
+        format.json {render json: {message: 'updated'}, status: :ok}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def destroy_portfolio
+    portfolio = Spree::Portfolio.find(params[:id])
+    respond_to do |format|
+      if portfolio.present? and portfolio.destroy
+        format.json {render json: {message: 'removed'}, status: :ok}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
  
  private
   def board_params
     params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline, :promotion_rule_ids => [])
     
+  end
+
+  def to_bool(str)
+    str=='true' ? true : false
   end
   
  
