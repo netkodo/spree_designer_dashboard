@@ -162,6 +162,7 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   
   def approve
     @board  = Spree::Board.friendly.find_by id: params[:board][:id]
+    @board.try(:update_column,:schedule, params[:schedule]) if params[:schedule].present?
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.publish
     @board.send_email_according_to_board("Hi #{@board.designer.full_name}, <br />Your room <strong>#{@board.name}</strong> has been approved and published.  You can <a href=\"#{@board.to_url}\">visit your room here</a> to check it out.","Your room has been approved!","Scout & Nimble",params[:board][:state_message],"simple-template") if params[:board][:send_message] == "on"
@@ -192,6 +193,7 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   
   def approval_form
     @board  = Spree::Board.find_by id: params[:id]
+    @schedule = params[:schedule]
     respond_to do |format|
       format.js {  }
     end
