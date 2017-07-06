@@ -15,14 +15,14 @@
           <div class="col-xs-12">
             <span class="designer-name"><%= board.designer.full_name %></span><br>
             <span class="designer-address">
-        <%= board.designer.designer_registrations.first.address1 %><br>
-              <%= board.designer.designer_registrations.first.address2 %><br>
+        <%= designer.address1 %><br>
+              <%= designer.address2 %><br>
 
-              <%= board.designer.designer_registrations.first.city %>,
-              <%= board.designer.designer_registrations.first.state %>,
-              <%= board.designer.designer_registrations.first.postal_code %><br>
+              <%= designer.city %>,
+              <%= designer.state %>,
+              <%= designer.postal_code %><br>
 
-        Phone: <%= board.designer.designer_registrations.first.phone %>
+        Phone: <%= designer.phone %>
       </span>
           </div>
         </div>
@@ -68,7 +68,7 @@
           DESIGNER NOTES
         </div>
         <div class="col-xs-12 text-center">
-          <%= board.project.description %>
+          <%= project.description %>
         </div>
       </div>
 
@@ -137,15 +137,15 @@
       <div class="row pdf-big-margin">
         <div class="col-xs-3">
           <div class="pdf-big-margin">
-            <h1><%= designer.company_name %></h1>
-            <%= designer.company_name %><br>
-            <%= designer.location %><br>
+            <h1><%= user.company_name %></h1>
+            <%= user.company_name %><br>
+            <%= user.location %><br>
           </div>
 
           <div class="pdf-small-margin">
             email: <br>
-            <%= designer.email %><br>
-            <%= designer.website_url.match('www') ? designer.website_url : "www.#{designer.website_url}" %>
+            <%= user.email %><br>
+            <%= user.website_url.match('www') ? user.website_url : "www.#{user.website_url}" %>
           </div>
         </div>
         <div class="col-xs-9">
@@ -265,6 +265,163 @@
 
         </div>
       </div>
+
+      <div style="page-break-before: always;"></div>
+
+      <div class="row">
+        <div class="container">
+
+          <div class="row">
+            <div class="col-xs-4">
+              <% if user.logo_image.present? %>
+                  <%= image_tag user.logo_image.attachment.url %>
+              <% end %>
+            </div>
+            <div class="col-xs-4">
+              <%= user.company_name %><br>
+              <%= designer.address1 %><br>
+              <%= designer.address2 %><br>
+              <%= designer.phone %>
+            </div>
+
+            <div class="col-xs-4">
+              <h1 class="invoice-bg-color">INVOICE</h1>
+              <div class="col-xs-6 text-left">
+                INVOICE
+              </div>
+              <div class="col-xs-6 text-right">
+                [<%= rand(100000) %>]
+              </div>
+              <div class="col-xs-6 text-left">
+                DATE
+              </div>
+              <div class="col-xs-6 text-right">
+                [<%= Date.today %>]
+              </div>
+            </div>
+          </div>
+
+          <!--<div class="row invoice-mb invoice-mt">-->
+            <!--<div class="col-xs-4 invoice-center">-->
+              <!--Invoice-->
+            <!--</div>-->
+            <!--<div class="col-xs-8">-->
+              <!--<table class="invoice-table">-->
+                <!--<colgroup>-->
+                  <!--<col style="width: 33%;">-->
+                  <!--<col style="width: 33%;">-->
+                  <!--<col style="width: 33%;">-->
+                <!--</colgroup>-->
+                <!--<thead>-->
+                <!--<th>Number</th>-->
+                <!--<th>Date</th>-->
+                <!--<th>PO</th>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr>-->
+                  <!--<td>-->
+                    <!--1234567-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<%#= Date.today %>-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--1-->
+                  <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+              <!--</table>-->
+            <!--</div>-->
+          <!--</div>-->
+
+          <div class="row invoice-mb">
+            <div class="col-xs-4 invoice-client">
+              Client
+            </div>
+            <div class="col-xs-8">
+              <%= project.project_name %><br>
+              <%= project.address1 %><br>
+              <%= project.address2 %><br>
+              <%= project.phone %>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row invoice-mt">
+          <div class="container">
+
+            <table class="invoice-tear-sheet">
+              <col style="width: 5%;">
+              <col style="width: 20%;">
+              <col style="width: 35%;">
+              <col style="width: 5%;">
+              <col style="width: 15%;">
+              <col style="width: 15%;">
+              <col style="width: 5%;">
+              <thead>
+              <th class="blank"></th>
+              <th>SKU</th>
+              <th>NAME</th>
+              <th>QTY</th>
+              <th>PRICE</th>
+              <th>TOTAL</th>
+              <th class="blank"></th>
+              </thead>
+              <tbody>
+              <tr class="space">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <% board_products.each do |bp| %>
+                  <tr>
+                    <td></td>
+                    <td><%= bp.get_item_data('sku') %></td>
+                    <td><%= bp.get_item_data('name') %></td>
+                    <td>1</td>
+                    <td><%= bp.get_item_data('cost') %></td>
+                    <td class="total"><%= bp.get_item_data('cost') %></td>
+                    <td></td>
+                  </tr>
+              <% end %>
+
+              <tr class="space-large">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td colspan="3">
+                  <span class="payment-info">Remit payment to <%= user.company_name %></span>
+                </td>
+                <td colspan="2" class="project-sumarize">
+                  <span class="l">TOTAL</span>
+                  <span class="r">$<%= total %></span>
+                </td>
+                <td></td>
+              </tr>
+
+              </tbody>
+
+            </table>
+
+        </div>
+        </div>
+      </div>
+
+
     </div>
   </body>
 </html>

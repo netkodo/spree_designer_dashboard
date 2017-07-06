@@ -49,14 +49,17 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
   def send_invoice_email
     board = Spree::Board.find(params[:id])
-    designer = board.designer
+    project = board.project
+    user = board.designer
+    designer = user.designer_registrations.first
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
     subtotal = Spree::BoardProduct.sum_items(board_products)
     total = Spree::BoardProduct.sum_items(board_products)
 
-    taxcloud=board.calculate_tax
-
-    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total+taxcloud.tax_amount})
+    # taxcloud=board.calculate_tax
+    taxcloud = 0
+    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project})
+    #+taxcloud.tax_amount
 
     pdf = WickedPdf.new.pdf_from_string(content,{margin: {top:10,bottom:10,left:0,right:0}})
     save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
@@ -67,9 +70,9 @@ class Spree::InvoiceLinesController < Spree::StoreController
     pdf_file = File.open(save_path,"r")
 
     respond_to do |format|
-      if Spree::Mailers::ContractMailer.invoice(designer.email,designer,save_path).deliver
+      if Spree::Mailers::ContractMailer.invoice(user.email,user,save_path).deliver
         Spree::ProjectHistory.create(action: "invoice_sent",project_id: board.project.id, pdf: pdf_file)
-        Spree::BoardHistory.create(user_id: designer.id, board_id: board.id, action: "invoice_email")
+        Spree::BoardHistory.create(user_id: user.id, board_id: board.id, action: "invoice_email")
         File.delete(save_path) if File.exist?(save_path)
         format.json {render json: {:message => "ok"}, status: :ok}
       else
@@ -80,7 +83,7 @@ class Spree::InvoiceLinesController < Spree::StoreController
   end
 
   def show_invoice_email
-    board = Spree::Board.find(138)
+    board = Spree::Board.last
     designer = board.designer
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
     subtotal = Spree::BoardProduct.sum_items(board_products)
