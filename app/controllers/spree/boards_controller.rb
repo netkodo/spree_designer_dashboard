@@ -294,13 +294,20 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def new
-    project_id = nil || params[:project_id]
-    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private],project_id: project_id)
-    @board.designer = spree_current_user
-    if @board.save!
-      Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
-      redirect_to design_board_path(@board)
+    date = DateTime.now
+    if spree_current_user.boards.where("created_at BETWEEN ? AND ?",date.beginning_of_month,date.end_of_month).count < Spree::Config[:room_creation_limit]
+      project_id = nil || params[:project_id]
+      @board = Spree::Board.new(:name => "Untitled Room",private: params[:private],project_id: project_id)
+      @board.designer = spree_current_user
+      if @board.save!
+        Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
+        redirect_to design_board_path(@board)
+      end
+    else
+      flash[:notice] = "You have reached maximum amount of created rooms for current month"
+      redirect_to designer_dashboard_path
     end
+
     #@colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
 
     #1.upto(5) do |n|
