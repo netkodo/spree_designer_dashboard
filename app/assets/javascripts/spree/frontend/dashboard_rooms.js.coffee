@@ -508,6 +508,8 @@ $ ->
           <option value="weekly" class="option-color">WEEKLY</option>
           <option value="bi_weekly" class="option-color">BI-WEEKLY</option>
           <option value="monthly" class="option-color">MONTHLY</option>
+          <option value="bi_monthly" class="option-color">BI-MONTHLY</option>
+          <option value="quarterly" class="option-color">QUARTERLY</option>
           <option value="at_completion" class="option-color">AT PROJECT COMPLETION</option>
         ')
       else
