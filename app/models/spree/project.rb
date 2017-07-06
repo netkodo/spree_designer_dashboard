@@ -75,6 +75,10 @@ class Spree::Project < ActiveRecord::Base
     self.rate_type == 'flat_rate_percentage' ? self.rate.to_i : self.rate
   end
 
+  def flat_percentage?
+    self.rate_type == 'flat_rate_percentage' ? true : false
+  end
+
   def charge_on_statement
     case self.charge_on
       when "all_products"
