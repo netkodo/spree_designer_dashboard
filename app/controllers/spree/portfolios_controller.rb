@@ -72,7 +72,7 @@ class Spree::PortfoliosController < Spree::StoreController
       @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(obj,2)
     else
-      tmp_portfolios = Spree::Portfolio.all.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
+      tmp_portfolios = Spree::Portfolio.visible.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       if params[:page].present? and params[:page].to_i > 1
         @obj = []
         (1..params[:page].to_i).each do |page|
@@ -103,7 +103,7 @@ class Spree::PortfoliosController < Spree::StoreController
 
       params[:filter][:wall_color].present? ? wall_s = ".includes(:board => :colors).where(\"wall_color IN (?) OR spree_colors.color_family IN (?)\",#{params[:filter][:wall_color]},#{params[:filter][:wall_color]})" : nil
       params[:filter][:tags].present? ? tag_s = ".select{|s| s.check_tags(#{params[:filter][:tags]})}" : nil
-      tab.join(',').present? ? statement = "Spree::Portfolio#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
+      tab.join(',').present? ? statement = "Spree::Portfolio.visible#{wall_s}.where(#{tab.join(',')})#{tag_s}" : statement = "Spree::Portfolio#{wall_s}#{tag_s}"
 
       tmp_portfolios = eval(statement)#.order('spree_portfolios.board_id IS NULL, spree_portfolios.created_at DESC')
       @portfolios = Kaminari.paginate_array(tmp_portfolios).page(params[:page]).per(60)
@@ -125,7 +125,7 @@ class Spree::PortfoliosController < Spree::StoreController
       designers = tmp_portfolios.map {|d| [d.user.full_name,d.user.id]}
       tags = Spree::Portfolio.get_filter_tags(tmp_portfolios)
     else
-      tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
+      tmp_portfolios = Spree::Portfolio.visible.order('board_id IS NULL, created_at DESC')
       @portfolios = tmp_portfolios.page(params[:page]).per(60)
       # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
       # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}
