@@ -7,7 +7,7 @@ class Spree::PortfoliosController < Spree::StoreController
     @room_style = Hash.new(0)
     @tags = Hash.new(0)
 
-    tmp_portfolios = Spree::Portfolio.all.order('board_id IS NULL, created_at DESC')
+    tmp_portfolios = Spree::Portfolio.visible.order('board_id IS NULL, created_at DESC')
     @portfolios = tmp_portfolios.page(params[:page]).per(60)
     # params[:cols].to_i > 768 ? @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,3) : @portfolios_ordering = Spree::Portfolio.portfolios_ordering(@portfolios,2)
     # colors = tmp_portfolios.map { |c| [c.wall_color,c.wall_color]}

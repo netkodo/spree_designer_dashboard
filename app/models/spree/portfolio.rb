@@ -10,6 +10,8 @@ class Spree::Portfolio < ActiveRecord::Base
 
   before_destroy :check_rooms
 
+  scope :visible, -> { where(show: true) }
+
   validates :name, presence: true
 
   has_attached_file :portfolio_image,
