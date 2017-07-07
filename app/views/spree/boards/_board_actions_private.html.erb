@@ -1,4 +1,4 @@
-<%= link_to "Preview Tear Sheet", preview_board_path(board), :class => "btn btn-default btn-sm"%>
+<%= link_to "Preview Tear Sheet", tear_sheet_path(board), :class => "btn btn-default btn-sm", target: "_blank" %>
 <%= link_to "Edit Room", design_board_path(board), :class => "btn btn-default btn-sm"%>
 <div class="btn btn-default btn-sm js-private-invoice">Edit Invoice</div>
 <% if board.project.present? %><div class="btn btn-default btn-sm js-private-email">Send to Client</div><% end %>
