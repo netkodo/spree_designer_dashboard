@@ -29,7 +29,7 @@
 							Status: <%= @board.human_state_name %>
 						</div>
             <div class="col-md-3 center">
-              <%= text_field_tag :schedule, @board.schedule, class: "form-control datepicker" %>
+              <%= text_field_tag :schedule, @board.schedule, class: "form-control datepicker", placeholder: "SCHEDULE" %>
             </div>
 						<div class="col-md-6" style="text-align: right;">
 							<%= link_to "Approve and Publish", "javascript:void(0);", :class => "js-btn-board-approve btn btn-sm btn-success", :"data-board-id" => @board.id %>
