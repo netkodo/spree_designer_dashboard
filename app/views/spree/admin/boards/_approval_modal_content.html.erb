@@ -4,6 +4,7 @@
 </div>
 <%= form_for(board, :url => "/admin/boards/approve", method: "post", :remote => true) do |f| %>
 	<%= f.hidden_field :id %>
+  <%= hidden_field_tag :schedule, @schedule %>
 	<div class="modal-body">
 		<% if !board.board_products.marked_for_removal.blank? %>
 			<h4>The following products will be removed upon approval</h4>
