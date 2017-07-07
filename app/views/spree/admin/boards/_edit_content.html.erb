@@ -25,9 +25,12 @@
 			<div class="col-md-7">
 				<div class="board-actions clearfix">
 					<div class="row" style="margin-bottom: 0;">
-						<div class="col-md-6">
+						<div class="col-md-3">
 							Status: <%= @board.human_state_name %>
 						</div>
+            <div class="col-md-3">
+              <%= text_field_tag :schedule, @board.schedule, class: "form-control datepicker", placeholder: "SCHEDULE" %>
+            </div>
 						<div class="col-md-6" style="text-align: right;">
 							<%= link_to "Approve and Publish", "javascript:void(0);", :class => "js-btn-board-approve btn btn-sm btn-success", :"data-board-id" => @board.id %>
 							<%= link_to "Request Revisions", "javascript:void(0);", :class => "js-btn-board-revise btn btn-sm btn-default", :"data-board-id" => @board.id %>
@@ -71,12 +74,13 @@
 
 	<script>
 	$('.js-btn-board-approve').click(function() {
-		var board_id = $(this).data('boardId')
+		var board_id = $(this).data('boardId');
+		var schedule = $("#schedule").val();
 		$('#board_modal').modal('show');
 		$('#board_modal_content').html('<div style="padding: 20px;">loading...</div>');
 		$.ajax({
 			type: "GET",
-			url: "/admin/boards/approval_form.js?id="+board_id,
+			url: "/admin/boards/approval_form.js?id="+board_id+"&schedule="+schedule,
 			contentType: "application/json"
 		}).done(function(data){
 			console.log(data);

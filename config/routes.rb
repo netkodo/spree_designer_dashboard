@@ -193,6 +193,9 @@ Spree::Core::Engine.routes.draw do
 
     get  "boards/list" => "boards#list", :as => :boards_list
     match  "boards/products(/:status)" => "boards#products", :as => :boards_products, :via =>[:get, :post]
+    get "portfolios" => "boards#portfolios", as: :portfolios
+    post 'portolio_visibility' => "boards#portfolio_visibility", as: :portfolio_visibility, defaults: {format: :json}
+    delete 'destroy_portfolio/:id' => "boards#destroy_portfolio", as: :destroy_portfolio, defaults: {format: :json}
     resources :boards
     resources :board_products
     resources :designer_registrations

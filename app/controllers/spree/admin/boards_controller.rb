@@ -162,6 +162,7 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   
   def approve
     @board  = Spree::Board.friendly.find_by id: params[:board][:id]
+    @board.try(:update_column,:schedule, params[:schedule]) if params[:schedule].present?
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.publish
     @board.send_email_according_to_board("Hi #{@board.designer.full_name}, <br />Your room <strong>#{@board.name}</strong> has been approved and published.  You can <a href=\"#{@board.to_url}\">visit your room here</a> to check it out.","Your room has been approved!","Scout & Nimble",params[:board][:state_message],"simple-template") if params[:board][:send_message] == "on"
@@ -192,6 +193,7 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   
   def approval_form
     @board  = Spree::Board.find_by id: params[:id]
+    @schedule = params[:schedule]
     respond_to do |format|
       format.js {  }
     end
@@ -265,12 +267,42 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
 
    logger.info sending   
  end
+
+  def portfolios
+    @portfolios = Spree::Portfolio.includes(user: :designer_registrations).order("created_at desc").page(params[:page] || 1).per(params[:per_page] || 20)
+  end
+
+  def portfolio_visibility
+    portfolio = Spree::Portfolio.find(params[:id])
+    respond_to do |format|
+      if portfolio.present? and portfolio.update_column(:show, to_bool(params[:visible]))
+        format.json {render json: {message: 'updated'}, status: :ok}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def destroy_portfolio
+    portfolio = Spree::Portfolio.find(params[:id])
+    respond_to do |format|
+      if portfolio.present? and portfolio.destroy
+        format.json {render json: {message: 'removed'}, status: :ok}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
  
  
  private
   def board_params
     params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline, :promotion_rule_ids => [])
     
+  end
+
+  def to_bool(str)
+    str=='true' ? true : false
   end
   
  

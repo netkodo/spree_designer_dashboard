@@ -221,7 +221,7 @@ class Spree::Board < ActiveRecord::Base
   end
 
   def self.published
-    where(:status => ["published"])
+    where(:status => ["published"]).where("(schedule IS NOT ? AND schedule <= ?) OR schedule IS ?",nil,Date.today,nil)
   end
 
   def display_short_status
