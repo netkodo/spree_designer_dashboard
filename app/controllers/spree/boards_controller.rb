@@ -284,6 +284,25 @@ class Spree::BoardsController < Spree::StoreController
     render :action => "show"
   end
 
+  def tear_sheet
+    board = Spree::Board.friendly.find(params[:id])
+    project = board.project
+    user = board.designer
+    designer = user.designer_registrations.first
+    board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.sum_items(board_products)
+    total = Spree::BoardProduct.sum_items(board_products)
+
+    # taxcloud=board.calculate_tax
+    taxcloud = 0
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "tear_sheet_previev", locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project}
+      end
+    end
+  end
+
   def edit
     @board = Spree::Board.find(params[:id])
     @colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
