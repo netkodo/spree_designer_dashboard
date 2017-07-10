@@ -298,8 +298,9 @@ class Spree::BoardsController < Spree::StoreController
 
     respond_to do |format|
       format.pdf do
-        render pdf: "tear_sheet_previev", locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project}
+        render pdf: "tear_sheet", locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project}, orientation: 'Landscape'
       end
+      format.html{ render html: "tear_sheet",locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project}, layout: false }
     end
   end
 

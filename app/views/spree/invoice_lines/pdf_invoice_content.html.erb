@@ -1,11 +1,11 @@
 <html>
   <head>
-    <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/all.css'), :media => 'screen' %>
   </head>
   <body style="border: none;">
-    <div class="container">
+    <div class="container tear-sheet">
 
-      <div class="row">
+      <div class="row invoice-mb">
         <div class="col-xs-3">
           <div class="col-xs-12">
             <% if user.logo_image.present? %>
@@ -28,7 +28,7 @@
         </div>
         <div class="col-xs-6">
           <div class="text-center">
-            <h1><%= board.name %></h1>
+            <span class="project-name"><%= board.name %></span>
           </div>
           <div>
             <div class="board-section board-image-section text-center">
@@ -71,6 +71,7 @@
           <%= project.description %>
         </div>
       </div>
+      <div style="page-break-before: always;"></div>
 
       <% board.board_products.each do |bp| %>
           <div class="row invoice-bp">
@@ -125,10 +126,8 @@
               </div>
             </div>
           </div>
+          <div style="page-break-before: always;"></div>
       <% end %>
-
-
-      <div style="page-break-before: always;"></div>
 
       <div class="row">
         <div class="container">
