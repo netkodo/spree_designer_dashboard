@@ -9,6 +9,19 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   # after_create :send_designer_welcome #depracted ac took over
   after_create :update_profile_information
   after_update :update_designer_status
+  after_update :update_approved_at
+
+  def self.initialize_approved_at_date
+    Spree::DesignerRegistration.all.find_each{|x| x.update_column(:approved_at, x.updated_at)}
+  end
+
+  def update_approved_at
+    if self.status_changed?
+      self.update_column(:approved_at, DateTime.now)
+    else
+      puts "status not changed"
+    end
+  end
 
   def update_profile_information
     if self.user
