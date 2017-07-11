@@ -85,7 +85,7 @@ class Spree::BoardProduct < ActiveRecord::Base
     #includes(:product).where("isnull(spree_products.deleted_at) and isnull(spree_board_products.approved_at) and isnull(spree_board_products.removed_at)")
   end
 
-  def self.calculate_subtotal(obj)
+  def self.calculate_subtotal(obj,only_customer_cost=false)
     customer_cost = BigDecimal(0)
     your_cost = BigDecimal(0)
     obj.each do |s|
@@ -107,7 +107,11 @@ class Spree::BoardProduct < ActiveRecord::Base
         end
       end
     end
-    [your_cost, customer_cost]
+    if only_customer_cost
+      customer_cost
+    else
+      [your_cost, customer_cost]
+    end
   end
 
   def tear_sheet_images

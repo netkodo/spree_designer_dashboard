@@ -1,259 +1,259 @@
 <html>
-  <head>
-    <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
-  </head>
-  <body style="border: none;">
-    <div class="container">
+<head>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/all.css'), :media => 'screen' %>
+</head>
+<body style="border: none;">
+<div class="container tear-sheet">
 
-      <div class="row">
-        <div class="col-xs-3">
-          <div class="col-xs-12">
-            <% if user.logo_image.present? %>
-              <%= image_tag user.logo_image.attachment.url, class: 'img-responsive' %>
-            <% end %>
-          </div>
-          <div class="col-xs-12">
-            <span class="designer-name"><%= board.designer.full_name %></span><br>
-            <span class="designer-address">
+  <div class="row invoice-mb">
+    <div class="col-xs-3">
+      <div class="col-xs-12 mb-small">
+        <% if user.logo_image.present? %>
+            <%= image_tag user.logo_image.attachment.url, class: 'img-responsive' %>
+        <% end %>
+      </div>
+      <div class="col-xs-12">
+        <span class="designer-name"><%= board.designer.full_name %></span><br>
+        <span class="designer-address">
         <%= designer.address1 %><br>
-              <%= designer.address2 %><br>
+          <%= designer.address2 %><br>
 
-              <%= designer.city %>,
-              <%= designer.state %>,
-              <%= designer.postal_code %><br>
+          <%= designer.city %>,
+          <%= designer.state %>,
+          <%= designer.postal_code %><br>
 
         Phone: <%= designer.phone %>
       </span>
-          </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="text-center">
-            <h1><%= board.name %></h1>
-          </div>
-          <div>
-            <div class="board-section board-image-section text-center">
-              <%= image_tag(board.board_image.attachment(:large), :class => "img-board img-responsive") %>
-            </div>
-          </div>
-          <div>
-
-          </div>
-        </div>
-        <div class="col-xs-3">
-
-          <h1>Wall Colors</h1>
-          <% board.colors.each do |color| %>
-              <div class="row swatch-color-row">
-                <div class="swatch-color-box col-xs-4" style="background-color: #<%= color.hex_val %>"></div>
-                <div class="swatch-color-desc col-xs-8">
-                  <div class="bold">
-                    <%= color.name %>
-                  </div>
-                  <div>
-                    <div class="col-xs-6 bold desc border">Swatch #</div>
-                    <div class="col-xs-6 desc border"><%= color.swatch_val %></div>
-                  </div>
-                  <div>
-                    <div class="col-xs-6 bold desc border">Hex</div>
-                    <div class="col-xs-6 desc border"><%= color.hex_val %></div>
-                  </div>
-                </div>
-              </div>
-          <% end %>
-
-        </div>
       </div>
-      <div class="row designer-notes">
-        <div class="col-xs-12 text-center">
-          DESIGNER NOTES
-        </div>
-        <div class="col-xs-12 text-center">
-          <%= project.description %>
+    </div>
+    <div class="col-xs-6">
+      <div class="text-center mb-large">
+        <span class="project-name"><%= board.name %></span>
+      </div>
+      <div>
+        <div class="board-section board-image board-image-section text-center">
+          <%= image_tag(board.board_image.attachment(:large), :class => "img-board img-responsive") %>
         </div>
       </div>
 
-      <% board.board_products.each do |bp| %>
-          <div class="row invoice-bp">
-            <div class="col-xs-6 text-center">
-              <% bp.tear_sheet_images.each_with_index do |img,index| %>
-                  <% if index == 0 %>
-                      <div class="col-xs-12">
-                        <%= image_tag img, class: "img-responsive img-center" %>
-                      </div>
-                  <% else %>
-                      <div class="col-xs-3">
-                        <%= image_tag img, class: "img-responsive img-center" %>
-                      </div>
-                  <% end %>
-              <% end %>
-            </div>
-            <div class="col-xs-6 invoice-bp-color">
-              <div class="text-center text-l mb">
-                <%= bp.tear_sheet_data(:name) %>
-              </div>
-              <div class="text-center text-s mb">
-                SKU: <%= bp.tear_sheet_data(:sku) %>
-              </div>
-              <div class="text-center text-m mb">
-                $<%= bp.tear_sheet_data(:price) %>
+    </div>
+    <div class="col-xs-3">
+
+      <div class="mb-large">
+        <span class="wall-colors">Wall Colors</span>
+      </div>
+
+      <% board.colors.each do |color| %>
+          <div class="row swatch-color-row">
+            <div class="swatch-color-box col-xs-4" style="background-color: #<%= color.hex_val %>"></div>
+            <div class="swatch-color-desc col-xs-8">
+              <div class="bold">
+                <%= color.name %>
               </div>
               <div>
-                <% if bp.product.present? %>
-
-                    <% if bp.tear_sheet_properties.present? %>
-                        <div class="text-s">Details:</div>
-                        <ul class="light">
-                          <% bp.tear_sheet_properties.each do |prop| %>
-                              <li><%= prop[0] %>: <%= prop[1] %></li>
-                          <% end %>
-                        </ul>
-                    <% end %>
-
-                    <% if bp.tear_sheet_dimensions(bp.product.master).present? %>
-                        <div class="text-s">Weights & Dimensions</div>
-                        <ul class="light">
-                          <% bp.tear_sheet_dimensions(bp.product.master).each do |dim| %>
-                              <li>
-                                <%= dim[0] %>: <%= dim[1] %>
-                              </li>
-                          <% end %>
-                        </ul>
-
-                    <% end %>
-
-                <% end %>
+                <div class="col-xs-6 bold desc border">Swatch #</div>
+                <div class="col-xs-6 desc border"><%= color.swatch_val %></div>
+              </div>
+              <div>
+                <div class="col-xs-6 bold desc border">Hex</div>
+                <div class="col-xs-6 desc border"><%= color.hex_val %></div>
               </div>
             </div>
           </div>
       <% end %>
 
+    </div>
+  </div>
+  <div class="row designer-notes">
+    <div class="col-xs-12 text-center">
+      DESIGNER NOTES
+    </div>
+    <div class="col-xs-12 text-center">
+      <%= project.description %>
+    </div>
+  </div>
+  <div style="page-break-before: always;"></div>
 
+  <% board.board_products.each do |bp| %>
+      <div class="row invoice-bp">
+        <div class="col-xs-6 text-center">
+          <% bp.tear_sheet_images.each_with_index do |img,index| %>
+              <% if index == 0 %>
+                  <div class="col-xs-12 product-image large">
+                    <%= image_tag img, class: "img-responsive img-center" %>
+                  </div>
+              <% else %>
+                  <div class="col-xs-3 product-image small">
+                    <%= image_tag img, class: "img-responsive img-center" %>
+                  </div>
+              <% end %>
+          <% end %>
+        </div>
+        <div class="col-xs-6 invoice-bp-color">
+          <div class="text-center text-l mb">
+            <%= bp.tear_sheet_data(:name) %>
+          </div>
+          <div class="text-center text-s mb">
+            SKU: <%= bp.tear_sheet_data(:sku) %>
+          </div>
+          <div class="text-center text-m mb">
+            $<%= bp.tear_sheet_data(:price) %>
+          </div>
+          <div>
+            <% if bp.product.present? %>
+
+                <% if bp.tear_sheet_properties.present? %>
+                    <div class="text-s">Details:</div>
+                    <ul class="light">
+                      <% bp.tear_sheet_properties.each do |prop| %>
+                          <li><%= prop[0] %>: <%= prop[1] %></li>
+                      <% end %>
+                    </ul>
+                <% end %>
+
+                <% if bp.tear_sheet_dimensions(bp.product.master).present? %>
+                    <div class="text-s">Weights & Dimensions</div>
+                    <ul class="light">
+                      <% bp.tear_sheet_dimensions(bp.product.master).each do |dim| %>
+                          <li>
+                            <%= dim[0] %>: <%= dim[1] %>
+                          </li>
+                      <% end %>
+                    </ul>
+
+                <% end %>
+
+            <% end %>
+          </div>
+        </div>
+      </div>
       <div style="page-break-before: always;"></div>
+  <% end %>
+
+  <div class="row">
+    <div class="container invoice">
 
       <div class="row">
-        <div class="container">
-
-          <div class="row">
-            <div class="col-xs-4">
-              <div class="col-xs-12">
-                <% if user.logo_image.present? %>
-                    <%= image_tag user.logo_image.attachment.url, class: 'img-responsive' %>
-                <% end %>
-              </div>
-            </div>
-            <div class="col-xs-4">
-              <%= user.company_name %><br>
-              <%= designer.address1 %><br>
-              <%= designer.address2 %><br>
-              <%= designer.phone %>
-            </div>
-
-            <div class="col-xs-4">
-              <h1 class="invoice-bg-color">INVOICE</h1>
-              <div class="col-xs-4 text-left">
-                INVOICE
-              </div>
-              <div class="col-xs-8 text-right">
-                [<%= rand(100000) %>]
-              </div>
-              <div class="col-xs-4 text-left">
-                DATE
-              </div>
-              <div class="col-xs-8 text-right">
-                [<%= Date.today %>]
-              </div>
-            </div>
+        <div class="col-xs-4">
+          <div class="col-xs-12">
+            <% if user.logo_image.present? %>
+                <%= image_tag user.logo_image.attachment.url, class: 'img-responsive' %>
+            <% end %>
           </div>
-
-
-          <div class="row invoice-mb">
-            <div class="col-xs-4 client-tear-sheet">
-              Client
-            </div>
-            <div class="col-xs-8">
-              <%= project.project_name %><br>
-              <%= project.address1 %><br>
-              <%= project.address2 %><br>
-              <%= project.phone %>
-            </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="name"><%= user.company_name %><br></div>
+          <div class="address">
+            <%= designer.address1 %><br>
+            <%= designer.address2 %><br>
+            <%= designer.phone %>
           </div>
-
         </div>
 
-        <div class="row invoice-mt">
-          <div class="container">
-
-            <table class="invoice-tear-sheet">
-              <col style="width: 5%;">
-              <col style="width: 20%;">
-              <col style="width: 35%;">
-              <col style="width: 5%;">
-              <col style="width: 15%;">
-              <col style="width: 15%;">
-              <col style="width: 5%;">
-              <thead>
-              <th class="blank"></th>
-              <th>SKU</th>
-              <th>NAME</th>
-              <th>QTY</th>
-              <th>PRICE</th>
-              <th>TOTAL</th>
-              <th class="blank"></th>
-              </thead>
-              <tbody>
-              <tr class="space">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <% board_products.each do |bp| %>
-                  <tr>
-                    <td></td>
-                    <td><%= bp.get_item_data('sku') %></td>
-                    <td><%= bp.get_item_data('name') %></td>
-                    <td>1</td>
-                    <td><%= bp.get_item_data('cost') %></td>
-                    <td class="total"><%= bp.get_item_data('cost') %></td>
-                    <td></td>
-                  </tr>
-              <% end %>
-
-              <tr class="space-large">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <tr>
-                <td></td>
-                <td colspan="3">
-                  <span class="payment-info">Remit payment to <%= user.company_name %></span>
-                </td>
-                <td colspan="2" class="project-sumarize">
-                  <span class="l">TOTAL</span>
-                  <span class="r">$<%= total %></span>
-                </td>
-                <td></td>
-              </tr>
-
-              </tbody>
-
-            </table>
-
-        </div>
+        <div class="col-xs-4">
+          <h1 class="invoice-bg-color">INVOICE</h1>
+          <div class="col-xs-6 text-left">
+            INVOICE
+          </div>
+          <div class="col-xs-6 text-right">
+            [<%= rand(100000) %>]
+          </div>
+          <div class="col-xs-6 text-left">
+            DATE
+          </div>
+          <div class="col-xs-6 text-right">
+            [<%= Date.today %>]
+          </div>
         </div>
       </div>
 
 
+      <div class="row invoice-mb">
+        <div class="col-xs-4">
+          <div class="col-xs-12 client-tear-sheet">
+            Client
+          </div>
+        </div>
+        <div class="col-xs-8">
+          <div class="name">
+            <%= project.project_name %><br>
+          </div>
+          <div class="address">
+            <%= project.address1 %><br>
+            <%= project.address2 %><br>
+            <%= project.phone %>
+          </div>
+        </div>
+      </div>
+
+    <!--</div>-->
+
+    <!--<div class="row mt-large">-->
+      <!--<div class="container">-->
+
+        <table class="invoice-tear-sheet">
+          <col style="width: 25%;">
+          <col style="width: 40%;">
+          <col style="width: 5%;">
+          <col style="width: 15%;">
+          <col style="width: 15%;">
+          <thead>
+          <!--<th class="blank"></th>-->
+          <th>SKU</th>
+          <th>NAME</th>
+          <th>QTY</th>
+          <th>PRICE</th>
+          <th>TOTAL</th>
+          <!--<th class="blank"></th>-->
+          </thead>
+          <tbody>
+          <tr class="space">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <% board_products.each do |bp| %>
+              <tr>
+                <td><%= bp.get_item_data('sku') %></td>
+                <td><%= bp.get_item_data('name') %></td>
+                <td>1</td>
+                <td>$<%= bp.calc_price(bp.get_item_data('price'),project.pass_discount,project.discount_amount) %></td>
+                <td class="total">$<%= bp.calc_price(bp.get_item_data('price'),project.pass_discount,project.discount_amount) %></td>
+              </tr>
+          <% end %>
+
+          <tr class="space-large">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <!--<td></td>-->
+            <td colspan="3">
+              <span class="payment-info">Remit payment to <%= user.company_name %></span>
+            </td>
+            <td colspan="2" class="project-sumarize">
+              <span class="l">TOTAL</span>
+              <span class="r">$<%= calc_totals(total,project.pass_discount,project.discount_amount) %></span>
+            </td>
+            <!--<td></td>-->
+          </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
     </div>
-  </body>
+  </div>
+
+
+</div>
+</body>
 </html>
