@@ -53,11 +53,11 @@ class Spree::InvoiceLinesController < Spree::StoreController
     user = board.designer
     designer = user.designer_registrations.first
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
-    subtotal = Spree::BoardProduct.sum_items(board_products)
-    total = Spree::BoardProduct.sum_items(board_products)
+    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true)
+    total = Spree::BoardProduct.calculate_subtotal(board_products,true)
 
-    # taxcloud=board.calculate_tax
-    taxcloud = 0
+    taxcloud=board.calculate_tax
+
     content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project})
     #+taxcloud.tax_amount
 

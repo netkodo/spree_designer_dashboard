@@ -290,11 +290,10 @@ class Spree::BoardsController < Spree::StoreController
     user = board.designer
     designer = user.designer_registrations.first
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
-    subtotal = Spree::BoardProduct.sum_items(board_products)
-    total = Spree::BoardProduct.sum_items(board_products)
+    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true)
+    total = Spree::BoardProduct.calculate_subtotal(board_products,true)
 
-    # taxcloud=board.calculate_tax
-    taxcloud = 0
+    taxcloud=board.calculate_tax
 
     respond_to do |format|
       format.pdf do

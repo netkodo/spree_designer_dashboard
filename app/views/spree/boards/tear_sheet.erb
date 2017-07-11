@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="col-xs-6">
-      <div class="text-center mb-small">
+      <div class="text-center mb-large">
         <span class="project-name"><%= board.name %></span>
       </div>
       <div>
@@ -39,7 +39,10 @@
     </div>
     <div class="col-xs-3">
 
-      <span class="wall-colors mb-small">Wall Colors</span>
+      <div class="mb-large">
+        <span class="wall-colors">Wall Colors</span>
+      </div>
+
       <% board.colors.each do |color| %>
           <div class="row swatch-color-row">
             <div class="swatch-color-box col-xs-4" style="background-color: #<%= color.hex_val %>"></div>
@@ -76,11 +79,11 @@
         <div class="col-xs-6 text-center">
           <% bp.tear_sheet_images.each_with_index do |img,index| %>
               <% if index == 0 %>
-                  <div class="col-xs-12">
+                  <div class="col-xs-12 product-image large">
                     <%= image_tag img, class: "img-responsive img-center" %>
                   </div>
               <% else %>
-                  <div class="col-xs-3">
+                  <div class="col-xs-3 product-image small">
                     <%= image_tag img, class: "img-responsive img-center" %>
                   </div>
               <% end %>
@@ -128,7 +131,7 @@
   <% end %>
 
   <div class="row">
-    <div class="container">
+    <div class="container invoice">
 
       <div class="row">
         <div class="col-xs-4">
@@ -139,10 +142,12 @@
           </div>
         </div>
         <div class="col-xs-4">
-          <%= user.company_name %><br>
-          <%= designer.address1 %><br>
-          <%= designer.address2 %><br>
-          <%= designer.phone %>
+          <div class="name"><%= user.company_name %><br></div>
+          <div class="address">
+            <%= designer.address1 %><br>
+            <%= designer.address2 %><br>
+            <%= designer.phone %>
+          </div>
         </div>
 
         <div class="col-xs-4">
@@ -164,43 +169,45 @@
 
 
       <div class="row invoice-mb">
-        <div class="col-xs-4 client-tear-sheet">
-          Client
+        <div class="col-xs-4">
+          <div class="col-xs-12 client-tear-sheet">
+            Client
+          </div>
         </div>
         <div class="col-xs-8">
-          <%= project.project_name %><br>
-          <%= project.address1 %><br>
-          <%= project.address2 %><br>
-          <%= project.phone %>
+          <div class="name">
+            <%= project.project_name %><br>
+          </div>
+          <div class="address">
+            <%= project.address1 %><br>
+            <%= project.address2 %><br>
+            <%= project.phone %>
+          </div>
         </div>
       </div>
 
-    </div>
+    <!--</div>-->
 
-    <div class="row invoice-mt">
-      <div class="container">
+    <!--<div class="row mt-large">-->
+      <!--<div class="container">-->
 
         <table class="invoice-tear-sheet">
-          <col style="width: 5%;">
-          <col style="width: 20%;">
-          <col style="width: 35%;">
+          <col style="width: 25%;">
+          <col style="width: 40%;">
           <col style="width: 5%;">
           <col style="width: 15%;">
           <col style="width: 15%;">
-          <col style="width: 5%;">
           <thead>
-          <th class="blank"></th>
+          <!--<th class="blank"></th>-->
           <th>SKU</th>
           <th>NAME</th>
           <th>QTY</th>
           <th>PRICE</th>
           <th>TOTAL</th>
-          <th class="blank"></th>
+          <!--<th class="blank"></th>-->
           </thead>
           <tbody>
           <tr class="space">
-            <td></td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -210,13 +217,11 @@
 
           <% board_products.each do |bp| %>
               <tr>
-                <td></td>
                 <td><%= bp.get_item_data('sku') %></td>
                 <td><%= bp.get_item_data('name') %></td>
                 <td>1</td>
-                <td><%= bp.get_item_data('cost') %></td>
-                <td class="total"><%= bp.get_item_data('cost') %></td>
-                <td></td>
+                <td>$<%= bp.calc_price(bp.get_item_data('price'),project.pass_discount,project.discount_amount) %></td>
+                <td class="total">$<%= bp.calc_price(bp.get_item_data('price'),project.pass_discount,project.discount_amount) %></td>
               </tr>
           <% end %>
 
@@ -226,20 +231,18 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td></td>
           </tr>
 
           <tr>
-            <td></td>
+            <!--<td></td>-->
             <td colspan="3">
               <span class="payment-info">Remit payment to <%= user.company_name %></span>
             </td>
             <td colspan="2" class="project-sumarize">
               <span class="l">TOTAL</span>
-              <span class="r">$<%= total %></span>
+              <span class="r">$<%= calc_totals(total,project.pass_discount,project.discount_amount) %></span>
             </td>
-            <td></td>
+            <!--<td></td>-->
           </tr>
 
           </tbody>

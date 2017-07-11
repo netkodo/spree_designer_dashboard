@@ -32,11 +32,11 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <% if @board.project.pass_discount %>
-                <%= bp.get_item_data('price') * ((100-@board.project.discount_amount)/100.to_f.round(2)) %>
-            <% else %>
-                <%= bp.get_item_data('price') %>
-            <% end %>
+            <%# if @board.project.pass_discount %>
+               $<%= bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
+            <%# else %>
+                <%#= bp.get_item_data('price') %>
+            <%# end %>
           </td>
         </tr>
       <% else %>
@@ -60,11 +60,13 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <% if @board.project.pass_discount %>
-              <%= bp.get_item_data('price') * ((100-@board.project.discount_amount)/100.to_f.round(2)) %>
-            <% else %>
-              <%= bp.get_item_data('price') %>
-            <% end %>
+            <%# if @board.project.pass_discount %>
+              <%#= bp.get_item_data('price') * ((100-@board.project.discount_amount)/100.to_f.round(2)) %>
+            <%# else %>
+              <%#= bp.get_item_data('price') %>
+            <%# end %>
+
+            $<%= bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
           </td>
         </tr>
       <% end %>
@@ -76,11 +78,7 @@
       <td>$<%= @subtotals[0] %></td>
       <td>$<%= @subtotals[1] %></td>
       <td>
-        <% if @board.project.pass_discount %>
-            $<%= @subtotals[1] * ((100-@board.project.discount_amount)/100.to_f.round(2)) %>
-        <% else %>
-            $<%= @subtotals[1] %>
-        <% end %>
+        $<%= calc_totals(@subtotals[1],@board.project.pass_discount,@board.project.discount_amount) %>
       </td>
     </tr>
     <tr class="summary">
@@ -106,11 +104,7 @@
       <td>$<%= @subtotals[0] %></td>
       <td>$<%= @subtotals[1] %></td>
       <td>
-        <% if @board.project.pass_discount %>
-            $<%= @subtotals[1] * ((100-@board.project.discount_amount)/100.to_f.round(2)) %>
-        <% else %>
-            $<%= @subtotals[1] %>
-        <% end %>
+        $<%= calc_totals(@subtotals[1],@board.project.pass_discount,@board.project.discount_amount) %>
       </td>
     </tr>
   </tbody>
