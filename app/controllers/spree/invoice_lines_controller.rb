@@ -36,8 +36,9 @@ class Spree::InvoiceLinesController < Spree::StoreController
 
   def private_invoice
     @board = Spree::Board.find(params[:id])
+    project = @board.project
     @board_products = @board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
-    @subtotals = Spree::BoardProduct.calculate_subtotal(@board_products)
+    @subtotals = Spree::BoardProduct.calculate_subtotal(@board_products,false,project.pass_discount,project.discount_amount)
     respond_to do |format|
       if @board_products.present?
         format.html{render layout: false, status: :ok}
@@ -53,12 +54,12 @@ class Spree::InvoiceLinesController < Spree::StoreController
     user = board.designer
     designer = user.designer_registrations.first
     board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
-    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true)
-    total = Spree::BoardProduct.calculate_subtotal(board_products,true)
+    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
+    total = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
 
     taxcloud=board.calculate_tax
 
-    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud, total: total, project: project})
+    content = render_to_string('/spree/invoice_lines/pdf_invoice_content.html.erb',layout: false, locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total, project: project})
     #+taxcloud.tax_amount
 
     pdf = WickedPdf.new.pdf_from_string(content,{orientation: 'Landscape',margin: {top:10,bottom:10,left:0,right:0}})
