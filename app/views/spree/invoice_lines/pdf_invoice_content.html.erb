@@ -187,11 +187,6 @@
         </div>
       </div>
 
-      <!--</div>-->
-
-      <!--<div class="row mt-large">-->
-      <!--<div class="container">-->
-
       <table class="invoice-tear-sheet">
         <col style="width: 25%;">
         <col style="width: 40%;">
@@ -199,13 +194,11 @@
         <col style="width: 15%;">
         <col style="width: 15%;">
         <thead>
-        <!--<th class="blank"></th>-->
         <th>SKU</th>
         <th>NAME</th>
         <th>QTY</th>
         <th>PRICE</th>
         <th>TOTAL</th>
-        <!--<th class="blank"></th>-->
         </thead>
         <tbody>
         <tr class="space">
@@ -235,15 +228,35 @@
         </tr>
 
         <tr>
-          <!--<td></td>-->
+          <td colspan="3"></td>
+          <td colspan="2" class="">
+            <span class="total l">SUBTOTAL</span>
+            <span class="r">$<%= subtotal %></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td colspan="2">
+            <span class="total l">TAX SALES</span>
+            <span class="r">$<%= tax %></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td colspan="2">
+            <span class="total l">SHIPPING</span>
+            <span class="r">$ ??</span>
+          </td>
+        </tr>
+        <tr>
+        <tr>
           <td colspan="3">
             <span class="payment-info">Remit payment to <%= user.company_name %></span>
           </td>
           <td colspan="2" class="project-sumarize">
-            <span class="l">TOTAL</span>
-            <span class="r">$<%= calc_totals(total,project.pass_discount,project.discount_amount) %></span>
+            <span class="total l">TOTAL</span>
+            <span class="r">$<%= total %></span>
           </td>
-          <!--<td></td>-->
         </tr>
 
         </tbody>
