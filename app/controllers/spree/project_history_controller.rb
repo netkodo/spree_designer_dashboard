@@ -5,7 +5,9 @@ class Spree::ProjectHistoryController < Spree::StoreController
   def destroy
     project = Spree::Project.find(params[:id])
     project_history = project.project_histories.find(params[:ph])
-    project_history.project_invoice_lines.each{|x| x.update_columns(project_history_id: nil, included: false)} if project_history.project_invoice_lines.present?
+    project_history.project_invoice_lines.each{
+        |x| x.custom ? x.destroy : x.update_columns(project_history_id: nil, included: false)
+    } if project_history.project_invoice_lines.present?
     respond_to do |format|
       if project_history.destroy
         format.json {render json: {message: "success"}, status: :ok}
