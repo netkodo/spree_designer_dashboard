@@ -1,5 +1,7 @@
 module Spree
   class UserImage < Asset
+
+    has_one :user_original_image, dependent: :destroy, class_name: "Spree::UserImageOriginal"
     
     #attr_accessible :alt, :attachment, :position, :viewable_type, :viewable_id
 

@@ -1,6 +1,7 @@
 module Spree
   class LogoImage < Asset
-    
+
+    has_one :logo_original_image, dependent: :destroy, class_name: "Spree::LogoImageOriginal"
 
     #attr_accessible :alt, :attachment, :position, :viewable_type, :viewable_id
 
