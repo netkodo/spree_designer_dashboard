@@ -110,10 +110,13 @@
           <div class="spinner" style="display: none">Loading...</div>
         </div>
         <div class="action clearfix">
-          <input type="file" id="file" style="float:left;" class="dropzone gold">
+          <!--<input type="file" id="file" style="float:left;" class="dropzone gold">-->
           <input type="button" id="btnCrop" value="Save" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
           <input type="button" id="btnZoomIn" value="+" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
           <input type="button" id="btnZoomOut" value="-" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
+        </div>
+        <div class="action clearfix">
+          <input type="file" id="file" style="float:left;" class="dropzone gold">
         </div>
         <div class="cropped">
           <%= image_tag(@user.user_images.first.attachment(:primary)) %>
@@ -153,10 +156,13 @@
           <div class="spinner" style="display: none">Loading...</div>
         </div>
         <div class="action clearfix">
-          <input type="file" id="logo_file" style="float:left;" class="dropzone gold">
+          <!--<input type="file" id="logo_file" style="float:left;" class="dropzone gold">-->
           <input type="button" id="btnCrop_logo" value="Save" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
           <input type="button" id="btnZoomIn_logo" value="+" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
           <input type="button" id="btnZoomOut_logo" value="-" style="float: left; margin-right: 3px; display:none;" class="btn-primary">
+        </div>
+        <div class="action clearfix">
+          <input type="file" id="logo_file" style="float:left;" class="dropzone gold">
         </div>
         <div class="cropped_logo">
           <%= image_tag(@user.logo_image.attachment(:primary)) %>
