@@ -51,10 +51,10 @@
     </div>
     <div class="room-type-buttons">
       <% if @designer_type == "room designer" %>
-          <div class="btn btn-default btn-tab js-get-room-type active" data-private="false">Public</div>
-          <div class="btn btn-default btn-tab js-get-room-type" data-private="true">Private</div>
+          <div class="btn btn-default btn-tab js-get-room-type active" data-private="false">Public Rooms</div>
+          <div class="btn btn-default btn-tab js-get-room-type" data-private="true">Private Projects</div>
       <% elsif @designer_type == "to the trade designer" %>
-          <div class="btn btn-default btn-tab js-get-room-type active" data-private="true">Private</div>
+          <div class="btn btn-default btn-tab js-get-room-type active" data-private="true">Private Projects</div>
       <% end %>
     </div>
 

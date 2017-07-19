@@ -255,8 +255,16 @@ $ ->
           $("#modal-location-body .confirmation").addClass("hidden")
           $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           $("#modal-location-body .success-sent").removeClass("hidden")
+          $(".action_send").remove()
+          $(".action_preview").remove()
+          $(".action_wihout_contract").remove()
+          $(".manually_add_invoice").show()
+          $(".design_room").show()
           if $(".project-history-group .project-history-content").length > 0
-            $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").replaceWith(response.history_item)
+            if $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").length > 0
+              $(".project-history-group .project-history-content[data-history-id='#{response.history_id}']").replaceWith(response.history_item)
+            else
+              $(".project-history-group .project-history-content").prepend(response.history_item)
           else
             $(".project-history-group").prepend(response.history_item)
 #          if response.location != undefined
@@ -278,6 +286,24 @@ $ ->
           console.log 'error'
 #          console.log response
   ,".js-send-contract-confirmation"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      $.ajax
+        dataType: 'json'
+        method: 'POST'
+        url: $(@).attr('href')
+        beforeSend: () ->
+          console.log "sending"
+        success: (response) ->
+          $(".action_preview").remove()
+          $(".action_wihout_contract").remove()
+          $(".design_room").show()
+          $(".project-history-group").prepend(response.history_item)
+        error: (response) ->
+          console.log 'error'
+  ,".js-start-without-contract"
 
   $(document).on
     click: (e) ->
@@ -424,9 +450,18 @@ $ ->
     click: (e) ->
       e.preventDefault()
       step = $(@).data('step')
-      $('.step').hide()
-      $(".step-#{step}").show()
-      $('#update_project_form').ajaxSubmit()
+      current_step = $(@).data('current-step')
+#      $('#update_project_form').ajaxSubmit()
+      $.ajax
+        method: 'PATCH'
+        dataType: 'json'
+        url: $('#update_project_form').attr('action')
+        data: $('#update_project_form').serialize() + "&current_step=#{current_step}"
+        success: (response) ->
+          $('.step').hide()
+          $(".step-#{step}").show()
+        error: (response) ->
+          console.log 'error'
 
       #deprecated due to not using step 4
 #      if step == 2

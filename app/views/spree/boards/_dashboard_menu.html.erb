@@ -1,21 +1,9 @@
 <% selected ||= "" %>
-<% @questions_amount = 0
-   board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted:true)
-   board_questions.each do |question|
-     board = Spree::Board.find_by(id:question.board_id)
-     if board.present?
-       if board.designer.id == spree_current_user.id
-         if !question.answer.present?
-           @questions_amount += 1
-         end
-       end
-     end
-   end %>
 <div id="db-mobile">
   <button class="btn btn-default dropdown-toggle col-sm-12 col-xs-12 text-center" data-toggle="dropdown">MENU</button>
   <ul class="nav nav-pills nav-stacked col-xs-12">
     <% if spree_current_user.is_board_designer? %>
-    <li class="<%="active" if selected == "dashboard"%>"><a href="/dashboard"><i class="glyphicon glyphicon-th"></i> My Scout Rooms</a></li>
+    <li class="<%="active" if selected == "dashboard"%>"><a href="/dashboard"><i class="glyphicon glyphicon-th"></i> My Projects</a></li>
 
     <li class="<%="active" if selected == "profile"%>"><a href="/my_profile"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
     <li class="<%="active" if selected == "portfolio"%>"><a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>
@@ -26,7 +14,7 @@
 
     <% end %>
     <li class="<%="active" if selected == "store_credit"%>"><a href="/my_store_credit"><i class="fa fa-money"></i> &nbsp; Store Credit</a></li>
-    <li class="<%="active" if selected == "questions_and_answers"%>"><a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp; (<span class="question-pending"><%= @questions_amount %> pending</span>)</a></li>
+    <li class="<%="active" if selected == "questions_and_answers"%>"><a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp; (<span class="question-pending"><%= count_board_questions %> pending</span>)</a></li>
     <li class="<%="active" if selected == "portfolio"%>"><a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>
     <li class="<%="active" if selected == "projects"%>"><a href="/projects"><i class="fa fa-list-alt"></i>&nbsp;Completed Projects </a></li>
     <li class="disabled <%="active" if selected == "payment_solutions"%>"><a href="/payment_solutions"><i class="fa fa-usd"></i>&nbsp; Payment Solutions </a></li>

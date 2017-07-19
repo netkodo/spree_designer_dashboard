@@ -10,9 +10,13 @@ class Spree::ProjectHistory < ActiveRecord::Base
   def self.manage_contract_state(project,action,pdf=nil)
     if project.project_histories.present?
       history = project.project_histories.where("action LIKE 'contract_%'").first
-      pdf.present? ? history.update(action: action,pdf: pdf) : history.update(action: action)
+      if history.present?
+        pdf.present? ? history.update(action: action,pdf: pdf) : history.update(action: action)
+      else
+        history = pdf.present? ?  Spree::ProjectHistory.create(action: action,pdf: pdf,project_id: project.id) : Spree::ProjectHistory.create(action: action,project_id: project.id)
+      end
     else
-      history =pdf.present? ? Spree::ProjectHistory.create(action: action,project_id: project.id,pdf: pdf) : Spree::ProjectHistory.create(action: action,project_id: project.id)
+      history = pdf.present? ? Spree::ProjectHistory.create(action: action,project_id: project.id,pdf: pdf) : Spree::ProjectHistory.create(action: action,project_id: project.id)
     end
     history
   end

@@ -48,17 +48,29 @@ class Spree::ProjectsController < Spree::StoreController
   end
 
   def update
+    current_step = params[:current_step] || 3
     @project = Spree::Project.find(params[:id])
     respond_to do |format|
-      if @project.update(project_params)
-        @project.contract.destroy if @project.contract.present? and @project.contract.signed?
-        format.html { redirect_to project_path(@project) }
-        format.json { render json: {message: "success"}, status: :ok }
-        format.js { render json: {message: "success"}, status: :ok }
+      @project.assign_attributes(eval("project_params_step#{current_step}"))
+      if @project.changed?
+        if @project.save #update(eval("project_params_step#{current_step}"))
+          @project.contract.destroy if @project.contract.present? and @project.contract.signed?
+
+          ph = @project.project_histories.where("action LIKE 'contract_%'").first
+          ph.update_attribute(:action, "contract_changed") if ph.present?
+
+          format.html { redirect_to project_path(@project) }
+          format.json { render json: {message: "success"}, status: :ok }
+          format.js { render json: {message: "success"}, status: :ok }
+        else
+          format.html { redirect_to project_path(@project) }
+          format.json { render json: {message: "error"}, status: :unprocessable_entity }
+          format.js { render json: {message: "error"}, status: :unprocessable_entity }
+        end
       else
         format.html { redirect_to project_path(@project) }
-        format.json { render json: {message: "error"}, status: :unprocessable_entity }
-        format.js { render json: {message: "error"}, status: :unprocessable_entity }
+        format.json { render json: {message: "no changes"}, status: :ok }
+        format.js { render json: {message: "no changes"}, status: :ok }
       end
     end
   end
@@ -83,6 +95,18 @@ class Spree::ProjectsController < Spree::StoreController
     end
   end
 
+  def start_without_contract
+    ph = Spree::ProjectHistory.create(project_id: params[:id], action: "pending_invoice")
+    respond_to do |format|
+      if ph.save
+        history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: ph}, formats: ['html'] )
+        format.json {render json: {message: 'created', history_item: history_item}, status: :ok}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
+  end
+
 
   private
 
@@ -93,7 +117,20 @@ class Spree::ProjectsController < Spree::StoreController
       end
     end
 
-    def project_params
-      params.require(:project).permit(:user_id, :project_name, :description, :address1, :address2, :city, :state, :zip_code, :email, :phone, :rate_type, :rate, :customer_billing_cycle, :charge_percentage, :charge, :charge_on, :status, :pass_discount, :discount_amount, :upfront_deposit, :deposit_amount)
+    def project_params_step1
+      params.require(:project).permit(:user_id, :project_name, :description, :address1, :address2, :city, :state, :zip_code, :email, :phone)
     end
+
+    def project_params_step2
+      params.require(:project).permit(:user_id, :rate_type, :rate, :upfront_deposit, :deposit_amount, :customer_billing_cycle)
+    end
+
+    def project_params_step3
+      params.require(:project).permit(:user_id, :pass_discount, :discount_amount, :charge, :charge_on, :charge_percentage)
+      # , :status
+    end
+
+    # def project_params
+    #   params.require(:project).permit(:user_id, :project_name, :description, :address1, :address2, :city, :state, :zip_code, :email, :phone, :rate_type, :rate, :customer_billing_cycle, :charge_percentage, :charge, :charge_on, :status, :pass_discount, :discount_amount, :upfront_deposit, :deposit_amount)
+    # end
 end
