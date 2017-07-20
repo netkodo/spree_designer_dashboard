@@ -62,6 +62,7 @@ Spree::Core::Engine.routes.draw do
   resources :projects do
     member do
       post :close_open, defaults: {format: 'json'}
+      post :start_without_contract, defaults: {format: 'json'}
       # get :contract
       resources :contracts, param: :cid
       resources :project_history, only: [:destroy], defaults: {format: :json}, param: :ph do
