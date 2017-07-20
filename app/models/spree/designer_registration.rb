@@ -3,7 +3,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   #attr_accessible :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :company_name, :status, :first_name, :last_name
   belongs_to :user, :class_name => "User"
 
-  validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
+  attr_accessor :validate_tin
+
+  validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :company_name
+  validates :tin, presence: true, :if => :validate_tin?
   #validates_presence_of :first_name, :last_name
 
   after_create :send_designer_welcome
@@ -18,6 +21,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
                               :website_url => self.website,
                               :company_name => self.company_name})
     end
+  end
+
+  def validate_tin?
+    validate_tin
   end
 
   def self.status_options

@@ -40,6 +40,8 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
       Rails.logger.info "FIRST/LAST NAME SET"
     end
 
+    @designer_registration.validate_tin = @designer_registration.applied_for == "room designer" ? true : false
+
     if @designer_registration.save
       redirect_to designer_registration_thanks_path
     else
