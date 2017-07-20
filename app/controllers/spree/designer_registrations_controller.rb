@@ -2,7 +2,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   before_action :set_designer_registration, only: [:show, :edit, :update, :destroy]
   layout "/spree/layouts/splash"
   before_filter :check_existing_registration, :only => [:new]
-  
+
   # GET /designer_registrations
   def index
 
@@ -33,6 +33,8 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     if @designer_registration.user.save
       Rails.logger.info "FIRST/LAST NAME SET"
     end
+
+    @designer_registration.validate_tin = @designer_registration.applied_for == "room designer" ? true : false
 
     if @designer_registration.save
       session[:fb_pixel_email] = current_spree_user.email
