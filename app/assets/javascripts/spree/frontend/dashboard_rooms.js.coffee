@@ -425,7 +425,7 @@ $ ->
   $(document).on
     change: (e) ->
       $(@).removeClass('select-placeholder')
-  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on, #project_upfront_deposit, #pass_discount"
+  ,"#project_charge_percentage, #project_customer_billing_cycle, #project_charge_on, #project_upfront_deposit, #pass_discount, #project_rate_type, #project_pass_discount"
 
   $(document).on
     click: (e) ->

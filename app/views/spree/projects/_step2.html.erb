@@ -1,5 +1,5 @@
 <div class="form-group">
-  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}],['FLAT RATE / PER ROOM','flat_rate_room',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT','flat_rate_project',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT IN THE FORM OF A PERCENTAGE','flat_rate_percentage',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{u ? '':'select-placeholder'}" %>
+  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}],['FLAT RATE / PER ROOM','flat_rate_room',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT','flat_rate_project',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT IN THE FORM OF A PERCENTAGE','flat_rate_percentage',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{@project.rate_type.present? ? '':'select-placeholder'}" %>
   <div class="info"></div>
 </div>
 
@@ -12,7 +12,7 @@
 </div>
 
 <div class="form-group">
-  <%= f.select :upfront_deposit, options_for_select([['Charge upfront deposit','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.upfront_deposit.to_s || 'placeholder'),{}, :class => "form-control text-center #{u ? '' : 'select-placeholder'}"%>
+  <%= f.select :upfront_deposit, options_for_select([['Charge upfront deposit','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.upfront_deposit || 'placeholder'),{}, :class => "form-control text-center #{@project.upfront_deposit.present? ? '' : 'select-placeholder'}"%>
   <div class="info"></div>
 </div>
 
@@ -21,23 +21,9 @@
   <div class="info"></div>
 </div>
 
-<div class="form-group" style="<%= u ? '' : 'display: none;' %>">
-  <% if u %>
-      <% tab = ["flat_rate_project",'hourly_rate','flat_rate_percentage','flat_rate_room'] %>
-    <% flat = [['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],['BILL AT START OF PROJECT','at_start'],['BILL AT PROJECT COMPLETION','at_completion']]
-        hourly = [
-            ['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],
-            ['WEEKLY','weekly'],
-            ['BI-WEEKLY','bi_weekly'],
-            ['MONTHLY','monthly'],
-            ['BI-MONTHLY','bi_monthly'],
-            ['QUARTERLY','quarterly'],
-            ['AT PROJECT COMPLETION','at_completion'],
-        ]
-        select = tab.include?(@project.rate_type) ? hourly : flat
-    %>
-
-    <%= f.select :customer_billing_cycle, options_for_select(select,@project.customer_billing_cycle),{}, :class => "form-control text-center" %>
+<div class="form-group" style="<%= @project.customer_billing_cycle.present? ? '' : 'display: none;' %>">
+  <% if @project.customer_billing_cycle.present? %>
+    <%= f.select :customer_billing_cycle, options_for_select(@project.select_customer_billing_cycle,@project.customer_billing_cycle || 'placeholder'),{}, :class => "form-control text-center" %>
   <% else %>
     <%= f.select :customer_billing_cycle, options_for_select([]),{}, :class => 'form-control text-center select-placeholder' %>
   <% end %>
