@@ -6,7 +6,7 @@
     <div class="col-md-9">
       <% unless @projects.present? %>
           <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <h1>You don't have any projects</h1>
+            <h1>You do not have any projects</h1>
             <%= link_to "Add One", new_project_path, :class => "btn btn-primary" %>
           </div>
       <% else %>

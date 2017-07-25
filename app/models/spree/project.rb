@@ -88,6 +88,21 @@ class Spree::Project < ActiveRecord::Base
     end
   end
 
+  def select_customer_billing_cycle
+    tab = ['flat_rate_project','hourly_rate','flat_rate_percentage','flat_rate_room']
+    flat = [['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],['BILL AT START OF PROJECT','at_start'],['BILL AT PROJECT COMPLETION','at_completion']]
+    hourly = [
+        ['Customer Billing Cycle','placeholder',{disabled: 'disabled'}],
+        ['WEEKLY','weekly'],
+        ['BI-WEEKLY','bi_weekly'],
+        ['MONTHLY','monthly'],
+        ['BI-MONTHLY','bi_monthly'],
+        ['QUARTERLY','quarterly'],
+        ['AT PROJECT COMPLETION','at_completion'],
+    ]
+    tab.include?(self.rate_type) ? hourly : flat
+  end
+
   def send_contract(from_addr,to_addr,to_name,pdf)
     html_content = ''
     m = Mandrill::API.new(MANDRILL_KEY)

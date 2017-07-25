@@ -16,7 +16,7 @@
               <div class="row menu-private hidden">
                 <% unless @projects.present? %>
                   <div class="col-md-12 text-center">
-                    <h1>You don't have any projects</h1>
+                    <h1>You do not have any projects</h1>
                     <%= link_to "Add One", new_project_path, :class => "btn btn-primary btn-no-radius" %>
                   </div>
                 <% else %>

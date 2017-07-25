@@ -5,7 +5,6 @@
 
   <div class="col-md-9">
     <%= form_for @project, :method => 'patch',:url => project_path, html: {id: "update_project_form"} do |f| %>
-        <% update = @project.created_at.present? ? true : false %>
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
             <div class="step step-1" style="<%= (params[:step].present? and params[:step]) == '1' ? '' : 'display: none;' %>">
@@ -13,7 +12,7 @@
               <div class="col-md-12 text-center">
                 <h1>Customer Information</h1>
               </div>
-              <%= render :partial => "step1", locals: {f: f, u: update} %>
+              <%= render :partial => "step1", locals: {f: f} %>
               <div class="text-right">
                 <button class="btn btn-primary text-right project-next-step btn-no-radius" data-step="2" data-current-step="1">Next</button>
               </div>
@@ -24,11 +23,9 @@
               <div class="col-md-12 text-center">
                 <h1>Billing Method</h1>
               </div>
-              <%= render :partial => "step2", locals: {f: f, u: update} %>
+              <%= render :partial => "step2", locals: {f: f} %>
               <div class="text-right">
-                <%if update %>
-                    <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="1" data-current-step="2">Back</button>
-                <% end %>
+                <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="1" data-current-step="2">Back</button>
                 <button class="btn btn-primary project-next-step btn-no-radius" data-step="3" data-current-step="2">Next</button>
               </div>
             </div>
@@ -38,11 +35,9 @@
               <div class="col-md-12 text-center">
                 <h1>Select a Contract</h1>
               </div>
-              <%= render :partial => "step3", locals: {f: f, u: update} %>
+              <%= render :partial => "step3", locals: {f: f} %>
               <div class="form-actions text-right">
-                <%if update %>
-                    <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="2" data-current-step="3">Back</button>
-                <% end %>
+                <button class="btn btn-primary text-right project-prev-step btn-no-radius" data-step="2" data-current-step="3">Back</button>
                 <!--<button class="btn btn-primary text-right project-next-step btn-no-radius" data-step="4">Next</button>-->
                 <%= f.submit "Save", :class => 'btn btn-primary btn-no-radius' %>
               </div>
