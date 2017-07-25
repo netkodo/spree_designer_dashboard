@@ -14,6 +14,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
 
   # GET /designer_registrations/new
   def new
+  #   @user = Spree::User.new
+  #   @designer_registration = Spree::DesignerRegistration.new
+  #   @designer_registration.user = @user
+  end
+
+  def designer_signup
     @user = Spree::User.new
     @designer_registration = Spree::DesignerRegistration.new
     @designer_registration.user = @user
@@ -58,6 +64,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   def destroy
     @designer_registration.destroy
     redirect_to designer_registrations_url, notice: 'Designer registration was successfully destroyed.'
+  end
+
+  def all_access_designer
+    @user = Spree::User.new
+    @designer_registration = Spree::DesignerRegistration.new
+    @designer_registration.user = @user
   end
 
   private
