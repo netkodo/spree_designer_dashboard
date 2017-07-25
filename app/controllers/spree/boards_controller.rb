@@ -138,11 +138,12 @@ class Spree::BoardsController < Spree::StoreController
 
   def dashboard
     @projects = Spree::Project.open.where(user_id: spree_current_user.id).order("project_name asc")
-    if spree_current_user.designer_registrations.first.status == "room designer"
+    designer_status = spree_current_user.designer_registrations.first.status
+    if designer_status == "room designer"
       @designer_type = "room designer"
       @boards = spree_current_user.boards.where(removal: false)
-    elsif spree_current_user.designer_registrations.first.status == "to the trade designer"
-      @designer_type = "to the trade designer"
+    elsif designer_status.in?(["to the trade designer","all access"])
+      @designer_type = designer_status
       @boards = spree_current_user.boards.where(removal: false,private: false)
     end
   end

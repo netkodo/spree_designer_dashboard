@@ -59,9 +59,11 @@ class Spree::DesignerRegistration < ActiveRecord::Base
             self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
             user.add_designer_to_mailchimp
             # user.designer_ac_registration('to the trade designer')
+          when "all access"
+            user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 1})
           when "declined"
             user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-            self.send_email_to_designer("", "Your application has been declined!", "Jesse Bodine", "", "we-have-our-eye-on-you")
+            self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
         end
       end
     end
