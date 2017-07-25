@@ -1,5 +1,5 @@
 <div class="form-group">
-  <%= f.select :pass_discount, options_for_select([['Pass product discounts onto customer','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.pass_discount || 'placeholder'),{}, :class => "form-control text-center #{@project.pass_discount.present? ? '' : 'select-placeholder'}"%>
+  <%= f.select :pass_discount, options_for_select([['Pass product discounts onto customer','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.pass_discount.in?([true,false]) ? @project.pass_discount : 'placeholder'),{}, :class => "form-control text-center #{@project.pass_discount.in?([true,false]) ? '' : 'select-placeholder'}"%>
   <div class="info"></div>
 </div>
 
@@ -9,7 +9,7 @@
 </div>
 
 <div class="form-group">
-  <%= f.select :charge, options_for_select([['Would you like to charge a percentage of the product order total ?','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.charge || 'placeholder'),{}, :class => "form-control text-center #{@project.charge.present? ? '' : 'select-placeholder'}"%>
+  <%= f.select :charge, options_for_select([['Would you like to charge a percentage of the product order total ?','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.charge.in?([true,false]) ? @project.charge : 'placeholder'),{}, :class => "form-control text-center #{@project.charge.in?([true,false]) ? '' : 'select-placeholder'}"%>
   <div class="info"></div>
 </div>
 
