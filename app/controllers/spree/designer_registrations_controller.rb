@@ -43,7 +43,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     if @designer_registration.save
       redirect_to designer_registration_thanks_path
     else
-      render action: 'new'
+      cookies[:designer_registration] = params[:designer_registration][:applied_for]
+      if params[:designer_registration][:applied_for] == "all access"
+        render action: 'all_access_designer'
+      else
+        render action: 'designer_signup'
+      end
     end
   end
   
