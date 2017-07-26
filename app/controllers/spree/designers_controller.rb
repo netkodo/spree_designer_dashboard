@@ -107,11 +107,6 @@ class Spree::DesignersController < Spree::StoreController
 
     end
 
-    puts "!!!!!"
-    puts "!!!!!"
-    puts exceptions.awesome_inspect
-    puts "!!!!!"
-    puts "!!!!!"
 
     @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
 
