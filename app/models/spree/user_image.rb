@@ -10,7 +10,7 @@ module Spree
                       default_style: :primary,
                       url: '/spree/user_images/:id/:style/:basename.:extension',
                       path: 'user_images/:id/:style/:basename.:extension',
-                      convert_options: { all: '-strip -auto-orient -quality 80' },
+                      convert_options: { all: '-strip -auto-orient -colorspace RGB' },
                       default_url: '/images/profile_default_primary.jpg'
 
     validates_attachment_presence :attachment
