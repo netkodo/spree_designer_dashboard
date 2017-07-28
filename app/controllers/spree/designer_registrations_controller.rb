@@ -1,6 +1,6 @@
 class Spree::DesignerRegistrationsController < Spree::StoreController
   before_action :set_designer_registration, only: [:show, :edit, :update, :destroy]
-  layout "/spree/layouts/splash"
+  # layout "/spree/layouts/splash"
   before_filter :check_existing_registration, :only => [:new]
   
   # GET /designer_registrations
@@ -14,6 +14,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
 
   # GET /designer_registrations/new
   def new
+  #   @user = Spree::User.new
+  #   @designer_registration = Spree::DesignerRegistration.new
+  #   @designer_registration.user = @user
+  end
+
+  def designer_signup
     @user = Spree::User.new
     @designer_registration = Spree::DesignerRegistration.new
     @designer_registration.user = @user
@@ -34,12 +40,19 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
       Rails.logger.info "FIRST/LAST NAME SET"
     end
 
+    @designer_registration.validate_tin = @designer_registration.applied_for == "room designer" ? true : false
+
     if @designer_registration.save
       session[:fb_pixel_email] = current_spree_user.email
       @designer_registration.user.designer_ac_signup(@designer_registration.applied_for)
       redirect_to designer_registration_thanks_url
     else
-      render action: 'new'
+      cookies[:designer_registration] = params[:designer_registration][:applied_for]
+      if params[:designer_registration][:applied_for] == "all access"
+        render action: 'all_access_designer'
+      else
+        render action: 'designer_signup'
+      end
     end
   end
   
@@ -61,6 +74,12 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
   def destroy
     @designer_registration.destroy
     redirect_to designer_registrations_url, notice: 'Designer registration was successfully destroyed.'
+  end
+
+  def all_access_designer
+    @user = Spree::User.new
+    @designer_registration = Spree::DesignerRegistration.new
+    @designer_registration.user = @user
   end
 
   private

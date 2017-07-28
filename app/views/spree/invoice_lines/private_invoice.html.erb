@@ -1,0 +1,105 @@
+<table class="table-invoice <%= @board.id %>" data-board_id="<%= @board.id %>" data-project_id="<%= @board.project_id %>">
+  <thead>
+    <tr>
+      <th class="align-center">IMAGE</th>
+      <th class="align-center">SKU</th>
+      <th class="align-center">NAME</th>
+      <th class="align-center">YOUR COST</th>
+      <th class="align-center">RETAIL PRICE</th>
+      <th class="align-center">CUSTOMER COST</th>
+    </tr>
+  </thead>
+  <tbody class="text-center">
+    <% @board_products.each do |bp| %>
+      <% if bp.product.present? %>
+        <tr data-id="<%= bp.id %>" data-custom="false">
+          <td>
+            <%= listing_image(bp.product, :itemprop => 'image',class:'img-responsive') %>
+          </td>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
+            <span class="edit">edit</span>
+          </td>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+            <%= bp.product.cost_price %>
+          </td>
+          <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
+            <%= bp.get_item_data('price') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+           $<%= bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
+          </td>
+        </tr>
+      <% else %>
+        <tr data-id="<%= bp.id %>" data-custom="true">
+          <td>
+           <%= image_tag bp.custom_item.image(:medium), class: 'img-responsive' %>
+          </td>
+          <td class="edit-sku" data-sku="<%= bp.get_item_data('sku') %>">
+            <%= bp.get_item_data('sku') %>
+            <span class="edit">edit</span>
+          </td>
+          <td class="edit-name" data-name="<%= bp.get_item_data('name') %>">
+            <%= bp.get_item_data('name') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+            <%= bp.custom_item.cost %>
+          </td>
+          <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
+            <%= bp.get_item_data('price') %>
+            <span class="edit">edit</span>
+          </td>
+          <td>
+            $<%= bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+    <tr class="summary">
+      <td>Subtotal</td>
+      <td></td>
+      <td></td>
+      <td>$<%= @subtotals[0] %></td>
+      <td>$<%= @subtotals[1] %></td>
+      <td>
+        $<%= @subtotals[1] %>
+      </td>
+    </tr>
+    <tr class="summary">
+      <td>Est. Sales Tax</td>
+      <td></td>
+      <td></td>
+      <td>$</td>
+      <td>$</td>
+      <td>$</td>
+    </tr>
+    <tr class="summary">
+      <td>Shipping</td>
+      <td></td>
+      <td></td>
+      <td>$</td>
+      <td>$</td>
+      <td>$</td>
+    </tr>
+    <tr class="summary total">
+      <td>Total</td>
+      <td></td>
+      <td></td>
+      <td>$<%= @subtotals[0] %></td>
+      <td>$<%= @subtotals[1] %></td>
+      <td>
+        $<%= @subtotals[1] %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="text-right">
+  <div class="btn btn-xs btn-default text-right close-invoice">Close</div>
+  <div class="btn btn-xs btn-primary text-right save-invoice" data-project_id="<%= @board.project_id %>" data-board_id="<%= @board.id %>" data-user_id="<%= spree_current_user.id %>">Save</div>
+</div>

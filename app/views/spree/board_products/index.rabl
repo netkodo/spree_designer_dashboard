@@ -1,10 +1,14 @@
 collection @board_products
-attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x
+attributes :id, :height, :rotation_offset, :top_left_x, :top_left_y, :width, :z_index, :center_point_x, :center_point_y, :flip_x, :option_id, :board_id
 image_id = ""
 board_image = ""
 node :board_product do |board_product|
    image_id = board_product.image_id
-   board_image = board_product.photo
+   if board_product.photo.present?
+    board_image = board_product.photo
+   else
+    board_image = board_product.custom_item.image(:original)
+   end
 end
 child  :product do
   attributes :slug, :name, :description
@@ -19,6 +23,17 @@ child  :product do
          p.images.first.attachment.url if !p.images.blank? and p.images.first.attachment
           "data:image/jpeg;base64,#{Base64.encode64(open( p.images.first.attachment.url.to_s).read) if !p.images.blank? and p.images.first.attachment}"
        end
+    end
+end
+child :custom_item do
+    attributes :name, :id
+    node :image_url do |p|
+        "data:image/jpeg;base64,#{Base64.encode64(open(p.image(:original).to_s).read)}"
+    end
+end
+child :option do
+    node :image_url do |p|
+        "data:image/jpeg;base64,#{Base64.encode64(open(p.property_image(:original).to_s).read)}"
     end
 end
 

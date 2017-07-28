@@ -15,7 +15,11 @@ Spree::Core::Engine.routes.draw do
     resources :colors
   end
   resources :rooms, controller: 'boards'  do
-
+    member do
+      post :make_public, :defaults => {format: :json}
+      get "wall_colors" => "wall_colors#wall_colors", as: :wall_colors
+      delete "wall_colors/:slug" => "wall_colors#destroy", as: :destroy_wall_color
+    end
     collection do
       post :search_all_categories
       post :product_result
@@ -29,12 +33,13 @@ Spree::Core::Engine.routes.draw do
   resources :designer_registrations
 
 
-
+  get "/designers/all-access-designer" => "designer_registrations#all_access_designer", as: :all_access_designer
 
   get "/tutorials" => "designers#tutorials", :as => :tutorials
   get "/designers" => "designers#index", :as => :designers
   get "/designers/thanks" => "designer_registrations#thanks", :as => :designer_registration_thanks
   get "/designers/signup" => "designer_registrations#new", :as => :designer_signup
+  get "/designers/designer_signup" => "designer_registrations#designer_signup", :as => :new_designer_signup
   patch "/designers" => "designers#update", :as => :update_designer
   #post "/designers/signup" => "designers#signup", :as => :create_designer_registration
 
@@ -52,6 +57,40 @@ Spree::Core::Engine.routes.draw do
   post "/single_portfolio_edit" => "portfolios#single_portfolio_edit", :as => :single_portfolio_edit, :defaults => {:format => 'html'}
 
   post "/get_tags" => "portfolios#get_tags", :as => :get_tags, :defaults => {:format => 'json'}
+
+  #project routes
+  resources :projects do
+    member do
+      post :close_open, defaults: {format: 'json'}
+      post :start_without_contract, defaults: {format: 'json'}
+      # get :contract
+      resources :contracts, param: :cid
+      resources :project_history, only: [:destroy], defaults: {format: :json}, param: :ph do
+        member do
+          post :send_invoice
+          get :edit_ready_invoice, defaults: {format: 'html'}
+          get :edit_custom_invoice, defaults: {format: 'html'}
+        end
+      end
+      resources :project_invoice_lines, param: :iid do
+        collection do
+          get :custom_invoice
+          post :update_invoice
+          get :edit_invoice
+          post :generate_invoice_manually, defaults: {format: 'json'}
+        end
+      end
+    end
+  end
+
+  post "/create_project" => "projects#create_project", as: :create_project, defaults: {format: 'json'}
+
+
+  # resources :project_history, only: [:destroy], defaults: {format: :json}
+
+  # match 'projects/:pid/contracts/:cid' => "contracts#show"
+  get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
+  patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
 
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
@@ -92,6 +131,17 @@ Spree::Core::Engine.routes.draw do
 
   post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
 
+  post "/private_invoice" => "invoice_lines#private_invoice", as: :private_invoice, :defaults => {:format => 'html'}
+  post "/send_invoice_email" => "invoice_lines#send_invoice_email", as: :send_invoice_email, :defaults => {:format => 'json'}
+  get "/show_invoice_email" => "invoice_lines#show_invoice_email", as: :show_invoice_email, :defaults => {:format => 'html'}
+  post "/save_invoice" => "invoice_lines#save_invoice", as: :save_invoice, :defaults => {:format => 'json'}
+
+  post "/send_contract/:id" => "contracts#send_contract", as: :send_contract, :defaults => {:format => 'json'}
+  get "/preview_contract/:id" => "contracts#preview_contract", as: :preview_contract, :defaults => {:format => 'html'}
+
+  post "/board_history" => "board_history#board_history", as: :board_history, :defaults => {:format => 'html'}
+  post "/create_board_history" => "board_history#create", as: :create_board_history, :defaults => {:format => 'json'}
+
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
   post '/rooms/add_answer' => "boards#add_answer"
@@ -99,6 +149,7 @@ Spree::Core::Engine.routes.draw do
   get '/rooms/:id/design' => "boards#design", :as => :design_board
   get '/rooms/:id/design2' => "boards#design2", :as => :design_board2
   get '/rooms/:id/preview' => "boards#preview", :as => :preview_board
+  get '/rooms/:id/tear_sheet' => "boards#tear_sheet", :as => :tear_sheet
   get '/colors/get_color/:swatch_val' => "colors#get_color", :as => :get_color_by_swatch
   get '/products/:id/product_with_variants' => "products#product_with_variants", :as => :product_with_variants
 

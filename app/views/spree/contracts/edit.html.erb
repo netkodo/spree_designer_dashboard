@@ -1,0 +1,74 @@
+<%= javascript_include_tag 'spree/frontend/signature_pack.js' %>
+<div class="row">
+    <div class="col-md-3 col-sm-12 col-xs-12">
+        <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
+    </div>
+
+    <div class="col-md-9 col-sm-12 col-xs-12">
+
+      <div class="row">
+        <h1>Contract</h1>
+      </div>
+
+      <div class="row">
+        <%= render partial: 'contract_preview',layout: false, locals: {contract: @contract, project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user} %>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <%= form_for @contract, url: {action: 'update', format: :json}, html: {id: 'js-update-contract'} do |f| %>
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <%= f.label :designer_name %>
+                <%= @contract.designer_name %>
+              </div>
+
+              <% if @contract.client_signed %>
+                <div class="form-group">
+                  <%= label_tag :designer_sign %>
+                  <%= text_field_tag :signature_designer_code,"",name: "contract[signature_designer_code]", class: 'form-control hidden' %>
+                  <div id="signature-designer" class="signature"></div>
+                  <div class="text-right signature-client-buttons">
+                    <div class="signature-designer-clear btn btn-primary">Clear</div>
+                    <%= f.button "Sign", type: :submit, class: "btn btn-primary" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <%= label_tag :client_name %>
+                  <%= @contract.client_name %>
+              </div>
+
+              <% if @contract.client_signed %>
+                <div class="form-group">
+                  <%= label_tag :client_sign %>
+                  <%= image_tag @contract.client_sign(:original) %>
+                </div>
+              <% end %>
+
+            </div>
+
+
+            <!--<div class="col-md-12 col-sm-12 col-xs-12 text-right">-->
+              <%# if @contract.client_signed %>
+                <!--<div class="signature-designer-clear btn btn-primary">Clear</div>-->
+              <%# end %>
+              <%#= link_to "Back",edit_project_path(@contract.project), class: "btn btn-default" %>
+              <%# if @contract.client_signed %>
+                <%#= f.button "Sign", type: :submit, class: "btn btn-primary" %>
+              <%# else %>
+                <%#= f.button "Save", type: :submit, class: "btn btn-primary", value: false %>
+                <%#= f.button "Save & Send", type: :submit, class: "btn btn-primary", value: true %>
+              <%# end %>
+            <!--</div>-->
+        <% end %>
+      </div>
+    </div>
+</div>
+
+<div id="board-history-modal-handler"></div>

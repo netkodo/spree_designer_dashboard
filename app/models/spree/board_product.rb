@@ -1,7 +1,9 @@
 class Spree::BoardProduct < ActiveRecord::Base
 
+  belongs_to :option, :class_name => "Spree::PropertyConnectImage", :primary_key => "property_image_file_name"
   belongs_to :board
-  belongs_to :product	
+  belongs_to :product
+  belongs_to :custom_item
   before_create :set_z_index
 
   has_attached_file :photo,
@@ -82,5 +84,71 @@ class Spree::BoardProduct < ActiveRecord::Base
     where(:state => "pending_approval")
     #includes(:product).where("isnull(spree_products.deleted_at) and isnull(spree_board_products.approved_at) and isnull(spree_board_products.removed_at)")
   end
-  
+
+  def self.calculate_subtotal(obj,only_customer_cost=false,discount=false,discount_amount=0)
+    customer_cost = BigDecimal(0)
+    your_cost = BigDecimal(0)
+    obj.each do |s|
+      if s.product.present?
+        if s.invoice_line.present? and s.invoice_line.price.present?
+          customer_cost += s.invoice_line.price
+          your_cost += s.invoice_line.price
+        else
+          customer_cost += s.product.price
+          your_cost += s.product.cost_price
+        end
+      else
+        if s.invoice_line.present? and s.invoice_line.price.present?
+          customer_cost += s.invoice_line.price
+          your_cost += s.invoice_line.price
+        else
+          customer_cost += s.custom_item.price
+          your_cost += s.custom_item.price
+        end
+      end
+    end
+    customer_cost *= ((100-discount_amount)/100.to_f.round(2)) if discount
+    if only_customer_cost
+      customer_cost
+    else
+      [your_cost, customer_cost]
+    end
+  end
+
+  def tear_sheet_images
+    if self.product_id.present? and !self.custom_item_id.present?
+      self.product.images.map{|x| x.attachment.url}
+    elsif !self.product_id.present? and self.custom_item_id.present?
+       [custom_item.image.url]
+    else
+      []
+     end
+  end
+
+  def tear_sheet_data(col)
+    if self.product_id.present? and !self.custom_item_id.present?
+      self.product.send(col)
+    elsif !self.product_id.present? and self.custom_item_id.present?
+      self.custom_item.send(col)
+    else
+      ""
+    end
+  end
+
+  def tear_sheet_properties
+    product.product_properties.select{|p| p.value.present?}.map{|x| [x.property.name.gsub('_',' ').camelize, x.value]}
+  end
+
+  def tear_sheet_dimensions(variant)
+    tab = []
+    if variant.present? and ( variant.height or variant.width or variant.depth or variant.length)
+      ["width", "height", "depth", "length"].each do |dim|
+        if variant.send(dim)
+          tab << [dim.camelize,variant.send(dim)]
+        end
+      end
+    end
+    tab
+  end
+
 end

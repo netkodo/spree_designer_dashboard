@@ -1,0 +1,29 @@
+<div class="row menu-private">
+  <% unless @projects.present? %>
+      <div class="col-md-12 text-center">
+        <h1>You do not have any projects</h1>
+        <%= link_to "Add One", new_project_path, :class => "btn btn-primary btn-no-radius" %>
+      </div>
+  <% else %>
+      <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+        <h1 id="h1_project_name"></h1>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+          <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Start or Select Project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),""), :class => 'form-control' %>
+        </div>
+      </div>
+      <div class="project-managment hidden">
+        <div class="row mtop">
+          <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+            <%= select_tag :project_action, options_for_select([["Select an Option","",{disabled: 'disabled'}],["Edit / View Project Details","project-details"],["Add a Room for this Project","add-room"],["End Project","end-project"],["Remove Project","remove-project"]],""),class:"form-control", data: {id: "", status: "close"} %>
+          </div>
+        </div>
+        <div class="row mtop">
+          <div class="col-md-12 text-center">
+            <div id="submit-action" class="btn btn-primary btn-no-radius">Submit</div>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>

@@ -1,0 +1,49 @@
+<%= javascript_include_tag 'spree/frontend/signature_pack.js' %>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <h1>Preview & Sign Contract</h1>
+      </div>
+
+      <div class="row">
+        <%= render partial: 'contract_preview',layout: false, locals: {contract: @project.contract, project: @project, designer: @project.user.designer_registrations.first, user: @project.user} %>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <%= form_for @contract, url: sign_contract_path(format: :json), html: {id: 'js-sign-contract'} do |f| %>
+
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <%= label_tag :designer_name %>
+              <%= @contract.designer_name %>
+            </div>
+          </div>
+
+
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <%= label_tag :client_name %>
+              <%= @contract.client_name %>
+            </div>
+            <div class="form-group">
+              <%= label_tag :client_sign %>
+              <%= text_field_tag :signature_client_code,"", name: "contract[signature_client_code]", class: 'form-control hidden' %>
+              <div id="signature-client" class="signature"></div>
+              <div class="text-right signature-client-buttons">
+                <div class="signature-client-clear btn btn-primary">Clear</div>
+                <%= f.submit "Sign", class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+
+
+          <!--<div class="col-md-12 col-sm-12 col-xs-12 text-right" style="width: 340px;">-->
+            <!--<div class="signature-client-clear btn btn-primary">Clear</div>-->
+            <%#= f.submit "Sign", class: "btn btn-primary" %>
+          <!--</div>-->
+        <% end %>
+      </div>
+    </div>
+</div>

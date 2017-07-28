@@ -83,7 +83,7 @@ class Spree::BoardsController < Spree::StoreController
     @room_type = Hash.new(0)
     @room_style = Hash.new(0)
 
-    tmp_boards = Spree::Board.published().order("created_at desc")
+    tmp_boards = Spree::Board.published().public.order("created_at desc")
     if session[:hash_board_id].present? and session[:remember_product_page].present?
       @jump_to_board_id = session[:hash_board_id]
       @new_next_page = session[:remember_product_page].to_i + 1
@@ -137,7 +137,18 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def dashboard
-    @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+    # form master
+    # @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+    @projects = Spree::Project.open.where(user_id: spree_current_user.id).order("project_name asc")
+    designer_status = spree_current_user.designer_registrations.first.status
+    if designer_status == "room designer"
+      @designer_type = "room designer"
+      # @boards = spree_current_user.boards.where(removal: false)
+      @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+    elsif designer_status.in?(["all access"])
+      @designer_type = designer_status
+      @boards = spree_current_user.boards.where(removal: false,private: true)
+    end
   end
 
   def profile
@@ -277,6 +288,25 @@ class Spree::BoardsController < Spree::StoreController
     render :action => "show"
   end
 
+  def tear_sheet
+    board = Spree::Board.friendly.find(params[:id])
+    project = board.project
+    user = board.designer
+    designer = user.designer_registrations.first
+    board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
+    total = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
+
+    taxcloud=board.calculate_tax
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "tear_sheet", locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total, project: project}, orientation: 'Landscape'
+      end
+      format.html{ render html: "tear_sheet",locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total, project: project}, layout: false }
+    end
+  end
+
   def edit
     @board = Spree::Board.find(params[:id])
     @colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
@@ -287,11 +317,13 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def new
-    @board = Spree::Board.new(:name => "Untitled Room")
+    project_id = nil || params[:project_id]
+    @board = Spree::Board.new(:name => "Untitled Room",private: params[:private],project_id: project_id)
     @board.designer = spree_current_user
-    @board.save!
-    redirect_to design_board_path(@board)
-
+    if @board.save!
+      Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
+      redirect_to design_board_path(@board)
+    end
     #@colors = Spree::Color.order(:position).where("position > 144 and position < 1000")
 
     #1.upto(5) do |n|
@@ -463,6 +495,9 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def update
+    puts '****'
+    puts params.inspect
+    puts '****'
     session[:page_count]=0
     @board.slug = nil
     @board.update_column(:generated,false)
@@ -470,6 +505,9 @@ class Spree::BoardsController < Spree::StoreController
     @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
     @board.update_column(:not_published_email,true)
     if @board.update_attributes(board_params)
+      time_spent=DateTime.now.to_time-@board.time_start.to_time
+      current_spent=@board.time_spent
+      @board.update_column(:time_spent, time_spent+current_spent)
 
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
@@ -487,9 +525,9 @@ class Spree::BoardsController < Spree::StoreController
       spree_current_user.user_ac_event_add("first_room_added") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_room_added
       spree_current_user.update_column(:popup_room, false)
       respond_to do |format|
-        format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
-        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
-        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+        format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}
+        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}}
+        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.', private: @board.private, id: @board.project.present? ? @board.project.id : '')}}
       end
     else
       puts @board.errors.collect { |e| e.to_s }
@@ -548,6 +586,7 @@ class Spree::BoardsController < Spree::StoreController
 
   def design
     except = spree_current_user.portfolios.select{|x| x.variants.exists? or (x.board.present? and x.board.status="published")}.map(&:id)
+    @board.update_column(:time_start, DateTime.now)
     @portfolios = spree_current_user.portfolios.where.not(id: except)
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 
@@ -738,7 +777,11 @@ class Spree::BoardsController < Spree::StoreController
     else
       flash[:warning] = "We could not delete this room."
     end
-    redirect_to designer_dashboard_path
+    respond_to do |format|
+      format.html { redirect_to designer_dashboard_path }
+      format.json { render json: {message: "success"}, status: :ok }
+    end
+
   end
 
   def add_board_favorite
@@ -763,6 +806,21 @@ class Spree::BoardsController < Spree::StoreController
     end
   end
 
+  def make_public
+    board = Spree::Board.find_by_slug(params[:id])
+    respond_to do |format|
+      if board.board_products.where.not(custom_item_id: nil).empty?
+        board.update_columns(private: false,project_id: nil, time_spent: nil, time_start: nil)
+        board.touch
+        actions = render_to_string(partial: "/spree/boards/board_actions_public.html.erb", locals: {board: board}, formats: ['html'])
+        columns = render_to_string(partial: "/spree/boards/board_public_columns.html.erb", locals: {board: board}, formats: ['html'])
+        format.json {render json: {message: "Board set as public", actions: actions, columns: columns}, status: :ok}
+      else
+        format.json {render json: {message: "Remove custom products from this room"}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   private
   def prep_search_collections
     @room_taxons = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
@@ -772,7 +830,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def board_params
-    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline)
+    params.require(:board).permit(:name, :description, :style_id, :room_id, :status, :message, :featured, :featured_starts_at, :featured_expires_at, :board_commission, :featured_copy, :featured_headline, :project_id)#:customer_address, :customer_zipcode, :state_id, :customer_city
   end
   # redirect to the edit action after create
   #create.response do |wants|

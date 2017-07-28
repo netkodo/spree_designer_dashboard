@@ -1,0 +1,31 @@
+<div id="board-history" class="modal in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="text-center">BOARD HISTORY</h3>
+      </div>
+      <div class="modal-body">
+        <div id="modal-location-body">
+          <div class="row text-right">
+            Time spent: <%= "%03dh %02dm %02ds" % [@t/3600%24, @t/60%60, @t%60] %>
+          </div>
+          <% if @history.present? %>
+            <% @history.each do |h| %>
+              <div class="row">
+                <div class="col-md-5">
+                  <%= h.created_at.strftime("%-d %B %Y %k:%M:%S") %>
+                </div>
+                <div class="col-md-7">
+                  <%= t("spree.board_history.#{h.action.split('|')[0]}", product: h.action.split('|')[1]) %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            NOTHING HAPPENS YET
+          <% end %>
+        </div>
+      </div><!-- end modal body -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

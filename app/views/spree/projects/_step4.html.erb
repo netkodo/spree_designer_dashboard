@@ -1,0 +1,58 @@
+<!--DEPRECATED NOW RENDERING IN SHOW SAME THING-->
+<div class="row project-step step1 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Customer Info:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="1">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+      <p>
+        <%= @project.project_name %><br>
+        <%= @project.description.truncate(100) if @project.description.present? %><br><br>
+        <%= @project.address1 %>, <%= @project.address2 %><br>
+        <%= @project.city %>, <%= @project.state %>, <%= @project.zip_code %>
+      </p>
+      <p>
+        <%= @project.email %><br>
+        <%= @project.phone %>
+      </p>
+    <% end %>
+  </div>
+</div>
+
+<div class="row project-step step2 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Billing Method:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="2">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+    <p>
+      <%= @project.display_rate_type %><br>
+      <%= @project.rate %><br>
+      Upfront deposit: <%= @project.upfront_deposit ?  @project.deposit_amount : "No" %><br>
+      <%= @project.get_customer_billing_cycle %>
+    </p>
+    <% end %>
+  </div>
+</div>
+
+<div class="row project-step step3 text-center">
+  <div class="col-md-4">
+    <p><span class="step-name">Contract Terms:</span></p>
+    <p><span class="project-edit js-project-edit" data-step="3">EDIT</span></p>
+  </div>
+  <div class="col-md-6 data">
+    <% if u %>
+        <%= @project.display_rate_type %><br>
+        <% if @project.charge %>
+          Percentage: Yes<br>
+          <%= @project.charge_on == 'alternate' ? 'On Alternate Products' : 'On All Products' %><br>
+          Charge: <%= @project.charge_percentage %>%<br>
+        <% else %>
+          Percentage: No<br>
+        <% end %>
+        Pass discount: <%= @project.pass_discount ? "#{@project.discount_amount}%" : "No" %>
+    <% end %>
+  </div>
+</div>

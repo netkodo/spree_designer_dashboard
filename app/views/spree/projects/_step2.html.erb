@@ -1,0 +1,31 @@
+<div class="form-group">
+  <%= f.select :rate_type, options_for_select([['Rate Type','placeholder',{disabled: 'disabled'}],['HOURLY RATE','hourly_rate',{class: 'option-color'}],['FLAT RATE / PER ROOM','flat_rate_room',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT','flat_rate_project',{class: 'option-color'}],['FLAT RATE / ENTIRE PROJECT IN THE FORM OF A PERCENTAGE','flat_rate_percentage',{class: 'option-color'}]],@project.rate_type || 'placeholder'),{}, :class => "form-control text-center #{@project.rate_type.present? ? '':'select-placeholder'}" %>
+  <div class="info"></div>
+</div>
+
+<div class="form-group">
+  <%= f.text_field :rate, :placeholder => @project.rate_type == 'flat_rate_percentage' ? 'ENTER PERCENTAGE (EX: 100.00)' : 'ENTER RATE (EX: 100.00)', :class => 'form-control text-center' %>
+  <div class="info" style="display: <%= (@project.rate_type == 'flat_rate' and @project.rate_type.present?) ? 'block;' : 'none;' %>">Notes: Hourly rates are calculated based on time<br>
+    spent working on your project. Flat Rates are generally<br>
+    charged to the customer per rooms you’ve created for<br>
+    your customer</div>
+</div>
+
+<div class="form-group">
+  <%= f.select :upfront_deposit, options_for_select([['Charge upfront deposit','placeholder',{disabled: 'disabled'}],['YES','true',{class: 'option-color'}],['NO','false',{class: 'option-color'}]],@project.upfront_deposit.in?([true,false]) ? @project.upfront_deposit : 'placeholder'),{}, :class => "form-control text-center #{@project.upfront_deposit.in?([true,false]) ? '' : 'select-placeholder'}"%>
+  <div class="info"></div>
+</div>
+
+<div class="form-group" style="display: <%= @project.upfront_deposit ? 'block;' : 'none;' %>">
+  <%= f.text_field :deposit_amount, :placeholder => 'DEPOSIT AMOUNT (EX: 100.00)', :class => 'form-control text-center' %>
+  <div class="info"></div>
+</div>
+
+<div class="form-group" style="<%= @project.customer_billing_cycle.present? ? '' : 'display: none;' %>">
+  <% if @project.customer_billing_cycle.present? %>
+    <%= f.select :customer_billing_cycle, options_for_select(@project.select_customer_billing_cycle,@project.customer_billing_cycle || 'placeholder'),{}, :class => "form-control text-center" %>
+  <% else %>
+    <%= f.select :customer_billing_cycle, options_for_select([]),{}, :class => 'form-control text-center select-placeholder' %>
+  <% end %>
+  <div class="info"></div>
+</div>

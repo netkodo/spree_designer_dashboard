@@ -10,6 +10,7 @@ class Spree::Board < ActiveRecord::Base
   has_many :products, :through => :board_products
   has_many :color_matches
   has_many :colors, :through => :color_matches
+  has_many :wall_colors, :order => "z_index", dependent: :destroy
   has_many :conversations, as: :conversationable, class_name: "::Mailboxer::Conversation"
 
   has_and_belongs_to_many :promotion_rules,
@@ -23,9 +24,17 @@ class Spree::Board < ActiveRecord::Base
   has_one :portfolio, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :board_favorites, dependent: :destroy
+  has_many :invoice_lines
+  has_many :board_histories, dependent: :destroy
+  belongs_to :project
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   #friendly_id [:name, :room_style, :room_type], use: :slugged
+
+  scope :private, -> { where(private: true) }
+  scope :private_by_user, -> (id) { joins(:project).where(private: true, designer_id: id).order("project_name asc") }
+  scope :public, -> { where(private: false) }
+  scope :public_by_user, -> (id) { joins(:project).where(private: false, designer_id: id).order("project_name asc") }
 
   def slug_candidates
     [
@@ -391,9 +400,16 @@ class Spree::Board < ActiveRecord::Base
     # activate alpha channel on white_canavas to get transparency working
     white_canvas.alpha = Magick::ActivateAlphaChannel
 
+    # normalize z_index, it's closing gap between them
+    (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each_with_index do |object,index|
+      object.update_column(:z_index, index)
+    end
+
     self.board_products(:order => "z_index asc").includes(:product => {:master => [:images]}).reload.collect
+    self.wall_colors.reload.collect
     file = nil
-    self.board_products.each do |bp|
+
+    (self.board_products+self.wall_colors).sort_by{|x| x.z_index}.each do |bp|
       top_left_x, top_left_y = bp.top_left_x, bp.top_left_y
       if bp.height == 0
         bp.height = 5
@@ -403,57 +419,73 @@ class Spree::Board < ActiveRecord::Base
         bp.width == 5
         bp.height == 5 * bp.height
       end
-      if bp.present? and bp.product.present?
 
-        product_image = bp.product.image_for_board(bp)
-      else
-        product_image =""
+      if bp.instance_of?(Spree::BoardProduct)
+        if bp.present? and bp.product.present?
+
+          image = bp.product.image_for_board(bp)
+        elsif bp.custom_item.present?
+          image = bp.custom_item.custom_image_for_board(bp)
+        elsif bp.option_id.present?
+          image = Spree::PropertyConnectImage.option_image_for_board(bp)
+        else
+          image =""
+        end
+      elsif bp.instance_of?(Spree::WallColor)
+        image_url = bp.wall_color.url
+        image = Magick::ImageList.new(image_url)
       end
-      if product_image.present?
+
+      if image.present?
+        #its needed to preevent 'jagged' white border after rotation
+        image.background_color = "none"
+
         #flip! is for vertical mirror
         #flop! is for horizontal mirror
-        product_image.flop! if bp.flip_x == true
+        image.flop! if bp.flip_x == true
 
         # changing format to get alpha channel
-        product_image.format = "png"
+        image.format = "png"
+
         # setting fuzz for similar colors to color which we want transform to transparent
         # number should be low to prevent from cutting middle of product
-        product_image.fuzz = "4%"
+        image.fuzz = "5%"
+
         #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
         # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
-        product_image = product_image.paint_transparent('#ffffff',Magick::TransparentOpacity)
+        image = image.transparent('#ffffff',Magick::TransparentOpacity)
 
         # set the rotation
-        product_image.rotate!(bp.rotation_offset)
-
-        # if turned sideways, then swap the width and height when scaling
+        image.rotate!(bp.rotation_offset)
         if [90, 270].include?(bp.rotation_offset)
-          product_image.scale!(bp.height, bp.width)
+          image.scale!(bp.height, bp.width)
           top_left_x = bp.center_point_x - bp.height/2
           top_left_y = bp.center_point_y - bp.width/2
 
           # original width and height work if it is just rotated 180
         else
-          product_image.scale!(bp.width, bp.height)
+          image.scale!(bp.width, bp.height)
           top_left_x = bp.center_point_x - bp.width/2
           top_left_y = bp.center_point_y - bp.height/2
         end
 
-        white_canvas.composite!(product_image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
+        white_canvas.composite!(image, ::Magick::NorthWestGravity, top_left_x, top_left_y, ::Magick::OverCompositeOp)
       end
 
-      white_canvas.format = 'png'
-      file = Tempfile.new("room_#{self.id}.png")
-      white_canvas.write(file.path)
     end
-      #self.board_image.destroy if self.board_image
-      self.build_board_image if self.board_image.blank?
-      #self.board_image.reload
-      self.board_image.attachment = file
-      self.board_image.save
-      # set it to be clean again
-      #self.is_dirty = 0
-      self.dirty_at = nil
+
+    white_canvas.format = 'png'
+    file = Tempfile.new("room_#{self.id}.png")
+    white_canvas.write(file.path)
+
+    #self.board_image.destroy if self.board_image
+    self.build_board_image if self.board_image.blank?
+    #self.board_image.reload
+    self.board_image.attachment = file
+    self.board_image.save
+    # set it to be clean again
+    #self.is_dirty = 0
+    self.dirty_at = nil
 
     self.save
   end
@@ -494,6 +526,7 @@ class Spree::Board < ActiveRecord::Base
     #     if product_hash['action_board'] == 'update'
     #       board_product = self.board_products.where(id: product_hash['product_id']).first
     #       if board_product.present?
+    #         Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "update_product|#{board_product.product.present? ? board_product.product.name : board_product.custom_item.name}")
     #         if product_hash['image'].present?
     #           crop_image(product_hash['image'], board_product)
     #         end
@@ -507,10 +540,32 @@ class Spree::Board < ActiveRecord::Base
     #         attr = product_hash.except!('action_board', 'product_id', 'image')
     #         board_product = product.board_products.new(attr)
     #         if board_product.save
+    #           Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.product.name}")
     #           if image.present?
     #             crop_image(image, board_product)
     #           end
     #           board_product.update(z_index: product_hash['z_index'])
+    #         end
+    #       else
+    #         puts 'nie istnieje'
+    #         puts 'nie istnieje'
+    #         puts 'nie istnieje'
+    #         custom = Spree::CustomItem.find(product_hash['custom_item_id'])
+    #         puts custom.inspect
+    #         if custom.present?
+    #           image = product_hash['image']
+    #           attr = product_hash.except!('action_board', 'product_id', 'image')
+    #           board_product = Spree::BoardProduct.new(attr)
+    #           if board_product.save
+    #             Spree::BoardHistory.create(user_id: board_product.board.designer.id, board_id: board_product.board_id, action: "new_product|#{board_product.custom_item.name}")
+    #             if image.present?
+    #               crop_image(image, board_product)
+    #             end
+    #             board_product.update(z_index: product_hash['z_index'])
+    #           end
+    #           puts "END "
+    #           puts "END "
+    #           puts "END "
     #         end
     #       end
     #     end
@@ -578,6 +633,102 @@ class Spree::Board < ActiveRecord::Base
     sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
 
     logger.info sending
+  end
+
+  def calculate_tax
+    designer=self.designer.designer_registrations.first
+    if designer.present?
+      # dest_state = Spree::State.find(self.project.state_id)
+      origin=::TaxCloud::Address.new(address1: designer.address1 , city: designer.city, zip5: designer.postal_code, state: designer.state)
+      destination=::TaxCloud::Address.new(address1:  self.project.address1, address2:  self.project.address2, city: self.project.city, zip5: self.project.zip_code, state: self.project.state)
+
+      transaction = ::TaxCloud::Transaction.new(customer_id: designer.user_id, order_id: self.project.id, cart_id: self.project.id,origin: origin, destination: destination)
+      self.board_products.each_with_index do |item,index|
+        transaction.cart_items << get_item_data_for_tax(item,index)
+      end
+
+      response = transaction.lookup
+    end
+  end
+
+  def get_item_data_for_tax(item,index)
+    ::TaxCloud::CartItem.new(
+      index: index,
+      # item_id: item.get_item_data('name')[0...50],
+      item_id: item.get_item_data('sku'),
+      tic: Spree::Config.taxcloud_shipping_tic,
+      price: item.get_item_data('cost'),
+      quantity: 1
+    )
+  end
+
+  def send_email_with_invoice(from_addr,to_addr,to_name,pdf)
+    html_content = ''
+    m = Mandrill::API.new(MANDRILL_KEY)
+
+    colors = []
+    products = []
+    self.colors.each do |c|
+      colors << {:r => c.rgb_r, :g => c.rgb_g,:b => c.rgb_b, :name => c.name, :swatch_val => c.swatch_val}
+    end
+
+    products = []
+    self.board_products.each do |bp|
+      if bp.product.present?
+        products << {:img => bp.product.images.first.attachment.url, :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
+      else
+        products << {:img => bp.custom_item.image(:original), :name => bp.get_item_data('name'), :cost => bp.get_item_data('cost')}
+      end
+    end
+
+    message = {
+        :subject => self.name,
+        :from_name => "INVOICE",
+        :text => "INVOICE",
+        :to => [
+            {
+                :email => to_addr,
+                :name => to_name
+            }
+        ],
+        :from_email => from_addr,
+        :track_opens => true,
+        :track_clicks => true,
+        :url_strip_qs => false,
+        :signing_domain => "scoutandnimble.com",
+        :merge_language => "handlebars",
+        :attachments => [
+            {
+                :type => "pdf",
+                :name => "invoice.pdf",
+                :content => Base64.encode64(pdf)
+            }
+        ],
+        :merge_vars => [
+            {
+                :rcpt => to_addr,
+                :vars => [
+                    {
+                        :name => "boardimage",
+                        :content => self.board_image.attachment(:original)#.split('?')[0]
+                    },
+                    {
+                        :name => "colors",
+                        :content => colors
+                    },
+                    {
+                        :name => "products",
+                        :content => products
+                    },
+                    {
+                        :name => "notes",
+                        :content => self.description
+                    }
+                ]
+            }
+        ]
+    }
+    sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
   end
 
 
