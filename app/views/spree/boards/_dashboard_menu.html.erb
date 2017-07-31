@@ -19,7 +19,9 @@
     <% if check_designer_permissions(@designer_type) %>
       <li class="<%="active" if selected == "portfolio"%>"><a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>
     <% end %>
-    <li class="<%="active" if selected == "projects"%>"><a href="/projects"><i class="fa fa-list-alt"></i>&nbsp;Completed Projects </a></li>
+    <% if @designer_type != "room designer" %>
+      <li class="<%="active" if selected == "projects"%>"><a href="/projects"><i class="fa fa-list-alt"></i>&nbsp;Completed Projects </a></li>
+    <% end %>
     <li class="disabled <%="active" if selected == "payment_solutions"%>"><a href="/payment_solutions"><i class="fa fa-usd"></i>&nbsp; Payment Solutions </a></li>
     <li class="disabled <%="active" if selected == "notifications"%>"><a href="/notifications"><i class="fa fa-envelope-o"></i>&nbsp; Notifications </a></li>
   </ul>
