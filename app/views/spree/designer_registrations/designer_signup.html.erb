@@ -40,15 +40,8 @@
       </div>
       <div class="login-content">
 
-        <% if spree_current_user %>
-            <h4>Step 2 of 2: Complete designer application</h4>
-            <%= render :partial => "form" %>
-        <% else %>
-            <h4>Step 1 of 2: Create your Scout & Nimble Account</h4>
-            <p>Please enter the information below to create your Scout & Nimble account.</p>
-            <%= render :partial => "login_form" %>
+        <%= render partial: 'designer_form_logic_wrapper' %>
 
-        <% end %>
       </div>
     </div>
 

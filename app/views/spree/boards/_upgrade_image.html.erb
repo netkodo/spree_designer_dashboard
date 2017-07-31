@@ -3,11 +3,11 @@
   <% if @designer_type == "all access" or @designer_type == "room designer" %>
     <div>
       <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
-      <div class="col-xs-6 text-center">
-        <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom" %>
+      <div class="col-xs-5 col-xs-offset-1 text-center">
+        <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
       </div>
-      <div class="col-xs-6 text-center">
-        <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom" %>
+      <div class="col-xs-5 text-center">
+        <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
       </div>
     </div>
   <% end %>

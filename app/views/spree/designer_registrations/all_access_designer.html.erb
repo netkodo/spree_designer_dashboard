@@ -115,22 +115,15 @@
 </div>
 
 <div class="row mtl" id="designer-form">
-  <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 git col-xs-12 col-xs-offset-0">
+  <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
     <div class="login-box">
       <div class="login-header">
         <h6>All-Access Designer Registration</h6>
       </div>
       <div class="login-content">
 
-        <% if spree_current_user %>
-            <h4>Step 2 of 2: Complete designer application</h4>
-            <%= render :partial => "form" %>
-        <% else %>
-            <h4>Step 1 of 2: Create your All-Access Account</h4>
-            <p>Please enter the information below to create your account.</p>
-            <%= render :partial => "login_form" %>
+        <%= render partial: 'designer_form_logic_wrapper' %>
 
-        <% end %>
       </div>
     </div>
 

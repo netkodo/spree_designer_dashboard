@@ -141,14 +141,26 @@ class Spree::BoardsController < Spree::StoreController
     # @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
     @projects = Spree::Project.open.where(user_id: spree_current_user.id).order("project_name asc")
     designer_status = spree_current_user.designer_registrations.first.status
-    if designer_status == "room designer"
-      @designer_type = "room designer"
-      # @boards = spree_current_user.boards.where(removal: false)
-      @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
-    elsif designer_status.in?(["all access"])
-      @designer_type = designer_status
-      @boards = spree_current_user.boards.where(removal: false,private: true)
+    @designer_type = designer_status
+    case designer_status
+      when 'room designer'
+        @boards = (spree_current_user.boards.where(removal: false,private: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+      when 'all access'
+        @boards = spree_current_user.boards.where(removal: false,private: true)
+      when 'room all access'
+        @boards = (spree_current_user.boards.where(removal: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+      else
+        @boards = []
     end
+
+    # if designer_status == "room designer"
+    #   @designer_type = "room designer"
+    #   # @boards = spree_current_user.boards.where(removal: false)
+    #   @boards = (spree_current_user.boards.where(removal: false,private: false) + spree_current_user.portfolios).sort_by(&:created_at).reverse
+    # elsif designer_status.in?(["all access"])
+    #   @designer_type = designer_status
+    #   @boards = spree_current_user.boards.where(removal: false,private: true)
+    # end
   end
 
   def profile

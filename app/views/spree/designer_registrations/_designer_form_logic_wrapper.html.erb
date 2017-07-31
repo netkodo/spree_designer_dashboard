@@ -1,0 +1,21 @@
+<% if spree_current_user %>
+  <% if spree_current_user.designer_registrations.present? %>
+    <% status = spree_current_user.designer_registrations.first.status %>
+    <% if status == 'pending' %>
+      Your application is pending
+    <% elsif status == 'room designer' %>
+      <%= render partial: 'form_tin' %>
+    <% elsif status == 'all access' %>
+      <%= render partial: 'form_tin' %>
+    <% elsif status == 'room all accesss' %>
+      You already have all privileges
+    <% end %>
+  <% else %>
+    <h4>Step 2 of 2: Complete designer application</h4>
+    <%= render :partial => "form" %>
+  <% end %>
+<% else %>
+  <h4>Step 1 of 2: Create your All-Access Account</h4>
+  <p>Please enter the information below to create your account.</p>
+  <%= render :partial => "login_form" %>
+<% end %>
