@@ -320,6 +320,11 @@ class Spree::BoardsController < Spree::StoreController
     project_id = nil || params[:project_id]
     @board = Spree::Board.new(:name => "Untitled Room",private: params[:private],project_id: project_id)
     @board.designer = spree_current_user
+    if @board.check_designer_permissions(spree_current_user.designer_registrations.first.status)
+      flash[:notice] = "You do not have permission"
+      redirect_to designer_dashboard_path
+      return
+    end
     if @board.save!
       Spree::BoardHistory.create(user_id: @board.designer.id, board_id: @board.id, action: "room_create")
       redirect_to design_board_path(@board)

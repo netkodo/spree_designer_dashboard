@@ -41,7 +41,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   end
 
   def self.status_options
-    [["Pending Review", "pending"], ["Room Designer", "room designer"], ["To the Trade Designer", "to the trade designer"], ["Test Designer", "test designer"], ["Declined", "declined"], ['All Access','all access']]
+    [["Pending Review", "pending"], ["Room Designer", "room designer"], ["To the Trade Designer", "to the trade designer"], ["Test Designer", "test designer"], ["Declined", "declined"], ['All Access Only','all access'],['Room Designer w/ All Access','room all access']]
   end
 
   def update_designer_status
@@ -83,7 +83,9 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
           user.designer_ac_registration("room designer")
         when "all access"
-          user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 1})
+          user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
+        when "room all access"
+          user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
           self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")

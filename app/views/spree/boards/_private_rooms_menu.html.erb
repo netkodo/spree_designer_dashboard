@@ -10,13 +10,13 @@
       </div>
       <div class="row">
         <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
-          <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Start or Select Project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]),""), :class => 'form-control' %>
+          <%= select_tag :project_select, options_for_select(@projects.map{|p| [p.project_name,p.id]}.unshift(["Start or Select Project","",{disabled: 'disabled'}],["Start New Project","new_project",{class: 'bold'}],["--------------------------------","divider",{disabled: 'disabled', class: 'text-center'}]), cookies['active_project_id'].present? ? cookies['active_project_id'] : ''), :class => 'form-control' %>
         </div>
       </div>
-      <div class="project-managment hidden">
+      <div class="project-managment <%= cookies['active_project_id'].present? ? '' : 'hidden' %>">
         <div class="row mtop">
           <div class="col-md-6 col-md-offset-3 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
-            <%= select_tag :project_action, options_for_select([["Select an Option","",{disabled: 'disabled'}],["Edit / View Project Details","project-details"],["Add a Room for this Project","add-room"],["End Project","end-project"],["Remove Project","remove-project"]],""),class:"form-control", data: {id: "", status: "close"} %>
+            <%= select_tag :project_action, options_for_select([["Select an Option","",{disabled: 'disabled'}],["Edit / View Project Details","project-details"],["Add a Room for this Project","add-room"],["End Project","end-project"],["Remove Project","remove-project"]],""),class:"form-control", data: {id: cookies['active_project_id'].present? ? cookies['active_project_id']: '', status: "close"} %>
           </div>
         </div>
         <div class="row mtop">

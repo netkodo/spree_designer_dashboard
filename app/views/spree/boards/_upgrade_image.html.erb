@@ -1,0 +1,14 @@
+
+<div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
+  <% if @designer_type == "all access" or @designer_type == "room designer" %>
+    <div>
+      <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
+      <div class="col-xs-6 text-center">
+        <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom" %>
+      </div>
+      <div class="col-xs-6 text-center">
+        <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom" %>
+      </div>
+    </div>
+  <% end %>
+</div>

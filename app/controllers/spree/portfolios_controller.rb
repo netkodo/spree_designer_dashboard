@@ -1,5 +1,7 @@
 class Spree::PortfoliosController < Spree::StoreController
 
+  before_filter :ensure_designer_permission, only: [:portfolio, :destroy_portfolio, :edit_portfolio, :new_portfolio, :update_portfolio, :single_portfolio_edit]
+
   def index
     @colors = Hash.new(0)
     @designers = Hash.new(0)
@@ -364,6 +366,14 @@ class Spree::PortfoliosController < Spree::StoreController
   end
 
   private
+
+    def ensure_designer_permission
+      reject_roles = ['all access']
+      if spree_current_user.present? and spree_current_user.designer_registrations.present? and reject_roles.include?(spree_current_user.designer_registrations.first.status)
+        flash[:notice] = "You do not have permission"
+        redirect_to designer_dashboard_path
+      end
+    end
 
     def portfolio_params
       params.require(:portfolio).permit(:id,:user_id,:name,:room_type,:style,:wall_color,:portfolio_image,:description,:paint_brand,:paint_name,:tags,:room_id)

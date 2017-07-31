@@ -26,23 +26,11 @@
 
     <% unless @boards.blank? %>
         <table class="table table-board-listing">
-          <colgroup>
-            <col style="width: 5%" />
-            <col style="width: 20%" />
-            <col style="width: 40%" />
-            <col style="width: 12%" />
-            <col style="width: 10%" />
-            <col style="width: 10%" />
-          </colgroup>
-          <thead>
-          <tr>
-            <th class="status">&nbsp;</th>
-            <th colspan="2"></th>
-            <th class="align-center"># Products</th>
-            <th class="align-center"># Views</th>
-            <th class="align-center">Revenue</th>
-          </tr>
-          </thead>
+          <% if @designer_type == "all access" %>
+            <%= render partial: "table_header_private" %>
+          <% else %>
+              <%= render partial: "table_header_public" %>
+          <% end %>
           <tbody class="dashboard">
 
             <% @boards.each do |board|%>
@@ -58,7 +46,10 @@
 
           </tbody>
         </table>
-        <%- if spree_current_user.designer_commission.present?  %>
+
+        <%= render partial: "upgrade_image" %>
+
+        <%- if spree_current_user.designer_commission.present? and @designer_type != "all access" %>
             <div class="board-title designer_commission_style">
               <%=  "Total earned: #{number_to_currency(spree_current_user.designer_commission)}" %>
             </div>
@@ -93,13 +84,10 @@
       tutorial.run();
     }
     <% if params[:private].present? and (params[:private]=='true' or params[:private]==true) %>
-      console.log('prawda');
       btn = $(".js-get-room-type[data-private='true']");
       globalClickChange(btn);
-    console.log('prawda21321');
       el = $("#project_select option[value=<%= params[:id] %>]");
       $("#project_select").val(<%= params[:id] %>);
       globalChange(el);
-    console.log('prawda52151');
     <% end %>
 </script>

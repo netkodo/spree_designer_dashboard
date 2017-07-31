@@ -205,6 +205,7 @@ Spree::Core::Engine.routes.draw do
 
     get "room_designers" => "designer_registrations#room_designers", :as => :room_designers
     get "trade_program" => "designer_registrations#trade_program", :as => :trade_program
+    get "all_access" => "designer_registrations#all_access", :as => :all_access
 
     get  "designers" => "users#designers", :as => :designers
 

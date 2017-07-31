@@ -68,6 +68,19 @@
     )
     $(".designer_commission_style").removeClass('hidden')
 
+@manageUpgradeImage = (type) ->
+  designer = $('#upgrade_image').data('designer')
+  if designer == 'all access'
+    if type == true
+      $('#upgrade_image').addClass('hidden')
+    else
+      $('#upgrade_image').removeClass('hidden')
+  else
+    if type == false
+      $('#upgrade_image').addClass('hidden')
+    else
+      $('#upgrade_image').removeClass('hidden')
+
 @globalClickChange = (el) ->
   getRoomsDependsOnType(el.data('private'))
   changeTableView(el.data('private'))
@@ -75,13 +88,15 @@
   hideNotSelectedProjects(el.data('private'),$("#project_select").val())
   $(".btn-tab.js-get-room-type").removeClass('active')
   el.addClass('active')
-  if getCookie('active_project_id') != null
-    selected = $('#project_select').val(getCookie('active_project_id'))
-    globalChange(selected)
-  else
-    $('#project_select').val("")
-    $(".project-managment").addClass('hidden')
-    $('#h1_project_name').html("")
+  if el.data('private') == true
+    if getCookie('active_project_id') != null
+      selected = $('#project_select').val(getCookie('active_project_id'))
+      globalChange(selected)
+    else
+      $('#project_select').val("")
+      $(".project-managment").addClass('hidden')
+      $('#h1_project_name').html("")
+  manageUpgradeImage(el.data('private'))
 
 $ ->
   $(".invoice-tooltip").tooltip()

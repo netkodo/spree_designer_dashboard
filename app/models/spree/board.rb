@@ -662,6 +662,16 @@ class Spree::Board < ActiveRecord::Base
     )
   end
 
+  def check_designer_permissions(status)
+    if status == "all access" and self.private == false
+      true
+    elsif status == "room designer" and self.private == true
+      true
+    else
+      false
+    end
+  end
+
   def send_email_with_invoice(from_addr,to_addr,to_name,pdf)
     html_content = ''
     m = Mandrill::API.new(MANDRILL_KEY)
