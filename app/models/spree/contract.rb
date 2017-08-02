@@ -15,6 +15,20 @@ class Spree::Contract < ActiveRecord::Base
                     convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
 
 
+  def generate_and_send_upfront_deposit(upfront_template)
+    pdf = WickedPdf.new.pdf_from_string(upfront_template)
+    save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
+    File.open(save_path, 'wb') do |file|
+      file << pdf
+    end
+
+    pdf_file = File.open(save_path,"r")
+
+    if Spree::Mailers::ContractMailer.upfront_deposit(self.project.email,self.project.user,pdf_file).deliver
+      File.delete(save_path) if File.exist?(save_path)
+    end
+  end
+
   def generate_and_send_contract(contract)
     pdf = WickedPdf.new.pdf_from_string(contract)
     save_path = Rails.root.join('public',"filename-#{Time.now.to_i}.pdf")
