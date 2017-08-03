@@ -128,7 +128,7 @@ class Spree::ContractsController < Spree::StoreController
           @contract.generate_and_send_contract(contract)
 
           if @contract.project.upfront_deposit and @contract.project.deposit_amount.present?
-            upfront_template = render_to_string('/spree/contracts/upfront_deposit.html.erb',layout: false, locals: {upfront_amount: @contract.project.deposit_amount})
+            upfront_template = render_to_string('/spree/contracts/upfront_deposit.html.erb',layout: false, locals: {project: @contract.project, designer: @contract.project.user.designer_registrations.first, user: @contract.project.user})
             @contract.generate_and_send_upfront_deposit(upfront_template)
           end
 

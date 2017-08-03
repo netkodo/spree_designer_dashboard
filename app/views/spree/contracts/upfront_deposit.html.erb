@@ -1,5 +1,142 @@
-<div class="container contract-content">
-  <h2 class="text-center">
-    UPFRONT DEPOSIT: <%= upfront_amount %>
-  </h2>
+<html>
+<head>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/all.css') %>
+</head>
+<body style="border: none;">
+<div class="container">
+
+  <div class="row">
+    <div style="color:black;">test</div>
+    <div class="col-xs-4">
+      <% if user.logo_image.present? %>
+          <%= image_tag user.logo_image.attachment.url %>
+      <% end %>
+    </div>
+    <div class="col-xs-8">
+      <%= user.company_name %><br>
+      <%= designer.address1 %><br>
+      <%= designer.address2 %><br>
+      <%= designer.phone %>
+    </div>
+  </div>
+
+  <div class="row invoice-mb invoice-mt">
+    <div class="col-xs-4 invoice-center">
+      Invoice
+    </div>
+    <div class="col-xs-8">
+      <table class="invoice-table">
+        <colgroup>
+          <col style="width: 33%;">
+          <col style="width: 33%;">
+          <col style="width: 33%;">
+        </colgroup>
+        <thead>
+        <th>Number</th>
+        <th>Date</th>
+        <th>PO</th>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            1234567
+          </td>
+          <td>
+            <%= Date.today.strftime("%m/%d/%Y") %>
+          </td>
+          <td>
+            1
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row invoice-mb">
+    <div class="col-xs-4 invoice-center">
+      Client
+    </div>
+    <div class="col-xs-8">
+      <%= project.project_name %><br>
+      <%= project.address1 %><br>
+      <%= project.address2 %><br>
+      <%= project.phone %>
+    </div>
+  </div>
+
 </div>
+
+<div class="row invoice-mt">
+
+  <table class="project-invoice-table-l1 hourly-table">
+    <col style="width: 5%;">
+    <col style="width: 20%;">
+    <col style="width: 40%;">
+    <col style="width: 15%;">
+    <col style="width: 15%;">
+    <col style="width: 5%;">
+    <thead>
+    <th></th>
+    <th>Date</th>
+    <th>Notes</th>
+    <th>Rate</th>
+    <th>Total</th>
+    <th></th>
+    </thead>
+    <tbody>
+    <tr class="space">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr id="line0">
+      <td></td>
+      <td class="date">
+        <%= Date.today.strftime("%m-%d-%Y") %>
+      </td>
+      <td class="notes">
+        Up Front Deposit
+      </td>
+      <td class="rate">
+        $<%= project.deposit_amount %>
+      </td>
+      <td class="total">
+        $<%= project.deposit_amount %>
+      </td>
+      <td></td>
+    </tr>
+
+    <tr class="space-large">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+
+    <tr>
+      <td colspan="3">
+        <span class="payment-info">Remit payment to <%= user.company_name %></span>
+      </td>
+      <td colspan="3" class="project-sumarize">
+        <span class="total l">TOTAL</span>
+        <span class="r">$<%= project.deposit_amount %></span>
+      </td>
+    </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+</body>
+</html>
