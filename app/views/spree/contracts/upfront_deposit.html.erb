@@ -1,12 +1,13 @@
 <html>
 <head>
-  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/all.css') %>
+  <%#= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/all.css') %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css') %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/invoice_styles/layout1.css') %>
 </head>
 <body style="border: none;">
 <div class="container">
 
   <div class="row">
-    <div style="color:black;">test</div>
     <div class="col-xs-4">
       <% if user.logo_image.present? %>
           <%= image_tag user.logo_image.attachment.url %>

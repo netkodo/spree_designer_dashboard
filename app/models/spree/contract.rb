@@ -16,7 +16,7 @@ class Spree::Contract < ActiveRecord::Base
 
 
   def generate_and_send_upfront_deposit(upfront_template)
-    pdf = WickedPdf.new.pdf_from_string(upfront_template)
+    pdf = WickedPdf.new.pdf_from_string(upfront_template,{margin: {top:10,bottom:10,left:0,right:0}})
     save_path = Rails.root.join('public',"filename-upfront-#{Time.now.to_i}.pdf")
     File.open(save_path, 'wb') do |file|
       file << pdf
