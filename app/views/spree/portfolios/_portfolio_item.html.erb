@@ -4,7 +4,7 @@
 
     <div class="image">
       <% if p.board.present? and p.board.status=="published" %>
-          <%= link_to image_tag(p.portfolio_image.url, class: 'lazyload-auto', lazy: true),show_portfolio_path(p.board) %>
+          <%= link_to image_tag(p.portfolio_image.url, class: 'lazyload-auto', lazy: true),show_portfolio_path(p) %>
       <% else %>
           <%#= image_tag p.portfolio_image.url, class: "img-responsive img-container", :data => {:id => p.id} %>
           <%= link_to image_tag(p.portfolio_image.url, class: 'lazyload-auto', lazy: true),show_portfolio_path(p) %>
