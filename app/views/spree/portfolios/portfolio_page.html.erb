@@ -53,7 +53,7 @@
                   </div>
                 </div>
 
-                <% if p.board.present? and p.board.status=="published" %>
+                <% if (p.board.present? and p.board.status=="published") or p.variants.exists? %>
                     <div class="col-md-12 col-xs-12 col-sm-12 text-center no-paddings shop-the-look">
                       <%= link_to "Shop the Look",show_portfolio_url(p.board), class: "btn btn-primary" %>
                     </div>
