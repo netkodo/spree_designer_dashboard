@@ -4,7 +4,7 @@ class Spree::Project < ActiveRecord::Base
   has_one :contract, dependent: :destroy
   belongs_to :user
   has_many :project_invoice_lines
-  has_one :project_payment, dependent: :destroy
+  has_many :project_payments, dependent: :destroy
 
   scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
   scope :close, -> {where(status: "close")}
@@ -104,13 +104,13 @@ class Spree::Project < ActiveRecord::Base
     tab.include?(self.rate_type) ? hourly : flat
   end
 
-  def set_project_payment
-    if self.project_payment.present?
-      self.project_payment.update(payment_token: SecureRandom.uuid)
+  def set_project_payment(history_id)
+    if self.project_payments.exists? and self.project_payments.where(project_history_id: history_id).exists?
+      payment = self.project_payments.where(project_history_id: history_id).first.update(payment_token: SecureRandom.uuid, project_history_id: history_id)
     else
-      self.create_project_payment(payment_token: SecureRandom.uuid)
+      payment = self.project_payments.create(payment_token: SecureRandom.uuid, project_history_id: history_id )
     end
-    self.project_payment.payment_token
+    payment.payment_token
   end
 
   def send_contract(from_addr,to_addr,to_name,pdf)

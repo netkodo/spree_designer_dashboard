@@ -2,6 +2,7 @@ class Spree::ProjectHistory < ActiveRecord::Base
 
   belongs_to :project
   has_many :project_invoice_lines
+  has_one :project_payment
 
   has_attached_file :pdf,
                     :path => "pdf_invoices/:id/:basename.:extension"
