@@ -13,9 +13,10 @@ class Spree::ProjectsController < Spree::StoreController
     @project = Spree::Project.create(user_id: spree_current_user.id)
     respond_to do |format|
       if @project.save
-        format.json { render json: {message: 'success', location: edit_project_path(id: @project, step: 1)}, status: :created}
+        redirect_to edit_project_path(id: @project, step: 1)
       else
-        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+        flash[:notice] = "Creating project failed. Try again."
+        redirect_to new_project_path
       end
     end
   end
