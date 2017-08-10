@@ -1,6 +1,5 @@
-
-<div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
-  <% if @designer_type == "all access" or @designer_type == "room designer" %>
+<% if @designer_type == "all access" or @designer_type == "room designer" %>
+  <div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
     <div>
       <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
       <div class="col-xs-5 col-xs-offset-1 text-center">
@@ -10,5 +9,30 @@
         <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
       </div>
     </div>
-  <% end %>
-</div>
+  </div>
+<% elsif @designer_type == 'to the trade designer' %>
+  <div id='upgrade_image' data-designer="<%= @designer_type %>">
+    <div id='trade_banner_public' >
+      <div>
+        <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
+        <div class="col-xs-5 col-xs-offset-1 text-center">
+          <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
+        </div>
+        <div class="col-xs-5 text-center">
+          <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
+        </div>
+      </div>
+    </div>
+    <div id='trade_banner_private' class="hidden">
+      <div>
+        <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
+        <div class="col-xs-5 col-xs-offset-1 text-center">
+          <%= link_to "Request to be a <br> Room Designer Now!".html_safe, all_access_designer_path, class: "btn btn-primary btn-custom-all-access small" %>
+        </div>
+        <div class="col-xs-5 text-center">
+          <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

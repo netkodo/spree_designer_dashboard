@@ -75,11 +75,13 @@
       $('#upgrade_image').addClass('hidden')
     else
       $('#upgrade_image').removeClass('hidden')
-  else
-    if type == false
-      $('#upgrade_image').addClass('hidden')
+  else if designer == 'to the trade designer'
+    if type == true
+      $('#trade_banner_public').addClass('hidden')
+      $('#trade_banner_private').removeClass('hidden')
     else
-      $('#upgrade_image').removeClass('hidden')
+      $('#trade_banner_private').addClass('hidden')
+      $('#trade_banner_public').removeClass('hidden')
 
 @globalClickChange = (el) ->
   getRoomsDependsOnType(el.data('private'))
