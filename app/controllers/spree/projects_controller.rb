@@ -11,14 +11,14 @@ class Spree::ProjectsController < Spree::StoreController
 
   def new
     @project = Spree::Project.create(user_id: spree_current_user.id)
-    respond_to do |format|
+    # respond_to do |format|
       if @project.save
         redirect_to edit_project_path(id: @project, step: 1)
       else
         flash[:notice] = "Creating project failed. Try again."
         redirect_to new_project_path
       end
-    end
+    # end
   end
 
   def show
