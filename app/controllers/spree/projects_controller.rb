@@ -10,7 +10,14 @@ class Spree::ProjectsController < Spree::StoreController
   end
 
   def new
-    @project = Spree::Project.new
+    @project = Spree::Project.create(user_id: spree_current_user.id)
+    respond_to do |format|
+      if @project.save
+        format.json { render json: {message: 'success', location: edit_project_path(id: @project, step: 1)}, status: :created}
+      else
+        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+      end
+    end
   end
 
   def show
