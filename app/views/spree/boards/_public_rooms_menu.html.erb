@@ -1,3 +1,3 @@
-<div class="row menu-public">
+<div class="row menu-public <%= hide.present? ? (hide ? 'hidden' : '') : '' %>">
   <%= link_to "Add a Room", new_room_path(private: false), :class => "btn btn-primary btn-no-radius" %>
 </div>

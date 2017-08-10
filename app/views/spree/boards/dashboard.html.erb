@@ -13,6 +13,9 @@
               <%= render partial: "public_rooms_menu" %>
             <% elsif @designer_type == "all access" %>
               <%= render partial: "private_rooms_menu" %>
+            <% elsif @designer_type == "room all access" %>
+              <%= render partial: "public_rooms_menu", locals: {hide: false} %>
+              <%= render partial: "private_rooms_menu", locals: {hide: true} %>
             <% end %>
         </div>
 

@@ -1,4 +1,4 @@
-<div class="row menu-private">
+<div class="row menu-private <%= hide.present? ? (hide ? 'hidden' : '') : '' %>">
   <% unless @projects.present? %>
       <div class="col-md-12 text-center">
         <h1>You do not have any projects</h1>
