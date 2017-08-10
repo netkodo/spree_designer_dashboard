@@ -1,0 +1,19 @@
+<%= form_for(spree_current_user.designer_registrations.first, html: {id: 'all_access_payment_form'}) do |f| %>
+    <% Spree::PaymentMethod.where(active: true, environment: Rails.env, display_on: ['frontend','']).each do |method| %>
+        <fieldset class="text-center">
+          <%= render :partial => "spree/checkout/payment/#{method.method_type}", :locals => {:payment_method => method} %>
+        </fieldset>
+    <% end %>
+    <div class="actions">
+      <%= f.submit "Pay", :class => "btn btn-primary disabled" %>
+    </div>
+<% end %>
+
+<% if cookies[:designer_finish_form] %>
+    <% cookies.delete :designer_finish_form %>
+    <script>
+        $(document).ready(function(){
+            document.getElementById("all_access_payment_form").scrollIntoView();
+        });
+    </script>
+<% end %>

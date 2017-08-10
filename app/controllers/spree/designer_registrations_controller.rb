@@ -45,7 +45,13 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     if @designer_registration.save
       session[:fb_pixel_email] = current_spree_user.email
       @designer_registration.user.designer_ac_signup(@designer_registration.applied_for)
-      redirect_to designer_registration_thanks_url
+      if @designer_registration.applied_for == 'all access' and !@designer_registration.access_paid
+        cookies[:designer_finish_form] = true
+        # redirect_to '/designers/all-access-designer'
+        respond_with @designer_registration, location: '/designers/all-access-designer'
+      else
+        redirect_to designer_registration_thanks_url
+      end
     else
       cookies[:designer_registration] = params[:designer_registration][:applied_for]
       if params[:designer_registration][:applied_for] == "all access"

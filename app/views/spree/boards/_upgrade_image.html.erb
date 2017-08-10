@@ -3,7 +3,7 @@
     <div>
       <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
       <div class="col-xs-5 col-xs-offset-1 text-center">
-        <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
+        <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access js-upgrade-account", data: {upgrade: "room all access"} %>
       </div>
       <div class="col-xs-5 text-center">
         <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
@@ -16,7 +16,7 @@
       <div>
         <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
         <div class="col-xs-5 col-xs-offset-1 text-center">
-          <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
+          <%= link_to "Join Now", all_access_designer_path, class: "btn btn-primary btn-custom-all-access js-upgrade-account", data: {upgrade: "room all access"} %>
         </div>
         <div class="col-xs-5 text-center">
           <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
@@ -27,7 +27,7 @@
       <div>
         <%= image_tag 'frontend/dashboard/upgrade.png', class: 'img-responsive' %>
         <div class="col-xs-5 col-xs-offset-1 text-center">
-          <%= link_to "Request to be a <br> Room Designer Now!".html_safe, all_access_designer_path, class: "btn btn-primary btn-custom-all-access small" %>
+          <%= link_to "Request to be a <br> Room Designer Now!".html_safe, all_access_designer_path, class: "btn btn-primary btn-custom-all-access small js-upgrade-account", data: {upgrade: "room designer"} %>
         </div>
         <div class="col-xs-5 text-center">
           <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
@@ -36,3 +36,5 @@
     </div>
   </div>
 <% end %>
+
+<%= render partial: "upgrade_modal" %>

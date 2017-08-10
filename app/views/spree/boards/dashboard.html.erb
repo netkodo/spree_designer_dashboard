@@ -10,9 +10,9 @@
 
 
           <% if @designer_type == "room designer" %>
-              <%= render partial: "public_rooms_menu" %>
+              <%= render partial: "public_rooms_menu", locals: {hide: nil} %>
             <% elsif @designer_type == "all access" %>
-              <%= render partial: "private_rooms_menu" %>
+              <%= render partial: "private_rooms_menu", locals: {hide: nil} %>
             <% elsif @designer_type == "room all access" %>
               <%= render partial: "public_rooms_menu", locals: {hide: false} %>
               <%= render partial: "private_rooms_menu", locals: {hide: true} %>

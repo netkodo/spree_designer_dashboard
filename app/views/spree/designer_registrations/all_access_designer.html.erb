@@ -129,7 +129,8 @@
 
   </div>
 </div>
-<% if @designer_registration.errors.present? %>
+<% if @designer_registration.errors.present? or cookies[:designer_finish_form] %>
+  <% cookies.delete :designer_finish_form %>
   <script>
     $(document).ready(function(){
         document.getElementById("designer-form").scrollIntoView();

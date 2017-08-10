@@ -609,3 +609,10 @@ $ ->
           error: (resp) ->
             console.log 'error'
   ,".js-project-remove-room"
+
+  $(document).on
+    click: (e) ->
+      e.preventDefault()
+      $('#designer_registration_applied_for').val($(@).data('upgrade'))
+      $('#upgrade-modal').modal()
+  ,".js-upgrade-account"
