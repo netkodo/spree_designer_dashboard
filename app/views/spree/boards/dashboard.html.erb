@@ -33,10 +33,10 @@
           <tbody>
           <% @boards.each do |board|%>
             <% if board.instance_of?(Spree::Board) %>
-              <tr id="<%= board.id %>" class="<%= !board.generated ? 'generating' : '' %>">
+              <tr id="<%= board.id %>" class="<%= !board.generating? ? 'generating' : '' %>">
                 <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
                 <td class="board-thumb">
-                  <% if board.generated %>
+                  <% if board.generating? %>
                     <%= board_image(board,:small)%>
                   <% else %>
                     <%= image_tag("/assets/frontend/boards/small_generated.png", class: 'img-responsive')%>
