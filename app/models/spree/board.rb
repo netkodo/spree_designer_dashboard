@@ -480,7 +480,7 @@ class Spree::Board < ActiveRecord::Base
     "https://scoutandnimble.com/rooms/#{self.id}"
   end
 
-  def generating?
+  def generated?
     begin
       if open(self.board_image.attachment.url(:small)) and self.generated
         true
