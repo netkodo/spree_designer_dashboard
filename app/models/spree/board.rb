@@ -482,7 +482,7 @@ class Spree::Board < ActiveRecord::Base
 
   def generating?
     begin
-      if open(self.board_image.attachment.url(:small)) and !self.generated
+      if open(self.board_image.attachment.url(:small)) and self.generated
         true
       else
         false
