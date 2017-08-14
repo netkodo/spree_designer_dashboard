@@ -86,9 +86,9 @@ class Spree::ProjectsController < Spree::StoreController
   def destroy
     @project = Spree::Project.find(params[:id])
     if @project.destroy
-      render json: {location: projects_path}
+      render json: {location: designer_dashboard_path}
     else
-      render json: {location: projects_path}
+      render json: {location: designer_dashboard_path}
     end
   end
 
