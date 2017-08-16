@@ -10,7 +10,7 @@ class Spree::ProjectsController < Spree::StoreController
   end
 
   def new
-    @project = Spree::Project.create(user_id: spree_current_user.id)
+    @project = Spree::Project.new(user_id: spree_current_user.id)
     # respond_to do |format|
       if @project.save
         redirect_to edit_project_path(id: @project, step: 1)
