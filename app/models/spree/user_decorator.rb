@@ -30,7 +30,8 @@ Spree::User.class_eval do
 
   def designer_type
     d = self.designer_registrations.first
-    d.present? ? d.status : ''
+    status = d.present? ? d.status : 'Subscriber'
+    status == 'room all access' ? 'Room designer with All-access' : status.capitalize
   end
 
   def is_affiliate?
@@ -43,6 +44,10 @@ Spree::User.class_eval do
   
   def self.is_active_designer
     where(:can_add_boards => 1)
+  end
+
+  def check_designer_type(except)
+    self.present? and self.designer_registrations.exists? and !except.include?(self.designer_registrations.first.status)
   end
   
 end

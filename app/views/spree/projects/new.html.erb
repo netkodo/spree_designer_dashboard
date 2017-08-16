@@ -1,9 +1,9 @@
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-12 col-xs-12">
         <%= render :partial => "spree/boards/dashboard_menu", :locals => {:selected => "projects"} %>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-9 col-sm-12 col-xs-12">
         <%= form_for @project, :method => 'patch',:url => project_path, html: {id: "update_project_form"} do |f| %>
           <div class="row">
              <div class="col-md-8 col-md-offset-2">

@@ -82,6 +82,11 @@
     else
       $('#trade_banner_private').addClass('hidden')
       $('#trade_banner_public').removeClass('hidden')
+  else if designer == 'room designer'
+    if type == false
+      $('#upgrade_image').addClass('hidden')
+    else
+      $('#upgrade_image').removeClass('hidden')
 
 @globalClickChange = (el) ->
   getRoomsDependsOnType(el.data('private'))
@@ -616,3 +621,12 @@ $ ->
       $('#designer_registration_applied_for').val($(@).data('upgrade'))
       $('#upgrade-modal').modal()
   ,".js-upgrade-account"
+
+  $(document).on
+    click: (e) ->
+      $('#project-info-wrapper').slideToggle('fast')
+      if $('#project-info-wrapper').is(':visible')
+        $('.js-project-info-toggle .sign').html('-')
+      else
+        $('.js-project-info-toggle .sign').html('+')
+  ,'.js-project-info-toggle'
