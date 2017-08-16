@@ -56,6 +56,35 @@
                     </div>
                   </div>
 
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.text_field :retailer, placeholder: 'Retailer', :class => 'form-control' %>
+                      <div class="errors text-left"></div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.text_field :url, placeholder: 'Product URL', :class => 'form-control' %>
+                      <div class="errors text-left"></div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.text_field :dimensions, placeholder: 'Dimensions', :class => 'form-control' %>
+                      <div class="errors text-left"></div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.select :project_id, options_for_select(spree_current_user.projects.map{|x| [x.project_name,x.id]}.unshift(['Add to Project', '']), ''), {}, class: 'form-control' %>
+                      <%#= f.text_field :project_id, placeholder: 'Shipping cost', :class => 'form-control' %>
+                      <div class="errors text-left"></div>
+                    </div>
+                  </div>
+
                   <div class="text-center">
                     <div class="btn btn-default close-custom-item">Cancel</div>
                     <%= submit_tag("Save Changes", :class =>"btn btn-primary") %>
