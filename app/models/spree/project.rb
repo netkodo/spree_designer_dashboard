@@ -6,9 +6,16 @@ class Spree::Project < ActiveRecord::Base
   has_many :project_invoice_lines
   has_many :project_payments, dependent: :destroy
 
+  validates :email, presence: true, if: :validate_only_update
+  validates :project_name, presence: true, if: :validate_only_update
+
   scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
   scope :close, -> {where(status: "close")}
   scope :open, -> {where(status: "open")}
+
+  def validate_only_update
+    !self.new_record?
+  end
 
   def get_customer_billing_cycle
     if self.rate_type == 'flat_rate'
