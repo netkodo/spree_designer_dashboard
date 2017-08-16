@@ -311,8 +311,9 @@ $ ->
             $("#send-contract").modal('hide')
             $("#modal-location-body .confirmation").removeClass("hidden")
             $("#modal-location-body .error").addClass("hidden")
+            $('.js-send-contract-confirmation').removeClass('disabled').text('YES')
           ,'1000'
-          console.log 'error'
+#          console.log 'error'
 #          console.log response
   ,".js-send-contract-confirmation"
 
@@ -486,11 +487,19 @@ $ ->
         dataType: 'json'
         url: $('#update_project_form').attr('action')
         data: $('#update_project_form').serialize() + "&current_step=#{current_step}"
+        beforeSend: () ->
+          $('.error').html('')
+          $('input').removeClass('error')
         success: (response) ->
           $('.step').hide()
           $(".step-#{step}").show()
         error: (response) ->
-          console.log 'error'
+          res = JSON.parse(response.responseText)
+          for k,v of res.errors
+            $("#project_#{k}").addClass('error')
+            $(".#{k}_error").text(v.join(','))
+
+#          console.log 'error'
 
       #deprecated due to not using step 4
 #      if step == 2
