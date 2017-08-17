@@ -1,6 +1,6 @@
 <div class="row db-custom">
   <div class="col-md-3 col-sm-12 col-xs-12">
-    <%= render :partial => "dashboard_menu", :locals => {:selected => "dashboard"}%>
+    <%= render :partial => "dashboard_menu", :locals => {:selected => "dashboard"} %>
   </div>
 
   <div class="col-md-9 col-sm-12 col-xs-12">
@@ -11,41 +11,45 @@
 
           <% if @designer_type == "room designer" %>
               <%= render partial: "public_rooms_menu", locals: {hide: nil} %>
-            <% elsif @designer_type == "all access" %>
+          <% elsif @designer_type == "all access" %>
               <%= render partial: "private_rooms_menu", locals: {hide: nil} %>
-            <% elsif @designer_type == "room all access" %>
+          <% elsif @designer_type == "room all access" %>
               <%= render partial: "public_rooms_menu", locals: {hide: false} %>
               <%= render partial: "private_rooms_menu", locals: {hide: true} %>
-            <% end %>
+          <% end %>
         </div>
 
       </div>
     </div>
     <div class="room-type-buttons">
-      <div class="btn btn-default btn-tab js-get-room-type <%= select_active_tab(spree_current_user,false) %>" data-private="false">Public Rooms</div>
-      <div class="btn btn-default btn-tab js-get-room-type <%= select_active_tab(spree_current_user,true) %>" data-private="true">Private Projects</div>
+      <div class="btn btn-default btn-tab js-get-room-type <%= select_active_tab(spree_current_user, false) %>" data-private="false">Public
+        Rooms
+      </div>
+      <div class="btn btn-default btn-tab js-get-room-type <%= select_active_tab(spree_current_user, true) %>" data-private="true">Private
+        Projects
+      </div>
     </div>
 
 
     <% unless @boards.blank? %>
         <table class="table table-board-listing">
           <% if @designer_type == "all access" %>
-            <%= render partial: "table_header_private" %>
+              <%= render partial: "table_header_private" %>
           <% else %>
               <%= render partial: "table_header_public" %>
           <% end %>
           <tbody class="dashboard">
 
-            <% @boards.each do |board|%>
-              <% cache board do %>
-                <% if board.instance_of?(Spree::Board) %>
+          <% @boards.each do |board| %>
+              <% if board.instance_of?(Spree::Board) %>
                   <%= render partial: "board_row", locals: {board: board} %>
-                <% else %>
-                  <%= render partial: "portfolio_row", locals: {board: board} %>
-                <% end %>
+              <% else %>
+                  <% cache board do %>
+                      <%= render partial: "portfolio_row", locals: {board: board} %>
+                  <% end %>
               <% end %>
 
-            <% end %>
+          <% end %>
 
           </tbody>
         </table>
@@ -54,7 +58,7 @@
 
         <%- if spree_current_user.designer_commission.present? and @designer_type != "all access" %>
             <div class="board-title designer_commission_style">
-              <%=  "Total earned: #{number_to_currency(spree_current_user.designer_commission)}" %>
+              <%= "Total earned: #{number_to_currency(spree_current_user.designer_commission)}" %>
             </div>
             <div class="board-title designer_commission_style">
               <%= "Total paid: #{number_to_currency(spree_current_user.total_affiliate_payments_amount)}" %>
@@ -62,7 +66,7 @@
             <div class="board-title designer_commission_style">
               <%= "Total due: #{number_to_currency(spree_current_user.afilliate_balance_due)}" %>
             </div>
-        <%- end%>
+        <%- end %>
     <% else %>
         <!--<div class="empty-state empty-tabs">You have not created any rooms yet.</div>-->
         <%= render partial: "upgrade_image" %>
@@ -77,21 +81,21 @@
 
 <script>
     $('#new_room_button').popover();
-    if($('.table.table-board-listing tbody tr').length == 1 && document.referrer.match('design') != null && <%= session[:page_count]==0 ? true:false %>) {
-      tutorial = new EnjoyHint({});
-      dashboard_after_save = [
-        {
-          'click .board-actions' : "Now that you've saved your room, you can preview it to ensure it is exacly how you want it. You can hiy Edit to make changes to your room, or you can \"Submit to Publish\" if your room is finished and you are ready for it to go live."
-        }
-      ];
-      tutorial.set(dashboard_after_save);
-      tutorial.run();
+    if ($('.table.table-board-listing tbody tr').length == 1 && document.referrer.match('design') != null && <%= session[:page_count]==0 ? true:false %>) {
+        tutorial = new EnjoyHint({});
+        dashboard_after_save = [
+            {
+                'click .board-actions': "Now that you've saved your room, you can preview it to ensure it is exacly how you want it. You can hiy Edit to make changes to your room, or you can \"Submit to Publish\" if your room is finished and you are ready for it to go live."
+            }
+        ];
+        tutorial.set(dashboard_after_save);
+        tutorial.run();
     }
     <% if params[:private].present? and (params[:private]=='true' or params[:private]==true) %>
-      btn = $(".js-get-room-type[data-private='true']");
-      globalClickChange(btn);
-      el = $("#project_select option[value=<%= params[:id] %>]");
-      $("#project_select").val(<%= params[:id] %>);
-      globalChange(el);
+    btn = $(".js-get-room-type[data-private='true']");
+    globalClickChange(btn);
+    el = $("#project_select option[value=<%= params[:id] %>]");
+    $("#project_select").val(<%= params[:id] %>);
+    globalChange(el);
     <% end %>
 </script>

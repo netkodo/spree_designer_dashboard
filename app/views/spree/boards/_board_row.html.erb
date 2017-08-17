@@ -1,10 +1,11 @@
-<tr id="<%= board.id %>" class="<%= board.private %> <%= board_hide_class_manage(@designer_type) %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %> <%= board.project.present? ? "project#{board.project.id}" : "" %>">
-  <td class="status"><span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
+<tr id="<%= board.id %>" class="<%= board.private %> <%= board_hide_class_manage(@designer_type, board, cookies['active_project_id']) %> board<%= board.id %> <%= !board.generated ? 'generating' : '' %>">
+  <td class="status">
+    <span class="label label-<%= board.display_short_status.downcase %>"><%= board.display_short_status %></span></td>
   <td class="board-thumb">
     <% if board.generated %>
-        <%= board_image(board,:small)%>
+        <%= board_image(board, :small) %>
     <% else %>
-        <%= image_tag("/assets/frontend/boards/small_generated.png", class: 'img-responsive')%>
+        <%= image_tag("/assets/frontend/boards/small_generated.png", class: 'img-responsive') %>
     <% end %>
   </td>
   <td class="board-title">
