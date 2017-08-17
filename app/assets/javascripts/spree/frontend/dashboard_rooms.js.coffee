@@ -233,6 +233,7 @@ $ ->
           $(".table.table-board-listing tbody.project tr.true").not(".project#{$(my_this).parents('.board-actions').data('project_id')}.board#{$(my_this).parents('.board-actions').data('board_id')}").addClass('hidden')
           my_this.parents('tr').after("<tr class='invoice'><td class='no-border' colspan='6'>#{response}</td></tr>")
         error: (response) ->
+          my_this.removeClass('disabled')
           my_this.parents('tr').after("<tr class='notification-to-remove'><td class='no-border text-center' colspan='6'>Board is empty</td></tr>")
           setTimeout () ->
             $('.notification-to-remove').remove()

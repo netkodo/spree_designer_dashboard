@@ -89,23 +89,25 @@ class Spree::BoardProduct < ActiveRecord::Base
     customer_cost = BigDecimal(0)
     your_cost = BigDecimal(0)
     obj.each do |s|
-      if s.product.present?
-        if s.invoice_line.present? and s.invoice_line.price.present?
-          customer_cost += s.invoice_line.price
-          your_cost += s.invoice_line.price
-        else
-          customer_cost += s.product.price
-          your_cost += s.product.cost_price
-        end
-      else
-        if s.invoice_line.present? and s.invoice_line.price.present?
-          customer_cost += s.invoice_line.price
-          your_cost += s.custom_item.cost
-        else
-          customer_cost += s.custom_item.price
-          your_cost += s.custom_item.cost
-        end
-      end
+      # if s.product.present?
+      #   if s.invoice_line.present? and s.invoice_line.price.present?
+      #     customer_cost += s.invoice_line.price
+      #     your_cost += s.invoice_line.price
+      #   else
+      #     customer_cost += s.product.price
+      #     your_cost += s.product.cost_price
+      #   end
+      # else
+      #   if s.invoice_line.present? and s.invoice_line.price.present?
+      #     customer_cost += s.invoice_line.price
+      #     your_cost += s.custom_item.cost
+      #   else
+      #     customer_cost += s.custom_item.price
+      #     your_cost += s.custom_item.cost
+      #   end
+      # end
+      customer_cost += s.get_item_data('price')
+      your_cost += s.get_item_data('cost')
     end
     customer_cost *= ((100-discount_amount)/100.to_f.round(2)) if discount
     if only_customer_cost

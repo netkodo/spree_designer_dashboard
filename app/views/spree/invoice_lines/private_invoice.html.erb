@@ -25,7 +25,7 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.product.cost_price %>
+            <%= bp.get_item_data('cost') %>
           </td>
           <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
             <%= bp.get_item_data('price') %>
@@ -49,7 +49,7 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.custom_item.cost %>
+            <%= bp.get_item_data('cost') %>
           </td>
           <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
             <%= bp.get_item_data('price') %>
