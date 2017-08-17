@@ -633,7 +633,7 @@ $ ->
 
   $(document).on
     click: (e) ->
-      $('#project-info-wrapper').slideToggle('fast')
+      $('#project-info-wrapper').toggle()
       if $('#project-info-wrapper').is(':visible')
         $('.js-project-info-toggle .sign').html('-')
       else
