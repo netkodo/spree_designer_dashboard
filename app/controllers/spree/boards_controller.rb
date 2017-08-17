@@ -790,9 +790,9 @@ class Spree::BoardsController < Spree::StoreController
     if @board
       @board.update(removal: true)
       Resque.enqueue DeleteRoom,@board.id
-      flash[:notice] = "The room has been deleted."
-    else
-      flash[:warning] = "We could not delete this room."
+      # flash[:notice] = "The room has been deleted."
+    # else
+    #   flash[:warning] = "We could not delete this room."
     end
     respond_to do |format|
       format.html { redirect_to designer_dashboard_path }
