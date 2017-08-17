@@ -100,10 +100,10 @@ class Spree::BoardProduct < ActiveRecord::Base
       else
         if s.invoice_line.present? and s.invoice_line.price.present?
           customer_cost += s.invoice_line.price
-          your_cost += s.invoice_line.price
+          your_cost += s.custom_item.cost
         else
           customer_cost += s.custom_item.price
-          your_cost += s.custom_item.price
+          your_cost += s.custom_item.cost
         end
       end
     end
