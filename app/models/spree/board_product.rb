@@ -106,15 +106,25 @@ class Spree::BoardProduct < ActiveRecord::Base
       #     your_cost += s.custom_item.cost
       #   end
       # end
-      customer_cost += s.get_item_data('price')
-      your_cost += s.get_item_data('cost')
+      if s.product_id.present?
+        customer_cost += s.calculate_discount(s.get_item_data('price'),discount_amount)
+        your_cost += s.product.price
+      else
+        customer_cost += s.get_item_data('price')
+        your_cost += s.custom_item.price
+      end
+
     end
-    customer_cost *= ((100-discount_amount)/100.to_f.round(2)) if discount
+    # customer_cost *= ((100-discount_amount)/100.to_f.round(2)) if discount
     if only_customer_cost
       customer_cost
     else
       [your_cost, customer_cost]
     end
+  end
+
+  def calculate_discount(price,discount)
+    price *= ((100-discount)/100.to_f.round(2))
   end
 
   def tear_sheet_images
