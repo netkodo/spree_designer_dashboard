@@ -25,9 +25,11 @@
     if type == true
       $('.table-board-listing tbody .false').each ->
         $(@).addClass('hidden')
+      $('.table-board-listing tbody .false').first().addClass('nbt')
     else
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
+      $('.table-board-listing tbody .true').first().addClass('nbt')
 
 @changeMenu = (type) ->
   if type == true
@@ -636,7 +638,9 @@ $ ->
     click: (e) ->
       $('#project-info-wrapper').toggle()
       if $('#project-info-wrapper').is(':visible')
+        $(@).addClass('margin-off')
         $('.js-project-info-toggle .sign').html('-')
       else
+        $(@).removeClass('margin-off')
         $('.js-project-info-toggle .sign').html('+')
   ,'.js-project-info-toggle'

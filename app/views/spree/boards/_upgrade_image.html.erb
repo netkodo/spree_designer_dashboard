@@ -1,12 +1,12 @@
 <% if @designer_type == "all access" or @designer_type == "room designer" %>
   <div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
     <div>
-      <%= image_tag 'frontend/dashboard/upgrade_room.png', class: 'img-responsive' %>
+      <%= image_tag 'frontend/dashboard/upgrade_all.png', class: 'img-responsive' %>
       <div class="col-xs-5 col-xs-offset-1 text-center">
-        <%= link_to "Sign Me Up!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin js-upgrade-account", data: {upgrade: "room all access"} %>
+        <%= link_to "Sign Me Up!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access js-upgrade-account", data: {upgrade: "room all access"} %>
       </div>
       <div class="col-xs-5 text-center">
-        <%= link_to "Tell Me More!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin" %>
+        <%= link_to "Tell Me More!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>
       </div>
     </div>
   </div>
@@ -16,10 +16,10 @@
       <div>
         <%= image_tag 'frontend/dashboard/upgrade_room.png', class: 'img-responsive' %>
         <div class="col-xs-5 col-xs-offset-1 text-center">
-          <%= link_to "Sign Me Up!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin js-upgrade-account", data: {upgrade: "room all access"} %>
+          <%= link_to "Sign Me Up!", new_designer_signup_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin", data: {upgrade: "room all access"} %>
         </div>
         <div class="col-xs-5 text-center">
-          <%= link_to "Tell Me More!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin" %>
+          <%= link_to "Tell Me More!", new_designer_signup_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin" %>
         </div>
       </div>
     </div>

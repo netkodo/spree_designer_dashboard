@@ -60,7 +60,12 @@ class Spree::ProjectsController < Spree::StoreController
     current_step = params[:current_step] || 3
     @project = Spree::Project.find(params[:id])
     respond_to do |format|
-      @project.assign_attributes(eval("project_params_step#{current_step}"))
+
+      step_params = eval("project_params_step#{current_step}")
+      attrs = [:rate, :deposit_amount, :discount_amount]
+      attrs.each{ |a| step_params[a] = step_params[a].gsub('$','').strip if step_params[a].present? }
+
+      @project.assign_attributes(step_params)
       if @project.changed?
         if @project.save #update(eval("project_params_step#{current_step}"))
           @project.contract.destroy if @project.contract.present? and @project.contract.signed?

@@ -97,5 +97,8 @@
     el = $("#project_select option[value=<%= params[:id] %>]");
     $("#project_select").val(<%= params[:id] %>);
     globalChange(el);
+    <% else %>
+      $('.table-board-listing tbody .false').first().addClass('nbt');
+      $('.table-board-listing tbody .true').first().addClass('nbt');
     <% end %>
 </script>

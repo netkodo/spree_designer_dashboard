@@ -117,3 +117,12 @@
     <%= f.submit "Submit Registration", :class => "btn btn-primary" %>
   </div>
 <% end %>
+
+<% if cookies[:designer_finish_form] %>
+    <% cookies.delete :designer_finish_form %>
+    <script>
+        $(document).ready(function(){
+            document.getElementById("new_designer_registration").scrollIntoView();
+        });
+    </script>
+<% end %>
