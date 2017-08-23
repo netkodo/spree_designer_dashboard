@@ -112,7 +112,10 @@
                     <div class="text-s">Details:</div>
                     <ul class="light">
                       <% bp.tear_sheet_properties.each do |prop| %>
-                          <li><%= prop[0] %>: <%= prop[1] %></li>
+                          <li>
+                            <!-- <%#= prop[0] %>: <%#=  %> -->
+                            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: prop[0].gsub(' ','_'), value: prop[1], label: prop[0]} %>
+                          </li>
                       <% end %>
                     </ul>
                 <% end %>
@@ -122,7 +125,8 @@
                     <ul class="light">
                       <% bp.tear_sheet_dimensions(bp.product.master).each do |dim| %>
                           <li>
-                            <%= dim[0] %>: <%= dim[1] %>
+                            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: dim[0], value: dim[1], label: dim[0]} %>
+                            <!-- <%#= dim[0] %>: <%#= dim[1] %> -->
                           </li>
                       <% end %>
                     </ul>
