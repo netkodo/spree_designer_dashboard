@@ -23,7 +23,7 @@
                   <div class="row">
                     <div class="col-md-12">
                       <%= f.label :applied_for, "Upgrade for" %>
-                      <%= f.text_field :applied_for, :class => 'form-control', readonly: true %>
+                      <%= text_field_tag :applied_for, "room all access", name: "designer_registration[applied_for]", :class => 'form-control', readonly: true %>
                       <%= f.error_message_on :applied_for %>
                     </div>
                   </div>
