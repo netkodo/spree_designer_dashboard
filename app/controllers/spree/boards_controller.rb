@@ -60,12 +60,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def require_board_designer
-    if !(spree_current_user and spree_current_user.is_board_designer?)
-      if spree_current_user.is_affiliate?
-        redirect_to my_profile_path
-      else
-        redirect_to root_path
-      end
+    if !spree_current_user.present?
+      redirect_to root_path
     end
   end
 
