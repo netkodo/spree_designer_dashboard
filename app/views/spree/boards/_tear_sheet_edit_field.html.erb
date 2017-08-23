@@ -1,0 +1,16 @@
+<!--field_name, value-->
+<% label = label || '' %>
+<div class="tear-sheet-edit">
+  <div class="display">
+    <%= label.present? ? (label != "$" ? "#{label}: " : "#{label}") : "" %><span class="display-value"><%= value %></span>
+    <i class="fa fa-edit js-edit"></i>
+    <span class="slash"> / </span>
+    <i class="fa fa-eye-slash js-show-hide"></i>
+  </div>
+  <div class="edit-input" data-old="<%= value %>">
+    <%= text_field_tag "#{field_name}", value, class: 'form-control' %>
+    <a class="btn btn-success btn-xs js-tear-update"><i class="fa fa-save"></i> save</a>
+    <a class="btn btn-xs btn-danger js-tear-cancel"><i class="fa fa-times"></i> cancel</a>
+    <a class="btn btn-xs btn-default js-tear-old-val"><i class="fa fa-repeat"></i> old value</a>
+  </div>
+</div>
