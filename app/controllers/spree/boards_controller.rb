@@ -315,6 +315,25 @@ class Spree::BoardsController < Spree::StoreController
     end
   end
 
+  def prepare_tear_sheet
+    board = Spree::Board.friendly.find(params[:id])
+    project = board.project
+    user = board.designer
+    designer = user.designer_registrations.first
+    board_products = board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
+    subtotal = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
+    total = Spree::BoardProduct.calculate_subtotal(board_products,true,project.pass_discount,project.discount_amount)
+
+    taxcloud=board.calculate_tax
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "tear_sheet", locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total, project: project}, orientation: 'Landscape'
+      end
+      format.html{ render html: "tear_sheet",locals: {designer: designer, user: user, board: board, board_products: board_products,subtotal: subtotal, tax: taxcloud.tax_amount, total: total, project: project}, layout: false }
+    end
+  end
+
   def edit
     @board = Spree::Board.find(params[:id])
     @colors = Spree::Color.order(:position).where("position > 144 and position < 1000")

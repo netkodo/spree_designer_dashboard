@@ -1,7 +1,8 @@
 <html>
 <head>
-  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/styles.css'), :media => 'screen' %>
-  <%= stylesheet_link_tag wicked_pdf_asset_base64('spree/frontend/invoice_styles/tear_sheet.css'), :media => 'screen' %>
+  <%= javascript_include_tag 'spree/frontend/jquery-preload'%>
+  <%= javascript_include_tag 'spree/frontend/all', :defer => 'defer'  %>
+  <%= stylesheet_link_tag 'spree/frontend/all', :media => 'screen' %>
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 </head>
 <body style="border: none;">
@@ -93,13 +94,16 @@
         </div>
         <div class="col-xs-6 invoice-bp-color">
           <div class="text-center text-l mb">
-            <%= bp.tear_sheet_data(:name) %>
+            <%#= bp.tear_sheet_data(:name) %>
+            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: 'name', value: bp.tear_sheet_data(:name)} %>
           </div>
           <div class="text-center text-s mb">
-            SKU: <%= bp.tear_sheet_data(:sku) %>
+            <!-- SKU: <%#= bp.tear_sheet_data(:sku) %> -->
+            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: 'sku', value: bp.tear_sheet_data(:sku), label: 'SKU'} %>
           </div>
           <div class="text-center text-m mb">
-            $<%= bp.tear_sheet_data(:price) %>
+            <!-- $<%#= bp.tear_sheet_data(:price) %> -->
+            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: 'price', value: bp.tear_sheet_data(:price), label: '$'} %>
           </div>
           <div>
             <% if bp.product.present? %>
@@ -108,7 +112,10 @@
                     <div class="text-s">Details:</div>
                     <ul class="light">
                       <% bp.tear_sheet_properties.each do |prop| %>
-                          <li><%= prop[0] %>: <%= prop[1] %></li>
+                          <li>
+                            <!-- <%#= prop[0] %>: <%#=  %> -->
+                            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: prop[0].gsub(' ','_'), value: prop[1], label: prop[0]} %>
+                          </li>
                       <% end %>
                     </ul>
                 <% end %>
@@ -118,7 +125,8 @@
                     <ul class="light">
                       <% bp.tear_sheet_dimensions(bp.product.master).each do |dim| %>
                           <li>
-                            <%= dim[0] %>: <%= dim[1] %>
+                            <%= render partial: 'tear_sheet_edit_field', locals: {field_name: dim[0], value: dim[1], label: dim[0]} %>
+                            <!-- <%#= dim[0] %>: <%#= dim[1] %> -->
                           </li>
                       <% end %>
                     </ul>
