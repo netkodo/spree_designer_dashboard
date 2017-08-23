@@ -28,7 +28,7 @@
                     </div>
                   </div>
                 </div>
-                <% Spree::PaymentMethod.where(active: true, environment: Rails.env, display_on: ['frontend','']).each do |method| %>
+                <% Spree::PaymentMethod.where(active: true, environment: Rails.env, display_on: ['frontend','']).limit(1).each do |method| %>
                     <fieldset class="text-center">
                       <%= render :partial => "spree/checkout/payment/#{method.method_type}", :locals => {:payment_method => method} %>
                     </fieldset>

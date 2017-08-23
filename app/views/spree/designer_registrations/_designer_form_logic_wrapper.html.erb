@@ -2,15 +2,17 @@
   <% if spree_current_user.designer_registrations.present? %>
     <% d = spree_current_user.designer_registrations.first %>
     <% if !d.access_paid %>
-      <%= render :partial => 'payment_form' %>
-    <% elsif d.status == 'pending' %>
-      Your application is pending
-    <% elsif d.status == 'room designer' %>
-      <%= render partial: 'form_tin' %>
-    <% elsif d.status == 'all access' %>
-      <%= render partial: 'form_tin' %>
-    <% elsif d.status == 'room all accesss' %>
-      You already have all privileges
+      <% if d.status == 'pending' %>
+        Your application is pending
+      <% elsif d.status == 'room designer' %>
+        <%= render :partial => 'payment_form' %>
+      <% elsif d.status == 'to the trade designer' %>
+        <%= render partial: 'form_tin' %>
+      <% elsif d.status == 'all access' %>
+        <%= render partial: 'form_tin' %>
+      <% elsif d.status == 'room all accesss' %>
+        You already have all privileges
+      <% end %>
     <% end %>
   <% else %>
     <h4>Step 2 of 2: Complete designer application</h4>
