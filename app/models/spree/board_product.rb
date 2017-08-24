@@ -4,6 +4,7 @@ class Spree::BoardProduct < ActiveRecord::Base
   belongs_to :board
   belongs_to :product
   belongs_to :custom_item
+  has_many :custom_tear_sheets
   before_create :set_z_index
 
   has_attached_file :photo,
@@ -42,7 +43,13 @@ class Spree::BoardProduct < ActiveRecord::Base
     
   end
   
-  
+
+  def get_cts_data(key)
+    if self.custom_tear_sheets.present?
+      self.custom_tear_sheets.custom(key).first.value if self.custom_tear_sheets.custom(key).present?
+    end
+  end
+
   def published_on_site
     false
   end
