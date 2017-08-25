@@ -15,7 +15,7 @@
   </div>
   <div class="edit-input" data-old="<%= value %>">
     <%= text_field_tag "#{bp.id}_#{field_name.downcase.gsub(' ','_')}", value, name: "custom_tear_sheet[#{bp.id}][#{field_name.downcase.gsub(' ','_')}][value]", class: 'form-control val-field' %>
-    <%= text_field_tag "#{bp.id}_visible", 1, name: "custom_tear_sheet[#{bp.id}][#{field_name.downcase.gsub(' ','_')}][visible]", class: 'form-control visible-field hidden' %>
+    <%= text_field_tag "#{bp.id}_visible", bp.data_visible?(field_name) ? 1 : 0, name: "custom_tear_sheet[#{bp.id}][#{field_name.downcase.gsub(' ','_')}][visible]", class: 'form-control visible-field hidden' %>
     <a class="btn btn-success btn-xs js-tear-update"><i class="fa fa-save"></i> save</a>
     <a class="btn btn-xs btn-danger js-tear-cancel"><i class="fa fa-times"></i> cancel</a>
     <a class="btn btn-xs btn-default js-tear-old-val"><i class="fa fa-repeat"></i> old value</a>
