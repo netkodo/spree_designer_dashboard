@@ -50,6 +50,19 @@ class Spree::BoardProduct < ActiveRecord::Base
     end
   end
 
+  def data_visible?(key)
+    invoice_line_fields = ['sku','name']
+    if key.in?(invoice_line_fields)
+      if self.invoice_line.present?
+        self.invoice_line.send("#{key}_visible")
+      end
+    else
+      if self.custom_tear_sheets
+        self.custom_tear_sheets.custom(key).present? ? self.custom_tear_sheets.custom(key).first.visible : false
+      end
+    end
+  end
+
   def published_on_site
     false
   end

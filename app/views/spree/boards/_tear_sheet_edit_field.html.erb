@@ -2,7 +2,7 @@
 <div class="tear-sheet-edit" data-bp="<%= bp.id %>" data-field="<%= field_name %>">
   <div class="display">
     <%= "<li>".html_safe if list %>
-    <span class="show-hide-field">
+    <span class="show-hide-field" style="<%= "display: none;" unless bp.data_visible?(field_name) %>">
       <%= label.present? ? (label != "$" ? "#{label}: " : "#{label}") : "" %>
       <span class="display-value">
         <%= value %>
@@ -10,7 +10,7 @@
     </span>
     <i class="fa fa-edit js-edit"></i>
     <span class="slash"> / </span>
-    <i class="fa fa-eye-slash js-show-hide"></i>
+    <i class="fa <%= bp.data_visible?(field_name) ? 'fa-eye-slash' : 'fa-eye' %> js-show-hide"></i>
     <%= "</li>".html_safe if list %>
   </div>
   <div class="edit-input" data-old="<%= value %>">
