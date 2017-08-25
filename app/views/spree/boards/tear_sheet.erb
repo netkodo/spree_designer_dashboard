@@ -93,10 +93,10 @@
         </div>
         <div class="col-xs-6 invoice-bp-color">
           <div class="text-center text-l mb">
-            <%= bp.get_item_data(:name) %>
+            <%= bp.get_item_data(:name) if bp.data_visible?('name') %>
           </div>
           <div class="text-center text-s mb">
-            SKU: <%= bp.get_item_data(:sku) %>
+            <% if bp.data_visible?('sku') %>SKU: <%= bp.get_item_data(:sku) %><% end %>
           </div>
           <div class="text-center text-m mb">
             $<%= bp.tear_sheet_data(:price) %>
@@ -108,7 +108,9 @@
                     <div class="text-s">Details:</div>
                     <ul class="light">
                       <% bp.tear_sheet_properties.each do |prop| %>
+                        <% if bp.data_visible?(prop[0]) %>
                           <li><%= prop[0] %>: <%= bp.get_cts_data(prop[0]) || prop[1] %></li>
+                        <% end %>
                       <% end %>
                     </ul>
                 <% end %>
@@ -117,9 +119,11 @@
                     <div class="text-s">Weights & Dimensions</div>
                     <ul class="light">
                       <% bp.tear_sheet_dimensions(bp.product.master).each do |dim| %>
+                        <% if bp.data_visible?(dim[0]) %>
                           <li>
                             <%= dim[0] %>: <%= bp.get_cts_data(dim[0]) || dim[1] %>
                           </li>
+                        <% end %>
                       <% end %>
                     </ul>
 
