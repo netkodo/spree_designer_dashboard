@@ -8,6 +8,7 @@ class Spree::Project < ActiveRecord::Base
 
   validates :email, presence: true, if: :validate_only_update
   validates :project_name, presence: true, if: :validate_only_update
+  validates :zip_code, presence: true, length: { minimum: 5 }
 
   scope :inclues_private_boards, -> { includes(:boards).where("spree_boards.private = true") }
   scope :close, -> {where(status: "close")}
