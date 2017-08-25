@@ -149,7 +149,7 @@ Spree::Core::Engine.routes.draw do
   get '/rooms/:id/design' => "boards#design", :as => :design_board
   get '/rooms/:id/design2' => "boards#design2", :as => :design_board2
   get '/rooms/:id/preview' => "boards#preview", :as => :preview_board
-  get '/rooms/:id/tear_sheet' => "boards#tear_sheet", :as => :tear_sheet
+  post '/rooms/:id/tear_sheet' => "boards#tear_sheet", :as => :tear_sheet
   get '/rooms/:id/prepare_tear_sheet' => "boards#prepare_tear_sheet", :as => :prepare_tear_sheet
   get '/colors/get_color/:swatch_val' => "colors#get_color", :as => :get_color_by_swatch
   get '/products/:id/product_with_variants' => "products#product_with_variants", :as => :product_with_variants

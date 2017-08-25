@@ -1,14 +1,21 @@
-<!--field_name, value-->
 <% label = label || '' %>
-<div class="tear-sheet-edit">
+<div class="tear-sheet-edit" data-bp="<%= bp.id %>" data-field="<%= field_name %>">
   <div class="display">
-    <%= label.present? ? (label != "$" ? "#{label}: " : "#{label}") : "" %><span class="display-value"><%= value %></span>
+    <%= "<li>".html_safe if list %>
+    <span class="show-hide-field">
+      <%= label.present? ? (label != "$" ? "#{label}: " : "#{label}") : "" %>
+      <span class="display-value">
+        <%= value %>
+      </span>
+    </span>
     <i class="fa fa-edit js-edit"></i>
     <span class="slash"> / </span>
     <i class="fa fa-eye-slash js-show-hide"></i>
+    <%= "</li>".html_safe if list %>
   </div>
   <div class="edit-input" data-old="<%= value %>">
-    <%= text_field_tag "#{field_name}", value, class: 'form-control' %>
+    <%= text_field_tag "#{bp.id}_#{field_name.downcase.gsub(' ','_')}", value, name: "custom_tear_sheet[#{bp.id}][#{field_name.downcase.gsub(' ','_')}][value]", class: 'form-control val-field' %>
+    <%= text_field_tag "#{bp.id}_visible", 1, name: "custom_tear_sheet[#{bp.id}][#{field_name.downcase.gsub(' ','_')}][visible]", class: 'form-control visible-field hidden' %>
     <a class="btn btn-success btn-xs js-tear-update"><i class="fa fa-save"></i> save</a>
     <a class="btn btn-xs btn-danger js-tear-cancel"><i class="fa fa-times"></i> cancel</a>
     <a class="btn btn-xs btn-default js-tear-old-val"><i class="fa fa-repeat"></i> old value</a>

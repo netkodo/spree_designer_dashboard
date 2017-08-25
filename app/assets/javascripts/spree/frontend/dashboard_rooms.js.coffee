@@ -15,6 +15,7 @@
   $(".table.table-board-listing tbody tr.true").not(".project#{el.val()}").addClass('hidden')
   $('.edit-project').attr('href',"/projects/#{el.val()}")
   $(".add-project-room").attr('href',"/rooms/new?private=true&project_id=#{el.val()}")
+  $('.table-board-listing tbody .true:visible').first().addClass('nbt')
 
 @clearHidden = () ->
   $('.table-board-listing tbody tr').each ->
@@ -29,7 +30,7 @@
     else
       $('.table-board-listing tbody .true').each ->
         $(@).addClass('hidden')
-      $('.table-board-listing tbody .true').first().addClass('nbt')
+      $('.table-board-listing tbody .true:visible').first().addClass('nbt')
 
 @changeMenu = (type) ->
   if type == true
