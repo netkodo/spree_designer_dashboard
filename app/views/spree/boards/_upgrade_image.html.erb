@@ -1,4 +1,16 @@
-<% if @designer_type == "all access" or @designer_type == "room designer" %>
+<% if @designer_type == "all access" %>
+  <div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
+    <div>
+      <%= image_tag 'frontend/dashboard/upgrade_room.png', class: 'img-responsive' %>
+      <div class="col-xs-5 col-xs-offset-1 text-center">
+        <%= link_to "Sign Me Up!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access js-upgrade-account btn-custom-no-margin", data: {upgrade: "room all access"} %>
+      </div>
+      <div class="col-xs-5 text-center">
+        <%= link_to "Tell Me More!", all_access_designer_path, class: "btn btn-primary btn-custom-all-access btn-custom-no-margin" %>
+      </div>
+    </div>
+  </div>
+<% elsif @designer_type == "room designer" %>
   <div id='upgrade_image' class="hidden" data-designer="<%= @designer_type %>">
     <div>
       <%= image_tag 'frontend/dashboard/upgrade_all.png', class: 'img-responsive' %>
@@ -27,7 +39,7 @@
       <div>
         <%= image_tag 'frontend/dashboard/upgrade_all.png', class: 'img-responsive' %>
         <div class="col-xs-5 col-xs-offset-1 text-center">
-          <%= link_to "Request to be a <br> Room Designer Now!".html_safe, all_access_designer_path, class: "btn btn-primary btn-custom-all-access small js-upgrade-account", data: {upgrade: "room designer"} %>
+          <%= link_to "Join now!".html_safe, all_access_designer_path, class: "btn btn-primary btn-custom-all-access js-upgrade-account", data: {upgrade: "room designer"} %>
         </div>
         <div class="col-xs-5 text-center">
           <%= link_to "Learn More", all_access_designer_path, class: "btn btn-primary btn-custom-all-access" %>

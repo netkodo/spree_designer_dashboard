@@ -1,37 +1,38 @@
 <% selected ||= "" %>
+<% disabled_class = spree_current_user.is_board_designer? ? '' : 'disabled'%>
 <div id="db-mobile">
   <button class="btn btn-default dropdown-toggle col-sm-12 col-xs-12 text-center" data-toggle="dropdown">MENU</button>
   <ul class="nav nav-pills nav-stacked col-xs-12">
     <li class="<%= "active" if selected == "dashboard" %>">
       <a href="/dashboard"><i class="glyphicon glyphicon-th"></i> My Projects</a></li>
-    <% if spree_current_user.is_board_designer? %>
+    <%# if spree_current_user.is_board_designer? %>
         <% if check_designer_permissions(@designer_type) %>
-            <li><a href="<%= new_room_path(private: false) %>"><i class="fa fa-plus"></i>&nbsp; Add a Room </a></li>
+            <li class="<%= disabled_class %>"><a href="<%= new_room_path(private: false) %>"><i class="fa fa-plus"></i>&nbsp; Add a Room </a></li>
         <% end %>
-        <li class="<%= "active" if selected == "tutorial" %>">
+        <li class="<%= "active" if selected == "tutorial" %> <%= disabled_class %>">
           <a href="/video_tutorial"><i class="fa fa-video-camera"></i> Video Tutorial</a></li>
-        <li class="<%= "active" if selected == "tips" %>">
+        <li class="<%= "active" if selected == "tips" %> <%= disabled_class %>">
           <a href="/tips_tricks"><i class="fa fa-bolt"></i> &nbsp;Tips &amp; Tricks</a></li>
-        <li class="<%= "active" if selected == "suppliers" %>">
+        <li class="<%= "active" if selected == "suppliers" %> <%= disabled_class %>">
           <a href="/our_suppliers"><i class="fa fa-building-o"></i> &nbsp;Our Suppliers</a></li>
-    <% end %>
-    <li class="<%= "active" if selected == "profile" %>">
+    <%# end %>
+    <li class="<%= "active" if selected == "profile" %> <%= disabled_class %>">
       <a href="/my_profile"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
-    <li class="<%= "active" if selected == "store_credit" %>">
+    <li class="<%= "active" if selected == "store_credit" %> <%= disabled_class %>">
       <a href="/my_store_credit"><i class="fa fa-money"></i> &nbsp; Store Credit</a></li>
-    <li class="<%= "active" if selected == "questions_and_answers" %>">
+    <li class="<%= "active" if selected == "questions_and_answers" %> <%= disabled_class %>">
       <a href="/questions_and_answers"><i class="fa fa-question-circle"></i> &nbsp; Q&A &nbsp;
         (<span class="question-pending"><%= count_board_questions %> pending</span>)</a></li>
-    <% if spree_current_user.is_board_designer? %>
+    <%# if spree_current_user.is_board_designer? %>
         <% if check_designer_permissions(@designer_type) %>
-            <li class="<%= "active" if selected == "portfolio" %>">
+            <li class="<%= "active" if selected == "portfolio" %> <%= disabled_class %>">
               <a href="/portfolio"><i class="fa fa-picture-o"></i>&nbsp; Add Portfolio Images </a></li>
         <% end %>
         <% if @designer_type != "room designer" %>
-            <li class="<%= "active" if selected == "projects" %>">
+            <li class="<%= "active" if selected == "projects" %> <%= disabled_class %>">
               <a href="/projects"><i class="fa fa-list-alt"></i>&nbsp;Completed Projects </a></li>
         <% end %>
-    <% end %>
+    <%# end %>
     <li class="disabled <%= "active" if selected == "payment_solutions" %>">
       <a href="/payment_solutions"><i class="fa fa-usd"></i>&nbsp; Payment Solutions </a></li>
     <li class="disabled <%= "active" if selected == "notifications" %>">
