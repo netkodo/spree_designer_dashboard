@@ -297,8 +297,8 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def tear_sheet
+    Spree::CustomTearSheet.create_or_update_tear_sheet(Spree::Board.friendly.find(params[:id]), params[:custom_tear_sheet])
     board = Spree::Board.friendly.where(slug: params[:id]).includes(board_products: [:custom_tear_sheets, :invoice_line], products: :product_properties).first
-    Spree::CustomTearSheet.create_or_update_tear_sheet(board, params[:custom_tear_sheet])
 
     project = board.project
     user = board.designer

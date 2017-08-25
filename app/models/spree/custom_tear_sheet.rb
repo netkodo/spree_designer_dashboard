@@ -10,11 +10,12 @@ class Spree::CustomTearSheet < ActiveRecord::Base
     board_products.each do |bp|
 
       params[bp.id.to_s].each do |key,values|
-        if bp.custom_tear_sheets.present?
-          create_or_update_cts(bp.id, key, values)
+        if key.in?(invoice_line_fields)
+          hash = {"#{key}" => values['value'], "#{key}_visible" => values['visible']}
+          update_invoice_line(bp,hash)
         else
-          if key.in?(invoice_line_fields)
-            bp.invoice_line.present? ? bp.invoice_line.update_columns(name: values['value'] ,name_visible: values['visible'] ) : bp.create_invoice_line(name: values['value'] ,name_visible: values['visible'] )
+          if bp.custom_tear_sheets.present?
+            update_or_create_cts(bp.id, key, values)
           else
             create_cts(bp.id, key, values)
           end
@@ -23,6 +24,10 @@ class Spree::CustomTearSheet < ActiveRecord::Base
 
     end
 
+  end
+
+  def self.update_invoice_line(bp, hash)
+    bp.invoice_line.present? ? bp.invoice_line.send(:update_columns, hash) : bp.create_invoice_line(hash)
   end
 
   def self.create_cts(bp_id, key, values)
