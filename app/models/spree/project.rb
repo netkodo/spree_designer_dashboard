@@ -114,7 +114,8 @@ class Spree::Project < ActiveRecord::Base
 
   def set_project_payment(history_id)
     if self.project_payments.exists? and self.project_payments.where(project_history_id: history_id).exists?
-      payment = self.project_payments.where(project_history_id: history_id).first.update(payment_token: SecureRandom.uuid, project_history_id: history_id)
+      payment = self.project_payments.where(project_history_id: history_id).first
+      payment.update(payment_token: SecureRandom.uuid, project_history_id: history_id)
     else
       payment = self.project_payments.create(payment_token: SecureRandom.uuid, project_history_id: history_id )
     end
