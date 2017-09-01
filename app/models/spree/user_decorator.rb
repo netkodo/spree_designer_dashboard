@@ -31,7 +31,7 @@ Spree::User.class_eval do
   def designer_type
     d = self.designer_registrations.first
     status = d.present? ? d.status : 'Subscriber'
-    status == 'room all access' ? 'Room designer with All-access' : status.capitalize
+    status == 'room all access' ? 'Room designer with All-access' : status
   end
 
   def is_affiliate?
