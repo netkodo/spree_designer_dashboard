@@ -45,8 +45,8 @@ class Spree::ProjectsController < Spree::StoreController
       if @project.save
         format.json { render json: {message: 'success', location: edit_project_path(id: @project, step: 1)}, status: :created}
       else
-        puts @project.errors.messages
-        format.json {render json: {message: 'error'}, status: :unprocessable_entity}
+        # puts @project.errors.messages
+        format.json {render json: {message: 'error', errors: @project.errors.messages}, status: :unprocessable_entity}
       end
     end
   end
