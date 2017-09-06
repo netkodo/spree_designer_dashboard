@@ -18,77 +18,82 @@
 <% end %>
 
 <ul class="ch-grid">
-    
-    
-<% @designers.in_groups_of(4,false) do |row_designers| %>
-	
+  <% @designers.in_groups_of(4,false) do |row_designers| %>
+    <% for designer in row_designers %>
+      <% if designer.user_images.blank? %>
+        <li style="margin-top: 60px;">
 
-	<% for designer in row_designers %>
-	
-		<% if designer.user_images.blank? %>
-			
-			<li style="margin-top: 60px;">
-				
-		        <div class="ch-item ch-img-default">
-		              <a href="/<%=designer.username%>" >
-			             <div class="ch-info">
-			                <h3><%=designer.company_name %></h3>
-			                <p><%= designer.location%></p>
-			             </div>
-		            </a>
-		        </div>
-		        
-		       <a href="/<%=designer.username%>" style="color:black;font-size:18px;">
-			       <div style="margin-top: 25px;">
-				       <%if designer.full_name.present?%>
-					 <%= designer.full_name %> 
-				       <%elsif designer.username.present?%>
-					      <%= designer.username %> 
-					<%else%>
-						  &nbsp;    
-		            	       <%end%>
-		               </div>
+          <% if spree_current_user.present? and spree_current_user.has_spree_role?("admin") %>
+            <div class="ch-designer-hide-icon">
+              <%= link_to "#", remote: true, class: 'js-hide-icon' do %>
+                <i class="fa fa-minus-square" aria-hidden="true"></i>
+              <% end %>
+            </div>
+          <% end %>
 
-		        </a>
-		    </li>
-		       	
-		<% else %>
-			<style>
-				.ch-img-<%=designer.id %> { 
-				    background-image: url('/assets/frontend/blank.png');
-                    /*background-repeat: no-repeat;*/
-                    /*background-position: center;*/
-                    /*background-size: 220px 220px ;*/
-				}
-			</style>
-			<li style="margin-top: 60px;">
-			
-		        <div class="ch-item ch-img-<%=designer.id %> lazyload" data-original="<%=designer.user_images.first.attachment(:primary)%>">
-		          <a href="/<%=designer.username%>" >
-		             <div class="ch-info">
-		                <h3><%= designer.company_name %></h3>
-						<p><%= designer.location%></p>
-		            </div>
-		          </a>
-		        </div>
-		     <a href="/<%=designer.username%>" style="color:black;font-size:18px;"> 
-                       <div style="margin-top: 25px;">
-		               <%if designer.full_name.present?%>
-				 <%= designer.full_name %> 
-			       <%elsif designer.username.present?%>
-				      <%= designer.username %> 
-				<%else%>
-				           
-			       <%end%>
-   	              </div>
-                     </a>
-		    </li>
-		<% end %>
-	
-		
+          <div class="ch-item ch-img-default">
+                <a href="/<%=designer.username%>" >
+                 <div class="ch-info">
+                    <h3><%=designer.company_name %></h3>
+                    <p><%= designer.location%></p>
+                 </div>
+              </a>
+          </div>
+
+          <a href="/<%=designer.username%>" style="color:black;font-size:18px;">
+             <div style="margin-top: 25px;">
+              <%if designer.full_name.present?%>
+                <%= designer.full_name %>
+              <%elsif designer.username.present?%>
+                <%= designer.username %>
+              <%else%>
+              &nbsp;
+              <%end%>
+            </div>
+          </a>
+        </li>
+      <% else %>
+        <style>
+          .ch-img-<%=designer.id %> {
+              background-image: url('/assets/frontend/blank.png');
+                      /*background-repeat: no-repeat;*/
+                      /*background-position: center;*/
+                      /*background-size: 220px 220px ;*/
+          }
+        </style>
+        <li style="margin-top: 60px;">
+
+          <% if spree_current_user.present? and spree_current_user.has_spree_role?("admin") %>
+              <div class="ch-designer-hide-icon">
+                <%= link_to "#", remote: true, class: 'js-hide-icon' do %>
+                    <i class="fa fa-minus-square" aria-hidden="true"></i>
+                <% end %>
+              </div>
+          <% end %>
+
+          <div class="ch-item ch-img-<%=designer.id %> lazyload" data-original="<%=designer.user_images.first.attachment(:primary)%>">
+            <a href="/<%=designer.username%>" >
+               <div class="ch-info">
+                  <h3><%= designer.company_name %></h3>
+                   <p><%= designer.location%></p>
+              </div>
+            </a>
+        </div>
+        <a href="/<%=designer.username%>" style="color:black;font-size:18px;">
+          <div style="margin-top: 25px;">
+            <%if designer.full_name.present?%>
+              <%= designer.full_name %>
+            <%elsif designer.username.present?%>
+              <%= designer.username %>
+            <%else%>
+
+            <%end%>
+          </div>
+         </a>
+        </li>
+      <% end %>
     <% end %>
-
-<% end %>
+  <% end %>
 </ul>
 
 <% if false %>

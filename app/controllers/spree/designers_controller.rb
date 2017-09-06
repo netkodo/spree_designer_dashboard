@@ -10,6 +10,13 @@ class Spree::DesignersController < Spree::StoreController
 
   def index
     @designers = Spree::User.published_designers().order("created_at desc")
+
+
+    respond_to do |format|
+      format.html {}
+      format.js   {}
+      format.json { render :json => @designers, status: :ok }
+    end
   end
 
   def tutorials

@@ -202,6 +202,28 @@ $(document).on({
 //    return [dataImg, cropper]
 //}
 
+$(".js-hide-icon").click(function(e) {
+    console.log("abc");
+    e.preventDefault();
+    $.ajaxForm({
+        dataType: 'json',
+        success: function (response) {
+            console.log("abc");
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes, I am sure!',
+                cancelButtonText: "No, cancel it!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            });
+        }
+    });
+});
+
+
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
