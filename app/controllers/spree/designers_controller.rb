@@ -10,12 +10,17 @@ class Spree::DesignersController < Spree::StoreController
 
   def index
     @designers = Spree::User.published_designers().order("created_at desc")
+  end
 
+  def handle_designer_hide
+    designer = Spree::User.find(params[:event_option_id]) if params[:event_option_id].present?
 
     respond_to do |format|
-      format.html {}
-      format.js   {}
-      format.json { render :json => @designers, status: :ok }
+      if designer.present? and designer.update_column(:show_designer_profile, false)
+        format.json { render json: {message: 'Designer has been hidden!'}, status: :ok}
+      else
+        format.json { render json: {message: 'Error'}, status: :unprocessable_entity}
+      end
     end
   end
 
@@ -126,7 +131,7 @@ class Spree::DesignersController < Spree::StoreController
     end
 
     respond_to do |format|
-      if @user.update_attributes(params[:user].permit!)
+      if @user.update_attributes(params[:user])
         @user.validate_description = false
         spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
         session[:popup_portfolio] = true if spree_current_user.popup_portfolio

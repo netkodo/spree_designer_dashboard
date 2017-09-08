@@ -35,8 +35,6 @@ function initializeProductSearchForm() {
                     $('.solr-filter-products').html(response);
                 }
             });
-
-
         });
     });
 }
@@ -202,27 +200,26 @@ $(document).on({
 //    return [dataImg, cropper]
 //}
 
-$(".js-hide-icon").click(function(e) {
-    console.log("abc");
-    e.preventDefault();
-    $.ajaxForm({
-        dataType: 'json',
-        success: function (response) {
-            console.log("abc");
-            swal({
-                title: "Are you sure?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Yes, I am sure!',
-                cancelButtonText: "No, cancel it!",
-                closeOnConfirm: false,
-                closeOnCancel: false
+$(document).ready(function() {
+    $(".js-hide-icon").click(function (e) {
+        e.preventDefault();
+        var obj = $(this).parents(".js-remove-obj");
+        var for_url = this;
+        if(confirm("Are you sure?")) {
+            $.ajax({
+                dataType: 'json',
+                type: "POST",
+                url: for_url.href,
+                success: function (response) {
+                    return obj.remove();
+                },
+                error: function (response) {
+                    return console.log('error')
+                }
             });
         }
     });
 });
-
 
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
