@@ -26,7 +26,7 @@
 
           <% if spree_current_user.present? and spree_current_user.has_spree_role?("admin") %>
             <div class="ch-designer-hide-icon">
-              <%= link_to designers_path(format: 'json', :event => designer.id, :event_option_id => designer.id), class: 'js-hide-icon' do %>
+              <%= link_to designers_path(format: 'json', :event_option_id => designer.id), class: 'js-hide-icon' do %>
                 <i class="fa fa-minus-square" aria-hidden="true"></i>
               <% end %>
             </div>

@@ -131,7 +131,7 @@ class Spree::DesignersController < Spree::StoreController
     end
 
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.update_attributes(params[:user].permit!)
         @user.validate_description = false
         spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
         session[:popup_portfolio] = true if spree_current_user.popup_portfolio
