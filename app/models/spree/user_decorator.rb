@@ -34,6 +34,11 @@ Spree::User.class_eval do
     status == 'room all access' ? 'Room designer with All-access' : status
   end
 
+  def designer_type_in?(types)
+    d = self.designer_registrations.first
+    d.present? and d.status.in?(types)
+  end
+
   def is_affiliate?
     self.is_discount_eligible
   end
