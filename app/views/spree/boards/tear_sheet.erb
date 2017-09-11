@@ -85,7 +85,7 @@
                     <%= image_tag img, class: "img-responsive img-center" %>
                   </div>
               <% else %>
-                  <div class="col-xs-6 product-image small">
+                  <div class="col-xs-6 product-image small" style="page-break-inside: avoid;">
                     <%= image_tag img, class: "img-responsive img-center" %>
                   </div>
               <% end %>
@@ -198,14 +198,21 @@
         <col style="width: 5%;">
         <col style="width: 15%;">
         <col style="width: 15%;">
-        <thead>
-        <th>SKU</th>
-        <th>NAME</th>
-        <th>QTY</th>
-        <th>PRICE</th>
-        <th>TOTAL</th>
-        </thead>
+        <!--<thead>-->
+        <!--<th>SKU</th>-->
+        <!--<th>NAME</th>-->
+        <!--<th>QTY</th>-->
+        <!--<th>PRICE</th>-->
+        <!--<th>TOTAL</th>-->
+        <!--</thead>-->
         <tbody>
+        <tr class="header">
+          <td>SKU</td>
+          <td>NAME</td>
+          <td>QTY</td>
+          <td>PRICE</td>
+          <td>TOTAL</td>
+        </tr>
         <tr class="space">
           <td></td>
           <td></td>
