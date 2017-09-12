@@ -1,4 +1,5 @@
 class Spree::Project < ActiveRecord::Base
+
   has_many :boards, dependent: :destroy
   has_many :project_histories, dependent: :destroy
   has_one :contract, dependent: :destroy
@@ -151,6 +152,46 @@ class Spree::Project < ActiveRecord::Base
         ]
     }
     sending = m.messages.send_template('invoice-email', [{:name => 'main', :content => html_content}], message, true)
+  end
+
+  def generate_cycle_invoice
+    history = self.project_histories.create(action: "invoice_ready")
+    pending_invoice = self.project_histories.find_by_action("pending_invoice")
+    pending_invoice.present? ? pending_invoice.id : self.project_histories.create(action: "pending_invoice").id
+
+    user = self.user
+    designer = user.designer_registrations.first
+    invoice_lines = self.project_invoice_lines.new_invoice
+    layout_number = "1"
+
+    # custom = (params[:custom].present? and params[:custom] == 'true') ? true : false
+
+    token = "#{history.id}/#{self.set_project_payment(history.id)}"
+
+    acb = ActionController::Base.new()
+    content = acb.render_to_string("/spree/project_invoice_lines/invoice_layouts/layout#{layout_number}.html.erb",layout: false, locals: {project: self, user: user, designer: designer, lines: invoice_lines, custom: false, token: token, host: self.set_host_name})
+    save_path = Spree::ProjectInvoiceLine.generate_invoice(content,{margin: {top:10,bottom:10,left:0,right:0}})
+    pdf_file = File.open(save_path,"r")
+
+    history.pdf = pdf_file
+    if history.save
+      Spree::Mailers::ContractMailer.invoice_ready(self.user.email,self,history,pdf_file).deliver
+      invoice_lines.update_all(project_history_id: history.id, included: true)
+      File.delete(save_path) if File.exist?(save_path)
+    else
+      Rails.logger.info "error when saving history entry"
+    end
+
+  end
+
+  def set_host_name
+    if Rails.env == "production"
+      'https://www.scoutandnimble'
+    elsif Rails.env == "development"
+      'http://scout.dev:3000'
+    elsif Rails.env == "staging"
+      'http://54.172.90.33'
+    end
   end
 
 end

@@ -117,6 +117,7 @@ class Spree::ContractsController < Spree::StoreController
     respond_to do |format|
       if @contract.save
         if check_sign
+          Resque.enqueue_at ProjectInvoiceEmail.set_time(@contract.project.customer_billing_cycle).from_now, ProjectInvoiceEmail, @contract.project.id
           # Spree::ProjectHistory.create(action: "contract_signed_by_designer",project_id: @contract.project_id)
           Spree::ProjectHistory.manage_contract_state(@contract.project,"contract_signed")
           @contract.update_column(:designer_signed, true)

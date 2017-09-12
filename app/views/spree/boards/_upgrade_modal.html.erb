@@ -22,17 +22,17 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="col-md-12">
-                      <%= f.label :applied_for, "Upgrade for" %>
-                      <%= text_field_tag :applied_for, "room all access", name: "designer_registration[applied_for]", :class => 'form-control', readonly: true %>
-                      <%= f.error_message_on :applied_for %>
+                      <%#= f.label :applied_for, "Upgrade for" %>
+                      <%= text_field_tag :applied_for, "room all access", name: "designer_registration[applied_for]", :class => 'form-control hidden', readonly: true %>
+                      <%#= f.error_message_on :applied_for %>
                     </div>
                   </div>
                 </div>
-                <% Spree::PaymentMethod.where(active: true, environment: Rails.env, display_on: ['frontend','']).limit(1).each do |method| %>
-                    <fieldset class="text-center">
-                      <%= render :partial => "spree/checkout/payment/#{method.method_type}", :locals => {:payment_method => method} %>
-                    </fieldset>
-                <% end %>
+                <%# Spree::PaymentMethod.where(active: true, environment: Rails.env, display_on: ['frontend','']).limit(1).each do |method| %>
+                    <!--<fieldset class="text-center">-->
+                      <%#= render :partial => "spree/checkout/payment/#{method.method_type}", :locals => {:payment_method => method} %>
+                    <!--</fieldset>-->
+                <%# end %>
                 <div class="actions">
                   <%= f.submit "Upgrade", :class => "btn btn-primary disabled" %>
                 </div>

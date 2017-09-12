@@ -18,7 +18,9 @@ class Spree::ProjectHistoryController < Spree::StoreController
   end
 
   def edit_ready_invoice
+    @show = true
     @project = Spree::Project.find(params[:id])
+    @ph = params[:ph]
     invoice_history = @project.project_histories.find(params[:ph])
     @project_invoice_lines = invoice_history.project_invoice_lines.order(:date)
 
@@ -26,7 +28,9 @@ class Spree::ProjectHistoryController < Spree::StoreController
   end
 
   def edit_custom_invoice
+    @show = true
     @project = Spree::Project.find(params[:id])
+    @ph = params[:ph]
     invoice_history = @project.project_histories.find(params[:ph])
     @project_invoice_lines = invoice_history.project_invoice_lines.order(:date)
 
@@ -35,15 +39,15 @@ class Spree::ProjectHistoryController < Spree::StoreController
 
   def send_invoice
     project = Spree::Project.find(params[:id])
-    invoice_histroy = project.project_histories.find(params[:ph])
+    invoice_history = project.project_histories.find(params[:ph])
 
     respond_to do |format|
-      if Spree::Mailers::ContractMailer.invoice_for_client(project.user.email,project.user,project,invoice_histroy.pdf.url).deliver
+      if Spree::Mailers::ContractMailer.invoice_for_client(project.user.email,project.user,project,invoice_history.pdf.url).deliver
+        
+        invoice_history.update_columns(action: "invoice_sent") if invoice_history.action != "invoice_sent"
+        history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: invoice_history}, formats: ['html'] )
 
-        invoice_histroy.update_columns(action: "invoice_sent") if invoice_histroy.action != "invoice_sent"
-        history_item = render_to_string(partial: 'spree/projects/project_history_item', locals: {ph: invoice_histroy}, formats: ['html'] )
-
-        format.json {render json: {message: "success", history_item: history_item, history_id: invoice_histroy.id}, status: :ok}
+        format.json {render json: {message: "success", history_item: history_item, history_id: invoice_history.id}, status: :ok}
       else
         format.json {render json: {message: "error"}, status: :unprocessable_entity}
       end
