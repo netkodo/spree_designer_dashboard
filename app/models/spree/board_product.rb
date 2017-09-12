@@ -104,9 +104,11 @@ class Spree::BoardProduct < ActiveRecord::Base
   end
 
   def self.calculate_subtotal(obj,only_customer_cost=false,discount=false,discount_amount=0)
+    discount_amount = 0 unless discount_amount.present?
     customer_cost = BigDecimal(0)
     your_cost = BigDecimal(0)
     obj.each do |s|
+      puts s.inspect
       # if s.product.present?
       #   if s.invoice_line.present? and s.invoice_line.price.present?
       #     customer_cost += s.invoice_line.price
@@ -126,10 +128,10 @@ class Spree::BoardProduct < ActiveRecord::Base
       # end
       if s.product_id.present?
         customer_cost += s.calculate_discount(s.get_item_data('price'),discount_amount)
-        your_cost += s.product.price
+        your_cost += s.product.cost_price
       else
         customer_cost += s.get_item_data('price')
-        your_cost += s.custom_item.price
+        your_cost += s.custom_item.cost
       end
 
     end
