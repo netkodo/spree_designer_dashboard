@@ -92,7 +92,7 @@ Spree::Core::Engine.routes.draw do
 
   post "/create_color_match" => "color_matches#create_color_match", as: :create_color_match, :defaults => {:format => 'json'}
 
-  post "/designers" => "designers#handle_designer_hide", :defaults => {:format => 'json'}
+  post "/handle_designer_hide" => "designers#handle_designer_hide", as: :handle_designer_hide, :defaults => {:format => 'json'}
 
   # room builder links
   post '/rooms/add_question' => "boards#add_question"

@@ -200,30 +200,6 @@ $(document).on({
 //    return [dataImg, cropper]
 //}
 
-// $(document).ready(function() {
-//     $(".js-hide-icon").click(function (e) {
-//         e.preventDefault();
-//         var obj = $(this).parents(".js-remove-obj");
-//         var for_url = this;
-//         if(confirm("Are you sure?")) {
-//             $.ajax({
-//                 dataType: 'json',
-//                 type: "POST",
-//                 url: for_url.href,
-//                 success: function (response) {
-//                    setTimeout((function() {
-//                        alert("Designer hidden");
-//                        return obj.remove();
-//                    }), 2000);
-//                 },
-//                 error: function (response) {
-//                     return console.log('error')
-//                 }
-//             });
-//         }
-//     });
-// });
-
 function generateModalCrop(dataImg){
     $('.croppedRoom').html('');
     delete dataImg.filters[0];
