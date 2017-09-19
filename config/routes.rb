@@ -173,6 +173,7 @@ Spree::Core::Engine.routes.draw do
   end
 
   #get "/boards/product_search" => "boards#product_search", :as => :board_product_search
+  post "/designer_registrations/:id/upgrade" => "designer_registrations#upgrade_to_toom_all_access", as: :upgrade_to_toom_all_access, defaults: {format: :json}
 
 
   match "/boards/submit_for_publication/:id", to: "boards#submit_for_publication", :as => "submit_for_publication", via: :patch

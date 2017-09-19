@@ -9,7 +9,7 @@
         <div class="row">
           <div class="col-md-12">
 
-            <%= form_for(spree_current_user.designer_registrations.first, html: {id: 'upgrade_to_room_all_access'}) do |f| %>
+            <%= form_for(:designer_registration, url: upgrade_to_toom_all_access_path(spree_current_user.designer_registrations.first), html: {id: 'upgrade_to_room_all_access'}) do |f| %>
                 <div class="form-group">
                   <div class="row">
                     <div class="col-md-12">
@@ -34,7 +34,10 @@
                     <!--</fieldset>-->
                 <%# end %>
                 <div class="actions">
-                  <%= f.submit "Upgrade", :class => "btn btn-primary disabled" %>
+                  <%= f.submit "Upgrade", :class => "btn btn-primary" %>
+                </div>
+                <div id="notification" class="text-center">
+
                 </div>
             <% end %>
 

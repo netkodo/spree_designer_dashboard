@@ -25,14 +25,14 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.product.cost_price %>
+            <%= "%.2f" % bp.sale_eligible(bp.user, bp.product.price) %>
           </td>
           <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
-            <%= bp.get_item_data('price') %>
+            <%= "%.2f" % bp.get_item_data('price') %>
             <span class="edit">edit</span>
           </td>
           <td>
-           $<%= bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
+           $<%= "%.2f" % bp.calc_price(bp.get_item_data('price'),@board.project.pass_discount,@board.project.discount_amount) %>
           </td>
         </tr>
       <% else %>
@@ -49,14 +49,14 @@
             <span class="edit">edit</span>
           </td>
           <td>
-            <%= bp.custom_item.cost %>
+            <%= "%.2f" % bp.custom_item.cost %>
           </td>
           <td class="edit-cost" data-price="<%= bp.get_item_data('price') %>">
-            <%= bp.get_item_data('price') %>
+            <%= "%.2f" % bp.get_item_data('price') %>
             <span class="edit">edit</span>
           </td>
           <td>
-            $<%= bp.get_item_data('price') %>
+            $<%= "%.2f" % bp.get_item_data('price') %>
           </td>
         </tr>
       <% end %>

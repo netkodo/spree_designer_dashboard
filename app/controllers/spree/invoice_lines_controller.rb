@@ -39,7 +39,6 @@ class Spree::InvoiceLinesController < Spree::StoreController
     project = @board.project
     @board_products = @board.board_products#.map{|x| x.product.present? ? x.product : x.custom_item}
     @retail_price = Spree::BoardProduct.calculate_subtotal(@board_products)
-    puts "asda"
     @customer_cost = Spree::BoardProduct.calculate_subtotal(@board_products,true,project.pass_discount,project.discount_amount)
     respond_to do |format|
       if @board_products.present?

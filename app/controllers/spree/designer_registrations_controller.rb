@@ -88,6 +88,18 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     @designer_registration.user = @user
   end
 
+  def upgrade_to_toom_all_access
+    designer = Spree::DesignerRegistration.find(params[:id])
+    respond_to do |format|
+      if designer.update_columns(params[:designer_registration])
+        Spree::Mailers::UpgradeMailer.upgrade(designer).deliver
+        format.json {render json: {message: "Request for upgrade has been send"}, status: :ok}
+      else
+        format.json {render json: {message: "Error occured"}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   private
   
     def check_existing_registration

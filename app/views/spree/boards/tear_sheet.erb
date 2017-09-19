@@ -34,7 +34,7 @@
       </div>
       <div>
         <div class="board-section board-image board-image-section text-center">
-          <%= image_tag(board.board_image.attachment(:large), :class => "img-board img-responsive") %>
+          <%= image_tag(board.board_image.attachment(:original), :class => "img-board img-responsive") %>
         </div>
       </div>
 
@@ -151,7 +151,10 @@
           <div class="name"><%= user.company_name %><br></div>
           <div class="address">
             <%= designer.address1 %><br>
-            <%= designer.address2 %><br>
+            <%= designer.address2.present? ? "#{designer.address2}<br>".html_safe : '' %>
+            <%= designer.city %>,
+            <%= designer.state %>,
+            <%= designer.postal_code %><br>
             <%= designer.phone %>
           </div>
         </div>
@@ -186,7 +189,10 @@
           </div>
           <div class="address">
             <%= project.address1 %><br>
-            <%= project.address2 %><br>
+            <%= project.address2.present? ? "#{project.address2}<br>".html_safe : '' %>
+            <%= project.city %>,
+            <%= project.state %>,
+            <%= project.zip_code %><br>
             <%= project.phone %>
           </div>
         </div>
@@ -227,11 +233,11 @@
               <td><%= bp.get_item_data('name') %></td>
               <td>1</td>
               <% if bp.product_id.present? %>
-                <td>$<%= bp.calc_price(bp.get_item_data('price'), project.pass_discount, project.discount_amount) %></td>
-                <td class="total">$<%= bp.calc_price(bp.get_item_data('price'), project.pass_discount, project.discount_amount) %></td>
+                <td>$<%= "%.2f" % bp.calc_price(bp.get_item_data('price'), project.pass_discount, project.discount_amount) %></td>
+                <td class="total">$<%= "%.2f" % bp.calc_price(bp.get_item_data('price'), project.pass_discount, project.discount_amount) %></td>
               <% else %>
-                <td>$<%= bp.get_item_data('price') %></td>
-                <td class="total">$<%= bp.get_item_data('price') %></td>
+                <td>$<%= "%.2f" % bp.get_item_data('price') %></td>
+                <td class="total">$<%= "%.2f" % bp.get_item_data('price') %></td>
               <% end %>
             </tr>
         <% end %>
@@ -248,14 +254,14 @@
           <td colspan="3"></td>
           <td colspan="2" class="">
             <span class="total l">SUBTOTAL</span>
-            <span class="r">$<%= subtotal %></span>
+            <span class="r">$<%= "%.2f" % subtotal %></span>
           </td>
         </tr>
         <tr>
           <td colspan="3"></td>
           <td colspan="2">
             <span class="total l">TAX SALES</span>
-            <span class="r">$<%= tax %></span>
+            <span class="r">$<%= "%.2f" % tax %></span>
           </td>
         </tr>
         <tr>
@@ -272,7 +278,7 @@
           </td>
           <td colspan="2" class="project-sumarize">
             <span class="total l">TOTAL</span>
-            <span class="r">$<%= total %></span>
+            <span class="r">$<%= "%.2f" % total %></span>
           </td>
         </tr>
 
