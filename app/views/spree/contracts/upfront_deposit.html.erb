@@ -16,7 +16,10 @@
     <div class="col-xs-8">
       <%= user.company_name %><br>
       <%= designer.address1 %><br>
-      <%= designer.address2 %><br>
+      <%= designer.address2.present? ? "#{project.address2}<br>".html_safe : '' %>
+      <%= designer.city %>,
+      <%= designer.state %>,
+      <%= designer.postal_code %><br>
       <%= designer.phone %>
     </div>
   </div>
@@ -61,7 +64,10 @@
     <div class="col-xs-8">
       <%= project.project_name %><br>
       <%= project.address1 %><br>
-      <%= project.address2 %><br>
+      <%= project.address2.present? ? "#{project.address2}<br>".html_safe : '' %>
+      <%= project.city %>,
+      <%= project.state %>,
+      <%= project.zip_code %><br>
       <%= project.phone %>
     </div>
   </div>

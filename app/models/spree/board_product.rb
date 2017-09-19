@@ -108,7 +108,7 @@ class Spree::BoardProduct < ActiveRecord::Base
     customer_cost = BigDecimal(0)
     your_cost = BigDecimal(0)
     obj.each do |s|
-      puts s.inspect
+      # puts s.inspect
       # if s.product.present?
       #   if s.invoice_line.present? and s.invoice_line.price.present?
       #     customer_cost += s.invoice_line.price
@@ -128,7 +128,7 @@ class Spree::BoardProduct < ActiveRecord::Base
       # end
       if s.product_id.present?
         customer_cost += s.calculate_discount(s.get_item_data('price'),discount_amount)
-        your_cost += s.product.cost_price
+        your_cost +=  s.sale_eligible(s.user,s.product.price)
       else
         customer_cost += s.get_item_data('price')
         your_cost += s.custom_item.cost
@@ -137,9 +137,9 @@ class Spree::BoardProduct < ActiveRecord::Base
     end
     # customer_cost *= ((100-discount_amount)/100.to_f.round(2)) if discount
     if only_customer_cost
-      customer_cost
+      "%.2f" % customer_cost
     else
-      [your_cost, customer_cost]
+      ["%.2f" % your_cost, "%.2f" % customer_cost]
     end
   end
 
