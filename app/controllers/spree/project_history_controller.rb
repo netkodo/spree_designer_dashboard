@@ -24,7 +24,7 @@ class Spree::ProjectHistoryController < Spree::StoreController
     invoice_history = @project.project_histories.find(params[:ph])
     @project_invoice_lines = invoice_history.project_invoice_lines.order(:date)
 
-    render "spree/project_invoice_lines/edit_invoice"
+    render "spree/project_invoice_lines/edit_ready_invoice"
   end
 
   def edit_custom_invoice
