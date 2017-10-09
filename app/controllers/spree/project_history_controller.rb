@@ -20,11 +20,20 @@ class Spree::ProjectHistoryController < Spree::StoreController
   def edit_ready_invoice
     @show = true
     @project = Spree::Project.find(params[:id])
-    @ph = params[:ph]
-    invoice_history = @project.project_histories.find(params[:ph])
-    @project_invoice_lines = invoice_history.project_invoice_lines.order(:date)
-
-    render "spree/project_invoice_lines/edit_invoice"
+    if @project.present?
+      @ph = params[:ph]
+      invoice_history = @project.project_histories.find(params[:ph])
+      if invoice_history.action != 'invoice_sent'
+        @project_invoice_lines = invoice_history.project_invoice_lines.order(:date)
+        render "spree/project_invoice_lines/edit_ready_invoice"
+      else
+        flash[:notice] = "Couldn't find invoice or invoice was already sent."
+        redirect_to project_path(@project)
+      end
+    else
+      flash[:notice] = "Couldn't find project"
+      redirect_to designer_dashboard_path
+    end
   end
 
   def edit_custom_invoice
