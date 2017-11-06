@@ -9,6 +9,7 @@ class Spree::Portfolio < ActiveRecord::Base
   belongs_to :room
 
   before_destroy :check_rooms
+  after_update :update_cordial_contact
 
   validates :name, presence: true
 
@@ -84,5 +85,11 @@ class Spree::Portfolio < ActiveRecord::Base
     end
     tab
   end
+
+  protected
+
+    def update_cordial_contact
+      user.designer_cordial_update('Room-Designer-Portfolio-Images')
+    end
 
 end
