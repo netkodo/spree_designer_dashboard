@@ -74,23 +74,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       #   design.update_column(:status,"pending")
       # end
     end
-
-  end
-
-  def update_cordial_user
-    uri = URI.parse("#{Cordial::ENDPOINT}/contacts")
-    Net::HTTP.start(uri.host, uri.port) do |http|
-      request = Net::HTTP::Post.new(uri, {
-          'Content-Type' => 'application/json',
-          'Authorization' => Cordial::ENCODED_API_KEY
-      })
-      request.body = {
-          address: user.email,
-          subscribeStatus: :subscribed,
-
-      }
-      http.request request
-    end
   end
 
   def send_designer_welcome
