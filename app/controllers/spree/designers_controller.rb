@@ -120,7 +120,7 @@ class Spree::DesignersController < Spree::StoreController
     end
 
 
-    @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
+    # @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
 
     designer = Spree::DesignerRegistration.where(user_id:@user.id).first
     # boards = @user.boards.where(status: "published").count

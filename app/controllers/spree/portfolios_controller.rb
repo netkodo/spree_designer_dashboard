@@ -311,7 +311,7 @@ class Spree::PortfoliosController < Spree::StoreController
           @portfolio.portfolio_variant_associations.create(variant_id: id) unless current_ids.include?(id)
         end
 
-        spree_current_user.user_ac_event_add("first_portfolio_added") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_portfolio_added
+        # spree_current_user.user_ac_event_add("first_portfolio_added") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_portfolio_added
         spree_current_user.update_column(:popup_portfolio, false) if spree_current_user.popup_portfolio
         session[:popup_room] = true if spree_current_user.popup_room
         format.html {redirect_to portfolio_path}

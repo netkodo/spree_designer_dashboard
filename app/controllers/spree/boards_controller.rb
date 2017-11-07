@@ -504,7 +504,7 @@ class Spree::BoardsController < Spree::StoreController
     @board = Spree::Board.find_by slug: params[:id]
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.submit_for_publication
-    spree_current_user.user_ac_event_add("first_room_published") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_room_published
+    # spree_current_user.user_ac_event_add("first_room_published") if spree_current_user.active_campaign.blank? || !spree_current_user.active_campaign.first_room_published
     html_content = "There is a new room for you to review."
     html_content << "<br /><br />Message from Designer:<br /><br />#{params[:board][:state_message]}" if params[:board] and params[:board][:state_message] and !params[:board][:state_message].blank?
 
