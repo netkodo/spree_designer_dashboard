@@ -7,6 +7,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   #validates_presence_of :first_name, :last_name
 
   # after_create :send_designer_welcome #depracted ac took over
+  after_create :create_cordial_profile
   after_create :update_profile_information
   after_update :update_designer_status
   after_update :update_approved_at
@@ -58,14 +59,16 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
           # Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
           # user.add_designer_to_mailchimp
-          user.designer_ac_registration("room designer")
-          user.user_ac_event_add("room_designer_accepted_event")
+          # user.designer_ac_registration("room designer")
+          # user.user_ac_event_add("room_designer_accepted_event")
+          user.designer_cordial_registration('Room-Designer-Accepted')
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
-          user.designer_ac_registration("to the trade designer")
-          user.user_ac_event_add("trade_designer_accepted_event")
+          # user.designer_ac_registration("to the trade designer")
+          # user.user_ac_event_add("trade_designer_accepted_event")
+          user.designer_cordial_registration('Trade-Designer-Accepted')
         when "test designer"
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
@@ -74,7 +77,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
           end
 
-          user.designer_ac_registration("room designer")
+          # user.designer_ac_registration("room designer")
         when "declined"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
           self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
@@ -190,5 +193,11 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
     logger.info sending
   end
+
+  protected
+
+    def create_cordial_profile
+      user.designer_cordial_registration('Pending-Designer-Application')
+    end
 
 end

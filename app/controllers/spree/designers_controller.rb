@@ -135,6 +135,7 @@ class Spree::DesignersController < Spree::StoreController
         @user.validate_description = false
         spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
         session[:popup_portfolio] = true if spree_current_user.popup_portfolio
+        @user.designer_cordial_update('Room-Designer-Profile')
 
         redirect = designer_dashboard_path
         if exceptions.present?
