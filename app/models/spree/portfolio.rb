@@ -15,7 +15,7 @@ class Spree::Portfolio < ActiveRecord::Base
 
   scope :visible, -> { where(show: true) }
 
-  after_update :update_cordial_contact
+  after_create :update_cordial_contact
   before_destroy :check_rooms
 
   validates :name, presence: true
