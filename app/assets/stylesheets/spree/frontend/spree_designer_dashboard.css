@@ -142,3 +142,8 @@ h2.home a:hover{
     opacity: 0.1;
     font-size: 36px;
 }
+
+.ch-designer-hide-icon {
+    z-index: 2;
+    text-align: left;
+}

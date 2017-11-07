@@ -10,7 +10,7 @@ module Spree
                       default_style: :primary,
                       url: '/spree/logo_image/:id/:style/:basename.:extension',
                       path: 'logo_image/:id/:style/:basename.:extension',
-                      convert_options: { all: '-strip -auto-orient -colorspace RGB' },
+                      convert_options: { all: '-strip -auto-orient' },
                       default_url: '/images/thumb.png'
 
     validates_attachment_presence :attachment

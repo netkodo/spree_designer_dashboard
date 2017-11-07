@@ -15,6 +15,7 @@ class Spree::Portfolio < ActiveRecord::Base
 
   scope :visible, -> { where(show: true) }
 
+  after_create :update_cordial_contact
   before_destroy :check_rooms
 
   validates :name, presence: true
@@ -91,5 +92,11 @@ class Spree::Portfolio < ActiveRecord::Base
     end
     tab.sort_by{|x| x[0].downcase}
   end
+
+  protected
+
+    def update_cordial_contact
+      user.designer_cordial_update('Room-Designer-Portfolio-Images')
+    end
 
 end

@@ -142,6 +142,8 @@ Spree::Core::Engine.routes.draw do
   post "/board_history" => "board_history#board_history", as: :board_history, :defaults => {:format => 'html'}
   post "/create_board_history" => "board_history#create", as: :create_board_history, :defaults => {:format => 'json'}
 
+  post "/handle_designer_hide" => "designers#handle_designer_hide", as: :handle_designer_hide, :defaults => {:format => 'json'}
+
   # room builder links
   post '/rooms/add_question' => "boards#add_question"
   post '/rooms/add_answer' => "boards#add_answer"

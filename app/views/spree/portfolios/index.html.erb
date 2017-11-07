@@ -11,84 +11,14 @@
         </div>
 
         <div class="col-md-3">
-          <div class="portfolio-filters">
-            <h4>Room Type<span class="toggle-filter"><%= params[:filter].present? ? (params[:filter][:room_type].present? ? '-' : '+') : '-' %></span></h4>
-            <div class="filter room_type <%= params[:filter].present? ? (params[:filter][:room_type].present? ? '' : 'filter-hide') : '' %>">
-              <ul>
-                <% @room_type.each do |k,v| %>
-                    <li>
-                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_type" >
-                        <%= k[0] %>
-                        <span class="count">(<%= v %>)</span>
-                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:room_type].present? and params[:filter][:room_type].include? k[1].to_s %>
-                      </a>
-                    </li>
-                <% end %>
-              </ul>
+          <div data-hook="homepage_sidebar_navigation">
+            <h4 class="text-center mobile-filter-nav">FILTERS<span>+</span></h4>
+            <div class="solor-filters-nav">
+              <%= render partial: 'filters' %>
             </div>
-
-            <h4>Room Style<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:style].present?) ? "-":"+" %></span></h4>
-            <div class="filter room_style <%= (params[:filter].present? and params[:filter][:style].present?) ? '' : 'filter-hide' %>">
-              <ul>
-                <% @room_style.each do |k,v| %>
-                    <li>
-                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:style].present? and params[:filter][:style].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="room_style" >
-                        <%= k[0] %>
-                        <span class="count">(<%= v %>)</span>
-                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:style].present? and params[:filter][:style].include? k[1].to_s %>
-                      </a>
-                    </li>
-                <% end %>
-              </ul>
-            </div>
-
-            <h4>Wall Color<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:wall_color].present?) ? "-":"+" %></span></h4>
-            <div class="filter color <%= (params[:filter].present? and params[:filter][:wall_color].present?) ? '' : 'filter-hide' %>">
-              <ul>
-                <% @colors.each do |k,v| %>
-                    <li>
-                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>" data-value="<%= k[1] %>" data-filter="color" >
-                        <%= k[0] %>
-                        <span class="count">(<%= v %>)</span>
-                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:wall_color].present? and params[:filter][:wall_color].include? k[1].to_s %>
-                      </a>
-                    </li>
-                <% end %>
-              </ul>
-            </div>
-
-            <h4>Designer<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:user_id].present?) ? "-":"+" %></span></h4>
-            <div class="filter designer <%= (params[:filter].present? and params[:filter][:user_id].present?) ? '' : 'filter-hide' %>">
-              <ul>
-                <% @designers.each do |k,v| %>
-                    <li>
-                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:user_id].present? and params[:filter][:user_id].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="designer" >
-                        <%= k[0] %>
-                        <span class="count">(<%= v %>)</span>
-                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:user_id].present? and params[:filter][:user_id].include? k[1].to_s %>
-                      </a>
-                    </li>
-                <% end %>
-              </ul>
-            </div>
-
-            <h4>Tags<span class="toggle-filter"><%= (params[:filter].present? and params[:filter][:tags].present?) ? "-":"+" %></span></h4>
-            <div class="filter tags  <%= (params[:filter].present? and params[:filter][:tags].present?) ? '' : 'filter-hide' %>">
-              <ul>
-                <% @tags.each do |k,v| %>
-                    <li>
-                      <a class="<%= 'gold_select' if params[:filter].present? and params[:filter][:tags].present? and params[:filter][:tags].include? k[1].to_s %>" data-value="<%= k[1] %>" data-value=<%= k[1] %> data-filter="tags" >
-                        <%= k[0] %>
-                        <span class="count">(<%= v %>)</span>
-                        <%= '<i class="fa fa-times"></i>'.html_safe if params[:filter].present? and params[:filter][:tags].present? and params[:filter][:tags].include? k[1].to_s %>
-                      </a>
-                    </li>
-                <% end %>
-              </ul>
-            </div>
-
           </div>
         </div>
+
         <div class="col-md-9">
 
           <div class="js-spinner"><%= image_tag("frontend/preloader64.gif")%></div>

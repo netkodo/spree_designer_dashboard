@@ -37,7 +37,7 @@
 								<div class="info-item info-item-company"><%= @designer.company_name %></div>
 							<% end %>
 							<% unless @designer.website_url.blank? %>
-								<div class="info-item info-item-url"><%= link_to @designer.website_url, format_url(@designer.website_url) %></div>
+								<div class="info-item info-item-url"><%= link_to @designer.website_url, format_url(@designer.website_url), target: '_blank' %></div>
 							<% end %>
 						</div>
 						<% else %>
@@ -46,7 +46,7 @@
 									<div class="info-item info-item-company"><%= @designer.company_name %></div>
 								<% end %>
 								<% unless @designer.website_url.blank? %>
-									<div class="info-item info-item-url"><%= link_to @designer.website_url, format_url(@designer.website_url) %></div>
+									<div class="info-item info-item-url"><%= link_to @designer.website_url, format_url(@designer.website_url), target: '_blank' %></div>
 								<% end %>
 							</div>
 						<% end %>

@@ -512,6 +512,17 @@ class Spree::Board < ActiveRecord::Base
     "https://scoutandnimble.com/rooms/#{self.id}"
   end
 
+  def generated?
+    begin
+      if open(self.board_image.attachment.url(:small)) and self.generated
+        true
+      else
+        false
+      end
+    rescue Exception => error
+      false
+    end
+  end
 
   def create_or_update_board_product(params,board_id,email)
     # Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email

@@ -12,6 +12,18 @@ class Spree::DesignersController < Spree::StoreController
     @designers = Spree::User.published_designers().order("created_at desc")
   end
 
+  def handle_designer_hide
+    designer = Spree::User.find(params[:event_option_id]) if params[:event_option_id].present?
+
+    respond_to do |format|
+      if designer.present? and designer.update_column(:show_designer_profile, false)
+        format.json { render json: {message: 'Designer has been hidden!'}, status: :ok}
+      else
+        format.json { render json: {message: 'Error'}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   def tutorials
 
   end
@@ -108,7 +120,7 @@ class Spree::DesignersController < Spree::StoreController
     end
 
 
-    @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
+    # @user.user_ac_event_add("profile_setup_saved") if @user.active_campaign.blank? || !@user.active_campaign.first_room_added
 
     designer = Spree::DesignerRegistration.where(user_id:@user.id).first
     # boards = @user.boards.where(status: "published").count
@@ -123,6 +135,7 @@ class Spree::DesignersController < Spree::StoreController
         @user.validate_description = false
         spree_current_user.update_column(:popup_my_profile, false) if spree_current_user.popup_my_profile
         session[:popup_portfolio] = true if spree_current_user.popup_portfolio
+        @user.designer_cordial_update('Room-Designer-Profile')
 
         redirect = designer_dashboard_path
         if exceptions.present?

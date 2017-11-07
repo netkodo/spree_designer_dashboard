@@ -35,8 +35,6 @@ function initializeProductSearchForm() {
                     $('.solr-filter-products').html(response);
                 }
             });
-
-
         });
     });
 }
