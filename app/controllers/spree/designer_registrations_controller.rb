@@ -37,8 +37,16 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
     if @designer_registration.save
       session[:fb_pixel_email] = current_spree_user.email
       # @designer_registration.user.designer_ac_signup(@designer_registration.applied_for)
-      Spree::DesignerRegistrationMailer.send_notification("morzechowski@netkodo.com")
-      redirect_to designer_registration_thanks_url
+      email_to = ""
+      if Rails.env == "development"
+        email_to = "morzechowski@netkodo.com"
+      else
+        email_to = "designer@scoutandnimble.com"
+      end
+
+      if Spree::DesignerRegistrationMailer.send_notification(email_to, @designer_registration.user.id).deliver
+        redirect_to designer_registration_thanks_url
+      end
     else
       render action: 'new'
     end
