@@ -49,7 +49,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       case self.status
         when "pending"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          Resque.enqueue CordialNiceWorker, self
+          Resque.enqueue CordialSignUpWorker, user.id
         when "room designer"
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
@@ -71,7 +71,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # user.user_ac_event_add("trade_designer_accepted_event")
           user.designer_cordial_registration('Trade-Designer-Accepted')
         when "test designer"
-          Resque.enqueue CordialNiceWorker, self
+          Resque.enqueue CordialSignUpWorker, user.id
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1, :show_designer_profile => 0})
@@ -81,7 +81,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
           # user.designer_ac_registration("room designer")
         when "declined"
-          Resque.enqueue CordialNiceWorker, self
+          Resque.enqueue CordialSignUpWorker, user.id
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
           self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
       end
