@@ -62,14 +62,16 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("room designer")
           # user.user_ac_event_add("room_designer_accepted_event")
-          user.designer_cordial_registration('Room-Designer-Accepted')
+          Spree::DesignerRegistrationMailer.send_notification(user.id, "morganw@scoutandnimble.com", "Room Designer Approved", false).deliver
+          # user.designer_cordial_registration('Room-Designer-Accepted')
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
           # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("to the trade designer")
           # user.user_ac_event_add("trade_designer_accepted_event")
-          user.designer_cordial_registration('Trade-Designer-Accepted')
+          Spree::DesignerRegistrationMailer.send_notification(user.id, "morganw@scoutandnimble.com", "Trade Designer Approved", false).deliver
+          # user.designer_cordial_registration('Trade-Designer-Accepted')
         when "test designer"
           Resque.enqueue CordialSignUpWorker, user.id
           # boards = user.boards.where(status: "published").count
