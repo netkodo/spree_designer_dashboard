@@ -13,7 +13,6 @@
 	</div>
 </div>
 <% end %>
-
 <div class="hidden">
   <%= text_field_tag :designer_signup, "true" %>
 </div>
@@ -26,6 +25,7 @@
 		</div>
 	</div>
 </div>
+
 <div id="password-credentials">
 	<div class="row">
 		<div class="col-lg-6  col-xs-12">
@@ -38,7 +38,12 @@
 		</div>
 	</div>
 </div>
-<br />
+  <br />
     <p><%= f.submit "Create my Account", :class => 'btn btn-primary' %></p>
-
+  <div class="text-center">
+    <p>OR</p>
+  </div>
+  <div>
+    <%= link_to "Sign in with Facebook", spree_user_omniauth_authorize_path(:facebook), class: "btn modal-button btn-md sn-btn-facebook btn-block" %>
+  </div>
 <% end %>
