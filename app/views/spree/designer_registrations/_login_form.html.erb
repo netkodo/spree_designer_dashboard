@@ -40,10 +40,15 @@
 </div>
   <br />
     <p><%= f.submit "Create my Account", :class => 'btn btn-primary' %></p>
+  <% if auth_method_is_active?('facebook')%>
+
   <div class="text-center">
     <p>OR</p>
   </div>
-  <div>
-    <%= link_to "Sign in with Facebook", spree_user_omniauth_authorize_path(:facebook), class: "btn modal-button btn-md sn-btn-facebook btn-block" %>
-  </div>
+
+    <div>
+      <%= link_to "Sign in with Facebook", spree_user_omniauth_authorize_path(:facebook), class: "btn modal-button btn-md sn-btn-facebook btn-block sn-br-4" %>
+    </div>
+  <% end %>
+
 <% end %>
