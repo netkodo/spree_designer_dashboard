@@ -50,6 +50,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
         # redirect_to '/designers/all-access-designer'
         respond_with @designer_registration, location: '/designers/all-access-designer'
       else
+        Spree::DesignerRegistrationMailer.send_notification(@designer_registration.user_id).deliver
         redirect_to designer_registration_thanks_url
       end
     else

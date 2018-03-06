@@ -56,6 +56,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       case self.status
         when "pending"
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
+          Resque.enqueue CordialSignUpWorker, user.id
         when "room designer"
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
@@ -68,6 +69,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("room designer")
           # user.user_ac_event_add("room_designer_accepted_event")
+          Spree::DesignerRegistrationMailer.send_notification(user.id, "morganw@scoutandnimble.com", "Room Designer Approved", false).deliver
           user.designer_cordial_registration('Room-Designer-Accepted')
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
@@ -75,8 +77,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("to the trade designer")
           # user.user_ac_event_add("trade_designer_accepted_event")
+          Spree::DesignerRegistrationMailer.send_notification(user.id, "morganw@scoutandnimble.com", "Trade Designer Approved", false).deliver
           user.designer_cordial_registration('Trade-Designer-Accepted')
         when "test designer"
+          Resque.enqueue CordialSignUpWorker, user.id
           # boards = user.boards.where(status: "published").count
           if user.user_images.count == 1#boards > 0 and
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1, :show_designer_profile => 0})
@@ -90,6 +94,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         when "room all access"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
         when "declined"
+          Resque.enqueue CordialSignUpWorker, user.id
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
           self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
       end

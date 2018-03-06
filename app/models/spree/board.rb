@@ -453,10 +453,15 @@ class Spree::Board < ActiveRecord::Base
 
         #set transparency | fuzz is set in previus line and paint_transparent inherit it from it
         # we assign again product_image coz paint_transparent doesnt work in place maybe in later versions
-        image = image.transparent('#ffffff',Magick::TransparentOpacity)
+        # image = image.transparent('#ffffff',Magick::TransparentOpacity)
 
         # set the rotation
         image.rotate!(bp.rotation_offset)
+
+        # set transparency again to remove white background after rotation
+        image = image.paint_transparent('#ffffff',Magick::TransparentOpacity)
+
+        # if turned sideways, then swap the width and height when scaling
         if [90, 270].include?(bp.rotation_offset)
           image.scale!(bp.height, bp.width)
           top_left_x = bp.center_point_x - bp.height/2
