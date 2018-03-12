@@ -181,8 +181,8 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board  = Spree::Board.find_by id: params[:board][:id]
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.request_designer_revision
-    @room_manager.send_message(@board.designer, "Your room needs revisions.", "Please revise your room.")
-
+    # @room_manager.send_message(@board.designer, "Your room needs revisions.", "Please revise your room.")
+    Spree::BoardMailer.request_revision(@board, @board.state_message).deliver
     respond_to do |format|
       format.js {  }
     end
