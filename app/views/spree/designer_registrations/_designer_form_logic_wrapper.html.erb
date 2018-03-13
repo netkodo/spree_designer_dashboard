@@ -1,5 +1,5 @@
 <% if spree_current_user %>
-  <% if spree_current_user.designer_registrations.present? %>
+  <% if spree_current_user.designer_registrations.present? && spree_current_user.designer_registrations.first.id.present? %>
     <% d = spree_current_user.designer_registrations.first %>
     <% if !d.access_paid %>
       <% if d.status == 'pending' %>
