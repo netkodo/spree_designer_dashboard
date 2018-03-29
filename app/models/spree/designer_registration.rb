@@ -1,5 +1,4 @@
 class Spree::DesignerRegistration < ActiveRecord::Base
-  require 'mandrill'
   #attr_accessible :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :company_name, :status, :first_name, :last_name
   belongs_to :user, :class_name => "User"
 
@@ -9,7 +8,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   validates :tin, presence: true, :if => :validate_tin?
   #validates_presence_of :first_name, :last_name
 
-  # after_create :send_designer_welcome #depracted ac took over
   after_create :create_cordial_profile
   after_create :update_profile_information
   after_update :update_designer_status
@@ -64,7 +62,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           else
             user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 1})
           end
-          # self.send_email_to_designer("","Congratulations! Your application has been accepted!","Jesse Bodine","","approved-room-design-new-email")
           # Resque.enqueue_at(7.days.from_now, NoActivityEmailsToDesigners, self.id)
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("room designer")
@@ -73,7 +70,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
           user.designer_cordial_registration('Room-Designer-Accepted')
         when "to the trade designer"
           user.update_attributes({:is_discount_eligible => 1, :can_add_boards => 0})
-          # self.send_email_to_designer("","Congratulations! You have been accepted into the Scout & Nimble Trade Designer Program!","Jesse Bodine","","approved-trade-designer")
           # user.add_designer_to_mailchimp
           # user.designer_ac_registration("to the trade designer")
           # user.user_ac_event_add("trade_designer_accepted_event")
@@ -96,7 +92,7 @@ class Spree::DesignerRegistration < ActiveRecord::Base
         when "declined"
           Resque.enqueue CordialSignUpWorker, user.id
           user.update_attributes({:is_discount_eligible => 0, :can_add_boards => 0})
-          self.send_email_to_designer("","Your application has been declined!","Jesse Bodine","","we-have-our-eye-on-you")
+          Spree::DesignerRegistrationMailer.decline_designer(user.email).deliver
       end
     end
   end
@@ -117,97 +113,6 @@ class Spree::DesignerRegistration < ActiveRecord::Base
       # end
     end
 
-  end
-
-  #Depracated
-  def send_designer_welcome
-    html_content = ''
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Thank you for submitting your application!",
-        :from_name => "Jesse Bodine",
-        :text => "Thanks for registering to be a Scout & Nimble room designer.  Please stay tuned as we'll be in touch soon!  \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    message_for_self = {
-        :subject => "New user has applied: #{self.user.first_name} #{self.user.last_name}",
-        :from_name => "Jesse Bodine",
-        :text => "New user has applied: #{self.user.first_name} #{self.user.last_name} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => "designer@scoutandnimble.com",
-                :name => "Scout & Nimble"
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com",
-
-        :merge_vars => [
-            {
-                :rcpt => self.user.email,
-                :vars => [
-                    {
-                        :name => "firstname",
-                        :content => self.user.first_name
-                    },
-                    {
-                        :name => "lastname",
-                        :content => self.user.last_name
-                    }
-                ]
-            }
-        ]
-    }
-
-    sending = m.messages.send_template('thank-you-for-applying', [{:name => 'main', :content => html_content}], message, true)
-    sending_self = m.messages.send_template('new-designer-registration-self-info', [{:name => 'main', :content => html_content}], message_for_self, true)
-    logger.info sending_self
-    logger.info sending
-
-
-  end
-
-  def send_email_to_designer(html_content,subject,from_name,text,template)
-    html_content = html_content
-    logger.info "Sending the mail to #{self.user.email}"
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => subject,
-        :from_name => from_name,
-        :text => text,
-        :to => [
-            {
-                :email => self.user.email,
-                :name => self.user.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}], message, true)
-
-    logger.info sending
   end
 
   protected
