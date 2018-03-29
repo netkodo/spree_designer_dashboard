@@ -1,5 +1,5 @@
 class Spree::InvoiceLinesController < Spree::StoreController
-  require 'mandrill'
+  # require 'mandrill'
 
   def save_invoice
     if params[:invoice].present?
