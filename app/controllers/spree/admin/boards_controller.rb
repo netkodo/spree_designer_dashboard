@@ -140,13 +140,10 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
   def update
     @board = Spree::Board.friendly.find(params[:id])
     if params[:state] == "deleted"
-      # self.send_deletion_email(@board, params[:email][:reason]) if params[:email][:should_send]
       @board.delete_permanently!
     elsif params[:state] == "request_revision"
-      # self.send_revision_email(@board, params[:email][:reason]) if params[:email][:should_send]
       @board.request_revision!
     elsif params[:state] == "published"
-      # self.send_publication_email(@board, params[:email][:reason]) if params[:email][:should_send]
       @board.publish!
     end
     
@@ -165,8 +162,8 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board.try(:update_column,:schedule, params[:schedule]) if params[:schedule].present?
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.publish
-    @board.send_email_according_to_board("Hi #{@board.designer.full_name}, <br />Your room <strong>#{@board.name}</strong> has been approved and published.  You can <a href=\"#{@board.to_url}\">visit your room here</a> to check it out.","Your room has been approved!","Scout & Nimble",params[:board][:state_message],"simple-template") if params[:board][:send_message] == "on"
-    @board.send_email_according_to_board("","Your room has been approved!","Scout & Nimble","","approved-room-new-email")
+    Spree::BoardMailer.room_published_message(@board, params[:board][:state_message]).deliver if params[:board][:send_message] == "on"
+    Spree::BoardMailer.room_published(@board).deliver
 
     # user=@board.designer
     # boards = user.boards.where(status: "published").count
@@ -184,8 +181,8 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board  = Spree::Board.find_by id: params[:board][:id]
     @board.set_state_transition_context(params[:board][:state_message], spree_current_user)
     @board.request_designer_revision
-    @room_manager.send_message(@board.designer, "Your room needs revisions.", "Please revise your room.")
-
+    # @room_manager.send_message(@board.designer, "Your room needs revisions.", "Please revise your room.")
+    Spree::BoardMailer.request_revision(@board, @board.state_message).deliver
     respond_to do |format|
       format.js {  }
     end
@@ -212,61 +209,6 @@ class Spree::Admin::BoardsController < Spree::Admin::ResourceController
     @board.designer = spree_current_user
     @board.save!
   end
-  
-  
-  
-  def send_deletion_email(board, message)
-   html_content = ''
-
-   m = Mandrill::API.new(MANDRILL_KEY)
-   message = {
-    :subject=> "Sorry, your board was deleted.",
-    :from_name=> "Jesse Bodine",
-    :text=>"#{message} \n\n The Scout & Nimble Team",
-    :to=>[
-     {
-       :email=> board.designer.email,
-       :name=> board.designer.full_name
-     }
-     ],
-     :from_email=>"designer@scoutandnimble.com",
-     :track_opens => true,
-     :track_clicks => true,
-     :url_strip_qs => false,
-     :signing_domain => "scoutandnimble.com"
-   }
-
-   sending = m.messages.send_template('board_deletion', [{:name => 'main', :content => html_content}], message, true)
-
-   logger.info sending
-
- end
-
- def send_revision_email(board, message)
-   html_content = ''
-
-   m = Mandrill::API.new(MANDRILL_KEY)
-   message = {
-    :subject=> "Your room needs revision before it can be published.",
-    :from_name=> "Jesse Bodine",
-    :text=>"#{message} \n\n The Scout & Nimble Team",
-    :to=>[
-     {
-       :email=> board.designer.email,
-       :name=> board.designer.full_name
-     }
-     ],
-     :from_email=>"designer@scoutandnimble.com",
-     :track_opens => true,
-     :track_clicks => true,
-     :url_strip_qs => false,
-     :signing_domain => "scoutandnimble.com"
-   }
-
-   sending = m.messages.send_template('board_revision', [{:name => 'main', :content => html_content}], message, true)
-
-   logger.info sending   
- end
 
   def portfolios
     @portfolios = Spree::Portfolio.includes(user: :designer_registrations).order("created_at desc").page(params[:page] || 1).per(params[:per_page] || 20)

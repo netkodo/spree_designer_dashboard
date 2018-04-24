@@ -497,39 +497,7 @@ class Spree::Board < ActiveRecord::Base
 
   def create_or_update_board_product(params,board_id,email)
     # Resque.enqueue_at(4.days.from_now,RoomSavedButNotPublishedEmail, board_id) if !email
-
     Resque.enqueue(RoomUpdate, params,board_id)
-
-    # if params[:products_board].present?
-    #   Rails.logger.info params[:products_board]
-    #   board_products = JSON.parse(params[:products_board])
-    #
-    #   board_products.each do |_, product_hash|
-    #     if product_hash['action_board'] == 'update'
-    #       board_product = self.board_products.where(id: product_hash['product_id']).first
-    #       if board_product.present?
-    #         if product_hash['image'].present?
-    #           crop_image(product_hash['image'], board_product)
-    #         end
-    #         attr = product_hash.except!('action_board', 'board_id', 'product_id', 'image')
-    #         board_product.update(attr)
-    #       end
-    #     elsif product_hash['action_board'] == 'create'
-    #       product = Spree::Product.where(id: product_hash['product_id']).first
-    #       if product.present?
-    #         image = product_hash['image']
-    #         attr = product_hash.except!('action_board', 'product_id', 'image')
-    #         board_product = product.board_products.new(attr)
-    #         if board_product.save
-    #           if image.present?
-    #             crop_image(image, board_product)
-    #           end
-    #           board_product.update(z_index: product_hash['z_index'])
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
   end
 
   def crop_image(base64, board_product)
@@ -539,59 +507,6 @@ class Spree::Board < ActiveRecord::Base
       if board_product.update({photo: file_img, image_id: ''})
         File.delete(file_img)
       end
-  end
-
-  def send_revision_request_email(message_content="")
-
-    html_content = "Hi #{self.designer.full_name}, <br /> Your room, \"#{self.name}\" has been reviewed and needs revision before publishing.  Please visit the <a href=\"#{self.to_url}/design\">design page</a> to make any revisions. "
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => "Your room status has changed: needs revision",
-        :from_name => "Scout & Nimble",
-        :text => "#{message_content} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.designer.email,
-                :name => self.designer.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template('simple-template', [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => message_content}], message, true)
-
-    logger.info sending
-  end
-
-  def send_email_according_to_board(html_content,subject,from_name,text,template)
-    html_content = html_content
-
-    m = Mandrill::API.new(MANDRILL_KEY)
-    message = {
-        :subject => subject,
-        :from_name => from_name,
-        :text => "#{text} \n\n The Scout & Nimble Team",
-        :to => [
-            {
-                :email => self.designer.email,
-                :name => self.designer.full_name
-            }
-        ],
-        :from_email => "designer@scoutandnimble.com",
-        :track_opens => true,
-        :track_clicks => true,
-        :url_strip_qs => false,
-        :signing_domain => "scoutandnimble.com"
-    }
-
-    sending = m.messages.send_template(template, [{:name => 'main', :content => html_content}, {:name => 'extra-message', :content => text}], message, true)
-
-    logger.info sending
   end
 
 
