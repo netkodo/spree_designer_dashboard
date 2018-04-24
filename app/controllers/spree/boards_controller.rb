@@ -11,7 +11,7 @@ class Spree::BoardsController < Spree::StoreController
 
   def check_generated_board
     hash = {}
-    params[:ids].each do  |b|
+    params[:ids].each do |b|
       board = Spree::Board.find(b)
       if board.generated
         hash[b] = render_to_string '/spree/boards/single_board_check.html.erb', locals: {board: board}, layout: false
@@ -20,25 +20,25 @@ class Spree::BoardsController < Spree::StoreController
 
     respond_to do |format|
       if hash.present?
-        format.json {render json: {boards: hash},status: :ok}
+        format.json {render json: {boards: hash}, status: :ok}
       else
-        format.json {render json: {:message => "nothing changed"},status: :unprocessable_entity}
+        format.json {render json: {:message => "nothing changed"}, status: :unprocessable_entity}
       end
     end
   end
 
   def add_question
     if params[:board_id].present?
-      @question=Spree::Question.new(board_id:params[:board_id],text:params[:text],from:params[:from],send_email:params[:send_email])
-      to="(board)"
+      @question = Spree::Question.new(board_id: params[:board_id], text: params[:text], from: params[:from], send_email: params[:send_email])
+      to = "(board)"
     elsif params[:product_id].present?
-      @question=Spree::Question.new(product_id:params[:product_id],text:params[:text],accepted:true,from:params[:from],send_email:params[:send_email])
-      to="(product)"
+      @question = Spree::Question.new(product_id: params[:product_id], text: params[:text], accepted: true, from: params[:from], send_email: params[:send_email])
+      to = "(product)"
     end
 
     respond_to do |format|
       if @question.save
-        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"You have new question",to,params[:text] if Rails.env != "staging"
+        Resque.enqueue NewQuestionReviewEmail, "support@scoutandnimble.com", "You have new question", to, params[:text] if Rails.env != "staging"
         format.json {render json: @question, status: :ok}
       else
         format.json {render json: @question.errors, status: :unprocessable_entity}
@@ -47,11 +47,11 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def add_answer
-    question = Spree::Question.find_by(id:params[:question_id])
-    @answer=question.build_answer(text:params[:text])
+    question = Spree::Question.find_by(id: params[:question_id])
+    @answer = question.build_answer(text: params[:text])
     respond_to do |format|
       if @answer.save
-        Resque.enqueue NewQuestionReviewEmail,"support@scoutandnimble.com",'question-review-email',"New designer answer","",params[:text] if Rails.env != "staging"
+        Resque.enqueue NewQuestionReviewEmail, "support@scoutandnimble.com", "New designer answer", "", params[:text] if Rails.env != "staging"
         format.json {render json: @answer}
       else
         format.json {render json: @answer.errors}
@@ -87,7 +87,7 @@ class Spree::BoardsController < Spree::StoreController
     if session[:hash_board_id].present? and session[:remember_product_page].present?
       @jump_to_board_id = session[:hash_board_id]
       @new_next_page = session[:remember_product_page].to_i + 1
-      @boards = tmp_boards.page(params[:page]).per(60*session[:remember_product_page].to_i)
+      @boards = tmp_boards.page(params[:page]).per(60 * session[:remember_product_page].to_i)
       session[:hash_board_id] = nil
       session[:remember_product_page] = nil
     else
@@ -96,11 +96,11 @@ class Spree::BoardsController < Spree::StoreController
 
     colors = []
     tmp_boards.each do |b|
-      colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+      colors += b.color_matches.map {|c| [c.color.color_family, c.color.color_family]}
     end
-    room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
-    room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
-    designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
+    room_type = tmp_boards.map {|r| [r.room_type, r.room_type]}
+    room_style = tmp_boards.map {|s| [s.room_style, s.room_style]}
+    designers = tmp_boards.map {|d| [d.designer.full_name, d.designer.id]}
 
     colors.each do |v|
       @colors[v] += 1
@@ -127,7 +127,7 @@ class Spree::BoardsController < Spree::StoreController
       params[:filter].except(:color).each do |f|
         tab << "#{f[0]}: #{f[1]}"
       end
-      params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
+      params[:filter][:color].present? ? statement = "Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement = "Spree::Board.active.where(#{tab.join(',')})"
       tmp_boards = eval(statement)
       @boards = tmp_boards.page(params[:page]).per(60)
     else
@@ -157,10 +157,10 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def questions_and_answers
-    board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted:true)
+    board_questions = Spree::Question.where("board_id IS NOT NULL").where(accepted: true)
     @questions = []
     board_questions.each do |question|
-      board = Spree::Board.find_by(id:question.board_id)
+      board = Spree::Board.find_by(id: question.board_id)
       if board.present?
         if board.designer.id == spree_current_user.id
           @questions << question
@@ -206,27 +206,27 @@ class Spree::BoardsController < Spree::StoreController
         tab << "#{f[0]}: #{f[1]}"
       end
 
-      params[:filter][:color].present? ? statement="Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement="Spree::Board.active.where(#{tab.join(',')})"
+      params[:filter][:color].present? ? statement = "Spree::Board.active.where(#{tab.join(',').present? ? tab.join(',') : 'nil'}).by_color_family(#{params[:filter][:color]})" : statement = "Spree::Board.active.where(#{tab.join(',')})"
       tmp_boards = eval(statement)
       @boards = tmp_boards.page(params[:page]).per(60)
 
       colors = []
       tmp_boards.each do |b|
-        colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+        colors += b.color_matches.map {|c| [c.color.color_family, c.color.color_family]}
       end
-      room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
-      room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
-      designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
+      room_type = tmp_boards.map {|r| [r.room_type, r.room_type]}
+      room_style = tmp_boards.map {|s| [s.room_style, s.room_style]}
+      designers = tmp_boards.map {|d| [d.designer.full_name, d.designer.id]}
     else
       tmp_boards = Spree::Board.published().order("created_at desc")
       @boards = tmp_boards.page(params[:page]).per(60)
       colors = []
       tmp_boards.each do |b|
-        colors += b.color_matches.map { |c| [c.color.color_family,c.color.color_family]}
+        colors += b.color_matches.map {|c| [c.color.color_family, c.color.color_family]}
       end
-      room_type = tmp_boards.map { |r| [r.room_type,r.room_type]}
-      room_style = tmp_boards.map { |s| [s.room_style,s.room_style]}
-      designers = tmp_boards.map {|d| [d.designer.full_name,d.designer.id]}
+      room_type = tmp_boards.map {|r| [r.room_type, r.room_type]}
+      room_style = tmp_boards.map {|s| [s.room_style, s.room_style]}
+      designers = tmp_boards.map {|d| [d.designer.full_name, d.designer.id]}
     end
 
     colors.each do |v|
@@ -245,7 +245,7 @@ class Spree::BoardsController < Spree::StoreController
       @room_style[v] += 1
     end
 
-    render "search",layout: false
+    render "search", layout: false
   end
 
   def my_rooms
@@ -256,7 +256,7 @@ class Spree::BoardsController < Spree::StoreController
     @board = Spree::Board.where(slug: params[:slug]).first
     @board.update(show_out_of_stock: params[:value])
     respond_to do |format|
-      format.json { head :no_content }
+      format.json {head :no_content}
     end
   end
 
@@ -268,8 +268,8 @@ class Spree::BoardsController < Spree::StoreController
 
   def show_portfolio
     @portfolio = Spree::Portfolio.find(params[:id])
-    @same_room_images = @portfolio.room.portfolios.select{|x| x.id != @portfolio.id}
-    @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?",@portfolio.room_type,@portfolio.style,@portfolio.wall_color).order("RAND()").limit(4)
+    @same_room_images = @portfolio.room.portfolios.select {|x| x.id != @portfolio.id}
+    @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?", @portfolio.room_type, @portfolio.style, @portfolio.wall_color).order("RAND()").limit(4)
     impressionist(@portfolio)
   end
 
@@ -306,7 +306,7 @@ class Spree::BoardsController < Spree::StoreController
     #@taxon_filters = Spree::Product.generate_new_filters(@my_taxon)
     @searcher.retrieve_products({where: "supplier_id = #{@my_taxon.id}"})
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html {render :layout => false}
     end
 
   end
@@ -328,17 +328,17 @@ class Spree::BoardsController < Spree::StoreController
       @searcher = build_searcher(params)
     end
     if params[:supplier_id] and params[:supplier_id].to_i > 0
-      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, out_of_stock, {page: params[:page] || 1, per_page: params[:per_page] || 60})
     else
-      @all_products = @searcher.retrieve_products(out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+      @all_products = @searcher.retrieve_products(out_of_stock, {page: params[:page] || 1, per_page: params[:per_page] || 60})
     end
     @products = @all_products
 
     @sign_in_count = spree_current_user.sign_in_count
 
-    session[:t_filter]=1 if @products.present?
+    session[:t_filter] = 1 if @products.present?
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html {render :layout => false}
     end
   end
 
@@ -359,17 +359,17 @@ class Spree::BoardsController < Spree::StoreController
       @searcher = build_searcher(params)
     end
     if params[:supplier_id] and params[:supplier_id].to_i > 0
-      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+      @all_products = @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, out_of_stock, {page: params[:page] || 1, per_page: params[:per_page] || 60})
     else
-      @all_products = @searcher.retrieve_products(out_of_stock,  {page: params[:page] || 1, per_page: params[:per_page] || 60})
+      @all_products = @searcher.retrieve_products(out_of_stock, {page: params[:page] || 1, per_page: params[:per_page] || 60})
     end
     @products = @all_products
 
     @sign_in_count = spree_current_user.sign_in_count
 
-    session[:t_filter]=1 if @products.present?
+    session[:t_filter] = 1 if @products.present?
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html {render :layout => false}
     end
   end
 
@@ -409,7 +409,9 @@ class Spree::BoardsController < Spree::StoreController
 
     @board = Spree::Board.find(params[:board_id])
 
-    if @board.private
+    if @board.
+
+    private
       if params[:supplier_id] and params[:supplier_id].to_i > 0
         # @all_products = @searcher.retrieve_products.by_supplier(params[:supplier_id]).not_on_a_board
         #@all_products =  @searcher.retrieve_products({where: "supplier_id = #{params[:supplier_id]}"}, {includes: :board_products}, {where: "spree_board_products.product_id is NULL"})
@@ -443,7 +445,7 @@ class Spree::BoardsController < Spree::StoreController
 
     #@products = Spree::Product.all()
     respond_to do |format|
-      format.js { render :layout => false }
+      format.js {render :layout => false}
       #format.html { redirect_to([:admin, @booking], :notice => 'Booking was successfully created.') }
       #format.xml  { render :xml => @booking, :status => :created, :location => @booking }
     end
@@ -455,26 +457,26 @@ class Spree::BoardsController < Spree::StoreController
     if @board.save
       respond_to do |format|
         format.html {redirect_to build_board_path(@board)}
-        format.json { render json: {location: build_board_path(@board)}}
-        format.js { render json: {location: build_board_path(@board)}}
+        format.json {render json: {location: build_board_path(@board)}}
+        format.js {render json: {location: build_board_path(@board)}}
       end
     else
     end
   end
 
   def update
-    session[:page_count]=0
+    session[:page_count] = 0
     @board.slug = nil
-    @board.update_column(:generated,false)
+    @board.update_column(:generated, false)
     #respond_to do |format|
-    @board.create_or_update_board_product(params,@board.id,@board.not_published_email)
-    @board.update_column(:not_published_email,true)
+    @board.create_or_update_board_product(params, @board.id, @board.not_published_email)
+    @board.update_column(:not_published_email, true)
     if @board.update_attributes(board_params)
 
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
-        portfolio.update(board_id: @board.id,room_type: params[:board][:room_id],style: params[:board][:style_id])
+        portfolio.update(board_id: @board.id, room_type: params[:board][:room_id], style: params[:board][:style_id])
 
         portfolio.variants.exists? ? @board.update(state: "published", status: "published") : nil
       else
@@ -489,11 +491,11 @@ class Spree::BoardsController < Spree::StoreController
       @board.designer.designer_cordial_update('Room-Designer-Build-A-Room')
       respond_to do |format|
         format.html {redirect_to designer_dashboard_path(@board, :notice => 'Your board was updated.')}
-        format.json { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
-        format.js { render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+        format.json {render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
+        format.js {render json: {location: designer_dashboard_path(@board, :notice => 'Your board was updated.')}}
       end
     else
-      puts @board.errors.collect { |e| e.to_s }
+      puts @board.errors.collect {|e| e.to_s}
       #format.html { render :action => "design"}
     end
     #end
@@ -509,7 +511,7 @@ class Spree::BoardsController < Spree::StoreController
     html_content << "<br /><br />Message from Designer:<br /><br />#{params[:board][:state_message]}" if params[:board] and params[:board][:state_message] and !params[:board][:state_message].blank?
 
     @board.designer.send_message(@room_manager, "Room Submitted by #{@board.designer.full_name}", html_content, true, nil, Time.now, @board)
-    session[:page_count]=1
+    session[:page_count] = 1
     redirect_to designer_dashboard_path
   end
 
@@ -531,8 +533,8 @@ class Spree::BoardsController < Spree::StoreController
     end
 
     department_taxons = Spree::Taxonomy.where(:name => 'Department').first().root.children
-    product_taxon_ids = @all_products.collect { |p| p.taxons.collect { |t| t.id } }.flatten.uniq
-    @ary = department_taxons.where(:id => product_taxon_ids).map { |taxon| [taxon.name, taxon.id] }
+    product_taxon_ids = @all_products.collect {|p| p.taxons.collect {|t| t.id}}.flatten.uniq
+    @ary = department_taxons.where(:id => product_taxon_ids).map {|taxon| [taxon.name, taxon.id]}
 
     #@ary = Array.new(Array.new) 
     #
@@ -548,7 +550,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def design
-    except = spree_current_user.portfolios.select{|x| x.variants.exists? or (x.board.present? and x.board.status="published")}.map(&:id)
+    except = spree_current_user.portfolios.select {|x| x.variants.exists? or (x.board.present? and x.board.status = "published")}.map(&:id)
     @portfolios = spree_current_user.portfolios.where.not(id: except)
     @portfolio_id = @board.portfolio.id if @board.portfolio.present?
 
@@ -566,7 +568,7 @@ class Spree::BoardsController < Spree::StoreController
 
     #@board.messages.new(:sender_id => spree_current_user.id, :recipient_id => 0, :subject => "Publication Submission")
     @products = Spree::Product.all()
-    @bookmarked_products = spree_current_user.bookmarks.collect { |bookmark| bookmark.product }
+    @bookmarked_products = spree_current_user.bookmarks.collect {|bookmark| bookmark.product}
     @department_taxons = Spree::Taxonomy.where(:name => 'Department').first().root.children
 
     #@department_taxons= Spree::Supplier.find_by(id: 16).taxons 
@@ -701,7 +703,7 @@ class Spree::BoardsController < Spree::StoreController
     end
 
     respond_to do |format|
-      format.html { render layout: false }
+      format.html {render layout: false}
     end
   end
 
@@ -709,7 +711,7 @@ class Spree::BoardsController < Spree::StoreController
 
     #@board.messages.new(:sender_id => spree_current_user.id, :recipient_id => 0, :subject => "Publication Submission")
     @products = Spree::Product.all()
-    @bookmarked_products = spree_current_user.bookmarks.collect { |bookmark| bookmark.product }
+    @bookmarked_products = spree_current_user.bookmarks.collect {|bookmark| bookmark.product}
     @department_taxons = Spree::Taxonomy.where(:name => 'Department').first().root.children
     #@department_taxons= Spree::Supplier.find_by(id: 16).taxons 
     @searcher = build_searcher(params)
@@ -734,7 +736,7 @@ class Spree::BoardsController < Spree::StoreController
   def destroy
     if @board
       @board.update(removal: true)
-      Resque.enqueue DeleteRoom,@board.id
+      Resque.enqueue DeleteRoom, @board.id
       flash[:notice] = "The room has been deleted."
     else
       flash[:warning] = "We could not delete this room."
@@ -743,7 +745,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def add_board_favorite
-    board = Spree::BoardFavorite.new(user_id: params[:user_id],board_id: params[:board_id])
+    board = Spree::BoardFavorite.new(user_id: params[:user_id], board_id: params[:board_id])
     respond_to do |format|
       if board.save
         format.json {render json: {}, status: :ok}
@@ -754,7 +756,7 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   def remove_board_favorite
-    board = Spree::BoardFavorite.find_by(user_id: params[:user_id],board_id: params[:board_id])
+    board = Spree::BoardFavorite.find_by(user_id: params[:user_id], board_id: params[:board_id])
     respond_to do |format|
       if board.destroy
         format.json {render json: {}, status: :ok}
@@ -765,8 +767,9 @@ class Spree::BoardsController < Spree::StoreController
   end
 
   private
+
   def prep_search_collections
-    @room_taxons = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select { |child| Spree::Board.available_room_taxons.include?(child.name) }
+    @room_taxons = Spree::Taxonomy.where(:name => 'Rooms').first().root.children.select {|child| Spree::Board.available_room_taxons.include?(child.name)}
     @style_taxons = Spree::Taxonomy.where(:name => 'Styles').first().root.children
     @colors = Spree::Color.order(:position)
     @designers = Spree::User.published_designers().order("created_at desc")
