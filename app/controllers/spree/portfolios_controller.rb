@@ -294,7 +294,6 @@ class Spree::PortfoliosController < Spree::StoreController
     @portfolio = Spree::Portfolio.new(x)
 
     @portfolio.show = false if spree_current_user.designer_registrations.present? and spree_current_user.designer_registrations.first.status == "test designer"
-
     respond_to do |format|
       if @portfolio.save
 
@@ -360,6 +359,14 @@ class Spree::PortfoliosController < Spree::StoreController
       else
         format.json {render json: portfolio.errors, status: :unprocessable_entity}
       end
+    end
+  end
+
+  def portfolio_bookmarks_fetch
+    bookmarks = spree_current_user.bookmarks.map{|x| x if x.product.variants.present? }.compact
+    rerender_table = render_to_string(partial: "spree/portfolios/bookmark_items", locals: {products: bookmarks.collect{|bookmark| bookmark.product}}, formats: [:html], layout: false)
+    respond_to do |format|
+      format.json { render json: {bookmarks: rerender_table} }
     end
   end
 

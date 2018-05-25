@@ -52,7 +52,7 @@ Spree::Core::Engine.routes.draw do
   post "/single_portfolio_edit" => "portfolios#single_portfolio_edit", :as => :single_portfolio_edit, :defaults => {:format => 'html'}
 
   post "/get_tags" => "portfolios#get_tags", :as => :get_tags, :defaults => {:format => 'json'}
-
+  get "/portfolio_bookmarks" => "portfolios#portfolio_bookmarks_fetch", as: :portfolio_bookmarks_fetch, :defaults => {:format => 'json'}
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
 
