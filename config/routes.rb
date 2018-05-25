@@ -92,6 +92,7 @@ Spree::Core::Engine.routes.draw do
   get "/sign_contract/:token" => "contracts#preview_sign_contract", :as => :preview_sign_contract
   patch "/sign_contract/:token/sign" => "contracts#sign_contract", :as => :sign_contract
 
+  get "/portfolio_bookmarks" => "portfolios#portfolio_bookmarks_fetch", as: :portfolio_bookmarks_fetch, :defaults => {:format => 'json'}
   #favoretes portfolio & board
   post "/check_generated_board" => "boards#check_generated_board", :as => :check_generated_board, :defaults => {:format => 'json'}
 
