@@ -2,7 +2,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
   #attr_accessible :address1, :address2, :city, :state, :postal_code, :phone, :website, :resale_certificate_number, :tin, :company_name, :status, :first_name, :last_name
   belongs_to :user, :class_name => "User"
 
-  validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :tin, :company_name
+  attr_accessor :validate_tin
+
+  validates_presence_of :address1, :city, :state, :postal_code, :phone, :website, :company_name
+  validates :tin, presence: true, :if => :validate_tin?
   #validates_presence_of :first_name, :last_name
 
   after_create :create_cordial_profile
@@ -12,6 +15,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
 
   def self.initialize_approved_at_date
     Spree::DesignerRegistration.all.find_each{|x| x.update_column(:approved_at, x.updated_at)}
+  end
+
+  def validate_tin?
+    validate_tin
   end
 
   def update_approved_at
