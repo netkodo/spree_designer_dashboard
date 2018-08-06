@@ -603,14 +603,13 @@ class Spree::BoardsController < Spree::StoreController
       @supplier = Spree::Supplier.new
     end
     tab = []
-
     if params[:keywords].present?
       @searcher = build_searcher(params)
       @searcher.retrieve_products
       tab = @searcher.solr_search.facet(:brand_name).rows.map(&:value)
       if params[:type].blank? and params[:id].blank?
         params[:type] = 'categories'
-        params[:id] = Spree::Taxon.where(permalink: tab.first).first.id
+        params[:id] = Spree::Taxon.where(permalink: tab.first).first.try(:id) || ''
         @room_id = params[:id]
       end
     end
@@ -625,16 +624,14 @@ class Spree::BoardsController < Spree::StoreController
         @category << [tax.name, tax.id]
       end
     end
-
-
     if params[:type].to_s == "categories"
       @category_id = Spree::Taxon.where(id: params[:id]).first
       params[:s] = {} if params[:s].blank?
-      params[:s][:brand_name] = @category_id.permalink
+      params[:s][:brand_name] = @category_id.try(:permalink) || ''
       @searcher = build_searcher(params)
       @searcher.retrieve_products
       @suppliers = Spree::Board.generate_brands(@searcher)
-      @category_id.children.each do |taxon|
+      @category_id.try(:children).try(:each) do |taxon|
         if tab.present?
           if tab.include?(taxon.permalink)
             @subcategory << [taxon.name, taxon.id]
