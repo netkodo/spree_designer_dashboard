@@ -542,6 +542,8 @@ class Spree::BoardsController < Spree::StoreController
       current_spent=@board.time_spent
       @board.update_column(:time_spent, time_spent+current_spent)
 
+      spree_current_user.update_column(:popup_room, false)
+
       if params[:is_assigned_to_portfolio].present?
         Spree::Portfolio.where(board_id: @board.id).update_all(board_id: nil)
         portfolio = Spree::Portfolio.find(params[:is_assigned_to_portfolio])
@@ -672,14 +674,13 @@ class Spree::BoardsController < Spree::StoreController
       @supplier = Spree::Supplier.new
     end
     tab = []
-
     if params[:keywords].present?
       @searcher = build_searcher(params)
       @searcher.retrieve_products
       tab = @searcher.solr_search.facet(:brand_name).rows.map(&:value)
       if params[:type].blank? and params[:id].blank?
         params[:type] = 'categories'
-        params[:id] = Spree::Taxon.where(permalink: tab.first).first.id
+        params[:id] = Spree::Taxon.where(permalink: tab.first).first.try(:id) || ''
         @room_id = params[:id]
       end
     end
@@ -694,16 +695,14 @@ class Spree::BoardsController < Spree::StoreController
         @category << [tax.name, tax.id]
       end
     end
-
-
     if params[:type].to_s == "categories"
       @category_id = Spree::Taxon.where(id: params[:id]).first
       params[:s] = {} if params[:s].blank?
-      params[:s][:brand_name] = @category_id.permalink
+      params[:s][:brand_name] = @category_id.try(:permalink) || ''
       @searcher = build_searcher(params)
       @searcher.retrieve_products
       @suppliers = Spree::Board.generate_brands(@searcher)
-      @category_id.children.each do |taxon|
+      @category_id.try(:children).try(:each) do |taxon|
         if tab.present?
           if tab.include?(taxon.permalink)
             @subcategory << [taxon.name, taxon.id]
