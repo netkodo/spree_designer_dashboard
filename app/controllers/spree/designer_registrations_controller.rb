@@ -40,6 +40,7 @@ class Spree::DesignerRegistrationsController < Spree::StoreController
       session[:fb_pixel_email] = current_spree_user.email
       # @designer_registration.user.designer_ac_signup(@designer_registration.applied_for)
       Spree::DesignerRegistrationMailer.send_notification(@designer_registration.user_id).deliver
+      Spree::DesignerRegistrationMailer.send_notification(user.id, "morganw@scoutandnimble.com").deliver
       redirect_to designer_registration_thanks_url
     else
       render action: 'new'
