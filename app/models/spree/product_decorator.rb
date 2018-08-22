@@ -154,6 +154,7 @@ Spree::Product.class_eval do
         else
           image_url = self.images.first.attachment.url(:product)
         end
+        image_url = image_url.gsub("https","http")
         self.images.first ? Magick::ImageList.new(image_url) : Magick::ImageList.new(image.present? ? image.attachment.url(:product)  : self.variants.first.images.first.attachment.url(:product))
       end
     rescue Exception => e
