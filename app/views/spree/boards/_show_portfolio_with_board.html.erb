@@ -295,7 +295,7 @@
 	<div class="col-md-12">
 		<div class="board-section board-products-section portfolio-row-margin">
 			<% if @portfolio.board.products.present? %><h3>Buy Products from this Room</h3><% end %>
-			<%= render :partial => "spree/designers/products_list", :locals => {:products => @portfolio.board.products}%>
+			<%= render :partial => "spree/designers/products_list", :locals => {:products => @board_products}%>
 		</div>
 	</div>
 </div>
