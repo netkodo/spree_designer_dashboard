@@ -287,39 +287,41 @@
         <% t = [] %>
         <% t << @board.portfolio if @board.portfolio.present? %>
         <% @board.other_designer_boards.map{|b| t << b} if !@board.other_designer_boards.blank? %>
-        <% if t.size > 2 %>
-          <div class="container col-md-12 other-room-slider">
-            <ul class="nbs-flexisel-ul">
-              <% t.each do |room| %>
-                <li>
-                  <div class="board-listing col-md-12">
-                    <% if room.instance_of? Spree::Portfolio %>
-                      <div class="board-image text-center col-md-12">
-                        <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.portfolio.id)%>
-                      </div>
-                    <% else %>
-                      <div class="board-image text-center col-md-12">
-                        <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
-                      </div>
-                    <% end %>
-                  </div>
-                </li>
-              <% end %>
-          </ul>
-        </div>
-      <% else %>
-        <% t.each do |room| %>
-          <div class="board-listing col-md-6">
-            <% if room.instance_of? Spree::Portfolio %>
-              <div class="board-image text-center">
-                <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.portfolio.id)%>
-              </div>
-            <% else %>
-              <div class="board-image">
-                <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
-              </div>
-            <% end %>
+        <% if t.present? %>
+          <% if t.size > 2 %>
+            <div class="container col-md-12 other-room-slider">
+              <ul class="nbs-flexisel-ul">
+                <% t.each do |room| %>
+                  <li>
+                    <div class="board-listing col-md-12">
+                      <% if room.instance_of? Spree::Portfolio %>
+                        <div class="board-image text-center col-md-12">
+                          <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.portfolio.id)%>
+                        </div>
+                      <% else %>
+                        <div class="board-image text-center col-md-12">
+                          <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </li>
+                <% end %>
+            </ul>
           </div>
+        <% else %>
+          <% t.each do |room| %>
+            <div class="board-listing col-md-6">
+              <% if room.instance_of? Spree::Portfolio %>
+                <div class="board-image text-center">
+                  <%= link_to image_tag(@board.portfolio.portfolio_image.url(:carousel), class: 'room-tied-portfolio'), show_portfolio_path(@board.portfolio.id)%>
+                </div>
+              <% else %>
+                <div class="board-image">
+                  <%= room.board_image.present? ? (link_to image_tag(room.board_image.attachment.url(:large)), room_path(room)) : (link_to image_tag("/assets/frontend/boards/primary_default.png",class: 'img-responsive'), room_path(room)) %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
       </div>
@@ -332,7 +334,7 @@
 	<div class="col-md-12">
 		<div class="board-section board-products-section">
 			<h3>Buy Products from this Room</h3>
-			<%= render :partial => "spree/designers/products_list", :locals => {:products => @board.products}%>
+			<%= render :partial => "spree/designers/products_list", :locals => {:products => @board_products}%>
 		</div>
 	</div>
 </div>
