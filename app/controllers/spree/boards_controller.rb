@@ -271,7 +271,7 @@ class Spree::BoardsController < Spree::StoreController
     @portfolio = Spree::Portfolio.find(params[:id])
     @same_room_images = @portfolio.room.portfolios.select {|x| x.id != @portfolio.id}
     @related_rooms = Spree::Portfolio.where("room_type = ? OR style = ? OR wall_color = ?", @portfolio.room_type, @portfolio.style, @portfolio.wall_color).order("RAND()").limit(4)
-    @board_products = Spree::Product.unscoped.where(id: @portfolio.board.board_products.map(&:product_id))
+    @board_products = Spree::Product.unscoped.where(id: @portfolio.board.present? ? @portfolio.board.board_products.map(&:product_id) : [])
     impressionist(@portfolio)
   end
 
