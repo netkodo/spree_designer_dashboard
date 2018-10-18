@@ -1,0 +1,144 @@
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
+<% if variants.present? %>
+  <% variants.in_groups_of(4, false) do |row_variants| %>
+    <div id="products" class="row">
+      <% for variant in row_variants %>
+        <% product = variant.product %>
+        <div class="col-md-3 col-sm-6 col-xs-6">
+
+
+          <div class="product-listing">
+            <div class="responsive-container">
+              <div class="dummy"></div>
+
+              <div class="img-container">
+                <div class="centerer"></div>
+                  <%= link_to product_path(product, variant_portfolio_id: variant.id), :itemprop => 'url' do %>
+                    <% if variant.images.present? && variant.images.order(position: :asc).first.attachment_file_name.present? %>
+                      <%= image_tag variant.images.order(position: :asc).first.attachment.url(:listing) %>
+                    <% end %>
+                  <% end %>
+                </div>
+              <%= show_out_of_stock(variant.product) %>
+            </div>
+
+
+            <div class="share-button">
+
+              <div class="scout-button">
+                <%
+                  media, description = ""
+                  media = meta_schema_image(product).split("?")[0].to_s if meta_schema_image(product).present?
+                  description = strip_tags(product.description) if product.description.present?
+                  product_name = product.name if product.name.present?
+                %>
+
+                <div class="favorits">
+                  <div class="shared-icon">
+
+                    <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= product_name %>&description=<%= description %>&link=<%= product_url(product) %>', '_blank', 'width=520, height=570')">
+                      <%= image_tag("frontend/facebook.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="favorits">
+                  <div class="shared-icon">
+
+                    <a onclick="return window.open('https://twitter.com/intent/tweet?via=scoutandnimble&hashtags=scoutandnimble&url=<%= product_url(product) %>&text=<%= product_name %>', '_blank', 'width=520, height=570')">
+                      <%= image_tag("frontend/twitter.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="favorits">
+                  <div class="shared-icon">
+
+
+                    <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= product_url(product) %>&media=<%= media %>&description=<%= description %>">
+                      <%= image_tag("frontend/pinterest.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
+                    </a>
+                    <!-- Please call pinit.js only once per page -->
+                    <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                  </div>
+                </div>
+
+                <div class="favorits">
+
+                  <% if spree_current_user %>
+                    <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
+                    <div class="js-scout-bookmark" data-bookmarked="<%= is_bookmarked %>" data-product-id="<%= product.id %>">
+                      <div title="Bookmark this Product" class="product-results-meta bookmark-product-container <%= "hidden" if is_bookmarked %>">
+
+                        <%= link_to "javascript:void(0);", class: "bookmark-product bookmark-link bookmark-link-#{product.id}", data: {product_id: product.id} do %>
+                          <i class="fa fa-heart fa-white"></i>
+
+                        <% end %>
+                      </div>
+
+
+                      <div title="Remove Bookmark for this Product" class="product-results-meta unbookmark-product-container <%= "hidden" unless is_bookmarked %>">
+                        <%= link_to "javascript:void(0);", class: "remove-bookmark-product unbookmark-link unbookmark-link-#{product.id}", data: {product_id: product.id} do %>
+                          <i class="fa fa-heart fa-red"></i>
+
+                        <% end %>
+
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+
+              </div>
+            </div>
+
+            <%= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
+            <div class="row price-discount">
+              <div class="col-md-12">
+                <div class="price-height">
+							<span class="price" itemprop="price">
+							<%= display_price_range(product) %>
+                <%#= display_price(product.master) %></span>
+
+                  <% if product.has_variants? %>
+                    <% variants = product.variants.order(:msrp_price) %>
+                    <% if variants.first and variants.last and !variants.first.msrp_price.nil? and variants.first.msrp_price > 0 and !variants.last.msrp_price.nil? and variants.last.msrp_price > 0 and variants.first.msrp_price != variants.last.msrp_price %>
+                      <span class="msrp"><%= display_msrp(variants.first) %> - <%= display_msrp(variants.last) %></span>
+                      <span class="price-percentage-off">
+										 <%= display_percentage_off(product) %>
+									</span>
+                    <% end %>
+                  <% else %>
+                    <% if !product.master.msrp_price.nil? %>
+                      <span class="msrp"><%= display_msrp(product.master) %></span>
+                      <span class="price-percentage-off">
+									 <%= display_percentage_off(product) %>
+								</span>
+                    <% end %>
+                  <% end %>
+                </div>
+                <div>
+                  <% if FREE_SHIPPING_CATEGORY_IDS.include?(product.shipping_category_id) %>
+                    <span class="products-free-shipping"><i class="fa fa-truck"></i> Free Shipping</span>
+                  <% else %>
+                    &nbsp;
+                  <% end %>
+                </div>
+              </div>
+
+            </div>
+
+
+            <% if false %>
+              <div>
+                <a href="javascript:void(0);" class="add-to-cart-button" data-product-name="<%= product.name %>" data-product-price="<%= display_price(product) %>" data-product-image-url="<%= product.images.first.attachment.url(:mini) if product.images.first %>" data-product-id="<%= product.id %>" data-variant-number="1">Add
+                  to Cart</a></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+<script>
+  observeBookmarkChanges();
+</script>

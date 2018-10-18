@@ -17,6 +17,10 @@ class Spree::DesignerRegistration < ActiveRecord::Base
     Spree::DesignerRegistration.all.find_each{|x| x.update_column(:approved_at, x.updated_at)}
   end
 
+  def validate_tin?
+    validate_tin
+  end
+
   def update_approved_at
     if self.status_changed?
       self.update_column(:approved_at, DateTime.now)

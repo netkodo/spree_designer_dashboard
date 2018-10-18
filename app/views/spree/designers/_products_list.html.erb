@@ -1,5 +1,5 @@
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
-<% if products.any? %>
+<% if products.present? %>
 	<% products.in_groups_of(4, false) do |row_products| %>
 	<div id="products" class="row">
 		<% for product in row_products %>
