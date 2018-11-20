@@ -115,7 +115,7 @@
   <div class="col-md-12">
     <div class="board-section board-products-section portfolio-row-margin">
       <% if @portfolio.variants.exists? %><h3>Buy Products from this Room</h3><% end %>
-      <%= render :partial => "spree/designers/variants_list", :locals => {:variants => @portfolio.variants}%>
+      <%= render :partial => "spree/designers/variants_list", :locals => {:variants => @portfolio.variants.joins(:product).where('spree_products.deleted_at IS NULL')}%>
     </div>
   </div>
 </div>
