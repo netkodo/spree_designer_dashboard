@@ -147,3 +147,24 @@ h2.home a:hover{
     z-index: 2;
     text-align: left;
 }
+
+@media only screen and (max-width: 600px) {
+    .img-container {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+    .dummy{
+        display: none;
+    }
+}
+
+#products .sn-to-the-left{
+    text-align: left;
+}
+
+.sn-product-name{
+    margin-top: 5px;
+    color: #404040!important;
+}

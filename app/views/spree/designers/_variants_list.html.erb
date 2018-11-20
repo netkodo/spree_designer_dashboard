@@ -1,142 +1,144 @@
+<div class="quick-shop-modal">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="sn-qs-close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </div>
+        <div class="modal-body js-modal-body">
+
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54fe66e3227e091d" async="async"></script>
 <% if variants.present? %>
   <% variants.in_groups_of(4, false) do |row_variants| %>
-    <div id="products" class="row">
-      <% for variant in row_variants %>
-        <% product = variant.product %>
-        <div class="col-md-3 col-sm-6 col-xs-6">
+    <div class="row">
+    <% for variant in row_variants %>
 
+      <% product = variant.product %>
+        <div class="col-md-3 col-sm-6 col-xs-12" id="products">
 
-          <div class="product-listing">
-            <div class="responsive-container">
-              <div class="dummy"></div>
-
-              <div class="img-container">
-                <div class="centerer"></div>
-                  <%= link_to product_path(product, variant_portfolio_id: variant.id), :itemprop => 'url' do %>
-                    <% if variant.images.present? && variant.images.order(position: :asc).first.attachment_file_name.present? %>
-                      <%= image_tag variant.images.order(position: :asc).first.attachment.url(:listing) %>
-                    <% end %>
-                  <% end %>
-                </div>
-              <%= show_out_of_stock(variant.product) %>
+        <div class="responsive-container">
+          <% if spree_current_user.present? and spree_current_user.has_spree_role?("admin") %>
+            <div class="js-admin-config">
+              <%= link_to "#" do %>
+                <i class="fa fa-wrench"></i>
+              <% end %>
             </div>
-
-
-            <div class="share-button">
-
-              <div class="scout-button">
-                <%
-                  media, description = ""
-                  media = meta_schema_image(product).split("?")[0].to_s if meta_schema_image(product).present?
-                  description = strip_tags(product.description) if product.description.present?
-                  product_name = product.name if product.name.present?
-                %>
-
-                <div class="favorits">
-                  <div class="shared-icon">
-
-                    <a onclick="return window.open('https://www.facebook.com/dialog/feed?app_id=329825710691123&display=popup&name=<%= product_name %>&description=<%= description %>&link=<%= product_url(product) %>', '_blank', 'width=520, height=570')">
-                      <%= image_tag("frontend/facebook.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
-                    </a>
-                  </div>
-                </div>
-
-                <div class="favorits">
-                  <div class="shared-icon">
-
-                    <a onclick="return window.open('https://twitter.com/intent/tweet?via=scoutandnimble&hashtags=scoutandnimble&url=<%= product_url(product) %>&text=<%= product_name %>', '_blank', 'width=520, height=570')">
-                      <%= image_tag("frontend/twitter.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
-                    </a>
-                  </div>
-                </div>
-
-                <div class="favorits">
-                  <div class="shared-icon">
-
-
-                    <a data-pin-do="buttonPin" data-pin-custom="true" href="//www.pinterest.com/pin/create/button/?url=<%= product_url(product) %>&media=<%= media %>&description=<%= description %>">
-                      <%= image_tag("frontend/pinterest.png", style: "background-color: #c9cace;position:relative;top:-1px;") %>
-                    </a>
-                    <!-- Please call pinit.js only once per page -->
-                    <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
-                  </div>
-                </div>
-
-                <div class="favorits">
-
-                  <% if spree_current_user %>
-                    <% is_bookmarked = product.is_bookmarked_by?(spree_current_user) %>
-                    <div class="js-scout-bookmark" data-bookmarked="<%= is_bookmarked %>" data-product-id="<%= product.id %>">
-                      <div title="Bookmark this Product" class="product-results-meta bookmark-product-container <%= "hidden" if is_bookmarked %>">
-
-                        <%= link_to "javascript:void(0);", class: "bookmark-product bookmark-link bookmark-link-#{product.id}", data: {product_id: product.id} do %>
-                          <i class="fa fa-heart fa-white"></i>
-
-                        <% end %>
-                      </div>
-
-
-                      <div title="Remove Bookmark for this Product" class="product-results-meta unbookmark-product-container <%= "hidden" unless is_bookmarked %>">
-                        <%= link_to "javascript:void(0);", class: "remove-bookmark-product unbookmark-link unbookmark-link-#{product.id}", data: {product_id: product.id} do %>
-                          <i class="fa fa-heart fa-red"></i>
-
-                        <% end %>
-
-                      </div>
-                    </div>
-                  <% end %>
-                </div>
-
-              </div>
+          <% end %>
+          <div class="dummy"></div>
+          <% cache product do %>
+            <div class="img-container sn-pointer-on-hover js-listed-product">
+              <div class="centerer"></div>
+              <%= link_to product_path(product, variant_portfolio_id: variant.id), :itemprop => 'url' do %>
+                <% if variant.images.present? && variant.images.order(position: :asc).first.attachment_file_name.present? %>
+                  <%= image_tag variant.images.order(position: :asc).first.attachment.url(:listing) %>
+                <% end %>
+              <% end %>
             </div>
+          <% end %>
+          <%= show_out_of_stock(product) %>
 
-            <%= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
-            <div class="row price-discount">
-              <div class="col-md-12">
-                <div class="price-height">
-							<span class="price" itemprop="price">
-							<%= display_price_range(product) %>
-                <%#= display_price(product.master) %></span>
-
-                  <% if product.has_variants? %>
-                    <% variants = product.variants.order(:msrp_price) %>
-                    <% if variants.first and variants.last and !variants.first.msrp_price.nil? and variants.first.msrp_price > 0 and !variants.last.msrp_price.nil? and variants.last.msrp_price > 0 and variants.first.msrp_price != variants.last.msrp_price %>
-                      <span class="msrp"><%= display_msrp(variants.first) %> - <%= display_msrp(variants.last) %></span>
-                      <span class="price-percentage-off">
-										 <%= display_percentage_off(product) %>
-									</span>
-                    <% end %>
-                  <% else %>
-                    <% if !product.master.msrp_price.nil? %>
-                      <span class="msrp"><%= display_msrp(product.master) %></span>
-                      <span class="price-percentage-off">
-									 <%= display_percentage_off(product) %>
-								</span>
-                    <% end %>
-                  <% end %>
-                </div>
-                <div>
-                  <% if FREE_SHIPPING_CATEGORY_IDS.include?(product.shipping_category_id) %>
-                    <span class="products-free-shipping"><i class="fa fa-truck"></i> Free Shipping</span>
-                  <% else %>
-                    &nbsp;
-                  <% end %>
-                </div>
-              </div>
-
-            </div>
-
-
-            <% if false %>
-              <div>
-                <a href="javascript:void(0);" class="add-to-cart-button" data-product-name="<%= product.name %>" data-product-price="<%= display_price(product) %>" data-product-image-url="<%= product.images.first.attachment.url(:mini) if product.images.first %>" data-product-id="<%= product.id %>" data-variant-number="1">Add
-                  to Cart</a></div>
-            <% end %>
+          <div class="variant-options-count">
+            <%= show_options(product) %>
           </div>
         </div>
-      <% end %>
+        <div class="share-buttons">
+          <!--<#%= link_to product, itemprop: "name", title: product.name, class: 'sn-text-decoration-none' do %>-->
+          <div class="btn btn-block sn-prod-btn js-quick-shop" data-quick-shop-url="<%= modal_info_product_path(product.id) %>" style="min-width: 100%;">
+            <span>Quick Shop</span>
+          </div>
+          <!--<#% end %>-->
+
+        </div>
+<div class="sn-to-the-left">
+        <%= link_to "#{is_new_arrival(product)} #{truncate(product.name.split(' ').map(&:capitalize).join(' '), :length => 50)}".html_safe, product, itemprop: "name", title: product.name,
+                    :class => "info sn-product-name" %>
+</div>
+        <div class="row price-discount sn-to-the-left">
+          <div class="col-md-12">
+            <div>
+              <% price_class = price_classes(product)%>
+              <span class="<%= price_class[:price_main] %>" itemprop="price">
+                            <%= d_main_price(product, product.check_if_in_sale_taxon) %>
+                          </span>
+
+              <% if product.check_if_in_sale_taxon %>
+                <% if product.has_variants? %>
+                  <s><%= c_sale_price_value(product) %></s>
+                <% else %>
+                                <span class="price-range <%= price_class[:price_msrp] %>">
+                                  <% if product.should_display_msrp? %>
+                                    <s><%= d_msrp_price(product) %></s>
+                                  <% else %>
+                                    <s><%= d_master_price(product) %></s>
+                                  <% end %>
+                                </span>
+                  <!--<span class="price-percentage-off">-->
+                  <!--<#%= "#{sale_percentage_off(product)}% off" %>-->
+                  <!--</span>-->
+                <% end %>
+              <% end %>
+
+
+            </div>
+            <div>
+              <% if product.proper_price > 95 %>
+                                <span class="products-tile-free-shipping">
+                                  <span><i class="fa fa-truck fa-flip-horizontal"></i></span>
+                                  <span>free shipping</span>
+                                </span>
+
+
+              <% end %>
+              <% unless has_an_option_color? product %>
+                <%= render partial: 'spree/shared/hearth_favourite', locals: { product: product } %>
+              <% end %>
+            </div>
+            <div>
+              <!--<div class="sn-variants-color-wrapper">-->
+              <!--<#% index = 0 %>-->
+              <!--<#% product.variants.each do |variant|%>-->
+              <!--<#% color = variant.option_values.find_by(option_type_id: option_type_color_ids).try('presentation') %>-->
+              <!--<#% if color.present? && index < 3 %>-->
+              <!--<span class="sn-variant-color scout-tooltip <#%= color_class_search(color) %>" data-toggle="tooltip" data-original-title="<#%= color %>" data-placement="top"></span>-->
+              <!--<#% end %>-->
+              <!--<#% index += 1 if color.present?%>-->
+              <!--<#% end %>-->
+              <!--<#% if index > 3 %>-->
+              <!--<span class="sn-more-options-available">-->
+              <!--+ more options available-->
+              <!--</span>-->
+              <!--<#% end %>-->
+
+              <!--<#% if has_an_option_color? product %>-->
+              <!--<#%= render partial: 'spree/shared/hearth_favourite', locals: { product: product } %>-->
+              <!--<#% end %>-->
+              <!--</div>-->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    <% end %>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
   <% end %>
 <% end %>
 <script>
