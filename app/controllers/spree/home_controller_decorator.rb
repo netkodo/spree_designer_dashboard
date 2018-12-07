@@ -9,6 +9,7 @@ module Spree
       @arrive_product = Spree::Product.all.order('created_at desc').limit(12) if @arrive_product.count <= 12
       @designers = Spree::User.published_designers().order("created_at desc")
       @promoted_rooms = Spree::Board.promoted.limit(6)
+      @instagram_feed = Spree::InstagramFeed.limit(10)
       @home_text = Spree::HomeText.first
     end
 
