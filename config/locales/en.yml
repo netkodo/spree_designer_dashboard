@@ -38,3 +38,14 @@ en:
       link: Link
       meta_title: Meta Title
       board_navigation_title: "Boards"
+
+    slide:
+      slides: Slides
+      new_slide: New Slide
+      name: Name
+      published_on: Published On
+      expires: Expires On
+      current_slides: Current Slides
+      upcoming_slides: Upcoming Slides
+      expired_slides: Expired Slides
+      slide_detail: Slide Details

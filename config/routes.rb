@@ -152,7 +152,7 @@ Spree::Core::Engine.routes.draw do
     resources :boards
     resources :board_products
     resources :designer_registrations
-    resources :slides
+
 
     get "room_designers" => "designer_registrations#room_designers", :as => :room_designers
     get "trade_program" => "designer_registrations#trade_program", :as => :trade_program

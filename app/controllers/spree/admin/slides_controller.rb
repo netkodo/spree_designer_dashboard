@@ -1,7 +1,7 @@
 class Spree::Admin::SlidesController < Spree::Admin::ResourceController
 
+  before_action :fetch, only: [:edit, :update, :destroy]
 
- 
   def index
     @current_slides = Spree::Slide.current
     @expired_slides = Spree::Slide.expired
@@ -18,52 +18,45 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     if @slide.save
       redirect_to admin_slides_path
     else
+      @slide.build_slider_image
+      render action: "new"
     end
   end
 
   def edit
-    @slide = Spree::Slide.find_by id: params[:id]
+    @slide.build_slider_image unless @slide.slider_image.present?
   end
-  
+
   def update
-    @slide = Spree::Slide.find_by id: params[:id]
-    
-    if @slide.update_attributes(slide_params)
-      redirect_to edit_admin_slide_path(@slide, :notice => 'Your slide was updated.')
+    if @slide.update(slide_params)
+      redirect_to edit_admin_slide_path(@slide, notice: 'Your slide was updated.')
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
   
   def destroy
-    @slide = Spree::Slide.find_by id: params[:id]
     respond_to do |format|
       if @slide.destroy
         format.html {redirect_to admin_slide_path(@slide, :notice => 'Your slide was deleted.')}
         format.js {render :nothing => true, :status => 200, :layout => false}
-        
       else
         #format.html { render :action => ""}
       end
     end 
-    
-    
-    
   end
 
  
   private
-    def slide_params
-      params.require(:slide).permit(:name, :path, :is_default, :published_at, :expires_at, slider_image_attributes: [:attachment])
-    end
-  # redirect to the edit action after create
-  #  create.response do |wants|
-  #    wants.html { redirect_to edit_admin_fancy_thing_url( @fancy_thing ) }
-  #  end
-  #  
-  #  # redirect to the edit action after update
-  #  update.response do |wants|
-  #    wants.html { redirect_to edit_admin_fancy_thing_url( @fancy_thing ) }
-  #  end
- 
+
+  def fetch
+    @slide = Spree::Slide.find(params[:id])
+  end
+
+  def slide_params
+    output = params.require(:slide).permit(:name, :path, :is_default, :published_at, :expires_at, slider_image_attributes: [:attachment])
+    # There is additional logic for image_slider so this was neccesary to prevent deletion while edit slide.
+    output.extract!(:slider_image_attributes) if params[:slide][:slider_image_attributes].present? and params[:slide][:slider_image_attributes][:attachment].blank?
+    output
+  end
 end
