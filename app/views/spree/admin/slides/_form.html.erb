@@ -14,12 +14,21 @@
       <%= f.error_message_on :path %>
 		<% end %>
 
+    <%= f.field_container :slider_images do  %>
+      <% f.object.slider_images.each do |image| %>
+        <%= link_to image_tag(image.attachment(:mini)),
+                    '#',
+                    'data-slider-image-id' => image.id,
+                    href: remove_slider_image_admin_slides_path,
+                    class: 'js-admin-slides-remove-slider-image' %>
+      <% end %>
+    <% end %>
+
+
     <%= f.field_container :slider_image do %>
-      <%= image_tag(slide.slider_image.attachment(:small)) if slide.slider_image.present? %>
-      <%= f.label :attachment, slide.slider_image.present? ? "Slide Image" : "Change Slide Image" %>
-      <div id="slider_image_file" class="choose-file-button">Choose a file</div>
       <%= f.fields_for :slider_image do |slider_image| %>
-        <%= slider_image.file_field :attachment %>
+        <%= slider_image.label :content_type, 'Upload pictures' %>
+        <%= slider_image.file_field :slider_images, multiple: true, accept: 'image/png, image/jpeg' %>
       <% end %>
     <% end %>
 

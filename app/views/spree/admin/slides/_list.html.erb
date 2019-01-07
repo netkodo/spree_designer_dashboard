@@ -11,7 +11,7 @@
   <tbody>
     <% slides.each do |slide| %>
       <tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id slide %>">
-        <td><%= image_tag(slide.slider_image.attachment(:small)) if slide.slider_image %></td>
+        <td><%#= image_tag(slide.slider_image.attachment(:small)) if slide.slider_image %></td>
         <td><%= slide.name %></td>
         <td><%= slide.published_at.to_date %></td>
         <td><%= slide.expires_at.to_date %></td>

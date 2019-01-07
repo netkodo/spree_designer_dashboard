@@ -23,12 +23,8 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     end
   end
 
-  def edit
-    @slide.build_slider_image unless @slide.slider_image.present?
-  end
-
   def update
-    if @slide.update(slide_params)
+    if @slide.update(slide_params) and images_create(params, @slide.id)
       redirect_to edit_admin_slide_path(@slide, notice: 'Your slide was updated.')
     else
       render action: "edit"
@@ -46,6 +42,12 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     end 
   end
 
+  def remove_slider_image
+    debugger
+    puts "-------"
+
+  end
+
  
   private
 
@@ -58,5 +60,19 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     # There is additional logic for image_slider so this was neccesary to prevent deletion while edit slide.
     output.extract!(:slider_image_attributes) if params[:slide][:slider_image_attributes].present? and params[:slide][:slider_image_attributes][:attachment].blank?
     output
+  end
+
+
+  def images_create(params, slide_id)
+    images = params['slide']['slider_image']['slider_images']
+    unless images == [""]
+      images.each do |image|
+        # Resque.enqueue JobName slide_id,
+        # Nie bardzo można sobie obrazki w jobach zapisywac
+        new_image = Spree::SliderImage.new(slide_id: slide_id)
+        new_image.attachment = image
+        new_image.save
+      end
+    end
   end
 end
