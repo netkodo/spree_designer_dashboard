@@ -1,18 +1,16 @@
-<% content_for :page_actions do %>  
-<li><%= button_link_to Spree.t("new_slide"), new_object_url, :icon => 'icon-plus' %></li>
-<% end %>
+<% render partial: 'page_action', locals: {slide: @slide} %>
+
 <% content_for :page_title do %>
-<%= Spree.t(:home_page_slides) %>
+  <%= Spree.t(:home_page_slides) %>
 <% end %>
 
-<%= render :partial => 'spree/admin/shared/slider_sub_menu' %>
+<%= render partial: 'spree/admin/shared/slider_sub_menu' %>
 
+<% slides_array = [[Spree.t('slide.current_slides'), @current_slides],
+                   [Spree.t('slide.expired_slides'), @expired_slides],
+                   [Spree.t('slide.upcoming_slides'), @upcoming_slides]] %>
 
-<h4>Current Slides</h4>
-<%= render :partial => "list", :locals => {:slides => @current_slides}%>
-
-<h4>Upcoming Slides</h4>
-<%= render :partial => "list", :locals => {:slides => @upcoming_slides}%>
-
-<h4>Expired Slides</h4>
-<%= render :partial => "list", :locals => {:slides => @expired_slides}%>
+<% slides_array.each do |array| %>
+  <h4><%= array[0] %></h4>
+  <%= render partial: 'list', locals: {slides: array[1]}%>
+<% end %>
