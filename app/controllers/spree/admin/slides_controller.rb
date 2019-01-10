@@ -10,34 +10,29 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
   
   def new
     @slide = Spree::Slide.new
-    @slide.build_slider_image
   end
   
   def create
     @slide = Spree::Slide.new(slide_params)
-    if @slide.save
-      redirect_to admin_slides_path
-    else
-      @slide.build_slider_image
-      render action: "new"
-    end
+    @slide.save ? redirect_to(admin_slides_path) : render(action: 'new')
   end
 
   def update
-    if @slide.update(slide_params) and images_create(params, @slide.id)
+    if @slide.update(slide_params)
+      images_create(params, @slide.id) if params['slide']['slider_image'].present?
       redirect_to edit_admin_slide_path(@slide, notice: 'Your slide was updated.')
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
-  
+
   def destroy
     respond_to do |format|
-      if @slide.destroy
+      if @slide.present? and @slide.destroy
         format.html {redirect_to admin_slide_path(@slide, :notice => 'Your slide was deleted.')}
         format.js {render :nothing => true, :status => 200, :layout => false}
       else
-        #format.html { render :action => ""}
+        redirect_to(admin_slides_path, notice: 'Slide not found')
       end
     end 
   end
@@ -50,7 +45,6 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
 
   def slide_params
     output = params.require(:slide).permit(:name, :path, :is_default, :published_at, :expires_at, slider_image_attributes: [:attachment])
-    # There is additional logic for image_slider so this was neccesary to prevent deletion while edit slide.
     output.extract!(:slider_image_attributes) if params[:slide][:slider_image_attributes].present? and params[:slide][:slider_image_attributes][:attachment].blank?
     output
   end
@@ -60,8 +54,6 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     images = params['slide']['slider_image']['slider_images']
     unless images == [""]
       images.each do |image|
-        # Resque.enqueue JobName slide_id,
-        # Nie bardzo można sobie obrazki w jobach zapisywac
         new_image = Spree::SliderImage.new(slide_id: slide_id)
         new_image.attachment = image
         new_image.save
