@@ -9,5 +9,9 @@
 
 <%= form_for [:admin, @slide], html: {multipart: true} do |f| %>
   <%= render partial: 'form', locals: { f: f, slide: @slide } %>
-  <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  <div class="form-buttons filter-actions actions" data-hook="buttons">
+    <%= button Spree.t('actions.create'), 'ok' %>
+    <span class="or"><%= Spree.t(:or) %></span>
+    <%= button_link_to Spree.t('actions.cancel'), collection_url, :icon => 'remove' %>
+  </div>
 <% end %>
