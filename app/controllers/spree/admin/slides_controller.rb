@@ -42,13 +42,6 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
     end 
   end
 
-  def remove_slider_image
-    debugger
-    puts "-------"
-
-  end
-
- 
   private
 
   def fetch

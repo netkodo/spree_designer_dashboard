@@ -18,8 +18,7 @@
       <% f.object.slider_images.each do |image| %>
         <%= link_to image_tag(image.attachment(:mini)),
                     '#',
-                    'data-slider-image-id' => image.id,
-                    href: remove_slider_image_admin_slides_path,
+                    href: admin_slider_image_path(image),
                     class: 'js-admin-slides-remove-slider-image' %>
       <% end %>
     <% end %>
