@@ -9,9 +9,15 @@
     </tr>
   </thead>
   <tbody>
+    <% unless slides.present? %>
+      <tr align='center' class="<%= cycle('odd', 'even') %>">
+        <td colspan='4'><%= Spree.t('slide.no_slides') %></td>
+      </tr>
+    <% end %>
     <% slides.each do |slide| %>
-      <tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id slide %>">
-        <td><%#= image_tag(slide.slider_image.attachment(:small)) if slide.slider_image %></td>
+
+      <tr align='center' class="<%= cycle('odd', 'even') %>" id="<%= dom_id slide %>">
+        <td><%= image_tag(slide.slider_images.first.attachment(:small)) if slide.slider_images.first.present? %></td>
         <td><%= slide.name %></td>
         <td><%= slide.published_at.to_date %></td>
         <td><%= slide.expires_at.to_date %></td>
