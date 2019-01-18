@@ -14,7 +14,13 @@ class Spree::Admin::SlidesController < Spree::Admin::ResourceController
   
   def create
     @slide = Spree::Slide.new(slide_params)
-    @slide.save ? redirect_to(admin_slides_path) : render(action: 'new')
+    if params['slide']['slider_image'].present? and @slide.save
+      images_create(params['slide']['slider_image'], @slide.id)
+      redirect_to admin_slides_path
+    else
+      flash[:error] = 'There was no slider images provided' unless params['slide']['slider_image'].present?
+      render(action: 'new')
+    end
   end
 
   def update
