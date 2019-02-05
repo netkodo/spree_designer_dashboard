@@ -3,7 +3,8 @@ module Spree
     # before_filter :require_authentication
     
     def home2
-      @slides = Spree::Slide.current.order("created_at desc") || Spree::Slide.defaults
+      # fast solution
+      @slides = Spree::Slide.current.joins(:slider_images).uniq.order("created_at desc") || Spree::Slide.defaults
       @page_photos = Spree::PagePhoto.where(active: true)
       @page_rows = Spree::PageRow.active
       @arrive_product = Spree::Product.where(new_arrival: true).where("new_arrival_until >= ?", DateTime.now.to_date).limit(20)

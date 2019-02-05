@@ -1,34 +1,32 @@
 <table class="index">
-	<colgroup>
-	<col style="width: 10%" />
-	<col style="width: 40%" />
-	<col style="width: 20%" />
-	<col style="width: 20%" />
-	<col style="width: 10%" />
-</colgroup>
-<thead>
-	<tr>
-		<th>&nbsp;</th>
-		<th>Name</th>
-		<th>Published On</th>
-		<th>Expires On</th>
-		<th class="actions"></th>
-	</tr>
-</thead>
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= Spree.t('slide.name') %></th>
+      <th><%= Spree.t('slide.published_on') %></th>
+      <th><%= Spree.t('slide.expires') %></th>
+      <th class="actions"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% unless slides.present? %>
+      <tr align='center' class="<%= cycle('odd', 'even') %>">
+        <td colspan='4'><%= Spree.t('slide.no_slides') %></td>
+      </tr>
+    <% end %>
+    <% slides.each do |slide| %>
 
-<tbody>
-	<% slides.each do |slide| %>
-	<tr class="<%= cycle('odd', 'even') %>" id="<%= dom_id slide %>">
-		<td><%= image_tag(slide.slider_image.attachment(:small)) if slide.slider_image %></td>
-		<td><%= slide.name %></td>
-		<td><%= slide.published_at.to_date %></td>
-		<td><%= slide.expires_at.to_date %></td>
+      <tr align='center' class="<%= cycle('odd', 'even') %>" id="<%= dom_id slide %>">
+        <td><%= image_tag(slide.slider_images.first.attachment(:small)) if slide.slider_images.first.present? %></td>
+        <td><%= slide.name %></td>
+        <td><%= slide.published_at.to_date %></td>
+        <td><%= slide.expires_at.to_date %></td>
 
-		<td  class="actions">
-			<%= link_to_edit slide, :no_text => true %>
-			<%= link_to_delete slide, :no_text => true %>
-		</td>
-	</tr>
-	<% end %>
-</tbody>
+        <td class="actions">
+          <%= link_to_edit slide, no_text: true %>
+          <%= link_to_delete slide, no_text: true %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
