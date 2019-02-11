@@ -157,7 +157,8 @@ class Spree::DesignersController < Spree::StoreController
   end
 
   def show
-    @designer = Spree::User.is_active_designer().where(:username => params[:username]).first
+    @designer = Spree::User.find(params['id'])
+    # @designer = Spree::User.is_active_designer().where(:username => params[:username]).first
     if @designer.present?
       # @portfolio_boards = @designer.boards.map { |b| b if b.portfolio.present? }.delete_if(&:blank?)
       @portfolios = @designer.portfolios
