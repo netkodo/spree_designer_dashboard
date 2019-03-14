@@ -162,7 +162,7 @@ class Spree::DesignersController < Spree::StoreController
       # @portfolio_boards = @designer.boards.map { |b| b if b.portfolio.present? }.delete_if(&:blank?)
       @portfolios = @designer.portfolios
       @products = []
-      @products = @designer.products.available_through_published_boards if @designer.present?
+      @products = @designer.products.available_through_published_boards + Spree::Product.where(id: @designer.bookmarks.pluck(:product_id)) if @designer.present?
       render :action => "show"
     else
       raise ActionController::RoutingError.new('Not Found')
