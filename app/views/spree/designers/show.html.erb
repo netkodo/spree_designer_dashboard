@@ -114,11 +114,11 @@
     </div>
   <% end %>
 
-<h2>Featured Rooms</h2>
 <div class="designer-boards">
   <% if @designer.present? %>
 	<% unless @designer.boards.active.blank? %>
-		<% @designer.boards.active.in_groups_of(3, false) do |row_boards| %>
+    <h2>Featured Rooms</h2>
+      <% @designer.boards.active.in_groups_of(3, false) do |row_boards| %>
 		<div class="row">
 			<% for board in row_boards %>
 			<div class="col-md-4">
@@ -142,9 +142,9 @@
 		</div>
 		<% end %>
 	<% else %>
-	<div class="empty-state">
-		This designer doesn't have any boards at this time.
-	</div>
+<!--	<div class="empty-state">-->
+<!--		#This designer doesn't have any boards at this time.-->
+<!--	</div>-->
 	<% end%>
 <% end %>
 </div>
@@ -162,17 +162,11 @@
 <% end %>
 	
 
-<h2>Featured Products</h2>
 <div class="designer-boards">
 	<% unless @products.blank? %>
-		<%#= render :partial => 'spree/shared/products', :locals => { :products => @products } %>
+    <h2>Featured Products</h2>
+    <%#= render :partial => 'spree/shared/products', :locals => { :products => @products } %>
 		<%= render :partial => "products_list", :locals => {:products => @products}%>
-	
-		
-	<% else %>
-	<div class="empty-state">
-		This designer doesn't have featured products at this time.
-	</div>
 	<% end%>
 </div>
 
