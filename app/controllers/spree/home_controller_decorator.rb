@@ -12,6 +12,7 @@ module Spree
       @promoted_rooms = Spree::Board.promoted.limit(6)
       @home_text = Spree::HomeText.first
       @sale_text = Spree::HeaderText.active
+
     end
 
     def user_review
